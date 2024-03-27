@@ -65,9 +65,9 @@
       ]
     },
     {
-      "group": "Functions SDK",
+      "group": "Write Functions",
       "pages": [
-        "sdk/introduction",
+        "sdk/functions-sdk",
         "sdk/connection",
         "sdk/inference",
         "sdk/search",
