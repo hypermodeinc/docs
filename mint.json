@@ -61,7 +61,8 @@
         "manifest",
         "define-models",
         "define-hosts",
-        "define-schema"
+        "define-schema",
+        "deploy"
       ]
     },
     {
