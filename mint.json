@@ -1,29 +1,33 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Starter Kit",
+  "name": "Hypermode",
   "logo": {
     "dark": "/logo/dark.svg",
     "light": "/logo/light.svg"
   },
   "favicon": "/favicon.svg",
   "colors": {
-    "primary": "#0D9373",
-    "light": "#07C983",
-    "dark": "#0D9373",
+    "primary": "#6342CB",
+    "light": "#9C85E3",
+    "dark": "#2C1C61",
+    "background": {
+      "dark": "#14161F",
+      "light": "#FFFFFF"
+    },
     "anchors": {
-      "from": "#0D9373",
-      "to": "#07C983"
+      "from": "#6342CB",
+      "to": "#2C1C61"
     }
   },
   "topbarLinks": [
     {
       "name": "Support",
-      "url": "mailto:hi@mintlify.com"
+      "url": "mailto:help@mintlify.com"
     }
   ],
   "topbarCtaButton": {
-    "name": "Dashboard",
-    "url": "https://dashboard.mintlify.com"
+    "name": "Request Access",
+    "url": "https://hypermode.com/home"
   },
   "tabs": [
     {
@@ -84,8 +88,8 @@
     }
   ],
   "footerSocials": {
-    "twitter": "https://twitter.com/mintlify",
-    "github": "https://github.com/mintlify",
-    "linkedin": "https://www.linkedin.com/company/mintsearch"
+    "twitter": "https://twitter.com/hypermodeAI",
+    "github": "https://github.com/gohypermode",
+    "linkedin": "https://www.linkedin.com/company/hypermode"
   }
 }
