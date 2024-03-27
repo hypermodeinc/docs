@@ -29,6 +29,10 @@
     "name": "Request Access",
     "url": "https://hypermode.com/home"
   },
+  "topAnchor": {
+    "name": "Docs",
+    "icon": "book-open-cover"
+  },
   "anchors": [
     {
       "name": "Home",
