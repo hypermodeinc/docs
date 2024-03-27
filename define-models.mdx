@@ -1,0 +1,57 @@
+---
+title: Define Models
+description: ''
+---
+
+Models are a core resource for inferencing. The [project manifest](/manifest) allows you to easily define models whether they're hosted by Hypermode or another host.
+
+```hypermode.json
+{
+  "models": [
+    {
+        "name": "sentiment-classifier",
+        "task": "classification",
+        "sourceModel": "distilbert/distilbert-base-uncased",
+        "provider": "hugging-face",
+        "host": "hypermode"
+    }
+  ]
+}
+```
+
+## Properties
+
+<ResponseField name="name" type="string" required>
+  Internal name of your model. Used for indicating the model to use in an API call.
+</ResponseField>
+
+<ResponseField name="task" type="string" required>
+  Training intent of model, such as `classification` or `embedding`.
+</ResponseField>
+
+<ResponseField name="sourceModel" type="string" required>
+  Relative path of model within provider.
+</ResponseField>
+
+<ResponseField name="provider" type="string" required>
+  Source location of model, such as `hugging-face` or `openai`.
+</ResponseField>
+
+<ResponseField name="host" type="string" required>
+  Runtime provider of model.
+  <Expandable title="host types">
+    <ResponseField name="hypermode" type="string">
+      Dynamically deployed models on Hypermode.
+    </ResponseField>
+    <ResponseField name="custom" type="string">
+      Fine-tuned models on Hypermode.
+    </ResponseField>
+    <ResponseField name="openai" type="string">
+      Models hosted by OpenAI.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+## Auto-Deployed Models
+
+When using `hugging-face` as the `provider` and `hypermode` as the `host`, Hypermode will automatically deploy a dedicated instance of the define `sourceModel` when deploying your project. Your project's functions will securely connect to the hosted model, with no additional configuration required.
