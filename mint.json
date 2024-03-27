@@ -49,7 +49,36 @@
     {
       "group": "Get Started",
       "pages": [
-        "introduction"
+        "introduction",
+        "overview",
+        "quickstart"
+      ]
+    },
+    {
+      "group": "Configure Project",
+      "pages": [
+        "manifest",
+        "define-models",
+        "define-hosts",
+        "define-schema"
+      ]
+    },
+    {
+      "group": "Function SDK",
+      "pages": [
+        "sdk/introduction",
+        "sdk/connection",
+        "sdk/inference",
+        "sdk/search",
+        "sdk/console"
+      ]
+    },
+    {
+      "group": "Patterns",
+      "pages": [
+        "patterns/retrieval-augmented-generation",
+        "patterns/micro-assistants",
+        "patterns/xyz"
       ]
     }
   ],
