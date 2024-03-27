@@ -29,6 +29,18 @@
     "name": "Request Access",
     "url": "https://hypermode.com/home"
   },
+  "anchors": [
+    {
+      "name": "Hypermode Home",
+      "icon": "house",
+      "url": "https://hypermode.com/home"
+    },
+    {
+      "name": "Blog",
+      "icon": "newspaper",
+      "url": "https://hypermode.com/blog"
+    }
+  ],
   "navigation": [
     {
       "group": "Get Started",
