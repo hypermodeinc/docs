@@ -65,7 +65,7 @@
       ]
     },
     {
-      "group": "Function SDK",
+      "group": "Functions SDK",
       "pages": [
         "sdk/introduction",
         "sdk/connection",
