@@ -3,4 +3,25 @@ title: Define Hosts
 description: ''
 ---
 
-Hosts establish connectivity for models and other external endpoints.
+Hosts establish connectivity for models and other external endpoints. The [project manifest](/manifest) allows you to easily define hosts for secure connectivity.
+
+```hypermode.json
+{
+  "hosts": [
+    {
+        "name": "openai"
+        "endpoint": "https://api.openai.com/v1"
+    }
+  ]
+}
+```
+
+## Properties
+
+<ResponseField name="name" type="string" required>
+  Internal name of your host. Used for indicating the host of a model or for a connection.
+</ResponseField>
+
+<ResponseField name="endpoint" type="string" required>
+  ...
+</ResponseField>

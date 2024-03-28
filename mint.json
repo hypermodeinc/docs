@@ -61,8 +61,7 @@
         "manifest",
         "define-models",
         "define-hosts",
-        "define-schema",
-        "deploy"
+        "define-schema"
       ]
     },
     {
@@ -76,11 +75,10 @@
       ]
     },
     {
-      "group": "Patterns",
+      "group": "Iterate Constantly",
       "pages": [
-        "patterns/retrieval-augmented-generation",
-        "patterns/micro-assistants",
-        "patterns/xyz"
+        "deploy",
+        "function-runs"
       ]
     }
   ],
