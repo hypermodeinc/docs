@@ -78,7 +78,7 @@
       "group": "Iterate Constantly",
       "pages": [
         "deploy",
-        "function-runs"
+        "function-observability"
       ]
     }
   ],
