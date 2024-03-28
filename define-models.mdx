@@ -3,7 +3,7 @@ title: Define Models
 description: ''
 ---
 
-Models are a core resource for inferencing. The [project manifest](/manifest) allows you to easily define models whether they're hosted by Hypermode or another host.
+Models are a core resource for inferencing. The [project manifest](/manifest) allows you to easily define models whether hosted by Hypermode or another host.
 
 ```hypermode.json
 {
@@ -54,4 +54,4 @@ Models are a core resource for inferencing. The [project manifest](/manifest) al
 
 ## Auto-Deployed Models
 
-When using `hugging-face` as the `provider` and `hypermode` as the `host`, Hypermode will automatically deploy a dedicated instance of the defined `sourceModel` when deploying your project. Your project's functions will securely connect to the hosted model, with no additional configuration required.
+When using `hugging-face` as the `provider` and `hypermode` as the `host`, Hypermode automatically deploys a dedicated instance of the defined `sourceModel` when deploying your project. Your project's functions securely connect to the hosted model, with no further configuration required.
