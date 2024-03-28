@@ -8,7 +8,7 @@ description: ''
 The schema exposes functions on your project's API endpoint. It is defined in a `schema.graphql` file in your project.
 
 ```schema.graphql
-directive @hm_function() on FIELD_DEFINITION
+directive @hm_function on FIELD_DEFINITION
 
 type Query {
    classifySentiment(text: String!): String! @lambda @hm_function
@@ -19,3 +19,5 @@ type Query {
 Hypermode follows [GraphQL's standard definition language](https://graphql.org/learn/schema/). Simply add the [directive](https://graphql.org/learn/queries/#directives) `@lambda @hm_function` to register the function on the project's endpoint.
 
 When deployed, your GraphQL API will be available on the `/graphql` path from your project's endpoint. The endpoint is listed in the Hypermode Console on the Project Home screen.
+
+function signature needs to match
