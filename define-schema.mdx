@@ -10,7 +10,7 @@ The schema exposes functions on your project's API endpoint. It is defined in a 
 ```schema.graphql
 directive @hm_function(name: String, args: [String!]) on FIELD_DEFINITION
 
-type Mutation {
+type Query {
    classifySentiment(text: String!): String! @lambda @hm_function
    classifySeverity(text: String!): String! @lambda @hm_function
 }
