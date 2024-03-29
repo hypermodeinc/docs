@@ -16,9 +16,6 @@ type Query {
 }
 ```
 
-Hypermode follows [GraphQL's standard definition language](https://graphql.org/learn/schema/). Simply add the [directive](https://graphql.org/learn/queries/#directives) `@lambda @hm_function` to register the function on the project's endpoint.
+Hypermode follows [GraphQL's standard definition language](https://graphql.org/learn/schema/). Add your function signature and the [directive](https://graphql.org/learn/queries/#directives) `@lambda @hm_function` to register the function on the project's endpoint. The signature must match the exposed function in your `index.ts` file.
 
 When deployed, your GraphQL API will be available on the `/graphql` path from your project's endpoint. The endpoint is listed in the Hypermode Console on the Project Home screen.
-
-TODO:
-function signature needs to match
