@@ -8,7 +8,7 @@ Inference APIs allow you to invoke AI models defined in your project's [manifest
 ### generateText
 Invoke a generative AI model with an instruction and prompt, resulting in a text response.
 
-```function.ts
+```TypeScript
 generateText (
     modelName: string,
     instruction: string,
@@ -31,7 +31,7 @@ generateText (
 ### computeClassificationLabels
 Invoke a fine-tuned classification model with a text input, resulting in an array of labels and probabilities.
 
-```function.ts
+```TypeScript
 computeClassificationLabels (
     modelName: string,
     text: string
@@ -49,7 +49,7 @@ computeClassificationLabels (
 ### embedText
 Invoke an embedding model with a text input, resulting in a vector embedding.
 
-```function.ts
+```TypeScript
 embedText (
     modelName: string,
 	text: string,
