@@ -3,12 +3,12 @@ title: Connection
 description: ''
 ---
 
-Connection APIs allow you to ...
+Connection APIs allow you to securely access an API endpoint at a defined host.
 
 <Tip>We're introducing new APIs consistently through ongoing development with build partners. [Let's chat](mailto:help@hypermode.com) about what would make the Functions SDK even more powerful for your next use case!</Tip>
 
 ### invokeGraphqlApi
-...
+Make a query or mutation against a GraphQL API endpoint.
 
 ```TypeScript
 invokeGraphqlApi (
@@ -19,13 +19,13 @@ invokeGraphqlApi (
 ```
 
 <ResponseField name="hostName" type="string" required>
-  ...
+  Internal name of your host, as [defined in your manifest](../define-hosts).
 </ResponseField>
 
 <ResponseField name="query" type="string" required>
-  ...
+  GraphQL operation to be executed on the API server to retrieve or write data.
 </ResponseField>
 
 <ResponseField name="variables" type="string">
-  ...
+  Optional variables added to the query.
 </ResponseField>
