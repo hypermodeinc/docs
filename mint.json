@@ -3,7 +3,8 @@
   "name": "Hypermode",
   "logo": {
     "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg"
+    "light": "/logo/light.svg",
+    "href": "/"
   },
   "favicon": "/favicon.svg",
   "colors": {
@@ -29,11 +30,54 @@
     "name": "Request Access",
     "url": "https://hypermode.com/home"
   },
+  "topAnchor": {
+    "name": "Docs",
+    "icon": "book-open-cover"
+  },
+  "anchors": [
+    {
+      "name": "Home",
+      "icon": "house",
+      "url": "https://hypermode.com/home"
+    },
+    {
+      "name": "Blog",
+      "icon": "newspaper",
+      "url": "https://hypermode.com/blog"
+    }
+  ],
   "navigation": [
     {
       "group": "Get Started",
       "pages": [
-        "introduction"
+        "introduction",
+        "quickstart"
+      ]
+    },
+    {
+      "group": "Configure Project",
+      "pages": [
+        "manifest",
+        "define-models",
+        "define-hosts",
+        "define-schema"
+      ]
+    },
+    {
+      "group": "Write Functions",
+      "pages": [
+        "sdk/functions-sdk",
+        "sdk/connection",
+        "sdk/inference",
+        "sdk/search",
+        "sdk/console"
+      ]
+    },
+    {
+      "group": "Iterate Constantly",
+      "pages": [
+        "deploy",
+        "function-observability"
       ]
     }
   ],
@@ -41,5 +85,11 @@
     "twitter": "https://twitter.com/hypermodeAI",
     "github": "https://github.com/gohypermode",
     "linkedin": "https://www.linkedin.com/company/hypermode"
+  },
+  "analytics": {
+    "fathom": {
+        "siteId": "LQSVRZXR"
+    }
   }
 }
+

@@ -1,0 +1,18 @@
+---
+title: Deploy Project
+description: ''
+---
+
+Hypermode leverages a native GitHub integration for the deployment of Hypermode projects. The deployment includes both the project's [manifest](/manifest) and functions.
+
+<Note>Preview environments for live validation of pull requests are in development.</Note>
+
+## Build
+
+A GitHub Action is included in the [template project](https://github.com/gohypermode/sample-project) to handle the build of your project's functions. This Action must complete successfully before your functions can be deployed.
+
+## Deploy
+
+On successful build of your project or a change to your manifest in your connected GitHub repository, Hypermode automatically deploys your project changes.
+
+For [auto-deployed models](/define-models#auto-deployed-models), a dedicated instance of the model is deployed.
