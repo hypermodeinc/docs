@@ -2,3 +2,64 @@
 title: Inference
 description: ''
 ---
+
+Inference APIs allow you to invoke AI models defined in your project's [manifest](../manifest) with less scaffolding.
+
+### generateText
+Invoke a generative AI model with an instruction and prompt, resulting in a text response.
+
+```function.ts
+generateText (
+    modelName: string,
+    instruction: string,
+    prompt: string
+): string
+```
+
+<ResponseField name="modelName" type="string" required>
+  Internal name of your model, as [defined in your manifest](../define-models).
+</ResponseField>
+
+<ResponseField name="instruction" type="string" required>
+  High-level instruction for the processing of the given prompt.
+</ResponseField>
+
+<ResponseField name="prompt" type="string" required>
+  Queries for response within the context of the given instruction.
+</ResponseField>
+
+### computeClassificationLabels
+Invoke a fine-tuned classification model with a text input, resulting in an array of labels and probabilities.
+
+```function.ts
+computeClassificationLabels (
+    modelName: string,
+    text: string
+): Map<string, number>
+```
+
+<ResponseField name="modelName" type="string" required>
+  Internal name of your model, as [defined in your manifest](../define-models).
+</ResponseField>
+
+<ResponseField name="text" type="string" required>
+  Text input to be classified amongst labels defined in the fine-tuning process.
+</ResponseField>
+
+### embedText
+Invoke an embedding model with a text input, resulting in a vector embedding.
+
+```function.ts
+embedText (
+    modelName: string,
+	text: string,
+): number
+```
+
+<ResponseField name="modelName" type="string" required>
+  Internal name of your model, as [defined in your manifest](../define-models).
+</ResponseField>
+
+<ResponseField name="text" type="string" required>
+  Text input to be embedded.
+</ResponseField>
