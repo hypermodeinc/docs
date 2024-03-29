@@ -85,5 +85,11 @@
     "twitter": "https://twitter.com/hypermodeAI",
     "github": "https://github.com/gohypermode",
     "linkedin": "https://www.linkedin.com/company/hypermode"
+  },
+  "analytics": {
+    "fathom": {
+        "siteId": "LQSVRZXR"
+    }
   }
 }
+
