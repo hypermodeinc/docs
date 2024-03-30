@@ -1,1 +1,10 @@
 [Hh]ypermode
+
+APIs
+inferencing
+
+invokeGraphqlApi
+generateText
+computeClassificationLabels
+embedText
+log
