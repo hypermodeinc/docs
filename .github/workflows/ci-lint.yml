@@ -13,6 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: errata-ai/vale-action@reviewdog
+        env:
+          GITHUB_TOKEN: ${{secrets.GO_PRIVATE_MODULES}}
         with:
           vale_flags: "--glob=*.mdx"
           fail_on_error: true
