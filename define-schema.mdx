@@ -3,9 +3,9 @@ title: Define Schema
 description: ''
 ---
 
-<Warning>A new approach for schema definition is currently being developed. Expect this to be simplified in the next few weeks. Feedback welcomed!</Warning>
+<Warning>A new approach for schema definition is currently in development. Expect this to be simpler in the next few weeks. Feedback welcomed!</Warning>
 
-The schema exposes functions on your project's API endpoint. It is defined in a `schema.graphql` file in your project.
+The schema exposes functions on your project's API endpoint. Define your schema in the `schema.graphql` file in your project.
 
 ```graphql schema.graphql
 directive @hm_function on FIELD_DEFINITION
@@ -18,4 +18,4 @@ type Query {
 
 Hypermode follows [GraphQL's standard definition language](https://graphql.org/learn/schema/). Add your function signature and the [directive](https://graphql.org/learn/queries/#directives) `@lambda @hm_function` to register the function on the project's endpoint. The signature must match the exposed function in your `index.ts` file.
 
-When deployed, your GraphQL API will be available on the `/graphql` path from your project's endpoint. The endpoint is listed in the Hypermode Console on the Project Home screen.
+When deployed, your GraphQL API is available on the `/graphql` path from your project's endpoint. The endpoint is visible in the Hypermode Console on the Project Home screen.
