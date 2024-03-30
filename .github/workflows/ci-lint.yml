@@ -9,7 +9,7 @@ on:
 jobs:
   vale:
     name: vale
-    runs-on: warp-ubuntu-latest-x64-8x
+    runs-on: warp-ubuntu-latest-x64-4x
     steps:
       - uses: actions/checkout@v4
       - uses: errata-ai/vale-action@reviewdog
