@@ -9,9 +9,10 @@ on:
 jobs:
   vale:
     name: vale
-    runs-on: warp-ubuntu-latest-x64-4x
+    runs-on: warp-ubuntu-latest-x64-2x
     steps:
       - uses: actions/checkout@v4
       - uses: errata-ai/vale-action@reviewdog
         with:
           vale_flags: "--glob=*.mdx"
+          fail_on_error: true
