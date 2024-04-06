@@ -49,19 +49,11 @@
   "navigation": [
     {
       "group": "Get Started",
-      "pages": [
-        "introduction",
-        "quickstart"
-      ]
+      "pages": ["introduction", "quickstart"]
     },
     {
       "group": "Configure Project",
-      "pages": [
-        "manifest",
-        "define-models",
-        "define-hosts",
-        "define-schema"
-      ]
+      "pages": ["manifest", "define-models", "define-hosts", "define-schema"]
     },
     {
       "group": "Write Functions",
@@ -75,10 +67,7 @@
     },
     {
       "group": "Iterate Constantly",
-      "pages": [
-        "deploy",
-        "function-observability"
-      ]
+      "pages": ["deploy", "function-observability"]
     }
   ],
   "footerSocials": {
@@ -88,8 +77,7 @@
   },
   "analytics": {
     "fathom": {
-        "siteId": "LQSVRZXR"
+      "siteId": "LQSVRZXR"
     }
   }
 }
-

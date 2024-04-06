@@ -1,19 +1,24 @@
 ---
 title: Console
-description: ''
+description: ""
 ---
 
 Console APIs allow you to interact with the Hypermode Console.
 
-<Tip>We're introducing new APIs consistently through ongoing development with build partners. [Let's chat](mailto:help@hypermode.com) about what would make the Functions SDK even more powerful for your next use case!</Tip>
+<Tip>
+  We're introducing new APIs consistently through ongoing development with build
+  partners. [Let's chat](mailto:help@hypermode.com) about what would make the
+  Functions SDK even more powerful for your next use case!
+</Tip>
 
 ### log
+
 Generate a log message for debugging at runtime.
 
 ```TypeScript
 log (
-    message: string,
-    level?: string
+  message: string,
+  level?: string
 )
 ```
 
@@ -22,5 +27,6 @@ log (
 </ResponseField>
 
 <ResponseField name="level" type="string">
-  Severity of log message, one of `info` (default), `error`, `warning` or `debug`.
+  Severity of log message, one of `info` (default), `error`, `warning` or
+  `debug`.
 </ResponseField>
