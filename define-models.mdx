@@ -1,6 +1,6 @@
 ---
 title: Define Models
-description: ''
+description: ""
 ---
 
 AI models are a core resource for inferencing. The [project manifest](/manifest) allows you to easily define models whether hosted by Hypermode or another host.
@@ -9,11 +9,11 @@ AI models are a core resource for inferencing. The [project manifest](/manifest)
 {
   "models": [
     {
-        "name": "sentiment-classifier",
-        "task": "classification",
-        "sourceModel": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
-        "provider": "hugging-face",
-        "host": "hypermode"
+      "name": "sentiment-classifier",
+      "task": "classification",
+      "sourceModel": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+      "provider": "hugging-face",
+      "host": "hypermode"
     }
   ]
 }
@@ -22,7 +22,8 @@ AI models are a core resource for inferencing. The [project manifest](/manifest)
 ## Properties
 
 <ResponseField name="name" type="string" required>
-  Internal name of your AI model. Used for indicating the model to use in an API call.
+  Internal name of your AI model. Used for indicating the model to use in an API
+  call.
 </ResponseField>
 
 <ResponseField name="task" type="string" required>

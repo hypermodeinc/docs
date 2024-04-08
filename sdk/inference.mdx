@@ -1,20 +1,25 @@
 ---
 title: Inference
-description: ''
+description: ""
 ---
 
 Inference APIs allow you to invoke AI models defined in your project's [manifest](../manifest) with less scaffolding.
 
-<Tip>We're introducing new APIs consistently through ongoing development with build partners. [Let's chat](mailto:help@hypermode.com) about what would make the Functions SDK even more powerful for your next use case!</Tip>
+<Tip>
+  We're introducing new APIs consistently through ongoing development with build
+  partners. [Let's chat](mailto:help@hypermode.com) about what would make the
+  Functions SDK even more powerful for your next use case!
+</Tip>
 
 ### generateText
+
 Invoke a generative AI model with an instruction and prompt, resulting in a text response.
 
 ```TypeScript
 generateText (
-    modelName: string,
-    instruction: string,
-    prompt: string
+  modelName: string,
+  instruction: string,
+  prompt: string
 ): string
 ```
 
@@ -31,12 +36,13 @@ generateText (
 </ResponseField>
 
 ### computeClassificationLabels
+
 Invoke a fine-tuned classification model with a text input, resulting in an array of labels and probabilities.
 
 ```TypeScript
 computeClassificationLabels (
-    modelName: string,
-    text: string
+  modelName: string,
+  text: string
 ): Map<string, number>
 ```
 
@@ -45,16 +51,18 @@ computeClassificationLabels (
 </ResponseField>
 
 <ResponseField name="text" type="string" required>
-  Text input for classification amongst labels defined in the fine-tuning process.
+  Text input for classification amongst labels defined in the fine-tuning
+  process.
 </ResponseField>
 
 ### embedText
+
 Invoke an embedding model with a text input, resulting in a vector embedding.
 
 ```TypeScript
 embedText (
-    modelName: string,
-	text: string,
+  modelName: string,
+  text: string,
 ): number
 ```
 

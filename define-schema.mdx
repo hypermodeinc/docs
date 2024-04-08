@@ -1,9 +1,12 @@
 ---
 title: Define Schema
-description: ''
+description: ""
 ---
 
-<Warning>A new approach for schema definition is currently in development. Expect this to be simpler in the next few weeks. Feedback welcomed!</Warning>
+<Warning>
+  A new approach for schema definition is currently in development. Expect this
+  to be simpler in the next few weeks. Feedback welcomed!
+</Warning>
 
 The schema exposes functions on your project's API endpoint. Define your schema in the `schema.graphql` file in your project.
 
@@ -11,8 +14,8 @@ The schema exposes functions on your project's API endpoint. Define your schema 
 directive @hm_function on FIELD_DEFINITION
 
 type Query {
-   classifySentiment(text: String!): String! @lambda @hm_function
-   classifySeverity(text: String!): String! @lambda @hm_function
+  classifySentiment(text: String!): String! @lambda @hm_function
+  classifySeverity(text: String!): String! @lambda @hm_function
 }
 ```
 
