@@ -1,20 +1,22 @@
+# Docs
+
 Self-serve documentation is a critical part of any technical product. Beyond current users, docs are an important evaluation tool for prospective users.
 
-# Source Control
+## Source Control
 
 Our docs are maintained in markdown files in this repo. All changes are managed through a code-first release flow.
 
-# Hosting
+## Hosting
 
 The design and hosting of our site is provided by [Mintlify](https://mintlify.com/). The vast majority of configuration is in code in `mint.json`.
 
 Changes will be deployed to [production](https://docs.hypermode.com) automatically after pushing to the `main` branch.
 
-# Development Environment Setup
+## Development Environment Setup
 
 The following components are useful when developing locally:
 
-## Mintlify CLI
+### Mintlify CLI
 
 See live changes as you write and edit.
 
@@ -22,7 +24,7 @@ See live changes as you write and edit.
 npm i -g mintlify
 ```
 
-## Vale CLI
+### Vale CLI
 
 Validate alignment of changes with style guide.
 
@@ -30,7 +32,7 @@ Validate alignment of changes with style guide.
 npm i -D @ocular-d/vale-bin
 ```
 
-## Trunk CLI
+### Trunk CLI
 
 Format and lint changes for easy merging.
 
@@ -38,7 +40,7 @@ Format and lint changes for easy merging.
 npm i -D @trunkio/launcher
 ```
 
-# Writing
+## Writing
 
 Mintlify includes a [number of components](https://mintlify.com/docs/content/components/accordions) to make it easier to build easy-to-consume documentation.
 
@@ -48,7 +50,7 @@ To spin up a local server, run the following command at the root of the docs rep
 mintlify dev
 ```
 
-## Style
+### Style
 
 Consistency is important in any documentation experience. Beyond Markdown’s opinionated structure, we adhere to a consistent style for Hypermode.
 
@@ -60,11 +62,11 @@ We have adopted [Google’s Developer Documentation Style Guide](https://develop
 vale --glob='*.{mdx}' *
 ```
 
-## Iconography
+### Iconography
 
 When icons are required, select from [Font Awesome](https://fontawesome.com/icons)’s catalog for easy rendering with Mintlify.
 
-## Formatting and Linting
+### Formatting and Linting
 
 Trunk has been implemented for easy formatting and linting across different file types. It is implemented within CI/CD, but also executable locally.
 
