@@ -15,6 +15,7 @@ Changes will be deployed to [production](https://docs.hypermode.com) automatical
 The following components are useful when developing locally:
 
 ## Mintlify CLI
+
 See live changes as you write and edit.
 
 ```bash
@@ -22,6 +23,7 @@ npm i -g mintlify
 ```
 
 ## Vale CLI
+
 Validate alignment of changes with style guide.
 
 ```bash
@@ -29,6 +31,7 @@ npm i -D @ocular-d/vale-bin
 ```
 
 ## Trunk CLI
+
 Format and lint changes for easy merging.
 
 ```bash
