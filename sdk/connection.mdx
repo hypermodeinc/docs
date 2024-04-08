@@ -1,20 +1,25 @@
 ---
 title: Connection
-description: ''
+description: ""
 ---
 
 Connection APIs allow you to securely access an API endpoint at a defined host.
 
-<Tip>We're introducing new APIs consistently through ongoing development with build partners. [Let's chat](mailto:help@hypermode.com) about what would make the Functions SDK even more powerful for your next use case!</Tip>
+<Tip>
+  We're introducing new APIs consistently through ongoing development with build
+  partners. [Let's chat](mailto:help@hypermode.com) about what would make the
+  Functions SDK even more powerful for your next use case!
+</Tip>
 
 ### invokeGraphqlApi
+
 Make a query or mutation against a GraphQL API endpoint.
 
 ```TypeScript
 invokeGraphqlApi (
-    hostName: string,
-    query: string,
-    variables?: Map<string, string>
+  hostName: string,
+  query: string,
+  variables?: Map<string, string>
 ):
 ```
 

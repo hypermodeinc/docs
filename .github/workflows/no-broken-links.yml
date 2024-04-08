@@ -1,20 +1,24 @@
 name: No Broken Links
+
 on:
   pull_request:
     branches:
       - main
 
+permissions: read-all
+
 jobs:
   no-broken-links:
+    name: Broken Link Checker
     runs-on: warp-ubuntu-latest-x64-2x
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18.x
 
-      - name: Run mintlify script
+      - name: Run Mintlify Script
         run: npx mintlify broken-links

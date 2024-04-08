@@ -35,8 +35,6 @@ Format and lint changes for easy merging.
 npm i -D @trunkio/launcher
 ```
 
-
-
 # Writing
 
 Mintlify includes a [number of components](https://mintlify.com/docs/content/components/accordions) to make it easier to build easy-to-consume documentation.
