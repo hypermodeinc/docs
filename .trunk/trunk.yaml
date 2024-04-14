@@ -31,6 +31,9 @@ lint:
     - linters: [ALL]
       paths:
         - styles
+    - linters: [checkov]
+      paths:
+        - mintlify.json
 
 actions:
   enabled:
