@@ -33,7 +33,7 @@ lint:
         - styles
     - linters: [checkov]
       paths:
-        - mintlify.json
+        - mint.json
 
 actions:
   enabled:
