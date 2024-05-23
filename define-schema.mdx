@@ -5,10 +5,11 @@ description: "Create the signature for your API"
 
 A GraphQL schema is code first generated from the exported functions in the `index.ts` file located under `functions / assembly` folder of you project.
 
-When deployed, your GraphQL API is available on the `/graphql` path from your project's endpoint.
-
+When deployed, your GraphQL API enpoint is available on the `/graphql` path from your project's endpoint.
+The project's endpoint is visible in the Hypermode Console on the Project Home screen.
 
 For example, with the following index.ts file:
+
 ```ts
 import { inference } from "@hypermode/functions-as";
 
@@ -18,15 +19,14 @@ export function testClassifier(text: string): string {
   return inference.classifyText(modelName, text, threshold);
 }
 ```
-The deployment will generate a GraphQL Schema 
+
+The GraphQL endpoint will serve the following GraphQL Schema:
 
 ```graphql
 type Query {
-  testClassifier(text: String!): String! 
+  testClassifier(text: String!): String!
 }
 ```
 
-The endpoint is visible in the Hypermode Console on the Project Home screen.
-
-
-
+The GraphQL API endpoint supports introspection.
+You can visualize the generated GraphQL Schema, using the query builder `Docs` tab in the Hypermode Console .
