@@ -3,22 +3,28 @@ title: Define Schema
 description: "Create the signature for your API"
 ---
 
-<Warning>
-  A new approach for schema definition is currently in development. Expect this
-  to be simpler in the next few weeks. Feedback welcomed!
-</Warning>
+Hypermode generates your Project's GraphQL API schema from the exported functions in the `index.ts` file located in the `functions / assembly` folder of you project.
 
-The schema exposes functions on your project's API endpoint. Define your schema in the `schema.graphql` file in your project.
+When deployed, your API is available on your project's endpoint, visible in the Hypermode Console on the Project Home screen.
 
-```graphql schema.graphql
-directive @hm_function on FIELD_DEFINITION
+For example, with the following index.ts file:
 
-type Query {
-  classifySentiment(text: String!): String! @lambda @hm_function
-  classifySeverity(text: String!): String! @lambda @hm_function
+```ts
+import { inference } from "@hypermode/functions-as";
+
+export function testClassifier(text: string): string {
+  const modelName = "sentiment-classifier";
+  const threshold: f32 = 0.5;
+  return inference.classifyText(modelName, text, threshold);
 }
 ```
 
-Hypermode follows [GraphQL's standard definition language](https://graphql.org/learn/schema/). Add your function signature and the [directive](https://graphql.org/learn/queries/#directives) `@lambda @hm_function` to register the function on the project's endpoint. The signature must match the exposed function in your `index.ts` file.
+The API endpoint serves the following GraphQL schema:
 
-When deployed, your GraphQL API is available on the `/graphql` path from your project's endpoint. The endpoint is visible in the Hypermode Console on the Project Home screen.
+```graphql
+type Query {
+  testClassifier(text: String!): String!
+}
+```
+
+You can visualize the generated GraphQL schema by expanding the Documentation Explorer on the Project Query screen.
