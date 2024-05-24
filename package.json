@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "@ocular-d/vale-bin": "^2.29.6"
+  }
+}
