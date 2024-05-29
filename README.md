@@ -28,13 +28,13 @@ npm i -g mintlify
 
 Validate alignment of changes with style guide.
 
-https://vale.sh/docs/vale-cli/installation/
-
 MacOS:
 
 ```bash
 brew install vale
 ```
+
+[Full Installation Docs](https://vale.sh/docs/vale-cli/installation/)
 
 ### Trunk CLI
 
