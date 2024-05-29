@@ -28,8 +28,12 @@ npm i -g mintlify
 
 Validate alignment of changes with style guide.
 
+https://vale.sh/docs/vale-cli/installation/
+
+MacOS:
+
 ```bash
-npm i -D @ocular-d/vale-bin
+brew install vale
 ```
 
 ### Trunk CLI
@@ -37,7 +41,7 @@ npm i -D @ocular-d/vale-bin
 Format and lint changes for easy merging.
 
 ```bash
-npm i -D @trunkio/launcher
+npm i -g @trunkio/launcher
 ```
 
 ## Writing
@@ -61,6 +65,9 @@ We have adopted [Google’s Developer Documentation Style Guide](https://develop
 ```bash
 vale --glob='*.{mdx}' *
 ```
+
+A [Vale VS Code extension](https://marketplace.visualstudio.com/items?itemName=ChrisChinchilla.vale-vscode) is also available,
+and is included in the recommended extensions for this repo.
 
 ### Iconography
 
