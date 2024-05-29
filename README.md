@@ -54,7 +54,7 @@ mintlify dev
 
 Consistency is important in any documentation experience. Beyond Markdown’s opinionated structure, we adhere to a consistent style for Hypermode.
 
-We have adopted [Google’s Developer Documentation Style Guide](https://developers.google.com/style/) as a baseline, with Hypermode-specific terms [stored in a vocabulary file](https://github.com/hypermodeAI/docs/blob/9b3f5c88a4274c549d65288339a4f7c5a7d6ae2a/styles/config/vocabularies/general/accept.txt).
+We have adopted [Google’s Developer Documentation Style Guide](https://developers.google.com/style/) as a baseline, with Hypermode-specific terms [stored in a vocabulary file](./styles/config/vocabularies/general/accept.txt).
 
 [Vale](https://vale.sh/) has been implemented in the repo for easy alignment. Vale is implemented within CI/CD, but also executable locally with:
 
