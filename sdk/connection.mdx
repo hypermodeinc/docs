@@ -53,7 +53,7 @@ invokeGraphqlApi (
           Description of the error incurred.
         </ResponseField>
         <ResponseField name="path" type="string[]">
-          Query path of the error incurred.
+          Query path of the error incurred.  Each item in the array represents a segment of the path.
         </ResponseField>
         <ResponseField name="locations" type="GQLErrorLocation[]">
           <Expandable title="properties">
