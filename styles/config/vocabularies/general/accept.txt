@@ -4,7 +4,12 @@ APIs
 inferencing
 
 invokeGraphqlApi
+fetch
 generateText
-computeClassificationLabels
-embedText
+classifyText
+getClassificationLabelsForText
+getClassificationLabelsForTexts
+getClassificationProbability
+getTextEmbedding
+getTextEmbeddings
 log
