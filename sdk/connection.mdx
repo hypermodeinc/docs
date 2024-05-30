@@ -55,7 +55,7 @@ invokeGraphqlApi (
         <ResponseField name="path" type="string">
           Query path of the error incurred.
         </ResponseField>
-        <ResponseField name="locations" type="GQLErrorLocation">
+        <ResponseField name="locations" type="GQLErrorLocation[]">
           <Expandable title="properties">
             <ResponseField name="line" type="u32">
               Specific line number of the request that points to the error.
