@@ -36,7 +36,9 @@ invokeGraphqlApi<TData> (
 </ResponseField>
 
 <ResponseField name="variables" type="QueryVariables">
-  Optional variables added to the query. Example:
+  Optional variables added to the query.
+
+Example:
 
 ```TypeScript
 const vars = new QueryVariables();
@@ -46,33 +48,32 @@ vars.set("lastName", lastName);
 
 </ResponseField>
 
-<ResponseField name="response" type="GQLResponse&lt;TData&gt;">
-  A response object from the GraphQL query.
+### GQLResponse object
+
+A response object from the GraphQL query.
+
+<ResponseField name="data" type="TData">
+  The results of the GraphQL operation.
+</ResponseField>
+<ResponseField name="errors" type="GQLError[]">
+  Any errors incurred as part of your GraphQL request.
   <Expandable title="properties">
-    <ResponseField name="errors" type="GQLError[]">
-      Any errors incurred as part of your GraphQL request.
+    <ResponseField name="message" type="string">
+      Description of the error incurred.
+    </ResponseField>
+    <ResponseField name="path" type="string[]">
+      Query path of the error incurred. Each item in the array represents a
+      segment of the path.
+    </ResponseField>
+    <ResponseField name="locations" type="GQLErrorLocation[]">
       <Expandable title="properties">
-        <ResponseField name="message" type="string">
-          Description of the error incurred.
+        <ResponseField name="line" type="u32">
+          Specific line number of the request that points to the error.
         </ResponseField>
-        <ResponseField name="path" type="string[]">
-          Query path of the error incurred. Each item in the array represents a
-          segment of the path.
-        </ResponseField>
-        <ResponseField name="locations" type="GQLErrorLocation[]">
-          <Expandable title="properties">
-            <ResponseField name="line" type="u32">
-              Specific line number of the request that points to the error.
-            </ResponseField>
-            <ResponseField name="column" type="u32">
-              Specific column number of the request that points to the error.
-            </ResponseField>
-          </Expandable>
+        <ResponseField name="column" type="u32">
+          Specific column number of the request that points to the error.
         </ResponseField>
       </Expandable>
-    </ResponseField>
-    <ResponseField name="data" type="TData">
-      The results of the GraphQL operation.
     </ResponseField>
   </Expandable>
 </ResponseField>
