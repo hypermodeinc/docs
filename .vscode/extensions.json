@@ -1,8 +1,9 @@
 {
   "recommendations": [
+    "chrischinchilla.vale-vscode",
     "esbenp.prettier-vscode",
     "streetsidesoftware.code-spell-checker",
-    "unifiedjs.vscode-mdx",
-    "chrischinchilla.vale-vscode"
+    "trunk.io",
+    "unifiedjs.vscode-mdx"
   ]
 }
