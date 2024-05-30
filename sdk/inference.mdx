@@ -37,7 +37,7 @@ generateText (
 
 ### classifyText
 
-Invoke a fine-tuned classification model with a text input, resulting in ...
+Invoke a fine-tuned classification model with a text input, resulting in a single classification label that exceeds the provided threshold.
 
 ```TypeScript
 classifyText (
@@ -57,7 +57,8 @@ classifyText (
 </ResponseField>
 
 <ResponseField name="threshold" type="f32" required>
-  ...
+  Confidence factor for classification. If no labels exist with a probability
+  higher than this threshold, the model won't produce a result.
 </ResponseField>
 
 ### getClassificationLabelsForText
@@ -102,7 +103,7 @@ getClassificationLabelsForTexts (
 
 ### getClassificationProbability
 
-Invoke a fine-tuned classification model with a text input, resulting in ...
+Invoke a fine-tuned classification model with a text input, resulting in the probability of the provided label.
 
 ```TypeScript
 getClassificationProbability (
@@ -121,7 +122,7 @@ getClassificationProbability (
 </ResponseField>
 
 <ResponseField name="label" type="string" required>
-  ...
+  The label to classify the provided text against.
 </ResponseField>
 
 ### getTextEmbedding

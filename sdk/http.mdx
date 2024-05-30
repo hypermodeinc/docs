@@ -13,7 +13,7 @@ The HTTP API allows you to securely call and fetch data from an HTTP endpoint.
 
 ### fetch
 
-...
+Invoke an HTTP endpoint to retrieve data or trigger external action.
 
 ```TypeScript
 fetch (
@@ -22,10 +22,12 @@ fetch (
 ```
 
 <ResponseField name="request" type="Request" required>
-  ...
+  A Request object for calling an HTTP endpoint.
   <Expandable title="properties">
     <ResponseField name="url" type="string">
-      The URL to send the request to. Example: "https://example.com/whatever"
+      The URL to send the request to. You must have a corresponding
+      [Host](/define-hosts) in your project's manifest. Example:
+      "https://example.com/whatever"
     </ResponseField>
     <ResponseField name="method" type="string">
       The HTTP method to use for the request. Example: "GET"
@@ -40,8 +42,8 @@ fetch (
   </Expandable>
 </ResponseField>
 
-<ResponseField name="response" type="Response" required>
-  ...
+<ResponseField name="response" type="Response">
+  A Response object from the HTTP endpoint.
   <Expandable title="properties">
     <ResponseField name="status" type="u16">
       The HTTP response status code. Example: 200

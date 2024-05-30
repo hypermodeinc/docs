@@ -59,6 +59,7 @@
       "group": "Write Functions",
       "pages": [
         "sdk/functions-sdk",
+        "sdk/http",
         "sdk/connection",
         "sdk/inference",
         "sdk/search",

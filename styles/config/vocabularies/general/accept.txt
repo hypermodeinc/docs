@@ -2,6 +2,7 @@
 
 APIs
 inferencing
+repo
 
 invokeGraphqlApi
 fetch

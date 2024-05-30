@@ -35,32 +35,40 @@ invokeGraphqlApi (
   Optional variables added to the query.
   <Expandable title="properties">
     <ResponseField name="name" type="string">
-      ...
+      Unique identifier of the variable.
     </ResponseField>
     <ResponseField name="value" type="string">
-      ...
+      Value to pass for the named variable.
     </ResponseField>
   </Expandable>
 </ResponseField>
 
 <ResponseField name="response" type="GQLResponse">
-  ...
+  A response object from the GraphQL query.
   <Expandable title="properties">
     <ResponseField name="errors" type="GQLError">
+      Any errors incurred as part of your GraphQL request.
       <Expandable title="properties">
         <ResponseField name="message" type="string">
-          ...
-        </ResponseField>
-        <ResponseField name="locations" type="GQLErrorLocation">
-          ...
+          Description of the error incurred.
         </ResponseField>
         <ResponseField name="path" type="string">
-          ...
+          Query path of the error incurred.
+        </ResponseField>
+        <ResponseField name="locations" type="GQLErrorLocation">
+          <Expandable title="properties">
+            <ResponseField name="line" type="u32">
+              Specific line number of the request that points to the error.
+            </ResponseField>
+            <ResponseField name="column" type="u32">
+              Specific column number of the request that points to the error.
+            </ResponseField>
+          </Expandable>
         </ResponseField>
       </Expandable>
     </ResponseField>
     <ResponseField name="data" type="string">
-      ...
+      The results of your GraphQL request.
     </ResponseField>
   </Expandable>
 </ResponseField>
