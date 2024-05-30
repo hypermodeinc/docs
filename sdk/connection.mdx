@@ -20,7 +20,7 @@ invokeGraphqlApi<TData> (
   hostName: string,
   statement: string,
   variables?: QueryVariables
-): GQLResponse
+): GQLResponse<TData>
 ```
 
 <ResponseField name="hostName" type="string" required>
