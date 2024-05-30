@@ -47,7 +47,7 @@ invokeGraphqlApi<TData> (
   </Expandable>
 </ResponseField>
 
-<ResponseField name="response" type="GQLResponse">
+<ResponseField name="response" type="GQLResponse&lt;TData&gt;">
   A response object from the GraphQL query.
   <Expandable title="properties">
     <ResponseField name="errors" type="GQLError[]">
