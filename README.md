@@ -28,16 +28,20 @@ npm i -g mintlify
 
 Validate alignment of changes with style guide.
 
+MacOS:
+
 ```bash
-npm i -D @ocular-d/vale-bin
+brew install vale
 ```
+
+[Full Installation Docs](https://vale.sh/docs/vale-cli/installation/)
 
 ### Trunk CLI
 
 Format and lint changes for easy merging.
 
 ```bash
-npm i -D @trunkio/launcher
+npm i -g @trunkio/launcher
 ```
 
 ## Writing
@@ -54,13 +58,16 @@ mintlify dev
 
 Consistency is important in any documentation experience. Beyond Markdown’s opinionated structure, we adhere to a consistent style for Hypermode.
 
-We have adopted [Google’s Developer Documentation Style Guide](https://developers.google.com/style/) as a baseline, with Hypermode-specific terms [stored in a vocabulary file](https://github.com/hypermodeAI/docs/blob/9b3f5c88a4274c549d65288339a4f7c5a7d6ae2a/styles/config/vocabularies/general/accept.txt).
+We have adopted [Google’s Developer Documentation Style Guide](https://developers.google.com/style/) as a baseline, with Hypermode-specific terms [stored in a vocabulary file](./styles/config/vocabularies/general/accept.txt).
 
 [Vale](https://vale.sh/) has been implemented in the repo for easy alignment. Vale is implemented within CI/CD, but also executable locally with:
 
 ```bash
 vale --glob='*.{mdx}' *
 ```
+
+A [Vale VS Code extension](https://marketplace.visualstudio.com/items?itemName=ChrisChinchilla.vale-vscode) is also available,
+and is included in the recommended extensions for this repo.
 
 ### Iconography
 
@@ -81,3 +88,10 @@ To run lint checks, run:
 ```bash
 trunk check # appending --all will run checks beyond changes on the current branch
 ```
+
+Note that Trunk also has a [VS Code extension](https://marketplace.visualstudio.com/items?itemName=Trunk.io) you can install.
+
+However, when installing it please be aware of the `trunk.autoInit` setting, which is `true` (enabled) by default
+This controls whether to auto-initialize trunk in non-trunk repositories - meaning _any_ folder you open with VS Code will get
+configured with a `.trunk` subfolder, and will start using Trunk. You should probably set this to `false` in your VS Code user settings,
+to not interfere with other projects you may be working on.
