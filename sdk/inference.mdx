@@ -96,7 +96,7 @@ getClassificationLabelsForTexts (
   Internal name of your model, as [defined in your manifest](../define-models).
 </ResponseField>
 
-<ResponseField name="texts" type="string" required>
+<ResponseField name="texts" type="Map<string, string>" required>
   Text inputs for classification amongst labels defined in the fine-tuning
   process.
 </ResponseField>
@@ -159,6 +159,6 @@ getTextEmbeddings (
   Internal name of your model, as [defined in your manifest](../define-models).
 </ResponseField>
 
-<ResponseField name="texts" type="string" required>
+<ResponseField name="texts" type="Map<string, string>" required>
   Text inputs for embedding.
 </ResponseField>
