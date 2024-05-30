@@ -32,15 +32,14 @@ invokeGraphqlApi (
 </ResponseField>
 
 <ResponseField name="variables" type="QueryVariables">
-  Optional variables added to the query.
-  <Expandable title="properties">
-    <ResponseField name="name" type="string">
-      Unique identifier of the variable.
-    </ResponseField>
-    <ResponseField name="value" type="string">
-      Value to pass for the named variable.
-    </ResponseField>
-  </Expandable>
+  Optional variables added to the query. Example:
+
+```TypeScript
+const vars = new QueryVariables();
+vars.set("firstName", firstName);
+vars.set("lastName", lastName);
+```
+
 </ResponseField>
 
 <ResponseField name="response" type="GQLResponse">
