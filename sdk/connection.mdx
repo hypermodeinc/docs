@@ -18,19 +18,49 @@ Make a query or mutation against a GraphQL API endpoint.
 ```TypeScript
 invokeGraphqlApi (
   hostName: string,
-  query: string,
-  variables?: Map<string, string>
-): string
+  statement: string,
+  variables?: QueryVariables
+): GQLResponse
 ```
 
 <ResponseField name="hostName" type="string" required>
   Internal name of your host, as [defined in your manifest](../define-hosts).
 </ResponseField>
 
-<ResponseField name="query" type="string" required>
+<ResponseField name="statement" type="string" required>
   GraphQL operation for execution on your API server to retrieve or write data.
 </ResponseField>
 
-<ResponseField name="variables" type="string">
+<ResponseField name="variables" type="QueryVariables">
   Optional variables added to the query.
+  <Expandable title="properties">
+    <ResponseField name="name" type="string">
+      ...
+    </ResponseField>
+    <ResponseField name="value" type="string">
+      ...
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="response" type="GQLResponse">
+  ...
+  <Expandable title="properties">
+    <ResponseField name="errors" type="GQLError">
+      <Expandable title="properties">
+        <ResponseField name="message" type="string">
+          ...
+        </ResponseField>
+        <ResponseField name="locations" type="GQLErrorLocation">
+          ...
+        </ResponseField>
+        <ResponseField name="path" type="string">
+          ...
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="data" type="string">
+      ...
+    </ResponseField>
+  </Expandable>
 </ResponseField>

@@ -66,7 +66,7 @@
       ]
     },
     {
-      "group": "Iterate Constantly",
+      "group": "Observe and Iterate",
       "pages": ["deploy", "function-observability"]
     }
   ],
