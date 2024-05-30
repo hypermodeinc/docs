@@ -1,0 +1,72 @@
+---
+title: HTTP
+description: ""
+---
+
+The HTTP API allows you to securely call and fetch data from an HTTP endpoint.
+
+<Tip>
+  We're introducing new APIs consistently through ongoing development with build
+  partners. [Let's chat](mailto:help@hypermode.com) about what would make the
+  Functions SDK even more powerful for your next use case!
+</Tip>
+
+### fetch
+
+Invoke an HTTP endpoint to retrieve data or trigger external action.
+
+```TypeScript
+fetch (
+  request: Request,
+): Response
+```
+
+<ResponseField name="request" type="Request" required>
+  A [Request](#request-object) object for calling an HTTP endpoint.
+</ResponseField>
+
+<ResponseField name="response" type="Response">
+  A [Response](#response-object) object from the HTTP endpoint.
+</ResponseField>
+
+### Request object
+
+<ResponseField name="url" type="string">
+  The URL to send the request to. You must have a corresponding
+  [Host](/define-hosts) in your project's manifest.
+
+Example: https://example.com/whatever
+
+</ResponseField>
+<ResponseField name="method" type="string">
+  The HTTP method to use for the request.
+
+Example: "GET"
+
+</ResponseField>
+<ResponseField name="headers" type="Headers">
+  The HTTP headers for the request, as [defined in your
+  manifest](../define-hosts).
+</ResponseField>
+<ResponseField name="body" type="ArrayBuffer">
+  The raw HTTP request body, as an `ArrayBuffer`.
+</ResponseField>
+
+### Response object
+
+<ResponseField name="status" type="u16">
+  The HTTP response status code. Example: 200
+</ResponseField>
+<ResponseField name="statusText" type="string">
+  The HTTP response status text. Example: "OK"
+</ResponseField>
+<ResponseField name="headers" type="Headers">
+  The HTTP response headers.
+</ResponseField>
+<ResponseField name="body" type="ArrayBuffer">
+  The raw HTTP response body, as an `ArrayBuffer`.
+
+  <Tip>
+    The response body isn't normally read directly. Instead, use `response.text()` or `response.json<T>()` functions.
+  </Tip>
+</ResponseField>

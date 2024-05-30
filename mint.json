@@ -59,6 +59,7 @@
       "group": "Write Functions",
       "pages": [
         "sdk/functions-sdk",
+        "sdk/http",
         "sdk/connection",
         "sdk/inference",
         "sdk/search",
@@ -66,7 +67,7 @@
       ]
     },
     {
-      "group": "Iterate Constantly",
+      "group": "Observe and Iterate",
       "pages": ["deploy", "function-observability"]
     }
   ],
