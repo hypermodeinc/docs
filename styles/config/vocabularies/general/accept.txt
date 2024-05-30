@@ -14,3 +14,4 @@ getClassificationProbability
 getTextEmbedding
 getTextEmbeddings
 log
+GQLResponse

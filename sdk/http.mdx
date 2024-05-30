@@ -22,14 +22,14 @@ fetch (
 ```
 
 <ResponseField name="request" type="Request" required>
-  A [Request](#request-type) object for calling an HTTP endpoint.
+  A [Request](#request-object) object for calling an HTTP endpoint.
 </ResponseField>
 
 <ResponseField name="response" type="Response">
-  A [Response](#response-type) object from the HTTP endpoint.
+  A [Response](#response-object) object from the HTTP endpoint.
 </ResponseField>
 
-### Request Type
+### Request object
 
 <ResponseField name="url" type="string">
   The URL to send the request to. You must have a corresponding
@@ -52,7 +52,7 @@ Example: "GET"
   The raw HTTP request body, as an `ArrayBuffer`.
 </ResponseField>
 
-### Response Type
+### Response object
 
 <ResponseField name="status" type="u16">
   The HTTP response status code. Example: 200
@@ -67,6 +67,6 @@ Example: "GET"
   The raw HTTP response body, as an `ArrayBuffer`.
 
   <Tip>
-    The response body doesn't usually need to be read directly. Instead, use `response.text()` or `response.json<T>()` functions.
+    The response body isn't normally read directly. Instead, use `response.text()` or `response.json<T>()` functions.
   </Tip>
 </ResponseField>
