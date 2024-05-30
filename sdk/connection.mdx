@@ -16,7 +16,7 @@ Connection APIs allow you to securely access an API endpoint at a defined host.
 Make a query or mutation against a GraphQL API endpoint.
 
 ```TypeScript
-invokeGraphqlApi (
+invokeGraphqlApi<TData> (
   hostName: string,
   statement: string,
   variables?: QueryVariables
