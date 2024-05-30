@@ -23,6 +23,10 @@ invokeGraphqlApi<TData> (
 ): GQLResponse<TData>
 ```
 
+<ResponseField name="TData" type="Type" required>
+  Type of object to use for the data returned from the query.
+</ResponseField>
+
 <ResponseField name="hostName" type="string" required>
   Internal name of your host, as [defined in your manifest](../define-hosts).
 </ResponseField>
