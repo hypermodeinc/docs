@@ -1,0 +1,44 @@
+---
+title: Postgresql
+description: ""
+---
+
+The `postgresql` API allows you to run queries against a [postgresql host](../define-hosts#postgresql-host).
+
+<Tip>
+  We're introducing new APIs consistently through ongoing development with build
+  partners. [Let's chat](mailto:help@hypermode.com) about what would make the
+  Functions SDK even more powerful for your next use case!
+</Tip>
+
+## query
+
+Run a query against a provided postgresql host.
+
+```TypeScript
+query (
+  datasourceName: string,
+  query: string,
+  params: string[],
+): string
+```
+
+<ResponseField name="datasourceName" type="string" required>
+  The name of the host specified in the manifest `hypermode.json`.
+</ResponseField>
+
+<ResponseField name="query" type="string" required>
+  A string containing the SQL query.
+</ResponseField>
+
+<ResponseField name="params" type="string[]" required>
+  An array of strings with parameter values in case the SQL query is
+  parametrized.
+</ResponseField>
+
+<ResponseField name="result" type="string">
+  A [result](#response) string containing the result of the query after
+  execution.
+</ResponseField>
+
+### Example

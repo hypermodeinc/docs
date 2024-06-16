@@ -3,13 +3,40 @@ title: Define Hosts
 description: "Securely connect to your data"
 ---
 
-Hosts establish connectivity for AI models and other external endpoints.
-The `hosts` object in the [project manifest](/manifest) allows you to define hosts, for secure access from within a function.
+Hosts establish connectivity to AI models, various data sources (databases) and other
+external endpoints. The `hosts` object in the [project manifest](/manifest) allows you
+to define hosts, for secure access from within a function.
+
+Each host requires a unique name, specified as a key, containing only
+alphanumeric characters and hyphens.
+
+Each host has a `type` defined that decides the kind of hosts it is. We currently
+support `http` and `postgresql` hosts. If not specified, `type` is set to `http`.
+
+| Type         | Properties Allowed in Manifest             | Functions in SDK |
+| :----------- | :----------------------------------------- | :--------------- |
+| `http`       | baseUrl/endpoint, headers, queryParameters | http.fetch       |
+| `postgresql` | connString                                 | postgresql.query |
+
+<Warning>
+Don't include secrets directly in the manifest!
+
+If your host requires authentication, you can can include _placeholders_ in hosts properties
+which resolve to their respective secrets at runtime. Set the actual secrets via the
+Hypermode Console, where they're securely stored until needed.
+
+</Warning>
+
+# HTTP Host
+
+This host type supports talking over http protocol with the provided parameters. In AssemblyScript,
+you could call `http.fetch` to send requests as explained in [HTTP SDK](/sdk/http).
 
 ```json hypermode.json
 {
   "hosts": {
     "openai": {
+      "type": "http",
       "baseUrl": "https://api.openai.com/",
       "headers": {
         "Authorization": "Bearer {{API_KEY}}"
@@ -19,20 +46,13 @@ The `hosts` object in the [project manifest](/manifest) allows you to define hos
 }
 ```
 
-Each host requires a unique name, specified as a key, containing only alphanumeric characters and hyphens.
-
 <Note>You must include either a `baseUrl` or an `endpoint` (not both).</Note>
 
-<Warning>
-Don't include secrets directly in the manifest!
-
-If your host requires authentication, you can specify `headers` and/or `queryParameters` properties.
-Those values can include _placeholders_ which resolve to their respective secrets at runtime.
-Set the actual secrets via the Hypermode Console, where they're securely stored until needed.
-
-</Warning>
-
 ## Properties
+
+<ResponseField name="type" type="string">
+  Always set to `"http"`.
+</ResponseField>
 
 <ResponseField name="baseUrl" type="string" required>
   Base URL for connections to the host.
@@ -103,6 +123,45 @@ This example specifies a query parameter named `key` provided by a secret named 
 "queryParameters": {
   "key": "{{API_KEY}}"
 }
+```
+
+  </Accordion>
+</ResponseField>
+
+# Postgresql Host
+
+This host type supports connecting to `postgresql` databases. In AssemblyScript, you could call
+`postgresql.query` to run queries against these databases as explained in [Postgresql SDK](/sdk/postgresql).
+
+```json hypermode.json
+{
+  "hosts": {
+    "neon": {
+      "type": "postgresql",
+      "connString": "postgresql://{{PG_USER}}:{{PG_PASSWORD}}@localhost:5432/data?sslmode=disable"
+    }
+  }
+}
+```
+
+## Properties
+
+<ResponseField name="type" type="string" required>
+  Always set to `"postgresql"`.
+</ResponseField>
+
+<ResponseField name="connString" type="string">
+  The connection string for the postgresql database.
+
+Values may include variables using the `{{VARIABLE}}` template syntax, which resolve at runtime to secrets
+provided for each host, via the Hypermode Console.
+
+  <Accordion title="Example">
+
+This example specifies a username and password provided by secrets named `PG_USER` & `PG_PASSWORD`:
+
+```json
+"connString": "postgresql://{{PG_USER}}:{{PG_PASSWORD}}@localhost:5432/data?sslmode=disable"
 ```
 
   </Accordion>

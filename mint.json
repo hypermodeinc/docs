@@ -60,6 +60,7 @@
       "pages": [
         "sdk/functions-sdk",
         "sdk/http",
+        "sdk/postgresql",
         "sdk/connection",
         "sdk/inference",
         "sdk/search",
