@@ -1,4 +1,142 @@
 ---
 title: JSON
-description: "JSON for AssemblyScript"
+description: "Using JSON in your project"
 ---
+
+AssemblyScript doesn't come with support for serializing and deserializing JSON, so instead, we use [json-as](https://github.com/JairusSW/as-json).
+
+In JavaScript, serializing arbitrary objects is common. This isn't type-safe or friendly to developers.
+
+```js
+// 😢
+const foo = {
+  x: 3.4,
+  y: 1.2,
+  z: -9.2,
+};
+
+JSON.stringify(foo);
+```
+
+In AssemblyScript, we use strongly typed classes instead
+
+```typescript
+// 😊
+@json
+class Vec3 {
+  x: f64 = 0.0;
+  y: f64 = 0.0;
+  z: f64 = 0.0;
+}
+
+const foo: Vec = {
+  x: 3.4,
+  y: 1.2,
+  z: -9.2,
+};
+
+JSON.stringify(foo);
+```
+
+In JavaScript, parsing a JSON object results in an arbitrary object.
+
+```js
+// 😢 No type information
+JSON.parse('{"x":3.4,"y":1.2,"z":-9.2}');
+```
+
+In AssemblyScript, define a class and parse JSON into it.
+
+```typescript
+// 😊 Type information and intellisense!
+@json
+class Vec3 {
+  x: f64 = 0.0;
+  y: f64 = 0.0;
+  z: f64 = 0.0;
+}
+
+JSON.parse<Vec3>('{"x":3.4,"y":1.2,"z":-9.2}');
+```
+
+<Note>
+  Objects used with `JSON.stringify` or `JSON.parse` must be decorated with
+  `@json`
+</Note>
+
+[json-as](https://github.com/JairusSW/as-json) gives us a few more tools to play with.
+
+**Aliasing Fields**
+
+In AssemblyScript, we can denote a new name for a field with the `@alias(newName: string)` decorator
+
+In this example, instead of `firstName` is renamed to `first name`. It is still accessible by the `Player.prototype.firstName` property though.
+
+```typescript
+@json
+class Player {
+  @alias("first name")
+  firstName!: string;
+  lastName!: string;
+  lastActive!: i32[];
+  age!: i32;
+  pos!: Vec3 | null;
+  isVerified!: boolean;
+}
+
+const player: Player = {
+  firstName: "John",
+  lastName: "Doe",
+  lastActive: [6, 23, 2024],
+  age: 23,
+  pos: {
+    x: 3.4,
+    y: 1.2,
+    z: 8.3,
+  },
+  isVerified: true,
+};
+
+JSON.stringify(player);
+```
+
+**Omitting Fields**
+
+We can also omit fields from serializing if they meet a certain criteria.
+
+In this example, age will only be included if the player is an adult (>= 18). Otherwise, age is hidden.
+```typescript
+@json
+class Player {
+  @alias("first name")
+  firstName!: string;
+  lastName!: string;
+  lastActive!: i32[];
+  @omitif("this.age < 18)
+  age!: i32;
+  pos!: Vec3 | null;
+  isVerified!: boolean;
+}
+
+const player: Player = {
+  firstName: "Jairus",
+  lastName: "Tanaka",
+  lastActive: [6, 23, 2024],
+  age: 17,
+  pos: {
+    x: 3.4,
+    y: 1.2,
+    z: 8.3,
+  },
+  isVerified: true,
+};
+```
+
+Perhaps we also want to hide the position if it is `null`. Add the `@omitnull()` decorator
+
+```diff
+- pos!: Vec3 | null;
+
++ @omitnull()
++ pos!: Vec3 | null;
+```
