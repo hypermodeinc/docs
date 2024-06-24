@@ -72,7 +72,8 @@
           "pages": [
             "sdk/assemblyscript/packages/variant"
           ]
-        }
+        },
+        "sdk/assemblyscript/faq"
       ]
     },
     {
