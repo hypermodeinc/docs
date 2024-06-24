@@ -4,7 +4,7 @@ description: "Introduction to AssemblyScript--a subset of TypeScript"
 mode: "wide"
 ---
 
-AssemblyScript is a variant of TypeScript, meaning it is very similar in semantics and syntax. It compiles to WebAssembly, limits the amount of features it can have since not all features designed for a JavaScript Runtime map well to a statically-compiled WebAssembly. Because of this, AssemblyScript has _most_ but not _all_ like TypeScript.
+AssemblyScript is a variant of TypeScript, meaning it is very similar in semantics and syntax. It compiles to WebAssembly, limits the amount of features it can have since not all features designed for a JavaScript Runtime map well to a statically compiled WebAssembly. Because of this, AssemblyScript has _most_ but not _all_ like TypeScript.
 
 Here's a quick rundown of the main differences that AssemblyScript has over TypeScript:
 
@@ -31,7 +31,7 @@ function foo(a: i32, b: i32): i32 {
 }
 ```
 
-There are no generics yet, but a similar effect can be done with Generics
+There are no generics yet, but a similar effect is achieved with Generics
 
 ```js
 // 😢
@@ -41,7 +41,7 @@ function foo(a: i32 | string): void {}
 function foo<T>(a: T): void {}
 ```
 
-To discern the type of a generic, AssemblyScript provides some helpful [Builtins]()
+To discern the type of a generic, AssemblyScript provides some helpful [Builtins](https://www.assemblyscript.org/stdlib/globals.html#static-type-checks)
 
 ```js
 function foo<T>(a: T): void {
@@ -57,7 +57,7 @@ function foo<T>(a: T): void {
 
 **Additional Primitives**
 
-The `number` type in TypeScript can only be a [Float64](). In AssemblyScript, we can define which type of number we want to work with.
+The `number` type in TypeScript can only be a [Float64](https://en.wikipedia.org/wiki/Double-precision_floating-point_format). In AssemblyScript, we can define which type of number we want to work with.
 
 <Note>
 If your not familiar with signed vs unsigned integers, signed means it can be `positive` or `negative`, but unsigned means it can *only be* `positive`
@@ -69,7 +69,7 @@ AssemblyScript provides integers in their `8`, `16`, `32`, and `64` bit flavors.
 
 `i8` `i16` `i32` `i64`
 
-It is recommended that you use `i32`
+It's recommended that you use `i32`
 
 Additionally, Floats come as either `32` (single precision) or `64` (double precision)
 
@@ -77,7 +77,7 @@ Additionally, Floats come as either `32` (single precision) or `64` (double prec
 
 `f32`
 
-It is recommended that you use `f64`
+It's recommended that you use `f64`
 
 There is also a `bool` type that can be defined as
 
@@ -89,7 +89,7 @@ AssemblyScript has pointers designated by the
 
 **Primary Function Limitations**
 
-Primary functions, aka the `exported` functions in your entry file only support the following types as input parameters:
+Primary functions, or the `exported` functions in your entry file only support the following types as input parameters:
 
 All Primitive Types
 
@@ -100,11 +100,11 @@ And these scalar types:
 - `Date`
 
 
-**Additionally, the [Hypermode Runtime]() has a few limitations:**
+**Additionally, the Hypermode Runtime has a few limitations:**
 
 **Optional or nullable input parameters are broken**
 
-If a field is defined as nullable, such as name: string | null , or if it has a default value, such as age: i32 = 21 , it currently won’t currently allow the null (or absence of the field), in the GraphQL query.  This is a bug.
+If a field is defined as nullable, such as name: string | null , or if it has a default value, such as age: i32 = 21 , it currently won’t currently allow the null (or absence of the field), in the GraphQL query. This is a bug.
 
 ```js
 // this will only work if you pass an actual string:
