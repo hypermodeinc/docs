@@ -56,6 +56,10 @@
       "pages": ["manifest", "define-models", "define-hosts", "define-schema"]
     },
     {
+      "group": "Using AssemblyScript",
+      "pages": ["sdk/what-is", "sdk/setting-up"]
+    },
+    {
       "group": "Write Functions",
       "pages": [
         "sdk/functions-sdk",

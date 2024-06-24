@@ -1,0 +1,125 @@
+---
+title: About
+description: "Introduction to AssemblyScript--a subset of TypeScript"
+mode: "wide"
+---
+
+AssemblyScript is a variant of TypeScript, meaning it is very similar in semantics and syntax. It compiles to WebAssembly, limits the amount of features it can have since not all features designed for a JavaScript Runtime map well to a statically-compiled WebAssembly. Because of this, AssemblyScript has _most_ but not _all_ like TypeScript.
+
+Here's a quick rundown of the main differences that AssemblyScript has over TypeScript:
+
+**Strictly Typed**
+
+- `any` and `undefined` don't exist in AssemblyScript
+- Union Types are also not supported
+- Instead, use generics or class inheritance
+
+For type safety and the [Limitations](https://www.assemblyscript.org/concepts.html), AssemblyScript is strictly typed.
+Some types are inferred, but generally, you need to declare parameter and return types.
+
+```js
+// 😢
+function foo(a, b) {
+    const c = a + b;
+    return c;
+}
+
+// 😊
+function foo(a: i32, b: i32): i32 {
+    const c = a + b;
+    return c;
+}
+```
+
+There are no generics yet, but a similar effect can be done with Generics
+
+```js
+// 😢
+function foo(a: i32 | string): void {}
+
+// 😊
+function foo<T>(a: T): void {}
+```
+
+To discern the type of a generic, AssemblyScript provides some helpful [Builtins]()
+
+```js
+function foo<T>(a: T): void {
+  if (isString<T>()) {
+    // a is string
+  } else if (isInteger<T>()) {
+    // a is an integer
+  } else {
+    ERROR("Expected a to be of type i32 | string!");
+  }
+}
+```
+
+**Additional Primitives**
+
+The `number` type in TypeScript can only be a [Float64](). In AssemblyScript, we can define which type of number we want to work with.
+
+<Note>
+If your not familiar with signed vs unsigned integers, signed means it can be `positive` or `negative`, but unsigned means it can *only be* `positive`
+</Note>
+
+AssemblyScript provides integers in their `8`, `16`, `32`, and `64` bit flavors. Namely:
+
+`u8` `u16` `u32` `u64`
+
+`i8` `i16` `i32` `i64`
+
+It is recommended that you use `i32`
+
+Additionally, Floats come as either `32` (single precision) or `64` (double precision)
+
+`f64`
+
+`f32`
+
+It is recommended that you use `f64`
+
+There is also a `bool` type that can be defined as
+
+`type bool = number | boolean`
+
+AssemblyScript has pointers designated by the 
+
+`usize` and `isize` types
+
+**Primary Function Limitations**
+
+Primary functions, aka the `exported` functions in your entry file only support the following types as input parameters:
+
+All Primitive Types
+
+And these scalar types:
+
+- `string`
+- `ArrayBuffer`
+- `Date`
+
+
+</br>
+**Additionally, the [Hypermode Runtime]() has a few limitations:**
+
+**Optional or nullable input parameters are broken**
+
+If a field is defined as nullable, such as name: string | null , or if it has a default value, such as age: i32 = 21 , it currently won’t currently allow the null (or absence of the field), in the GraphQL query.  This is a bug.
+
+```js
+// this will only work if you pass an actual string:
+export function sayHello(name: string | null) {
+  if (name) return `Hello, ${name}!`;
+  else return "Hello!";
+}
+
+// this will only work if you pass an actual number
+export function increment(x: i32, n: i32 = 1) {
+  return x + n;
+}
+```
+
+<Note>
+If you have any questions, feel free to join the [AssemblyScript Discord](https://discord.gg/assemblyscript/) to ask questions
+</Note>
