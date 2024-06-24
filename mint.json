@@ -56,8 +56,24 @@
       "pages": ["manifest", "define-models", "define-hosts", "define-schema"]
     },
     {
-      "group": "Using AssemblyScript",
-      "pages": ["sdk/what-is", "sdk/setting-up"]
+      "group": "AssemblyScript SDK",
+      "pages": [
+        "sdk/assemblyscript/about",
+        "sdk/assemblyscript/setting-up",
+        {
+          "group": "API",
+          "pages": [
+            "sdk/assemblyscript/api/json",
+            "sdk/assemblyscript/api/fetch"
+          ]
+        },
+        {
+          "group": "Packages",
+          "pages": [
+            "sdk/assemblyscript/packages/variant"
+          ]
+        }
+      ]
     },
     {
       "group": "Write Functions",
