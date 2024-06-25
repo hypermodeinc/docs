@@ -3,6 +3,7 @@
 APIs
 inferencing
 repo
+[Hh]ypergories
 
 invokeGraphqlApi
 fetch
