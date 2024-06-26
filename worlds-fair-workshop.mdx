@@ -134,20 +134,160 @@ You will:
 
 ### Trend summarization
 
-```
-code here
-```
+Have a look at the function `trendSummary` in `/functions/assembly/trends.ts`
 
 ### Classify issue type
 
+The issue classification function is located in `/functions/assembly/classify.ts`
+
 ```typescript
-foo;
+export function classifyIssue(id: string, title: string): string {
+  const model = models.getModel<ClassificationModel>("issue-classifier");
+  const input = model.createInput([title]);
+  const output = model.invoke(input).predictions[0];
+
+  return output.label;
+}
 ```
 
 ### Find similar issues
 
+In order to find similar issues base on title we need to
+
+- declare a collection to store issues
+- instruct Hypermode to compute a vector embedding using a model
+- create an Hypermode function returning similar issues based on a provided title.
+
+#### Declare a Collection in `hypermode.json` manifest file.
+
+Add the following section in hypermode.json:
+
+```
+  "collections": {
+    "issuesCollection": {
+      "searchMethods": {
+        "byTitle": {
+          "embedder": "minilmEmbedder"
+        }
+      }
+    }
+  }
+```
+
+In order to compute vector embedding we will also need a model.
+
+Simply add a model declaration in hypermode.json file, under the `models` section:
+
+```
+"minilm": {
+      "sourceModel": "sentence-transformers/all-MiniLM-L6-v2",
+      "host": "hypermode",
+      "provider": "hugging-face"
+    }
+```
+
+Hypermode.json file should now be
+
+```
+{
+  "$schema": "https://manifest.hypermode.com/hypermode.json",
+
+  "models": {
+    "issue-classifier": {
+      "sourceModel": "AntoineMC/distilbart-mnli-github-issues",
+      "provider": "hugging-face",
+      "host": "hypermode"
+    },
+    "text-generator": {
+      "sourceModel": "gpt-3.5-turbo",
+      "host": "openai",
+      "path": "v1/chat/completions"
+    },
+    "minilm": {
+      "sourceModel": "sentence-transformers/all-MiniLM-L6-v2",
+      "host": "hypermode",
+      "provider": "hugging-face"
+    }
+  },
+
+  "hosts": {
+    "github": {
+      "baseUrl": "https://api.github.com/",
+      "headers": {
+        "Authorization": "Bearer {{AUTH_TOKEN}}"
+      }
+    },
+    "openai": {
+      "baseUrl": "https://api.openai.com/",
+      "headers": {
+        "Authorization": "Bearer {{API_KEY}}"
+      }
+    }
+  },
+
+  "collections": {
+    "issuesCollection": {
+      "searchMethods": {
+        "byTitle": {
+          "embedder": "minilmEmbedder"
+        }
+      }
+    }
+  }
+}
+
+```
+
+#### Write the embedding function
+
+Add a file `embedder.ts`in the`functions/assembly` folder.
+
+```
+import { models } from "@hypermode/functions-as";
+import { EmbeddingsModel } from "@hypermode/models-as/models/experimental/embeddings";
+
+export function minilmEmbedder(text: string[]): f32[][] {
+  const model = models.getModel<EmbeddingsModel>("minilm");
+  const input = model.createInput(text);
+  const output = model.invoke(input);
+
+  return output.predictions;
+}
+```
+
+#### Write `similarIssues` function
+
+Let's create `similar.ts` file and declare a function to return similarIssues from the collection.
+
 ```typescript
-foo;
+import { collections } from "@hypermode/functions-as";
+
+// Define the structure we expect for the output of the similarity search function.
+@json
+export class SimilarIssue {
+  id!: string;
+  title!: string;
+  similarity!: f64;
+}
+
+export function similarIssues(title: string): SimilarIssue[] {
+  const response = collections.search(
+    "issuesCollection",
+    "byTitle",
+    title, // the text to search for
+    3, // return the top 3 results
+    true, // include text in the results
+  );
+
+  return response.objects.map<SimilarIssue>(
+    (o) =>
+      <SimilarIssue>{
+        id: o.key,
+        title: o.text,
+        similarity: o.score,
+      },
+  );
+}
 ```
 
 ### Production-ready API
