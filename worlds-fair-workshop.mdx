@@ -684,11 +684,15 @@ git push
 
 #### Insert issues data into the collection
 
-In the Hypermode UI, navigate to your project and find the collection named `issuesCollection`.
+- Download an [example CSV data file](https://github.com/hypermodeAI/ship-issue-triage/blob/final/extras/issues.csv),
+  and save it to your local machine.
 
-Click the `Upload` link and upload a CSV file containing the issues data.
+- Then, in the Hypermode UI, navigate to your project and find the collection named `issuesCollection`.
 
-TODO: provide a sample CSV file
+- Click the `Upload` link and upload a CSV file containing the issues data.
+
+The import process starts, and should complete within a few seconds, adding all your issues
+to the collection.
 
 Alternatively, you can add the data programmatically.
 For example, you can create a new function that inserts data directly into
