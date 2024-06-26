@@ -424,7 +424,7 @@ You'll also need to modify the `functions/assembly/index.ts` file to export the 
 Add the following line to the end of the file:
 
 ```ts
-export { minilmEmbedder } from "./embedder";
+export * from "./embedder";
 ```
 
 #### Create the search function
@@ -438,7 +438,7 @@ import { collections } from "@hypermode/functions-as";
 
 // Define the structure we expect for the output of the similarity search function.
 @json
-export class SimilarIssue {
+class SimilarIssue {
   id!: string;
   title!: string;
   similarity!: f64;
@@ -469,7 +469,7 @@ You'll also need to modify the `functions/assembly/index.ts` file to export the 
 Add the following line to the end of the file:
 
 ```ts
-export { similarIssues } from "./similar";
+export * from "./similar";
 ```
 
 #### Deploy the changes
@@ -491,6 +491,17 @@ In the Hypermode UI, navigate to your project and find the collection named `iss
 Click the `Upload` link and upload a CSV file containing the issues data.
 
 **TODO: provide a sample CSV file**
+
+Alternatively, you can add the data programmatically.
+For example, you can create a new function that inserts data directly into
+the collection.
+
+```ts
+export function addIssue(id: string, title: string): string {
+  const result = collections.upsert("issuesCollection", id, title);
+  return result.status;
+}
+```
 
 #### Test the function
 
