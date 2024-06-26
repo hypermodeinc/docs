@@ -27,8 +27,8 @@
     }
   ],
   "topbarCtaButton": {
-    "name": "Request Access",
-    "url": "https://hypermode.com/home"
+    "name": "Start Now",
+    "url": "https://hypermode.com/new"
   },
   "topAnchor": {
     "name": "Docs",
@@ -44,6 +44,11 @@
       "name": "Blog",
       "icon": "newspaper",
       "url": "https://hypermode.com/blog"
+    },
+    {
+      "name": "Templates",
+      "icon": "sparkles",
+      "url": "https://justship.ai"
     }
   ],
   "navigation": [
