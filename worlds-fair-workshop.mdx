@@ -9,7 +9,11 @@ If you need help at any point, please don't hesitate to ask.
 
 ## Prerequisites
 
-To get the most out of this workshop, you'll need a GitHub account where you can create a new repo and [Node.js 20](https://nodejs.org/) or higher installed and activated.
+To get the most out of this workshop, you'll need
+
+- a GitHub account where you can create a new repo
+- [Node.js 20](https://nodejs.org/) or higher installed and activated.
+- an IDE such as VS Code
 
 You can install Node.js with any supported method, including:
 
@@ -59,20 +63,79 @@ While your project is spinning up, personalize your workspace.
 
 ### Set up local environment
 
-clone
+- clone the newly created GitHub repository locally.
+  From the repository folder:
 
-```bash
+```sh
+cd functions
 npm install
-```
-
-```bash
 npm run build
 ```
 
+The build output is as follow:
+
+```
+> functions@1.2.0 build
+> node ./node_modules/@hypermode/functions-as/bin/build-plugin.js
+
+Building functions@1.2.0 in debug mode...
+
+     __ __                                __
+    / // /_ _____  ___ ______ _  ___  ___/ /__
+   / _  / // / _ \/ -_) __/  ' \/ _ \/ _  / -_)
+  /_//_/\_, / .__/\__/_/ /_/_/_/\___/\_,_/\__/
+       /___/_/
+
+Plugin Metadata:
+  Plugin Name:     functions@1.2.0
+  Library:         @hypermode/functions-as@0.9.1
+  Build ID:        cptjdhnr043kifof248g
+  Build Timestamp: 2024-06-25T21:29:42.152Z
+  Git Repo:        https://github.com/hypermodeAI/ship-issue-triage
+  Git Commit:      b40ec3e5076acaf7f53b2c3dd9c78c34d04b376a
+
+Hypermode Functions:
+  addIssue(id: string, title: string): string
+  addSpam(id: string, title: string): string
+  classifyIssue(id: string, title: string): string
+  embedIssue(text: string[]): f32[][]
+  isSpam(title: string): f32
+  similarIssues(title: string): SimilarIssue[]
+  trendSummary(owner: string, repo: string, since: string): string
+
+Custom Data Types:
+  SimilarIssue { id: string, title: string, similarity: f64 }
+```
+
+**What just happened?**
+
+- Hypermode compiled the assembly scripts form our project and create a wasm module ready to be deployed on Hypermode.
+- Every function exported from `index.ts` became an `Hypermode function` and will appear in the project GraphQL API.
+
+At this stage, you can see
+
+```
+  classifyIssue(id: string, title: string): string
+  trendSummary(owner: string, repo: string, since: string): string
+```
+
+**Note**
+If using VS Code and see files in errors, you may need to force a reset of the typescript.
+
+```sh
+touch assembly/tsconfig.json
+```
+
+You will:
+
+- review the code of `trendSummary` function
+- review and change the function `issueClassification`
+- add a new function `similarIssues`
+
 ### Trend summarization
 
-```typescript
-foo;
+```
+code here
 ```
 
 ### Classify issue type
