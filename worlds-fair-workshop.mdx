@@ -1,0 +1,525 @@
+---
+title: AI Engineer World's Fair Workshop
+description: "git push, get AI API"
+---
+
+In this workshop you'll build a demo that augments an app with AI for classification,
+natural language search, and summarization. Then you'll learn how to iteratively improve
+before and after shipping to prod. We'll use Hypermode to move fast and reduce infra overhead.
+You'll walk away with a greater intuition for when & how to integrate AI without refactoring.
+
+If you need help at any point, please don't hesitate to ask.
+
+## Prerequisites
+
+To get the most out of this workshop, you'll need:
+
+- A GitHub account where you can create a new repo
+- [Node.js 20](https://nodejs.org/) or higher installed and activated.
+- An IDE or text editor such as [VS Code](https://code.visualstudio.com/)
+
+You can install Node.js with any supported method, including:
+
+- Downloading the official [prebuilt installer](https://nodejs.org/en/download)
+- Using a [package manager](https://nodejs.org/en/download/package-manager)
+
+<Tip>
+  [Join the
+  conversation](https://ai-engineer-workspace.slack.com/archives/C079FEPGY69) on
+  the AI Engineer Slack. ([Slack
+  Invite](https://join.slack.com/t/ai-engineer-workspace/shared_invite/zt-2lcyging7-nb9owJrFthJb0dbfdt3cpw))
+</Tip>
+
+## Agenda
+
+We'll spend our time together on the following:
+
+1. Playing a familiar game, using AI to scale the format
+2. Understanding how the game is constructed, using both large and small models
+3. Applying the same building blocks to an app triaging GitHub issues
+4. Generalizing the concepts for adding AI to your apps
+
+## Hypercategories
+
+We're going to first play a game called Hypercategories, a scaled-variant of the game
+[Scattergories](https://en.wikipedia.org/wiki/Scattergories). In Scattergories, players
+receive a list of categories and a letter. They have to come up with a unique word that
+fits each category and starts with the given letter.
+
+In Hypercategories, for each submission that matches the category and letter, you'll
+receive a point. If other submissions match yours, you'll split the point.
+
+### Let's play
+
+When the game starts, scan the QR code or go to https://tinyurl.com/4mdhx29j
+
+### AI-powered filtering and scoring
+
+## GitHub issue triage
+
+We're going to apply what we learned from Hypercategories to a real-world problem:
+triaging GitHub issues. We'll build a tool that helps you quickly understand trends,
+classify, and identify similar issues in their repos.
+
+### Set up your project
+
+Hypermode makes it easy to spin up new projects for experimentation.
+
+- Go to [justship.ai](https://justship.ai) and select `GitHub Issue Triage`
+- Click `Deploy` to start the onboarding flow
+- Authenticate your account with GitHub and edit the repo name as needed
+- Click `Create` to deploy your project
+
+While your project is spinning up, personalize your workspace.
+
+### Set up local environment
+
+- Clone the newly created GitHub repository locally, using any method you prefer.
+
+  For example, you can use the GitHub CLI:
+
+  ```sh
+  gh repo clone <your-repo-name>
+  ```
+
+  Or the Git CLI:
+
+  ```sh
+  git clone <your-repo-uri>
+  ```
+
+  Or you can use a graphical client like [GitHub Desktop](https://desktop.github.com/).
+
+- Open the local repository in your IDE or text editor.
+
+- Using a terminal window (preferably from within your IDE), open the `functions` directory,
+  install dependencies, and build the project:
+
+  ```sh
+  cd functions
+  npm install
+  npm run build
+  ```
+
+<Accordion title="Build Output">
+
+```none
+Building issue-triage@1.0.0 in debug mode...
+
+     __ __                                __
+    / // /_ _____  ___ ______ _  ___  ___/ /__
+   / _  / // / _ \/ -_) __/  ' \/ _ \/ _  / -_)
+  /_//_/\_, / .__/\__/_/ /_/_/_/\___/\_,_/\__/
+       /___/_/
+
+Plugin Metadata:
+  Plugin Name:     issue-triage@1.0.0
+  Library:         @hypermode/functions-as@0.9.1
+  Build ID:        cptr9kv9lp6m35581s7g
+  Build Timestamp: 2024-06-26T06:27:31.320Z
+  Git Repo:        https://github.com/hypermodeAI/ship-issue-triage
+  Git Commit:      556a604357827e0e135cd530432ec5dd7d21489a
+
+Hypermode Functions:
+  classifyIssue(id: string, title: string, description: string): string
+  trendSummary(owner: string, repo: string): string
+```
+
+</Accordion>
+
+#### What just happened?
+
+You compiled a Hypermode project written in [AssemblyScript](https://www.assemblyscript.org/),
+a TypeScript-like language that compiles to WebAssembly for fast, secure, and efficient execution.
+
+A successful compilation indicates that the resulting project is ready to deploy on Hypermode.
+The Hypermode Functions listed in the output automatically become part of the project's GraphQL API.
+
+In this case, you can see two functions:
+
+- `classifyIssue` that takes an issue ID, title, and description and returns a classification label.
+- `trendSummary` that takes a GitHub owner and repo and returns a summary of trends for that repo.
+
+Since you created the project from a template, this version of the code is already deployed.
+When you make any changes, simply commit and push back to the GitHub repository.
+The changes deploy automatically using the GitHub Actions workflow set up in the project.
+
+### Review and modify the code
+
+For this next step of the workshop, we'll review the code of the Hypermode Functions
+in the project and make some small modifications.
+
+We'll start this together, as a group. Please follow along in your own project.
+
+<Tip>
+  If using VS Code, you may be seeing files and code underlined in red at this stage,
+  even though the project built successfully. This is because the TypeScript language services
+  aren't yet aware of the AssemblyScript dependency.
+
+You can fix this by forcing a reset of the TypeScript language services, in any of these ways:
+
+- You can close and reopen the project in VS Code.
+- You can open the VS Code command pallette (`Cmd+Shift+P` on Mac, `Ctrl+Shift+P` on Windows)
+  and run the command `TypeScript: Restart TS server`.
+- You can modify the `assembly/tsconfig.json` file by adding a comment or whitespace and saving it.
+- On Linux or Mac, you can open a terminal and run `touch assembly/tsconfig.json`.
+
+</Tip>
+
+### Trend summarization
+
+Have a look at the function `trendSummary` in [functions/assembly/trends.ts](https://github.com/hypermodeAI/ship-issue-triage/blob/main/functions/assembly/trends.ts)
+
+The purpose of this function is to summarize the trends of the issues in a GitHub repository.
+
+The function performs the following steps:
+
+- Fetches the issues from the repository, using the GitHub REST API.
+- Concatenates several pieces of information from each issue into a single string.
+- Sends that string to an OpenAI model to generate a summary.
+- Returns the summary as the output of the function.
+
+<Accordion title="Code">
+
+```ts
+export function trendSummary(owner: string, repo: string): string {
+  const issues = getGithubIssues(owner, repo);
+
+  const summary = issues
+    .map<string>(
+      (issue) =>
+        `${issue.createdAt} ${issue.user ? "From " + issue.user!.login : ""} : ${issue.title}`,
+    )
+    .join("\n");
+
+  const model = models.getModel<OpenAIChatModel>("text-generator");
+  const instruction = `Provide a summary of the trends in the repository based on the issues created.`;
+
+  const input = model.createInput([
+    new SystemMessage(instruction),
+    new UserMessage(summary),
+  ]);
+
+  input.temperature = 0.7;
+
+  const output = model.invoke(input);
+
+  return output.choices[0].message.content.trim();
+}
+```
+
+</Accordion>
+
+### Issue type classification
+
+Next let's examine the `classifyIssue` function in [functions/assembly/classify.ts](https://github.com/hypermodeAI/ship-issue-triage/blob/main/functions/assembly/classify.ts)
+
+The purpose of this function is to classify an issue based on its title and description.
+
+The function performs the following steps:
+
+- Concatenates the title and description of the issue into a single string.
+- Sends that string to a purpose-built classification model to classify the issue.
+- Returns the classification label as the output of the function.
+
+Along the way, it also logs some information to Hypermode that can be useful
+for debugging and monitoring the function's behavior.
+
+<Accordion title="Code">
+
+```ts
+export function classifyIssue(
+  id: string,
+  title: string,
+  description: string,
+): string {
+  console.log(`Classifying issue ${id}`);
+  const summary = `${title}\n${description}`;
+
+  const model = models.getModel<ClassificationModel>("issue-classifier");
+  const input = model.createInput([summary]);
+  const output = model.invoke(input).predictions[0];
+
+  console.log(`Issue ${id} classified as ${output.label}`);
+  return output.label;
+}
+```
+
+</Accordion>
+
+#### Modify the function
+
+As an exercise, let's modify the `classifyIssue` function to only return labels
+that have a confidence score of a certain threshold or higher.
+
+See if you can figure out how to do this. If you get stuck, ask for help,
+or view the solution below.
+
+<Accordion title="Code (Solution Spoiler)">
+
+```ts
+export function classifyIssue(
+  id: string,
+  title: string,
+  description: string,
+): string {
+  console.log(`Classifying issue ${id}`);
+  const summary = `${title}\n${description}`;
+
+  const model = models.getModel<ClassificationModel>("issue-classifier");
+  const input = model.createInput([summary]);
+  const output = model.invoke(input).predictions[0];
+
+  // This is the new code that checks the confidence score.
+  if (output.confidence < 0.6) {
+    console.log(
+      `Issue ${id} couldn't be classified. Confidence: ${output.confidence}`,
+    );
+    return "unknown";
+  }
+
+  console.log(`Issue ${id} classified as ${output.label}`);
+  return output.label;
+}
+```
+
+</Accordion>
+
+#### Deploy the changes for classification
+
+Commit and push the changes to the GitHub repository, using any method you prefer.
+
+For example, using the Git CLI:
+
+```sh
+git add .
+git commit -m "Add threshold to classification"
+git push
+```
+
+#### Test the classification function
+
+Using a web browser, sign in to hypermode.com and navigate to your project.
+You can test the `classifyIssue` function with sample inputs using the GraphiQL
+interface provided by the Hypermode UI.
+
+### Issue similarity search
+
+In order to find similar issues, we need to:
+
+- Define a collection to store issues
+- Create a function that knows how to compute vector embeddings
+- Create a Hypermode function that uses the collection to find similar issues
+- Deploy the code changes
+- Insert issues data into the collection, and test the function
+
+#### Define a collection
+
+Open the `hypermode.json` (in the root of the repo directory) and add the following section:
+
+```json
+  "collections": {
+    "issuesCollection": {
+      "searchMethods": {
+        "byTitle": {
+          "embedder": "minilmEmbedder"
+        }
+      }
+    }
+  }
+```
+
+This tells Hypermode to create a collection named `issuesCollection`,
+and to search by title using an embedder function named `minilmEmbedder`.
+
+In order to compute vector embeddings, we also need another model to be
+declared in the `hypermode.json` file.
+
+Add the following to the existing `"models"` section:
+
+```json
+    "minilm": {
+      "sourceModel": "sentence-transformers/all-MiniLM-L6-v2",
+      "host": "hypermode",
+      "provider": "hugging-face"
+    }
+```
+
+<Accordion title="Complete Manifest File">
+
+The complete `hypermode.json` manifest file should now be as follows:
+
+```json
+{
+  "$schema": "https://manifest.hypermode.com/hypermode.json",
+
+  "models": {
+    "issue-classifier": {
+      "sourceModel": "AntoineMC/distilbart-mnli-github-issues",
+      "provider": "hugging-face",
+      "host": "hypermode"
+    },
+    "text-generator": {
+      "sourceModel": "gpt-3.5-turbo",
+      "host": "openai",
+      "path": "v1/chat/completions"
+    },
+    "minilm": {
+      "sourceModel": "sentence-transformers/all-MiniLM-L6-v2",
+      "host": "hypermode",
+      "provider": "hugging-face"
+    }
+  },
+
+  "hosts": {
+    "github": {
+      "baseUrl": "https://api.github.com/",
+      "headers": {
+        "Authorization": "Bearer {{AUTH_TOKEN}}"
+      }
+    },
+    "openai": {
+      "baseUrl": "https://api.openai.com/",
+      "headers": {
+        "Authorization": "Bearer {{API_KEY}}"
+      }
+    }
+  },
+
+  "collections": {
+    "issuesCollection": {
+      "searchMethods": {
+        "byTitle": {
+          "embedder": "minilmEmbedder"
+        }
+      }
+    }
+  }
+}
+```
+
+</Accordion>
+
+#### Create the embedder function
+
+Create a new file `embedder.ts` in the `functions/assembly` folder.
+
+This function uses the MiniLM model to create vector embeddings for the input text.
+
+```ts
+import { models } from "@hypermode/functions-as";
+import { EmbeddingsModel } from "@hypermode/models-as/models/experimental/embeddings";
+
+export function minilmEmbedder(text: string[]): f32[][] {
+  const model = models.getModel<EmbeddingsModel>("minilm");
+  const input = model.createInput(text);
+  const output = model.invoke(input);
+
+  return output.predictions;
+}
+```
+
+You'll also need to modify the `functions/assembly/index.ts` file to export the new function.
+
+Add the following line to the end of the file:
+
+```ts
+export * from "./embedder";
+```
+
+#### Create the search function
+
+Create a new file `similar.ts` in the `functions/assembly` folder.
+
+This function uses the collection to search for similar issues based on the title.
+
+```ts
+import { collections } from "@hypermode/functions-as";
+
+// Define the structure we expect for the output of the similarity search function.
+@json
+class SimilarIssue {
+  id!: string;
+  title!: string;
+  similarity!: f64;
+}
+
+export function similarIssues(title: string): SimilarIssue[] {
+  const response = collections.search(
+    "issuesCollection",
+    "byTitle",
+    title, // the text to search for
+    3, // return the top 3 results
+    true, // include text in the results
+  );
+
+  return response.objects.map<SimilarIssue>(
+    (o) =>
+      <SimilarIssue>{
+        id: o.key,
+        title: o.text,
+        similarity: o.score,
+      },
+  );
+}
+```
+
+You'll also need to modify the `functions/assembly/index.ts` file to export the new function.
+
+Add the following line to the end of the file:
+
+```ts
+export * from "./similar";
+```
+
+#### Deploy the changes for similarity search
+
+Commit and push the changes to the GitHub repository, using any method you prefer.
+
+For example, using the Git CLI:
+
+```sh
+git add .
+git commit -m "Add similarity search"
+git push
+```
+
+#### Insert issues data into the collection
+
+In the Hypermode UI, navigate to your project and find the collection named `issuesCollection`.
+
+Click the `Upload` link and upload a CSV file containing the issues data.
+
+TODO: provide a sample CSV file
+
+Alternatively, you can add the data programmatically.
+For example, you can create a new function that inserts data directly into
+the collection.
+
+```ts
+export function addIssue(id: string, title: string): string {
+  const result = collections.upsert("issuesCollection", id, title);
+  return result.status;
+}
+```
+
+#### Test the similarity function
+
+Like before, you can navigate to your project at hypermode.com and test the `similarIssues`
+function with sample inputs using the GraphiQL interface provided by the Hypermode UI.
+
+### Production-ready API
+
+As you've seen, Hypermode makes it easy to build and deploy AI-powered functions.
+
+When you're ready to take the next step, you can start incorporating these functions
+into your own applications. Hypermode provides a GraphQL API that you can use to
+interact with your functions. You can obtain an API key from the settings page
+in the Hypermode UI, then use any GraphQL tool or client library you wish.
+
+## What's next
+
+You can apply the building blocks of filtering, summarization, categorization, and search
+into a wide variety of applications. Hypermode makes it easy to iterate on your AI features.
+
+For further inspiration, explore [justship.ai](https://justship.ai) and deploy today!
