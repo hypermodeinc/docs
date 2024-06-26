@@ -2,6 +2,8 @@
 [Hh]ypermode
 APIs
 classifyText
+CLI
+embedder
 fetch
 generateText
 getClassificationLabelsForText
@@ -9,6 +11,7 @@ getClassificationLabelsForTexts
 getClassificationProbability
 getTextEmbedding
 getTextEmbeddings
+GitHub
 GQLResponse
 inferencing
 invokeGraphqlApi

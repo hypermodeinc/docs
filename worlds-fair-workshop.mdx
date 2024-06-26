@@ -24,8 +24,10 @@ You can install Node.js with any supported method, including:
 - Using a [package manager](https://nodejs.org/en/download/package-manager)
 
 <Tip>
-  [Join the conversation](https://ai-engineer-workspace.slack.com/archives/C079FEPGY69) on the AI Engineer
-  Slack. ([Slack Invite](https://join.slack.com/t/ai-engineer-workspace/shared_invite/zt-2lcyging7-nb9owJrFthJb0dbfdt3cpw))
+  [Join the
+  conversation](https://ai-engineer-workspace.slack.com/archives/C079FEPGY69) on
+  the AI Engineer Slack. ([Slack
+  Invite](https://join.slack.com/t/ai-engineer-workspace/shared_invite/zt-2lcyging7-nb9owJrFthJb0dbfdt3cpw))
 </Tip>
 
 ## Agenda
@@ -163,7 +165,7 @@ You can fix this by forcing a reset of the TypeScript language services, in any 
 
 ### Trend summarization
 
-Have a look at the function `trendSummary` in [/functions/assembly/trends.ts](https://github.com/hypermodeAI/ship-issue-triage/blob/main/functions/assembly/trends.ts)
+Have a look at the function `trendSummary` in [functions/assembly/trends.ts](https://github.com/hypermodeAI/ship-issue-triage/blob/main/functions/assembly/trends.ts)
 
 The purpose of this function is to summarize the trends of the issues in a GitHub repository.
 
@@ -207,7 +209,7 @@ export function trendSummary(owner: string, repo: string): string {
 
 ### Issue type classification
 
-Next let's examine the `classifyIssue` function in [/functions/assembly/classify.ts](https://github.com/hypermodeAI/ship-issue-triage/blob/main/functions/assembly/classify.ts)
+Next let's examine the `classifyIssue` function in [functions/assembly/classify.ts](https://github.com/hypermodeAI/ship-issue-triage/blob/main/functions/assembly/classify.ts)
 
 The purpose of this function is to classify an issue based on its title and description.
 
@@ -282,17 +284,18 @@ export function classifyIssue(
 
 ### Issue similarity search
 
-In order to find similar issues base on title we need to
+In order to find similar issues, we need to:
 
-- declare a collection to store issues
-- instruct Hypermode to compute a vector embedding using a model
-- create an Hypermode function returning similar issues based on a provided title.
+- Define a collection to store issues
+- Create a function that knows how to compute vector embeddings
+- Create a Hypermode function that uses the collection to find similar issues
+- Insert issues data into the collection, and test the function
 
-#### Declare a Collection in `hypermode.json` manifest file.
+#### Define a collection
 
-Add the following section in hypermode.json:
+Open the `hypermode.json` (in the root of the repo directory) and add the following section:
 
-```
+```json
   "collections": {
     "issuesCollection": {
       "searchMethods": {
@@ -304,21 +307,27 @@ Add the following section in hypermode.json:
   }
 ```
 
-In order to compute vector embedding we will also need a model.
+This tells Hypermode to create a collection named `issuesCollection`,
+and to search by title using an embedder function named `minilmEmbedder`.
 
-Simply add a model declaration in hypermode.json file, under the `models` section:
+In order to compute vector embeddings, we also need another model to be
+declared in the `hypermode.json` file.
 
-```
-"minilm": {
+Add the following to the existing `"models"` section:
+
+```json
+    "minilm": {
       "sourceModel": "sentence-transformers/all-MiniLM-L6-v2",
       "host": "hypermode",
       "provider": "hugging-face"
     }
 ```
 
-Hypermode.json file should now be
+<Accordion title="Complete Manifest File">
 
-```
+The complete `hypermode.json` manifest file should now be as follows:
+
+```json
 {
   "$schema": "https://manifest.hypermode.com/hypermode.json",
 
@@ -365,14 +374,19 @@ Hypermode.json file should now be
     }
   }
 }
-
 ```
 
-#### Write the embedding function
+</Accordion>
 
-Add a file `embedder.ts`in the`functions/assembly` folder.
+#### Create the embedder function
 
-```
+Create a new file `embedder.ts` in the `functions/assembly` folder.
+
+This function uses the MiniLM model to create vector embeddings for the input text.
+
+<Accordion title="View Code">
+
+```ts
 import { models } from "@hypermode/functions-as";
 import { EmbeddingsModel } from "@hypermode/models-as/models/experimental/embeddings";
 
@@ -385,11 +399,17 @@ export function minilmEmbedder(text: string[]): f32[][] {
 }
 ```
 
-#### Write `similarIssues` function
+</Accordion>
 
-Let's create `similar.ts` file and declare a function to return similarIssues from the collection.
+#### Create the search function
 
-```typescript
+Create a new file `similar.ts` in the `functions/assembly` folder.
+
+This function uses the collection to search for similar issues based on the title.
+
+<Accordion title="View Code">
+
+```ts
 import { collections } from "@hypermode/functions-as";
 
 // Define the structure we expect for the output of the similarity search function.
@@ -419,6 +439,12 @@ export function similarIssues(title: string): SimilarIssue[] {
   );
 }
 ```
+
+</Accordion>
+
+#### Insert issues data into the collection
+
+#### Deploy and test the function
 
 ### Production-ready API
 
