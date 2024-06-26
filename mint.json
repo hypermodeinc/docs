@@ -58,7 +58,13 @@
     },
     {
       "group": "Configure Project",
-      "pages": ["manifest", "define-models", "define-hosts", "define-schema"]
+      "pages": [
+        "manifest",
+        "define-models",
+        "define-hosts",
+        "define-collections",
+        "define-schema"
+      ]
     },
     {
       "group": "Write Functions",
