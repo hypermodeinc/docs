@@ -297,7 +297,7 @@ git commit -m "Add threshold to classification"
 git push
 ```
 
-#### Test the function
+#### Test the classification function
 
 Using a web browser, sign in to hypermode.com and navigate to your project.
 You can test the `classifyIssue` function with sample inputs using the GraphiQL
@@ -472,7 +472,7 @@ Add the following line to the end of the file:
 export * from "./similar";
 ```
 
-#### Deploy the changes
+#### Deploy the new files
 
 Commit and push the changes to the GitHub repository, using any method you prefer.
 
@@ -490,7 +490,7 @@ In the Hypermode UI, navigate to your project and find the collection named `iss
 
 Click the `Upload` link and upload a CSV file containing the issues data.
 
-**TODO: provide a sample CSV file**
+TODO: provide a sample CSV file
 
 Alternatively, you can add the data programmatically.
 For example, you can create a new function that inserts data directly into
@@ -503,7 +503,7 @@ export function addIssue(id: string, title: string): string {
 }
 ```
 
-#### Test the function
+#### Test the similarity function
 
 Like before, you can navigate to your project at hypermode.com and test the `similarIssues`
 function with sample inputs using the GraphiQL interface provided by the Hypermode UI.
