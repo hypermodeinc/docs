@@ -12,6 +12,7 @@ getClassificationLabelsForTexts
 getClassificationProbability
 getTextEmbedding
 getTextEmbeddings
+GraphiQL
 GQLResponse
 inferencing
 invokeGraphqlApi

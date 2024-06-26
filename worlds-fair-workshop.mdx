@@ -285,6 +285,24 @@ export function classifyIssue(
 
 </Accordion>
 
+#### Deploy the changes
+
+Commit and push the changes to the GitHub repository, using any method you prefer.
+
+For example, using the Git CLI:
+
+```sh
+git add .
+git commit -m "Add threshold to classification"
+git push
+```
+
+#### Test the function
+
+Using a web browser, sign in to hypermode.com and navigate to your project.
+You can test the `classifyIssue` function with sample inputs using the GraphiQL
+interface provided by the Hypermode UI.
+
 ### Issue similarity search
 
 In order to find similar issues, we need to:
@@ -292,6 +310,7 @@ In order to find similar issues, we need to:
 - Define a collection to store issues
 - Create a function that knows how to compute vector embeddings
 - Create a Hypermode function that uses the collection to find similar issues
+- Deploy the code changes
 - Insert issues data into the collection, and test the function
 
 #### Define a collection
@@ -387,8 +406,6 @@ Create a new file `embedder.ts` in the `functions/assembly` folder.
 
 This function uses the MiniLM model to create vector embeddings for the input text.
 
-<Accordion title="Code">
-
 ```ts
 import { models } from "@hypermode/functions-as";
 import { EmbeddingsModel } from "@hypermode/models-as/models/experimental/embeddings";
@@ -402,15 +419,19 @@ export function minilmEmbedder(text: string[]): f32[][] {
 }
 ```
 
-</Accordion>
+You'll also need to modify the `functions/assembly/index.ts` file to export the new function.
+
+Add the following line to the end of the file:
+
+```ts
+export { minilmEmbedder } from "./embedder";
+```
 
 #### Create the search function
 
 Create a new file `similar.ts` in the `functions/assembly` folder.
 
 This function uses the collection to search for similar issues based on the title.
-
-<Accordion title="Code">
 
 ```ts
 import { collections } from "@hypermode/functions-as";
@@ -443,17 +464,47 @@ export function similarIssues(title: string): SimilarIssue[] {
 }
 ```
 
-</Accordion>
+You'll also need to modify the `functions/assembly/index.ts` file to export the new function.
+
+Add the following line to the end of the file:
+
+```ts
+export { similarIssues } from "./similar";
+```
+
+#### Deploy the changes
+
+Commit and push the changes to the GitHub repository, using any method you prefer.
+
+For example, using the Git CLI:
+
+```sh
+git add .
+git commit -m "Add similarity search"
+git push
+```
 
 #### Insert issues data into the collection
 
-#### Deploy and test the function
+TODO
+
+#### Test the function
+
+Like before, you can navigate to your project at hypermode.com and test the `similarIssues`
+function with sample inputs using the GraphiQL interface provided by the Hypermode UI.
 
 ### Production-ready API
+
+As you've seen, Hypermode makes it easy to build and deploy AI-powered functions.
+
+When you're ready to take the next step, you can start incorporating these functions
+into your own applications. Hypermode provides a GraphQL API that you can use to
+interact with your functions. You can obtain an API key from the settings page
+in the Hypermode UI, then use any GraphQL tool or client library you wish.
 
 ## What's next
 
 You can apply the building blocks of filtering, summarization, categorization, and search
-into a wide variety of apps.
+into a wide variety of applications. Hypermode makes it easy to iterate on your AI features.
 
 For further inspiration, explore [justship.ai](https://justship.ai) and deploy today!
