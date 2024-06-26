@@ -49,7 +49,7 @@
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["introduction", "quickstart"]
+      "pages": ["introduction", "quickstart", "words-fair-workshop"]
     },
     {
       "group": "Configure Project",
