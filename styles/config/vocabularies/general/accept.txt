@@ -1,3 +1,4 @@
+[Gg]it[Hh]ub
 [Hh]ypercategories
 [Hh]ypermode
 APIs
@@ -11,7 +12,6 @@ getClassificationLabelsForTexts
 getClassificationProbability
 getTextEmbedding
 getTextEmbeddings
-GitHub
 GQLResponse
 inferencing
 invokeGraphqlApi
