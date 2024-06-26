@@ -179,7 +179,7 @@ The function performs the following steps:
 - Sends that string to an OpenAI model to generate a summary.
 - Returns the summary as the output of the function.
 
-<Accordion title="View Code">
+<Accordion title="Code">
 
 ```ts
 export function trendSummary(owner: string, repo: string): string {
@@ -225,7 +225,7 @@ The function performs the following steps:
 Along the way, it also logs some information to Hypermode that can be useful
 for debugging and monitoring the function's behavior.
 
-<Accordion title="View Code">
+<Accordion title="Code">
 
 ```ts
 export function classifyIssue(
@@ -255,7 +255,7 @@ that have a confidence score of a certain threshold or higher.
 See if you can figure out how to do this. If you get stuck, ask for help,
 or view the solution below.
 
-<Accordion title="Solution">
+<Accordion title="Code (Solution Spoiler)">
 
 ```ts
 export function classifyIssue(
@@ -387,7 +387,7 @@ Create a new file `embedder.ts` in the `functions/assembly` folder.
 
 This function uses the MiniLM model to create vector embeddings for the input text.
 
-<Accordion title="View Code">
+<Accordion title="Code">
 
 ```ts
 import { models } from "@hypermode/functions-as";
@@ -410,7 +410,7 @@ Create a new file `similar.ts` in the `functions/assembly` folder.
 
 This function uses the collection to search for similar issues based on the title.
 
-<Accordion title="View Code">
+<Accordion title="Code">
 
 ```ts
 import { collections } from "@hypermode/functions-as";
