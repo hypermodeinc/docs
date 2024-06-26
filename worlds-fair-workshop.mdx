@@ -1,19 +1,22 @@
 ---
-title: AI Engineers World's Fair Workshop
+title: AI Engineer World's Fair Workshop
 description: "git push, get AI API"
 ---
 
-In this workshop you’ll build a demo that augments an app with AI for classification, natural language search, and summarization. Then you’ll learn how to iteratively improve before and after shipping to prod. We’ll use Hypermode to move fast and reduce infra overhead. You’ll walk away with a greater intuition for when & how to integrate AI without refactoring.
+In this workshop you'll build a demo that augments an app with AI for classification,
+natural language search, and summarization. Then you'll learn how to iteratively improve
+before and after shipping to prod. We'll use Hypermode to move fast and reduce infra overhead.
+You'll walk away with a greater intuition for when & how to integrate AI without refactoring.
 
 If you need help at any point, please don't hesitate to ask.
 
 ## Prerequisites
 
-To get the most out of this workshop, you'll need
+To get the most out of this workshop, you'll need:
 
-- a GitHub account where you can create a new repo
+- A GitHub account where you can create a new repo
 - [Node.js 20](https://nodejs.org/) or higher installed and activated.
-- an IDE such as VS Code
+- An IDE or text editor such as [VS Code](https://code.visualstudio.com/)
 
 You can install Node.js with any supported method, including:
 
@@ -36,21 +39,25 @@ We'll spend our time together on the following:
 
 ## Hypercategories
 
-We're going to first play a game called Hypercategories, a scaled-variant of the game Scattergories. In Scattergories, players receive a list of categories and a letter. They have to come up with a unique word that fits each category and starts with the given letter.
+We're going to first play a game called Hypercategories, a scaled-variant of the game
+[Scattergories](https://en.wikipedia.org/wiki/Scattergories). In Scattergories, players
+receive a list of categories and a letter. They have to come up with a unique word that
+fits each category and starts with the given letter.
 
-In Hypercategories, for each submission that matches the category and letter, you'll receive a point. If other submissions match yours, you'll split the point.
+In Hypercategories, for each submission that matches the category and letter, you'll
+receive a point. If other submissions match yours, you'll split the point.
 
 ### Let's play
 
-When the game is started, scan the QR code or go to
-
-https://tinyurl.com/4mdhx29j
+When the game starts, scan the QR code or go to https://tinyurl.com/4mdhx29j
 
 ### AI-powered filtering and scoring
 
 ## GitHub issue triage
 
-We're going to apply what we learned from Hypercategories to a real-world problem: triaging GitHub issues. We'll build a tool that helps you quickly understand trends, classify, and identify similar issues in their repos.
+We're going to apply what we learned from Hypercategories to a real-world problem:
+triaging GitHub issues. We'll build a tool that helps you quickly understand trends,
+classify, and identify similar issues in their repos.
 
 ### Set up your project
 
@@ -65,22 +72,37 @@ While your project is spinning up, personalize your workspace.
 
 ### Set up local environment
 
-- clone the newly created GitHub repository locally.
-  From the repository folder:
+- Clone the newly created GitHub repository locally, using any method you prefer.
 
-```sh
-cd functions
-npm install
-npm run build
-```
+  For example, you can use the GitHub CLI:
+
+  ```sh
+  gh repo clone <your-repo-name>
+  ```
+
+  Or the Git CLI:
+
+  ```sh
+  git clone <your-repo-uri>
+  ```
+
+  Or you can use a graphical client like [GitHub Desktop](https://desktop.github.com/).
+
+- Open the local repository in your IDE or text editor.
+
+- Using a terminal window (preferably from within your IDE), open the `functions` directory,
+  install dependencies, and build the project:
+
+  ```sh
+  cd functions
+  npm install
+  npm run build
+  ```
 
 The build output is as follow:
 
 ```
-> functions@1.2.0 build
-> node ./node_modules/@hypermode/functions-as/bin/build-plugin.js
-
-Building functions@1.2.0 in debug mode...
+Building issue-triage@1.0.0 in debug mode...
 
      __ __                                __
     / // /_ _____  ___ ______ _  ___  ___/ /__
@@ -89,70 +111,176 @@ Building functions@1.2.0 in debug mode...
        /___/_/
 
 Plugin Metadata:
-  Plugin Name:     functions@1.2.0
+  Plugin Name:     issue-triage@1.0.0
   Library:         @hypermode/functions-as@0.9.1
-  Build ID:        cptjdhnr043kifof248g
-  Build Timestamp: 2024-06-25T21:29:42.152Z
+  Build ID:        cptr9kv9lp6m35581s7g
+  Build Timestamp: 2024-06-26T06:27:31.320Z
   Git Repo:        https://github.com/hypermodeAI/ship-issue-triage
-  Git Commit:      b40ec3e5076acaf7f53b2c3dd9c78c34d04b376a
+  Git Commit:      556a604357827e0e135cd530432ec5dd7d21489a
 
 Hypermode Functions:
-  addIssue(id: string, title: string): string
-  addSpam(id: string, title: string): string
-  classifyIssue(id: string, title: string): string
-  embedIssue(text: string[]): f32[][]
-  isSpam(title: string): f32
-  similarIssues(title: string): SimilarIssue[]
-  trendSummary(owner: string, repo: string, since: string): string
-
-Custom Data Types:
-  SimilarIssue { id: string, title: string, similarity: f64 }
+  classifyIssue(id: string, title: string, description: string): string
+  trendSummary(owner: string, repo: string): string
 ```
 
-**What just happened?**
+#### What just happened?
 
-- Hypermode compiled the assembly scripts form our project and create a wasm module ready to be deployed on Hypermode.
-- Every function exported from `index.ts` became an `Hypermode function` and will appear in the project GraphQL API.
+You compiled a Hypermode project written in [AssemblyScript](https://www.assemblyscript.org/),
+a TypeScript-like language that compiles to WebAssembly for fast, secure, and efficient execution.
 
-At this stage, you can see
+A successful compilation indicates that the resulting project is ready to deploy on Hypermode.
+The Hypermode Functions listed in the output automatically become part of the project's GraphQL API.
 
-```
-  classifyIssue(id: string, title: string): string
-  trendSummary(owner: string, repo: string, since: string): string
-```
+In this case, you can see two functions:
 
-**Note**
-If using VS Code and see files in errors, you may need to force a reset of the typescript.
+- `classifyIssue` that takes an issue ID, title, and description and returns a classification label.
+- `trendSummary` that takes a GitHub owner and repo and returns a summary of trends for that repo.
 
-```sh
-touch assembly/tsconfig.json
-```
+Since you created the project from a template, this version of the code is already deployed.
+When you make any changes, simply commit and push back to the GitHub repository.
+The changes deploy automatically using the GitHub Actions workflow set up in the project.
 
-You will:
+### Review and modify the code
 
-- review the code of `trendSummary` function
-- review and change the function `issueClassification`
-- add a new function `similarIssues`
+For this next step of the workshop, we'll review the code of the Hypermode Functions
+in the project and make some small modifications.
+
+We'll start this together, as a group. Please follow along in your own project.
+
+<Tip>
+  If using VS Code, you may be seeing files and code underlined in red at this stage,
+  even though the project built successfully. This is because the TypeScript language services
+  aren't yet aware of the AssemblyScript dependency.
+
+You can fix this by forcing a reset of the TypeScript language services, in any of these ways:
+
+- You can close and reopen the project in VS Code.
+- You can open the VS Code command pallette (`Cmd+Shift+P` on Mac, `Ctrl+Shift+P` on Windows)
+  and run the command `TypeScript: Restart TS server`.
+- You can modify the `assembly/tsconfig.json` file by adding a comment or whitespace and saving it.
+- On Linux or Mac, you can open a terminal and run `touch assembly/tsconfig.json`.
+  </Tip>
 
 ### Trend summarization
 
-Have a look at the function `trendSummary` in `/functions/assembly/trends.ts`
+Have a look at the function `trendSummary` in [/functions/assembly/trends.ts](https://github.com/hypermodeAI/ship-issue-triage/blob/main/functions/assembly/trends.ts)
 
-### Classify issue type
+The purpose of this function is to summarize the trends of the issues in a GitHub repository.
 
-The issue classification function is located in `/functions/assembly/classify.ts`
+The function performs the following steps:
 
-```typescript
-export function classifyIssue(id: string, title: string): string {
+- Fetches the issues from the repository, using the GitHub REST API.
+- Concatenates several pieces of information from each issue into a single string.
+- Sends that string to an OpenAI model to generate a summary.
+- Returns the summary as the output of the function.
+
+<Accordion title="View Code">
+
+```ts
+export function trendSummary(owner: string, repo: string): string {
+  const issues = getGithubIssues(owner, repo);
+
+  const summary = issues
+    .map<string>(
+      (issue) =>
+        `${issue.createdAt} ${issue.user ? "From " + issue.user!.login : ""} : ${issue.title}`,
+    )
+    .join("\n");
+
+  const model = models.getModel<OpenAIChatModel>("text-generator");
+  const instruction = `Provide a summary of the trends in the repository based on the issues created.`;
+
+  const input = model.createInput([
+    new SystemMessage(instruction),
+    new UserMessage(summary),
+  ]);
+
+  input.temperature = 0.7;
+
+  const output = model.invoke(input);
+
+  return output.choices[0].message.content.trim();
+}
+```
+
+</Accordion>
+
+### Issue type classification
+
+Next let's examine the `classifyIssue` function in [/functions/assembly/classify.ts](https://github.com/hypermodeAI/ship-issue-triage/blob/main/functions/assembly/classify.ts)
+
+The purpose of this function is to classify an issue based on its title and description.
+
+The function performs the following steps:
+
+- Concatenates the title and description of the issue into a single string.
+- Sends that string to a purpose-built classification model to classify the issue.
+- Returns the classification label as the output of the function.
+
+Along the way, it also logs some information to Hypermode that can be useful
+for debugging and monitoring the function's behavior.
+
+<Accordion title="View Code">
+
+```ts
+export function classifyIssue(
+  id: string,
+  title: string,
+  description: string,
+): string {
+  console.log(`Classifying issue ${id}`);
+  const summary = `${title}\n${description}`;
+
   const model = models.getModel<ClassificationModel>("issue-classifier");
-  const input = model.createInput([title]);
+  const input = model.createInput([summary]);
   const output = model.invoke(input).predictions[0];
 
+  console.log(`Issue ${id} classified as ${output.label}`);
   return output.label;
 }
 ```
 
-### Find similar issues
+</Accordion>
+
+#### Modify the function
+
+As an exercise, let's modify the `classifyIssue` function to only return labels
+that have a confidence score of a certain threshold or higher.
+
+See if you can figure out how to do this. If you get stuck, ask for help,
+or view the solution below.
+
+<Accordion title="Solution">
+
+```ts
+export function classifyIssue(
+  id: string,
+  title: string,
+  description: string,
+): string {
+  console.log(`Classifying issue ${id}`);
+  const summary = `${title}\n${description}`;
+
+  const model = models.getModel<ClassificationModel>("issue-classifier");
+  const input = model.createInput([summary]);
+  const output = model.invoke(input).predictions[0];
+
+  // This is the new code that checks the confidence score.
+  if (output.confidence < 0.6) {
+    console.log(
+      `Issue ${id} couldn't be classified. Confidence: ${output.confidence}`,
+    );
+    return "unknown";
+  }
+
+  console.log(`Issue ${id} classified as ${output.label}`);
+  return output.label;
+}
+```
+
+</Accordion>
+
+### Issue similarity search
 
 In order to find similar issues base on title we need to
 
@@ -296,6 +424,7 @@ export function similarIssues(title: string): SimilarIssue[] {
 
 ## What's next
 
-You can apply the building blocks of filtering, summarization, categoriation, and search into a wide variety of apps.
+You can apply the building blocks of filtering, summarization, categorization, and search
+into a wide variety of apps.
 
 For further inspiration, explore [justship.ai](https://justship.ai) and deploy today!
