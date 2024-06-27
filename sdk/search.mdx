@@ -15,9 +15,14 @@ Search APIs integrate collections and models defined in your project's [manifest
 
 ### upsert
 
-Add a text to your collection and automatically index in the collections' search methods.
+Inserts or updates an item into a collection.
 
-```TypeScript
+<Note>
+  If an item with the same key already exists, the original text is overwritten
+  with the new text.
+</Note>
+
+```ts
 upsert(
   collection: string,
   key: string | null,
@@ -26,24 +31,28 @@ upsert(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Internal name of your collection as [defined in your
-  manifest](../define-collections).
+  Name of the collection, as [defined in the manifest](../define-collections).
 </ResponseField>
 
 <ResponseField name="key" type="string">
-  The key for your text, optionally provided. If not provided, a UUID will be
-  generated.
+  An optional key for the item. If `null`, Hypermode assigns a new UUID as the
+  key for the item.
 </ResponseField>
 
 <ResponseField name="text" type="string" required>
-  The text being uploaded to the collection.
+  The text of the item to add to the collection.
 </ResponseField>
 
 ### upsertBatch
 
-Add a group of texts to your collection, and automatically index in the collections' searchMethods.
+Inserts or updates a batch of items into a collection.
 
-```TypeScript
+<Note>
+  If an item with the same key already exists, the original text is overwritten
+  with the new text.
+</Note>
+
+```ts
 upsertBatch(
   collection: string,
   keys: string[] | null,
@@ -52,24 +61,23 @@ upsertBatch(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Internal name of your collection as [defined in your
-  manifest](../define-collections).
+  Name of the collection, as [defined in the manifest](../define-collections).
 </ResponseField>
 
 <ResponseField name="keys" type="string[]">
-  The keys for your texts, optionally provided. If not provided, a UUID will be
-  generated for each text.
+  Array of keys for the item to add to the collection. If you pass `null` for
+  any key, Hypermode assigns a new UUID as the key for the item.
 </ResponseField>
 
 <ResponseField name="texts" type="string[]" required>
-  The texts being uploaded to the collection.
+  Array of texts for the items to add to the collection.
 </ResponseField>
 
 ### remove
 
-remove a key and its corresponding text from the collection.
+Removes an item from the collection.
 
-```TypeScript
+```ts
 remove(
   collection: string,
   key: string,
@@ -77,19 +85,23 @@ remove(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Internal name of your collection as [defined in your
-  manifest](../define-collections).
+  Name of the collection, as [defined in the manifest](../define-collections).
 </ResponseField>
 
 <ResponseField name="key" type="string" required>
-  The key to be deleted.
+  The key of the item to delete from the collection.
 </ResponseField>
 
 ### search
 
-Use natural language search on a text.
+Search for an item in the collection by using natural language search.
 
-```TypeScript
+<Note>
+  Hypermode uses the same embedder for both inserting text into the collection,
+  and for the text used when searching the collection.
+</Note>
+
+```ts
 search(
   collection: string,
   searchMethod: string,
@@ -100,8 +112,7 @@ search(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Internal name of your collection as [defined in your
-  manifest](../define-collections).
+  Name of the collection, as [defined in the manifest](../define-collections).
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string" required>
@@ -122,9 +133,9 @@ search(
 
 ### recomputeSearchMethod
 
-Recompute the embeddings for all texts in a specific collection for a search method.
+Recomputes the embeddings for all texts in a collection, for a specific search method.
 
-```TypeScript
+```ts
 recomputeSearchMethod(
   collection: string,
   searchMethod: string,
@@ -132,8 +143,7 @@ recomputeSearchMethod(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Internal name of your collection as [defined in your
-  manifest](../define-collections).
+  Name of the collection, as [defined in the manifest](../define-collections).
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string" required>
@@ -142,9 +152,9 @@ recomputeSearchMethod(
 
 ### computeSimilarity
 
-Compute similarity between two keys in a collection using a search method's embedder.
+Computes similarity between two keys in a collection using a search method's embedder.
 
-```TypeScript
+```ts
 computeSimilarity(
   collection: string,
   searchMethod: string,
@@ -154,12 +164,11 @@ computeSimilarity(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Internal name of your collection as [defined in your
-  manifest](../define-collections).
+  Name of the collection, as [defined in the manifest](../define-collections).
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string" required>
-  The search method used to calculate embedding for keys' texts.
+  The search method used to calculate embedding for key's texts.
 </ResponseField>
 
 <ResponseField name="key1, key2" type="string" required>
@@ -168,30 +177,29 @@ computeSimilarity(
 
 ### getText
 
-Get text for a key from a collection.
+Gets an item's text from a collection, give the item's key.
 
-```TypeScript
+```ts
 getText(collection: string, key: string): string
 ```
 
 <ResponseField name="collection" type="string" required>
-  Internal name of your collection as [defined in your
-  manifest](../define-collections).
+  Name of the collection, as [defined in the manifest](../define-collections).
 </ResponseField>
 
 <ResponseField name="key" type="string" required>
-  The key to be retrieved.
+  The key of the item to retrieve.
 </ResponseField>
 
 ### getTexts
 
-Get all keys and texts in a collection.
+Get all items from a collection.
+The result is a map of key to text for all items in the collection.
 
-```TypeScript
+```ts
 getTexts(collection: string): Map<string, string>
 ```
 
 <ResponseField name="collection" type="string" required>
-  Internal name of your collection as [defined in your
-  manifest](../define-collections).
+  Name of the collection, as [defined in the manifest](../define-collections).
 </ResponseField>
