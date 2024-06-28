@@ -34,10 +34,14 @@ You can install Node.js with any supported method, including:
 
 We'll spend our time together on the following:
 
+{/* <!-- vale Google.Passive = NO --> */}
+
 1. Playing a familiar game, using AI to scale the format
 2. Understanding how the game is constructed, using both large and small models
 3. Applying the same building blocks to an app triaging GitHub issues
 4. Generalizing the concepts for adding AI to your apps
+
+{/* <!-- vale Google.Passive = YES --> */}
 
 ## Hypercategories
 
@@ -530,8 +534,8 @@ Open the `hypermode.json` (in the root of the repo directory) and add the follow
 This tells Hypermode to create a collection named `issuesCollection`,
 and to search by title using an embedder function named `minilmEmbedder`.
 
-In order to compute vector embeddings, we also need another model to be
-declared in the `hypermode.json` file.
+In order to compute vector embeddings, we also need to declare another model
+in the `hypermode.json` file.
 
 Add the following to the existing `"models"` section:
 
