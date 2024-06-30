@@ -4,16 +4,19 @@
 APIs
 classifyText
 CLI
+computeSimilarity
 embedder
 fetch
 generateText
 getClassificationLabelsForText
 getClassificationLabelsForTexts
 getClassificationProbability
+getText
 getTextEmbedding
 getTextEmbeddings
-GraphiQL
+getTexts
 GQLResponse
+GraphiQL
 inferencing
 invokeGraphqlApi
 log
@@ -22,3 +25,5 @@ repo
 REST
 Scattergories
 triaging
+upsert
+UUID

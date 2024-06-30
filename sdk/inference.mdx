@@ -3,6 +3,8 @@ title: Inference
 description: "Incorporate AI models into functions"
 ---
 
+{/* <!-- vale Google.Headings = NO --> */}
+
 Inference APIs allow you to invoke AI models defined in your project's [manifest](../manifest) with less scaffolding.
 
 <Tip>
@@ -15,7 +17,7 @@ Inference APIs allow you to invoke AI models defined in your project's [manifest
 
 Invoke a generative AI model with an instruction and prompt, resulting in a text response.
 
-```TypeScript
+```ts
 generateText (
   modelName: string,
   instruction: string,
@@ -39,7 +41,7 @@ generateText (
 
 Invoke a fine-tuned classification model with a text input, resulting in a single classification label that exceeds the provided threshold.
 
-```TypeScript
+```ts
 classifyText (
   modelName: string,
   text: string,
@@ -65,7 +67,7 @@ classifyText (
 
 Invoke a fine-tuned classification model with a text input, resulting in an array of labels and probabilities.
 
-```TypeScript
+```ts
 getClassificationLabelsForText (
   modelName: string,
   text: string
@@ -85,7 +87,7 @@ getClassificationLabelsForText (
 
 Invoke a fine-tuned classification model with multiple text inputs, resulting in an array of an array of labels and probabilities.
 
-```TypeScript
+```ts
 getClassificationLabelsForTexts (
   modelName: string,
   texts: Map<string, string>
@@ -105,7 +107,7 @@ getClassificationLabelsForTexts (
 
 Invoke a fine-tuned classification model with a text input, resulting in the probability of the provided label.
 
-```TypeScript
+```ts
 getClassificationProbability (
   modelName: string,
   text: string,
@@ -129,7 +131,7 @@ getClassificationProbability (
 
 Invoke an embedding model with a text input, resulting in a vector embedding.
 
-```TypeScript
+```ts
 getTextEmbedding (
   modelName: string,
   text: string
@@ -148,7 +150,7 @@ getTextEmbedding (
 
 Invoke an embedding model with multiple text inputs, resulting in an array of vector embeddings.
 
-```TypeScript
+```ts
 getTextEmbeddings (
   modelName: string,
   texts: Map<string, string>

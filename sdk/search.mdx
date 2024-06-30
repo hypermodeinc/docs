@@ -1,7 +1,11 @@
 ---
-title: Search
-description: "Add search into your functions"
+title: Collections
+description: "Add data and search built into your functions"
 ---
+
+{/* <!-- vale Google.Headings = NO --> */}
+
+Search APIs integrate collections and models defined in your project's [manifest](../manifest).
 
 <Tip>
   We're introducing new APIs consistently through ongoing development with build
@@ -9,4 +13,193 @@ description: "Add search into your functions"
   Functions SDK even more powerful for your next use case!
 </Tip>
 
-The [getTextEmbedding](/sdk/inference#getTextEmbedding) API creates text embeddings for use in semantic similarity search use cases.
+### upsert
+
+Inserts or updates an item into a collection.
+
+<Note>
+  If an item with the same key already exists, the original text is overwritten
+  with the new text.
+</Note>
+
+```ts
+upsert(
+  collection: string,
+  key: string | null,
+  text: string,
+): CollectionMutationResult
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>
+
+<ResponseField name="key" type="string">
+  An optional key for the item. If `null`, Hypermode assigns a new UUID as the
+  key for the item.
+</ResponseField>
+
+<ResponseField name="text" type="string" required>
+  The text of the item to add to the collection.
+</ResponseField>
+
+### upsertBatch
+
+Inserts or updates a batch of items into a collection.
+
+<Note>
+  If an item with the same key already exists, the original text is overwritten
+  with the new text.
+</Note>
+
+```ts
+upsertBatch(
+  collection: string,
+  keys: string[] | null,
+  texts: string[],
+): CollectionMutationResult
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>
+
+<ResponseField name="keys" type="string[]">
+  Array of keys for the item to add to the collection. If you pass `null` for
+  any key, Hypermode assigns a new UUID as the key for the item.
+</ResponseField>
+
+<ResponseField name="texts" type="string[]" required>
+  Array of texts for the items to add to the collection.
+</ResponseField>
+
+### remove
+
+Removes an item from the collection.
+
+```ts
+remove(
+  collection: string,
+  key: string,
+): CollectionMutationResult
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>
+
+<ResponseField name="key" type="string" required>
+  The key of the item to delete from the collection.
+</ResponseField>
+
+### search
+
+Search for an item in the collection by using natural language search.
+
+<Note>
+  Hypermode uses the same embedder for both inserting text into the collection,
+  and for the text used when searching the collection.
+</Note>
+
+```ts
+search(
+  collection: string,
+  searchMethod: string,
+  text: string,
+  limit: i32,
+  returnText: bool = false,
+): CollectionSearchResult
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>
+
+<ResponseField name="searchMethod" type="string" required>
+  The search method used to calculate embedding for text & search against.
+</ResponseField>
+
+<ResponseField name="text" type="string" required>
+  The text to compute natural language search on.
+</ResponseField>
+
+<ResponseField name="limit" type="i32" required>
+  The number of result objects to return.
+</ResponseField>
+
+<ResponseField name="returnText" type="bool">
+  A flag to return the texts in the response.
+</ResponseField>
+
+### recomputeSearchMethod
+
+Recomputes the embeddings for all texts in a collection, for a specific search method.
+
+```ts
+recomputeSearchMethod(
+  collection: string,
+  searchMethod: string,
+): SearchMethodMutationResult
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>
+
+<ResponseField name="searchMethod" type="string" required>
+  The search method to recompute embeddings for.
+</ResponseField>
+
+### computeSimilarity
+
+Computes similarity between two keys in a collection using a search method's embedder.
+
+```ts
+computeSimilarity(
+  collection: string,
+  searchMethod: string,
+  key1: string,
+  key2: string,
+): CollectionSearchResultObject
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>
+
+<ResponseField name="searchMethod" type="string" required>
+  The search method used to calculate embedding for key's texts.
+</ResponseField>
+
+<ResponseField name="key1, key2" type="string" required>
+  Keys to compute similarity on.
+</ResponseField>
+
+### getText
+
+Gets an item's text from a collection, give the item's key.
+
+```ts
+getText(collection: string, key: string): string
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>
+
+<ResponseField name="key" type="string" required>
+  The key of the item to retrieve.
+</ResponseField>
+
+### getTexts
+
+Get all items from a collection.
+The result is a map of key to text for all items in the collection.
+
+```ts
+getTexts(collection: string): Map<string, string>
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>

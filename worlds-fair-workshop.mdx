@@ -34,10 +34,14 @@ You can install Node.js with any supported method, including:
 
 We'll spend our time together on the following:
 
+{/* <!-- vale Google.Passive = NO --> */}
+
 1. Playing a familiar game, using AI to scale the format
 2. Understanding how the game is constructed, using both large and small models
 3. Applying the same building blocks to an app triaging GitHub issues
 4. Generalizing the concepts for adding AI to your apps
+
+{/* <!-- vale Google.Passive = YES --> */}
 
 ## Hypercategories
 
@@ -210,6 +214,16 @@ export function trendSummary(owner: string, repo: string): string {
 
 </Accordion>
 
+<Accordion title="Example Query">
+
+```graphql
+query GetTrendSummary {
+  trendSummary(owner: "huggingface", repo: "transformers")
+}
+```
+
+</Accordion>
+
 ### Issue type classification
 
 Next let's examine the `classifyIssue` function in [functions/assembly/classify.ts](https://github.com/hypermodeAI/ship-issue-triage/blob/main/functions/assembly/classify.ts)
@@ -244,6 +258,194 @@ export function classifyIssue(
   return output.label;
 }
 ```
+
+</Accordion>
+
+<Accordion title="Example Query">
+
+````graphql
+query ClassifyIssueText {
+  classifyIssue(
+    id: "31622"
+    title: "Unable to export Phi-3-vision model to PyTorch exported program"
+    description: "### System Info\n\n- `transformers` version: 4.41.2
+\n- Platform: Linux-6.5.0-35-generic-x86_64-with-glibc2.35
+\n- Python version: 3.10.14
+\n- Huggingface_hub version: 0.23.0
+\n- Safetensors version: 0.4.3
+\n- Accelerate version: 0.30.1
+\n- Accelerate config:    not found
+\n- PyTorch version (GPU?): 2.4.0.dev20240412+cu121 (True)
+\n- Tensorflow version (GPU?): not installed (NA)
+\n- Flax version (CPU?/GPU?/TPU?): not installed (NA)
+\n- Jax version: not installed
+\n- JaxLib version: not installed
+\n- Using GPU in script?: yes
+\n- Using distributed or parallel set-up in script?: no\n\n### Who can help?\n\n@amyeroberts\n\n### Information\n\n- [ ] The official example scripts\n- [X] My own modified scripts\n\n### Tasks\n\n- [ ] An officially supported task in the `examples` folder (such as GLUE/SQuAD, ...)\n- [X] My own task or dataset (give details below)\n\n### Reproduction\n\nI'm trying to export the Phi-3-vision model to PyTorch exported program.
+\n
+\nRepro:
+\n```python
+\nimport requests
+\nimport torch
+\nfrom PIL import Image
+\nfrom transformers import AutoModelForCausalLM, AutoProcessor
+\nfrom ml_dtypes import bfloat16
+\nimport numpy as np
+\n
+\n
+\nmodel_id = \"microsoft/Phi-3-vision-128k-instruct\"
+\nprocessor = AutoProcessor.from_pretrained(model_id, trust_remote_code=True)
+\nmodel = AutoModelForCausalLM.from_pretrained(
+\n    model_id, trust_remote_code=True, torch_dtype=\"auto\"
+\n).to('cuda')
+\n
+\nuser_prompt = \"<|user|>\\n\"
+\nassistant_prompt = \"<|assistant|>\\n\"
+\nprompt_suffix = \"<|end|>\\n\"
+\n
+\n# single-image prompt
+\nprompt = f\"{user_prompt}<|image_1|>\\nWhat is shown in this image?{prompt_suffix}{assistant_prompt}\"
+\nurl = \"https://www.ilankelman.org/stopsigns/australia.jpg\"
+\nprint(f\">>> Prompt\\n{prompt}\")
+\n
+\nimage = Image.open(requests.get(url, stream=True).raw)
+\ninputs = processor(prompt, image, return_tensors=\"pt\").to(\"cuda:0\")
+\n
+\n# Initialize
+\n# inputs.keys: dict_keys(['input_ids', 'pixel_values', 'image_sizes'])
+\ninput_ids = inputs[\"input_ids\"]
+\nstart_point = input_ids.shape[1]
+\npixel_values = inputs[\"pixel_values\"]
+\nimage_sizes = inputs[\"image_sizes\"]
+\ninputs.pop(\"attention_mask\")
+\n
+\nwith torch.no_grad():
+\n    # max=1024 has contraint violation error. https://github.com/pytorch/pytorch/issues/125604
+\n    seq_len = torch.export.Dim(\"seq_len\", min=1, max=4096)
+\n    kwargs = {\"input_ids\": input_ids, \"pixel_values\": pixel_values, \"image_sizes\": image_sizes}
+\n    ep = torch.export.export(
+\n        model,
+\n        args=tuple(),
+\n        kwargs=kwargs,
+\n        dynamic_shapes=({1: seq_len}, {}, {}),
+\n        strict=False,
+\n    )
+\n```
+\n
+\nError message:
+\n
+\n```
+\nTraceback (most recent call last):
+\n  File \"/home/zewenl/Documents/pytorch/TensorRT/examples/dynamo/phi3.py\", line 39, in <module>
+\n    ep = torch.export.export(
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/export/__init__.py\", line 174, in export
+\n    return _export(
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/export/_trace.py\", line 900, in wrapper
+\n    raise e
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/export/_trace.py\", line 883, in wrapper
+\n    ep = fn(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/export/exported_program.py\", line 85, in wrapper
+\n    return fn(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/export/_trace.py\", line 1062, in _export
+\n    ep_non_strict = _export_non_strict(
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/export/_trace.py\", line 583, in _export_non_strict
+\n    gm, graph_signature = transform(aot_export_module)(
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/export/_trace.py\", line 1023, in _aot_export_non_strict
+\n    gm, sig = aot_export(wrapped_mod, args, kwargs=kwargs, **flags)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_functorch/aot_autograd.py\", line 1059, in aot_export_module
+\n    fx_g, metadata, in_spec, out_spec = _aot_export_function(
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_functorch/aot_autograd.py\", line 1249, in _aot_export_function
+\n    fx_g, meta = create_aot_dispatcher_function(
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_dynamo/utils.py\", line 265, in time_wrapper
+\n    r = func(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_functorch/aot_autograd.py\", line 549, in create_aot_dispatcher_function
+\n    fw_metadata = run_functionalized_fw_and_collect_metadata(
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_functorch/_aot_autograd/collect_metadata_analysis.py\", line 150, in inner
+\n    flat_f_outs = f(*flat_f_args)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_functorch/_aot_autograd/utils.py\", line 174, in flat_fn
+\n    tree_out = fn(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_functorch/_aot_autograd/traced_function_transforms.py\", line 709, in functional_call
+\n    out = mod(*args[params_len:], **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/nn/modules/module.py\", line 1532, in _wrapped_call_impl
+\n    return self._call_impl(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/nn/modules/module.py\", line 1541, in _call_impl
+\n    return forward_call(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/export/_trace.py\", line 1010, in forward
+\n    tree_out = self._export_root(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/nn/modules/module.py\", line 1532, in _wrapped_call_impl
+\n    return self._call_impl(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/nn/modules/module.py\", line 1541, in _call_impl
+\n    return forward_call(*args, **kwargs)
+\n  File \"/home/zewenl/.cache/huggingface/modules/transformers_modules/microsoft/Phi-3-vision-128k-instruct/7b92b8c62807f5a98a9fa47cdfd4144f11fbd112/modeling_phi3_v.py\", line 1301, in forward
+\n    outputs = self.model(
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/nn/modules/module.py\", line 1532, in _wrapped_call_impl
+\n    return self._call_impl(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/nn/modules/module.py\", line 1541, in _call_impl
+\n    return forward_call(*args, **kwargs)
+\n  File \"/home/zewenl/.cache/huggingface/modules/transformers_modules/microsoft/Phi-3-vision-128k-instruct/7b92b8c62807f5a98a9fa47cdfd4144f11fbd112/modeling_phi3_v.py\", line 1129, in forward
+\n    inputs_embeds = self.vision_embed_tokens(input_ids, pixel_values=pixel_values, image_sizes=image_sizes)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/nn/modules/module.py\", line 1532, in _wrapped_call_impl
+\n    return self._call_impl(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/nn/modules/module.py\", line 1541, in _call_impl
+\n    return forward_call(*args, **kwargs)
+\n  File \"/home/zewenl/.cache/huggingface/modules/transformers_modules/microsoft/Phi-3-vision-128k-instruct/7b92b8c62807f5a98a9fa47cdfd4144f11fbd112/image_embedding_phi3_v.py\", line 170, in forward
+\n    if len(positions.tolist()) > 0:
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_subclasses/functional_tensor.py\", line 219, in tolist
+\n    return [elem.tolist() for elem in self.elem]
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_tensor.py\", line 1066, in __iter__
+\n    return iter(self.unbind(0))
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_subclasses/functional_tensor.py\", line 421, in __torch_dispatch__
+\n    outs_unwrapped = func._op_dk(
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/utils/_stats.py\", line 20, in wrapper
+\n    return fn(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_subclasses/fake_tensor.py\", line 842, in __torch_dispatch__
+\n    return self.dispatch(func, types, args, kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_subclasses/fake_tensor.py\", line 1187, in dispatch
+\n    return self._cached_dispatch_impl(func, types, args, kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_subclasses/fake_tensor.py\", line 920, in _cached_dispatch_impl
+\n    output = self._dispatch_impl(func, types, args, kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_subclasses/fake_tensor.py\", line 1339, in _dispatch_impl
+\n    return decomposition_table[func](*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_refs/__init__.py\", line 3906, in unbind
+\n    if t.shape[dim] == 0:
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/__init__.py\", line 377, in __bool__
+\n    return self.node.bool_()
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/fx/experimental/sym_node.py\", line 439, in bool_
+\n    return self.guard_bool(\"\", 0)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/fx/experimental/sym_node.py\", line 377, in guard_bool
+\n    r = self.shape_env.evaluate_expr(self.expr, self.hint, fx_node=self.fx_node)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/fx/experimental/recording.py\", line 265, in wrapper
+\n    return event.run(self)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/fx/experimental/recording.py\", line 160, in run
+\n    return self.f(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/fx/experimental/symbolic_shapes.py\", line 4269, in evaluate_expr
+\n    raise self._make_data_dependent_error(
+\ntorch.fx.experimental.symbolic_shapes.GuardOnDataDependentSymNode: Could not guard on data-dependent expression Eq(u0, 0) (unhinted: Eq(u0, 0)).  (Size-like symbols: u0)
+\n
+\nATTENTION: guard_size_oblivious would fix the error, evaluating expression to False.
+\nMaybe you need to add guard_size_oblivious to framework code, see doc below for more guidance.
+\n
+\nPotential framework code culprit (scroll up for full backtrace):
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_refs/__init__.py\", line 3906, in unbind
+\n    if t.shape[dim] == 0:
+\n
+\nFor more information, run with TORCH_LOGS=\"dynamic\"
+\nFor extended logs when we create symbols, also add TORCHDYNAMO_EXTENDED_DEBUG_CREATE_SYMBOL=\"u0\"
+\nIf you suspect the guard was triggered from C++, add TORCHDYNAMO_EXTENDED_DEBUG_CPP=1
+\nFor more debugging help, see https://docs.google.com/document/d/1HSuTTVvYH1pTew89Rtpeu84Ht3nQEFTYhAX3Ypa_xJs/edit?usp=sharing
+\n
+\nFor C++ stack trace, run with TORCHDYNAMO_EXTENDED_DEBUG_CPP=1
+\n```
+\n
+\nIt seems the error is due to:
+\n```
+\nFile \"/home/zewenl/.cache/huggingface/modules/transformers_modules/microsoft/Phi-3-vision-128k-instruct/7b92b8c62807f5a98a9fa47cdfd4144f11fbd112/image_embedding_phi3_v.py\", line 170, in forward
+\n    if len(positions.tolist()) > 0:
+\n```\n\n### Expected behavior\n\nThe code should be able to run correctly.
+\nI'm not sure the issue is from huggingface or pytorch. I submitted a issue to pytorch as well [here](https://github.com/pytorch/pytorch/issues/128906) for your reference."
+  )
+}
+````
 
 </Accordion>
 
@@ -332,8 +534,8 @@ Open the `hypermode.json` (in the root of the repo directory) and add the follow
 This tells Hypermode to create a collection named `issuesCollection`,
 and to search by title using an embedder function named `minilmEmbedder`.
 
-In order to compute vector embeddings, we also need another model to be
-declared in the `hypermode.json` file.
+In order to compute vector embeddings, we also need to declare another model
+in the `hypermode.json` file.
 
 Add the following to the existing `"models"` section:
 
@@ -486,11 +688,15 @@ git push
 
 #### Insert issues data into the collection
 
-In the Hypermode UI, navigate to your project and find the collection named `issuesCollection`.
+- Download an [example CSV data file](https://github.com/hypermodeAI/ship-issue-triage/blob/final/extras/issues.csv),
+  and save it to your local machine.
 
-Click the `Upload` link and upload a CSV file containing the issues data.
+- Then, in the Hypermode UI, navigate to your project and find the collection named `issuesCollection`.
 
-TODO: provide a sample CSV file
+- Click the `Upload` link and upload a CSV file containing the issues data.
+
+The import process starts, and should complete within a few seconds, adding all your issues
+to the collection.
 
 Alternatively, you can add the data programmatically.
 For example, you can create a new function that inserts data directly into
@@ -507,6 +713,20 @@ export function addIssue(id: string, title: string): string {
 
 Like before, you can navigate to your project at hypermode.com and test the `similarIssues`
 function with sample inputs using the GraphiQL interface provided by the Hypermode UI.
+
+<Accordion title="Example Query">
+
+```graphql
+query FindSimilarIssues {
+  similarIssues(title: "Add Spanish Readme") {
+    id
+    title
+    similarity
+  }
+}
+```
+
+</Accordion>
 
 ### Production-ready API
 
