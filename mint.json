@@ -67,35 +67,32 @@
       ]
     },
     {
-      "group": "AssemblyScript SDK",
-      "pages": [
-        "sdk/assemblyscript/about",
-        "sdk/assemblyscript/setting-up",
-        {
-          "group": "API",
-          "pages": [
-            "sdk/assemblyscript/api/json",
-            "sdk/assemblyscript/api/fetch"
-          ]
-        },
-        {
-          "group": "Packages",
-          "pages": [
-            "sdk/assemblyscript/packages/variant"
-          ]
-        },
-        "sdk/assemblyscript/faq"
-      ]
-    },
-    {
-      "group": "Write Functions",
+      "group": "Functions SDK",
       "pages": [
         "sdk/functions-sdk",
-        "sdk/http",
-        "sdk/connection",
-        "sdk/inference",
-        "sdk/search",
-        "sdk/console"
+        {
+          "group": "APIs",
+          "pages": [
+            "sdk/http",
+            "sdk/connection",
+            "sdk/inference",
+            "sdk/search",
+            "sdk/console"
+          ]
+        },
+        {
+          "group": "Languages",
+          "pages": [
+            {
+              "group": "AssemblyScript",
+              "pages": [
+                "sdk/assemblyscript/about",
+                "sdk/assemblyscript/faq",
+                "sdk/assemblyscript/json"
+              ]
+            }
+          ]
+        }
       ]
     },
     {

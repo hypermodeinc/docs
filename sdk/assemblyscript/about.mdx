@@ -1,6 +1,7 @@
 ---
-title: About
-description: "Introduction to AssemblyScript--a subset of TypeScript"
+title: About AssemblyScript
+sidebarTitle: About
+description: "Introduction to AssemblyScript -- a TypeScript-like language"
 mode: "wide"
 ---
 
@@ -60,7 +61,8 @@ function foo<T>(a: T): void {
 The `number` type in TypeScript can only be a [Float64](https://en.wikipedia.org/wiki/Double-precision_floating-point_format). In AssemblyScript, we can define which type of number we want to work with.
 
 <Note>
-If your not familiar with signed vs unsigned integers, signed means it can be `positive` or `negative`, but unsigned means it can *only be* `positive`
+  If your not familiar with signed vs unsigned integers, signed means it can be
+  `positive` or `negative`, but unsigned means it can *only be* `positive`
 </Note>
 
 AssemblyScript provides integers in their `8`, `16`, `32`, and `64` bit flavors. Namely:
@@ -83,7 +85,7 @@ There is also a `bool` type that can be defined as
 
 `type bool = number | boolean`
 
-AssemblyScript has pointers designated by the 
+AssemblyScript has pointers designated by the
 
 `usize` and `isize` types
 
@@ -98,7 +100,6 @@ And these scalar types:
 - `string`
 - `ArrayBuffer`
 - `Date`
-
 
 **Additionally, the Hypermode Runtime has a few limitations:**
 
@@ -120,5 +121,6 @@ export function increment(x: i32, n: i32 = 1) {
 ```
 
 <Note>
-If you have any questions, feel free to join the [AssemblyScript Discord](https://discord.gg/assemblyscript/) to ask questions
+  If you have any questions, feel free to join the [AssemblyScript
+  Discord](https://discord.gg/assemblyscript/) to ask questions
 </Note>

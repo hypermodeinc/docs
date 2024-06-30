@@ -1,9 +1,11 @@
 ---
-title: JSON
+title: AssemblyScript JSON Support
+sidebarTitle: JSON Support
 description: "Using JSON in your project"
+mode: "wide"
 ---
 
-AssemblyScript doesn't come with support for serializing and deserializing JSON, so instead, we use [json-as](https://github.com/JairusSW/as-json).
+AssemblyScript doesn't come with built-in JSON support, so instead, we use the [json-as](https://github.com/JairusSW/as-json) library.
 
 In JavaScript, serializing arbitrary objects is common. This isn't type-safe or friendly to developers.
 
@@ -105,6 +107,7 @@ JSON.stringify(player);
 We can also omit fields from serializing if they meet a certain criteria.
 
 In this example, age will only be included if the player is an adult (>= 18). Otherwise, age is hidden.
+
 ```typescript
 @json
 class Player {
