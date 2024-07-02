@@ -21,9 +21,6 @@ import { collections } from "@hypermode/functions-as";
 
 </CodeGroup>
 
-All of the following APIs are available under the `collections` namespace.
-For example, to add an item into a collection, you would use the `collections.upsert` API.
-
 ## Collections APIs
 
 The APIs in the `collections` namespace are below, organized by category.
@@ -34,7 +31,7 @@ The APIs in the `collections` namespace are below, organized by category.
   Functions SDK even more powerful for your next use case!
 </Tip>
 
-### Modifying the collection
+### Mutation Functions
 
 #### upsert
 
@@ -52,7 +49,7 @@ collections.upsert(
   collection: string,
   key: string | null,
   text: string,
-): CollectionMutationResult
+): collections.CollectionMutationResult
 ```
 
 </CodeGroup>
@@ -86,7 +83,7 @@ collections.upsertBatch(
   collection: string,
   keys: string[] | null,
   texts: string[],
-): CollectionMutationResult
+): collections.CollectionMutationResult
 ```
 
 </CodeGroup>
@@ -114,7 +111,7 @@ Removes an item from the collection.
 collections.remove(
   collection: string,
   key: string,
-): CollectionMutationResult
+): collections.CollectionMutationResult
 ```
 
 </CodeGroup>
@@ -127,7 +124,7 @@ collections.remove(
   The key of the item to delete from the collection.
 </ResponseField>
 
-### Search and retrieval
+### Search and Retrieval Functions
 
 #### search
 
@@ -147,7 +144,7 @@ collections.search(
   text: string,
   limit: i32,
   returnText: bool = false,
-): CollectionSearchResult
+): collections.CollectionSearchResult
 ```
 
 </CodeGroup>
@@ -184,7 +181,7 @@ collections.computeSimilarity(
   searchMethod: string,
   key1: string,
   key2: string,
-): CollectionSearchResultObject
+): collections.CollectionSearchResultObject
 ```
 
 </CodeGroup>
@@ -238,7 +235,7 @@ collections.getTexts(collection: string): Map<string, string>
   Name of the collection, as [defined in the manifest](../define-collections).
 </ResponseField>
 
-### Maintenance
+### Maintenance Functions
 
 #### recomputeSearchMethod
 
@@ -250,7 +247,7 @@ Recomputes the embeddings for all texts in a collection, for a specific search m
 collections.recomputeSearchMethod(
   collection: string,
   searchMethod: string,
-): SearchMethodMutationResult
+): collections.SearchMethodMutationResult
 ```
 
 </CodeGroup>
@@ -262,3 +259,21 @@ collections.recomputeSearchMethod(
 <ResponseField name="searchMethod" type="string" required>
   The search method to recompute embeddings for.
 </ResponseField>
+
+### Objects
+
+#### CollectionMutationResult
+
+TODO: Add description
+
+#### CollectionSearchResult
+
+TODO: Add description
+
+#### CollectionSearchResultObject
+
+TODO: Add description
+
+#### SearchMethodMutationResult
+
+TODO: Add description

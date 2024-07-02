@@ -5,7 +5,25 @@ description: "Access external GraphQL data sources from your functions."
 
 {/* <!-- vale Google.Headings = NO --> */}
 
-Hypermode's GraphQL API allows you to securely call and fetch data from any GraphQL endpoint.
+Hypermode's GraphQL APIs allows you to securely call and fetch data from any GraphQL endpoint.
+After [defining a host](../define-hosts) for the GraphQL endpoint in your project's manifest,
+you can use the following APIs to interact with the data.
+
+## Import from the SDK
+
+To begin, import the `graphql` namespace from the SDK:
+
+<CodeGroup>
+
+```ts AssemblyScript
+import { graphql } from "@hypermode/functions-as";
+```
+
+</CodeGroup>
+
+## GraphQL APIs
+
+The APIs in the `graphql` namespace are below, organized by category.
 
 <Tip>
   We're constantly introducing new APIs through ongoing development with build
@@ -13,16 +31,18 @@ Hypermode's GraphQL API allows you to securely call and fetch data from any Grap
   Functions SDK even more powerful for your next use case!
 </Tip>
 
-## invokeGraphqlApi
+### Execution Function
 
-Make a query or mutation against a GraphQL API endpoint.
+#### execute
+
+Execute a GraphQL statement to call a query or apply mutation against a GraphQL API endpoint.
 
 ```ts AssemblyScript
-invokeGraphqlApi<TData> (
+graphql.execute<TData> (
   hostName: string,
   statement: string,
   variables?: QueryVariables
-): GQLResponse<TData>
+): graphql.Response<TData>
 ```
 
 <ResponseField name="TData" type="Type" required>
@@ -50,7 +70,11 @@ vars.set("lastName", lastName);
 
 </ResponseField>
 
-### GQLResponse object
+### Objects
+
+#### QueryVariables
+
+#### Response
 
 A response object from the GraphQL query.
 
