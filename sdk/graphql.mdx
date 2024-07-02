@@ -5,7 +5,7 @@ description: "Access external GraphQL data sources from your functions."
 
 {/* <!-- vale Google.Headings = NO --> */}
 
-Connection APIs allow you to securely access an API endpoint at a defined host.
+Hypermode's GraphQL API allows you to securely call and fetch data from any GraphQL endpoint.
 
 <Tip>
   We're constantly introducing new APIs through ongoing development with build
@@ -17,7 +17,7 @@ Connection APIs allow you to securely access an API endpoint at a defined host.
 
 Make a query or mutation against a GraphQL API endpoint.
 
-```ts
+```ts AssemblyScript
 invokeGraphqlApi<TData> (
   hostName: string,
   statement: string,
@@ -42,7 +42,7 @@ invokeGraphqlApi<TData> (
 
 Example:
 
-```ts
+```ts AssemblyScript
 const vars = new QueryVariables();
 vars.set("firstName", firstName);
 vars.set("lastName", lastName);

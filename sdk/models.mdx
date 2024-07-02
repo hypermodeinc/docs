@@ -17,7 +17,7 @@ Inference APIs allow you to invoke AI models defined in your project's [manifest
 
 Invoke a generative AI model with an instruction and prompt, resulting in a text response.
 
-```ts
+```ts AssemblyScript
 generateText (
   modelName: string,
   instruction: string,
@@ -41,7 +41,7 @@ generateText (
 
 Invoke a fine-tuned classification model with a text input, resulting in a single classification label that exceeds the provided threshold.
 
-```ts
+```ts AssemblyScript
 classifyText (
   modelName: string,
   text: string,
@@ -67,7 +67,7 @@ classifyText (
 
 Invoke a fine-tuned classification model with a text input, resulting in an array of labels and probabilities.
 
-```ts
+```ts AssemblyScript
 getClassificationLabelsForText (
   modelName: string,
   text: string
@@ -87,7 +87,7 @@ getClassificationLabelsForText (
 
 Invoke a fine-tuned classification model with multiple text inputs, resulting in an array of an array of labels and probabilities.
 
-```ts
+```ts AssemblyScript
 getClassificationLabelsForTexts (
   modelName: string,
   texts: Map<string, string>
@@ -107,7 +107,7 @@ getClassificationLabelsForTexts (
 
 Invoke a fine-tuned classification model with a text input, resulting in the probability of the provided label.
 
-```ts
+```ts AssemblyScript
 getClassificationProbability (
   modelName: string,
   text: string,
@@ -131,7 +131,7 @@ getClassificationProbability (
 
 Invoke an embedding model with a text input, resulting in a vector embedding.
 
-```ts
+```ts AssemblyScript
 getTextEmbedding (
   modelName: string,
   text: string
@@ -150,7 +150,7 @@ getTextEmbedding (
 
 Invoke an embedding model with multiple text inputs, resulting in an array of vector embeddings.
 
-```ts
+```ts AssemblyScript
 getTextEmbeddings (
   modelName: string,
   texts: Map<string, string>

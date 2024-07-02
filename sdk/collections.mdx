@@ -48,7 +48,7 @@ Inserts or updates an item into a collection.
 <CodeGroup>
 
 ```ts AssemblyScript
-upsert(
+collections.upsert(
   collection: string,
   key: string | null,
   text: string,
@@ -82,7 +82,7 @@ Inserts or updates a batch of items into a collection.
 <CodeGroup>
 
 ```ts AssemblyScript
-upsertBatch(
+collections.upsertBatch(
   collection: string,
   keys: string[] | null,
   texts: string[],
@@ -111,7 +111,7 @@ Removes an item from the collection.
 <CodeGroup>
 
 ```ts AssemblyScript
-remove(
+collections.remove(
   collection: string,
   key: string,
 ): CollectionMutationResult
@@ -141,7 +141,7 @@ Search for an item in the collection by using natural language search.
 <CodeGroup>
 
 ```ts AssemblyScript
-search(
+collections.search(
   collection: string,
   searchMethod: string,
   text: string,
@@ -179,7 +179,7 @@ Computes similarity between two keys in a collection using a search method's emb
 <CodeGroup>
 
 ```ts AssemblyScript
-computeSimilarity(
+collections.computeSimilarity(
   collection: string,
   searchMethod: string,
   key1: string,
@@ -208,7 +208,7 @@ Gets an item's text from a collection, give the item's key.
 <CodeGroup>
 
 ```ts AssemblyScript
-getText(collection: string, key: string): string
+collections.getText(collection: string, key: string): string
 ```
 
 </CodeGroup>
@@ -229,7 +229,7 @@ The result is a map of key to text for all items in the collection.
 <CodeGroup>
 
 ```ts AssemblyScript
-getTexts(collection: string): Map<string, string>
+collections.getTexts(collection: string): Map<string, string>
 ```
 
 </CodeGroup>
@@ -247,7 +247,7 @@ Recomputes the embeddings for all texts in a collection, for a specific search m
 <CodeGroup>
 
 ```ts AssemblyScript
-recomputeSearchMethod(
+collections.recomputeSearchMethod(
   collection: string,
   searchMethod: string,
 ): SearchMethodMutationResult
