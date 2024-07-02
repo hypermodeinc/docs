@@ -37,6 +37,8 @@ The APIs in the `graphql` namespace are below, organized by category.
 
 Execute a GraphQL statement to call a query or apply mutation against a GraphQL API endpoint.
 
+<CodeGroup>
+
 ```ts AssemblyScript
 graphql.execute<TData> (
   hostName: string,
@@ -45,28 +47,61 @@ graphql.execute<TData> (
 ): graphql.Response<TData>
 ```
 
+</CodeGroup>
+
 <ResponseField name="TData" type="Type" required>
   Type of object to use for the data returned from the query.
+  This can be any type, including a custom type defined in your project.
+  It should match the shape of the data returned from the GraphQL query.
+
+  <Tip>
+    Define custom types in the project's source code.
+    In AssemblyScript, create classes decorated with `@json`.
+
+    All types, including classes, base classes, and field types must be JSON serializable.
+    You can also use built-in types such as strings, numbers, arrays, and maps.
+
+  </Tip>
+
 </ResponseField>
 
 <ResponseField name="hostName" type="string" required>
-  Internal name of your host, as [defined in your manifest](../define-hosts).
+  Name of the host, as [defined in the manifest](../define-hosts).
 </ResponseField>
 
 <ResponseField name="statement" type="string" required>
-  GraphQL operation for execution on your API server to retrieve or write data.
+  GraphQL statement containing the query or mutation operation to execute.
 </ResponseField>
 
 <ResponseField name="variables" type="QueryVariables">
-  Optional variables added to the query.
+  Optional variables to include with the query.
+  
+  To use this feature, create a new `QueryVariables` object and set variables using the `set` method.
+  Then pass the object to the `execute` function.
 
-Example:
+**Example:**
+
+<CodeGroup>
 
 ```ts AssemblyScript
 const vars = new QueryVariables();
 vars.set("firstName", firstName);
 vars.set("lastName", lastName);
+
+const response = graphql.execute<PeopleData>(hostName, statement, vars);
 ```
+
+</CodeGroup>
+
+For a complete example, refer to [/examples/graphql/assembly/index.ts](https://github.com/hypermodeAI/functions-as/blob/9894db357c128f80745d24dbf5c76d67ff39187d/examples/graphql/assembly/index.ts#L29-L57)
+in the `functions-as` repository.
+
+<Warning>
+  While it's possible to directly include parameter values into your GraphQL
+  statement, it's highly recommended to pass a `QueryVariables` object instead.
+  This can help to prevent against injection attacks and other security
+  vulnerabilities.
+</Warning>
 
 </ResponseField>
 
@@ -76,12 +111,23 @@ vars.set("lastName", lastName);
 
 #### Response
 
+<CodeGroup>
+
+```ts AssemblyScript
+class Response<T> {
+  errors: ErrorResult[] | null = null;
+  data: T | null = null;
+}
+```
+
+</CodeGroup>
+
 A response object from the GraphQL query.
 
-<ResponseField name="data" type="TData">
+<ResponseField name="data" type="T">
   The results of the GraphQL operation.
 </ResponseField>
-<ResponseField name="errors" type="GQLError[]">
+<ResponseField name="errors" type="ErrorResult[]">
   Any errors incurred as part of your GraphQL request.
   <Expandable title="properties">
     <ResponseField name="message" type="string">
@@ -91,7 +137,7 @@ A response object from the GraphQL query.
       Query path of the error incurred. Each item in the array represents a
       segment of the path.
     </ResponseField>
-    <ResponseField name="locations" type="GQLErrorLocation[]">
+    <ResponseField name="locations" type="CodeLocation[]">
       <Expandable title="properties">
         <ResponseField name="line" type="u32">
           Specific line number of the request that points to the error.
