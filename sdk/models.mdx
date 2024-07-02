@@ -1,6 +1,6 @@
 ---
-title: Inference
-description: "Incorporate AI models into functions"
+title: Models
+description: "Easily invoke AI models from your functions."
 ---
 
 {/* <!-- vale Google.Headings = NO --> */}
@@ -8,12 +8,12 @@ description: "Incorporate AI models into functions"
 Inference APIs allow you to invoke AI models defined in your project's [manifest](../manifest) with less scaffolding.
 
 <Tip>
-  We're introducing new APIs consistently through ongoing development with build
+  We're constantly introducing new APIs through ongoing development with build
   partners. [Let's chat](mailto:help@hypermode.com) about what would make the
   Functions SDK even more powerful for your next use case!
 </Tip>
 
-### generateText
+## generateText
 
 Invoke a generative AI model with an instruction and prompt, resulting in a text response.
 
@@ -37,7 +37,7 @@ generateText (
   Queries for response within the context of the given instruction.
 </ResponseField>
 
-### classifyText
+## classifyText
 
 Invoke a fine-tuned classification model with a text input, resulting in a single classification label that exceeds the provided threshold.
 
@@ -63,7 +63,7 @@ classifyText (
   higher than this threshold, the model won't produce a result.
 </ResponseField>
 
-### getClassificationLabelsForText
+## getClassificationLabelsForText
 
 Invoke a fine-tuned classification model with a text input, resulting in an array of labels and probabilities.
 
@@ -83,7 +83,7 @@ getClassificationLabelsForText (
   process.
 </ResponseField>
 
-### getClassificationLabelsForTexts
+## getClassificationLabelsForTexts
 
 Invoke a fine-tuned classification model with multiple text inputs, resulting in an array of an array of labels and probabilities.
 
@@ -103,7 +103,7 @@ getClassificationLabelsForTexts (
   process.
 </ResponseField>
 
-### getClassificationProbability
+## getClassificationProbability
 
 Invoke a fine-tuned classification model with a text input, resulting in the probability of the provided label.
 
@@ -127,7 +127,7 @@ getClassificationProbability (
   The label to classify the provided text against.
 </ResponseField>
 
-### getTextEmbedding
+## getTextEmbedding
 
 Invoke an embedding model with a text input, resulting in a vector embedding.
 
@@ -146,7 +146,7 @@ getTextEmbedding (
   Text input for embedding.
 </ResponseField>
 
-### getTextEmbeddings
+## getTextEmbeddings
 
 Invoke an embedding model with multiple text inputs, resulting in an array of vector embeddings.
 

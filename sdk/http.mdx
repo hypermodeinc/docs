@@ -1,6 +1,6 @@
 ---
 title: HTTP
-description: ""
+description: "Access external HTTP endpoints from your functions."
 ---
 
 {/* <!-- vale Google.Headings = NO --> */}
@@ -8,12 +8,12 @@ description: ""
 The HTTP API allows you to securely call and fetch data from an HTTP endpoint.
 
 <Tip>
-  We're introducing new APIs consistently through ongoing development with build
+  We're constantly introducing new APIs through ongoing development with build
   partners. [Let's chat](mailto:help@hypermode.com) about what would make the
   Functions SDK even more powerful for your next use case!
 </Tip>
 
-### fetch
+## fetch
 
 Invoke an HTTP endpoint to retrieve data or trigger external action.
 
@@ -31,7 +31,7 @@ fetch (
   A [Response](#response-object) object from the HTTP endpoint.
 </ResponseField>
 
-### Request object
+## Request object
 
 <ResponseField name="url" type="string">
   The URL to send the request to. You must have a corresponding
@@ -54,7 +54,7 @@ Example: "GET"
   The raw HTTP request body, as an `ArrayBuffer`.
 </ResponseField>
 
-### Response object
+## Response object
 
 <ResponseField name="status" type="u16">
   The HTTP response status code.

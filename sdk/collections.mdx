@@ -1,19 +1,42 @@
 ---
 title: Collections
-description: "Add data and search built into your functions"
+description: "Add basic storage and search capabilities to your functions."
 ---
 
 {/* <!-- vale Google.Headings = NO --> */}
 
-Search APIs integrate collections and models defined in your project's [manifest](../manifest).
+Hypermode Collections provide a built-in key-value storage mechanism that supports vector
+embeddings, that you can use from your functions. After [defining collections](../define-collections)
+in your project's manifest, you can use the following APIs to interact with the data.
+
+## Import from the SDK
+
+To begin, import the `collections` namespace from the SDK:
+
+<CodeGroup>
+
+```ts AssemblyScript
+import { collections } from "@hypermode/functions-as";
+```
+
+</CodeGroup>
+
+All of the following APIs are available under the `collections` namespace.
+For example, to add an item into a collection, you would use the `collections.upsert` API.
+
+## Collections APIs
+
+The APIs in the `collections` namespace are below, organized by category.
 
 <Tip>
-  We're introducing new APIs consistently through ongoing development with build
+  We're constantly introducing new APIs through ongoing development with build
   partners. [Let's chat](mailto:help@hypermode.com) about what would make the
   Functions SDK even more powerful for your next use case!
 </Tip>
 
-### upsert
+### Modifying the collection
+
+#### upsert
 
 Inserts or updates an item into a collection.
 
@@ -22,13 +45,17 @@ Inserts or updates an item into a collection.
   with the new text.
 </Note>
 
-```ts
+<CodeGroup>
+
+```ts AssemblyScript
 upsert(
   collection: string,
   key: string | null,
   text: string,
 ): CollectionMutationResult
 ```
+
+</CodeGroup>
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the manifest](../define-collections).
@@ -43,7 +70,7 @@ upsert(
   The text of the item to add to the collection.
 </ResponseField>
 
-### upsertBatch
+#### upsertBatch
 
 Inserts or updates a batch of items into a collection.
 
@@ -52,13 +79,17 @@ Inserts or updates a batch of items into a collection.
   with the new text.
 </Note>
 
-```ts
+<CodeGroup>
+
+```ts AssemblyScript
 upsertBatch(
   collection: string,
   keys: string[] | null,
   texts: string[],
 ): CollectionMutationResult
 ```
+
+</CodeGroup>
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the manifest](../define-collections).
@@ -73,16 +104,20 @@ upsertBatch(
   Array of texts for the items to add to the collection.
 </ResponseField>
 
-### remove
+#### remove
 
 Removes an item from the collection.
 
-```ts
+<CodeGroup>
+
+```ts AssemblyScript
 remove(
   collection: string,
   key: string,
 ): CollectionMutationResult
 ```
+
+</CodeGroup>
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the manifest](../define-collections).
@@ -92,7 +127,9 @@ remove(
   The key of the item to delete from the collection.
 </ResponseField>
 
-### search
+### Search and retrieval
+
+#### search
 
 Search for an item in the collection by using natural language search.
 
@@ -101,7 +138,9 @@ Search for an item in the collection by using natural language search.
   and for the text used when searching the collection.
 </Note>
 
-```ts
+<CodeGroup>
+
+```ts AssemblyScript
 search(
   collection: string,
   searchMethod: string,
@@ -110,6 +149,8 @@ search(
   returnText: bool = false,
 ): CollectionSearchResult
 ```
+
+</CodeGroup>
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the manifest](../define-collections).
@@ -131,30 +172,13 @@ search(
   A flag to return the texts in the response.
 </ResponseField>
 
-### recomputeSearchMethod
-
-Recomputes the embeddings for all texts in a collection, for a specific search method.
-
-```ts
-recomputeSearchMethod(
-  collection: string,
-  searchMethod: string,
-): SearchMethodMutationResult
-```
-
-<ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../define-collections).
-</ResponseField>
-
-<ResponseField name="searchMethod" type="string" required>
-  The search method to recompute embeddings for.
-</ResponseField>
-
-### computeSimilarity
+#### computeSimilarity
 
 Computes similarity between two keys in a collection using a search method's embedder.
 
-```ts
+<CodeGroup>
+
+```ts AssemblyScript
 computeSimilarity(
   collection: string,
   searchMethod: string,
@@ -162,6 +186,8 @@ computeSimilarity(
   key2: string,
 ): CollectionSearchResultObject
 ```
+
+</CodeGroup>
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the manifest](../define-collections).
@@ -175,13 +201,17 @@ computeSimilarity(
   Keys to compute similarity on.
 </ResponseField>
 
-### getText
+#### getText
 
 Gets an item's text from a collection, give the item's key.
 
-```ts
+<CodeGroup>
+
+```ts AssemblyScript
 getText(collection: string, key: string): string
 ```
+
+</CodeGroup>
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the manifest](../define-collections).
@@ -191,15 +221,44 @@ getText(collection: string, key: string): string
   The key of the item to retrieve.
 </ResponseField>
 
-### getTexts
+#### getTexts
 
 Get all items from a collection.
 The result is a map of key to text for all items in the collection.
 
-```ts
+<CodeGroup>
+
+```ts AssemblyScript
 getTexts(collection: string): Map<string, string>
 ```
 
+</CodeGroup>
+
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>
+
+### Maintenance
+
+#### recomputeSearchMethod
+
+Recomputes the embeddings for all texts in a collection, for a specific search method.
+
+<CodeGroup>
+
+```ts AssemblyScript
+recomputeSearchMethod(
+  collection: string,
+  searchMethod: string,
+): SearchMethodMutationResult
+```
+
+</CodeGroup>
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>
+
+<ResponseField name="searchMethod" type="string" required>
+  The search method to recompute embeddings for.
 </ResponseField>

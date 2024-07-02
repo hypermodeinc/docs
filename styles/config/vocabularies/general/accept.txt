@@ -2,6 +2,7 @@
 [Hh]ypercategories
 [Hh]ypermode
 APIs
+boolean
 classifyText
 CLI
 computeSimilarity
@@ -20,10 +21,12 @@ GraphiQL
 inferencing
 invokeGraphqlApi
 log
+namespace
 onboarding
 repo
 REST
 Scattergories
+timeEnd
 triaging
 upsert
 UUID
