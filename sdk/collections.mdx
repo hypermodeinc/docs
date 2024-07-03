@@ -49,7 +49,7 @@ collections.upsert(
   collection: string,
   key: string | null,
   text: string,
-): collections.CollectionMutationResult
+): CollectionMutationResult
 ```
 
 </CodeGroup>
@@ -83,7 +83,7 @@ collections.upsertBatch(
   collection: string,
   keys: string[] | null,
   texts: string[],
-): collections.CollectionMutationResult
+): CollectionMutationResult
 ```
 
 </CodeGroup>
@@ -111,7 +111,7 @@ Removes an item from the collection.
 collections.remove(
   collection: string,
   key: string,
-): collections.CollectionMutationResult
+): CollectionMutationResult
 ```
 
 </CodeGroup>
@@ -144,7 +144,7 @@ collections.search(
   text: string,
   limit: i32,
   returnText: bool = false,
-): collections.CollectionSearchResult
+): CollectionSearchResult
 ```
 
 </CodeGroup>
@@ -181,7 +181,7 @@ collections.computeSimilarity(
   searchMethod: string,
   key1: string,
   key2: string,
-): collections.CollectionSearchResultObject
+): CollectionSearchResultObject
 ```
 
 </CodeGroup>

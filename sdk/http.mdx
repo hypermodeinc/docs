@@ -17,11 +17,15 @@ The HTTP API allows you to securely call and fetch data from an HTTP endpoint.
 
 Invoke an HTTP endpoint to retrieve data or trigger external action.
 
+<CodeGroup>
+
 ```ts AssemblyScript
-fetch (
+http.fetch (
   request: Request,
 ): Response
 ```
+
+</CodeGroup>
 
 <ResponseField name="request" type="Request" required>
   A [Request](#request-object) object for calling an HTTP endpoint.
