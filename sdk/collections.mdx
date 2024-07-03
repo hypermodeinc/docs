@@ -264,16 +264,180 @@ collections.recomputeSearchMethod(
 
 #### CollectionMutationResult
 
-TODO: Add description
+<CodeGroup>
+
+```ts AssemblyScript
+class CollectionMutationResult {
+  collection: string;
+  status: CollectionStatus;
+  error: string;
+  isSuccessful: bool;
+  operation: string;
+  keys: string[];
+}
+```
+
+</CodeGroup>
+
+Represents the result of a mutation operation on a collection.
+
+<ResponseField name="collection" type="string">
+  Name of the collection.
+</ResponseField>
+
+<ResponseField name="status" type="CollectionStatus">
+  The status of the operation.
+</ResponseField>
+
+<ResponseField name="error" type="string">
+  Error message, if any.
+</ResponseField>
+
+<ResponseField name="isSuccessful" type="bool">
+  Whether the operation was successful.
+</ResponseField>
+
+<ResponseField name="operation" type="string">
+  The operation performed.
+</ResponseField>
+
+<ResponseField name="keys" type="string[]">
+  The keys of the items affected by the operation.
+</ResponseField>
 
 #### CollectionSearchResult
 
-TODO: Add description
+<CodeGroup>
+
+```ts AssemblyScript
+class CollectionSearchResult {
+  collection: string;
+  status: CollectionStatus;
+  error: string;
+  isSuccessful: bool;
+  searchMethod: string;
+  objects: CollectionSearchResultObject[];
+}
+```
+
+</CodeGroup>
+
+Represents the result of a search operation on a collection.
+
+<ResponseField name="collection" type="string">
+  Name of the collection.
+</ResponseField>
+
+<ResponseField name="status" type="CollectionStatus">
+  The status of the operation.
+</ResponseField>
+
+<ResponseField name="error" type="string">
+  Error message, if any.
+</ResponseField>
+
+<ResponseField name="isSuccessful" type="bool">
+  Whether the operation was successful.
+</ResponseField>
+
+<ResponseField name="searchMethod" type="string">
+  The search method used in the operation.
+</ResponseField>
+
+<ResponseField name="objects" type="CollectionSearchResultObject[]">
+  The search results.
+</ResponseField>
 
 #### CollectionSearchResultObject
 
-TODO: Add description
+<CodeGroup>
+
+```ts AssemblyScript
+class CollectionSearchResultObject {
+  key: string;
+  text: string;
+  score: f64;
+}
+```
+
+</CodeGroup>
+
+Represents an object in the search results.
+
+<ResponseField name="key" type="string">
+  The key of the item found as part of the search.
+</ResponseField>
+
+<ResponseField name="text" type="string">
+  The text of the item found as part of the search.
+</ResponseField>
+
+<ResponseField name="score" type="f64">
+  The similarity score of the item found, as it pertains to the search.
+</ResponseField>
+
+#### CollectionStatus
+
+<CodeGroup>
+
+```ts AssemblyScript
+enum CollectionStatus {
+  Success = "success";
+  Error = "error";
+}
+```
+
+</CodeGroup>
+
+The status of a collection operation.
+
+<ResponseField name="Success" type="string">
+  The operation was successful.
+</ResponseField>
+
+<ResponseField name="Error" type="string">
+  The operation encountered an error.
+</ResponseField>
 
 #### SearchMethodMutationResult
 
-TODO: Add description
+<CodeGroup>
+
+```ts AssemblyScript
+class SearchMethodMutationResult {
+  collection: string;
+  status: CollectionStatus;
+  error: string;
+  isSuccessful: bool;
+  operation: string;
+  searchMethod: string;
+}
+```
+
+</CodeGroup>
+
+Represents the result of a mutation operation on a search method.
+
+<ResponseField name="collection" type="string">
+  Name of the collection.
+</ResponseField>
+
+<ResponseField name="status" type="CollectionStatus">
+  The status of the operation.
+</ResponseField>
+
+<ResponseField name="error" type="string">
+  Error message, if any.
+</ResponseField>
+
+<ResponseField name="isSuccessful" type="bool">
+  Whether the operation was successful.
+</ResponseField>
+
+<ResponseField name="operation" type="string">
+  The operation performed.
+</ResponseField>
+
+<ResponseField name="searchMethod" type="string">
+  The search method affected by the operation.
+</ResponseField>
