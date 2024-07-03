@@ -103,7 +103,7 @@ See the details of the [`Variables`](#variables) object for more information.
 
 ```ts AssemblyScript
 class Variables {
-  public set<T>(name: string, value: T): void;
+  public set(name: string, value: any): void;
   public toJSON(): string;
 }
 ```
@@ -121,19 +121,11 @@ Set a variable with a name and value to include with the GraphQL operation.
 
 <Accordion title="Parameters">
 
-<ResponseField name="T">
-
-The type of the value to include with the GraphQL operation.
-
-You don't usually need to specify this type explicitly, as the compiler can infer it from the value you pass.
-
-</ResponseField>
-
 <ResponseField name="name" type="string" required>
   The name of the variable to include in the GraphQL operation.
 </ResponseField>
 
-<ResponseField name="value" type="T" required>
+<ResponseField name="value" type="any" required>
 
 The value of the variable to include in the GraphQL operation.
 

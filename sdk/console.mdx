@@ -48,12 +48,12 @@ Asserts that a condition is true, and logs an error if it's not.
 <CodeGroup>
 
 ```ts AssemblyScript
-console.assert<T>(assertion: T, message?: string): void
+console.assert(assertion: any, message?: string): void
 ```
 
 </CodeGroup>
 
-<ResponseField name="assertion" type="T" required>
+<ResponseField name="assertion" type="any" required>
   The condition to assert. Typically a boolean value. In the case of an object,
   asserts that the object isn't `null`.
 </ResponseField>
