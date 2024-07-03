@@ -18,6 +18,7 @@ getTextEmbeddings
 getTexts
 GQLResponse
 GraphiQL
+hardcoding
 inferencing
 invokeGraphqlApi
 log
