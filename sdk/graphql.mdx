@@ -31,11 +31,9 @@ import { graphql } from "@hypermode/functions-as";
 The APIs in the `graphql` namespace are below, organized by category.
 
 <Tip>
-
-We're constantly introducing new APIs through ongoing development with build
-partners. [Let's chat](mailto:help@hypermode.com) about what would make the
-Functions SDK even more powerful for your next use case!
-
+  We're constantly introducing new APIs through ongoing development with build
+  partners. [Let's chat](mailto:help@hypermode.com) about what would make the
+  Functions SDK even more powerful for your next use case!
 </Tip>
 
 ### Functions
@@ -57,10 +55,9 @@ graphql.execute<TData> (
 </CodeGroup>
 
 <ResponseField name="TData" type="Type" required>
-
-Type of object to use for the data returned from the query.
-This can be any type, including a custom type defined in your project.
-It should match the shape of the data returned from the GraphQL query.
+  Type of object to use for the data returned from the query.
+  This can be any type, including a custom type defined in your project.
+  It should match the shape of the data returned from the GraphQL query.
 
 <Tip>
 
@@ -75,21 +72,17 @@ You can also use built-in types such as strings, numbers, arrays, and maps.
 </ResponseField>
 
 <ResponseField name="hostName" type="string" required>
-
-Name of the host, as [defined in the manifest](../define-hosts).
-
+  Name of the host, as [defined in the manifest](../define-hosts).
 </ResponseField>
 
 <ResponseField name="statement" type="string" required>
-
-GraphQL statement containing the query or mutation operation to execute.
+  GraphQL statement containing the query or mutation operation to execute.
 
 <Warning>
-
-While it's possible to directly include parameter values into your GraphQL statement,
-it's highly recommended to pass a [`Variables`](#variables) object instead.
-This can help to prevent against injection attacks and other security vulnerabilities.
-
+  While it's possible to directly include parameter values into your GraphQL
+  statement, it's highly recommended to pass a [`Variables`](#variables) object
+  instead. This can help to prevent against injection attacks and other security
+  vulnerabilities.
 </Warning>
 
 </ResponseField>
@@ -229,9 +222,7 @@ class ErrorResult {
 The details of an error incurred as part of a GraphQL operation.
 
 <ResponseField name="message" type="string">
-
-Description of the error incurred.
-
+  Description of the error incurred.
 </ResponseField>
 
 <ResponseField name="path" type="string[]">
@@ -243,10 +234,8 @@ Each item in the array represents a segment of the path.
 </ResponseField>
 
 <ResponseField name="locations" type="CodeLocation[]">
-
-An array of [`CodeLocation`](#codelocation) objects that point to the specific
-location of the error in the GraphQL statement.
-
+  An array of [`CodeLocation`](#codelocation) objects that point to the specific
+  location of the error in the GraphQL statement.
 </ResponseField>
 
 #### CodeLocation
@@ -265,13 +254,9 @@ class CodeLocation {
 The location of specific code within a GraphQL statement.
 
 <ResponseField name="line" type="u32">
-
-Line number within the GraphQL statement for the code.
-
+  Line number within the GraphQL statement for the code.
 </ResponseField>
 
 <ResponseField name="column" type="u32">
-
-Column number within the GraphQL statement for the code.
-
+  Column number within the GraphQL statement for the code.
 </ResponseField>
