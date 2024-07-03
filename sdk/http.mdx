@@ -53,6 +53,8 @@ The APIs in the `http` namespace are below, organized by category.
 
 Invoke an HTTP endpoint to retrieve data or trigger external action.
 
+Returns a [`Response`](#response) object with the HTTP response data.
+
 <CodeGroup>
 
 ```ts AssemblyScript
@@ -79,36 +81,215 @@ those defined in the manifest entry of the host.
 
 </ResponseField>
 
-<ResponseField name="response" type="Response">
-  A [Response](#response-object) object from the HTTP endpoint.
+<ResponseField name="options" type="RequestOptions">
+  A [`RequestOptions`](#requestoptions) object with additional options for the
+  request, such as the HTTP method, headers, and body.
 </ResponseField>
 
 ### Objects
 
+#### Content
+
+<CodeGroup>
+
+```ts AssemblyScript
+class Content {
+  static from(value: any): Content;
+  readonly data: ArrayBuffer;
+  text(): string;
+  json<T>(): T;
+}
+```
+
+</CodeGroup>
+
+Represents content used in the body of an HTTP request or response.
+
+<ResponseField name="Content.from(value)">
+  Creates a new `Content` object from the given value.
+</ResponseField>
+
+<ResponseField name="data" type="ArrayBuffer">
+  The raw binary content data.
+</ResponseField>
+
+<ResponseField name="text()">
+  Interprets the content as a UTF-8 encoded string, and returns it as a `string`
+  value.
+</ResponseField>
+
+<ResponseField name="json<T>()">
+  Interprets the content as a UTF-8 encoded string containing JSON in the shape
+  of type `T`, and returns it as a value of type `T`.
+</ResponseField>
+
+#### Header
+
+<CodeGroup>
+
+```ts AssemblyScript
+class Header {
+  name: string;
+  values: string[];
+}
+```
+
+</CodeGroup>
+
+Represents an HTTP request or response header.
+
+<ResponseField name="name" type="string">
+  The name of the header.
+</ResponseField>
+
+<ResponseField name="values" type="string[]">
+  An array of values for the header. Typically a header has a single value, but
+  some headers can have multiple values.
+</ResponseField>
+
+#### Headers
+
+<CodeGroup>
+
+```ts AssemblyScript
+class Headers {
+  static from(
+    value: string[][] | Map<string, string> | Map<string, string[]>,
+  ): Headers;
+  append(name: string, value: string): void;
+  entries(): string[][];
+  get(name: string): string | null;
+}
+```
+
+</CodeGroup>
+
+Represents a collection of HTTP headers.
+
+<ResponseField name="Headers.from(value)">
+
+Creates a new `Headers` object from the given `value` object.
+
+The `value` object must be one of the following types:
+
+- A `string[][]`, where each inner array contains a header name and value.
+- A `Map<string, string>`, where the keys are header names and the values are header values.
+- A `Map<string, string[]>`, where the keys are header names and the values are arrays of header values.
+
+</ResponseField>
+
+<ResponseField name="append(name, value)">
+  Appends a new header with the given `name` and `value` to the collection.
+</ResponseField>
+
+<ResponseField name="entries()">
+  Returns a `string[][]`, where each inner array contains a header name and
+  value.
+</ResponseField>
+
+<ResponseField name="get(name)">
+  Returns the value of the header with the given `name`, or `null` if the header
+  doesn't exist. If there are multiple values for the header, this function
+  concatenates them with a comma to form a single string.
+</ResponseField>
+
 #### Request
 
+<CodeGroup>
+
+```ts AssemblyScript
+class Request {
+  constructor(url: string, options?: RequestOptions);
+  static clone(request: Request, options: RequestOptions): Request;
+  readonly url: string;
+  readonly method: string;
+  readonly headers: Headers;
+  readonly body: ArrayBuffer;
+  text(): string;
+  json<T>(): T;
+}
+```
+
+</CodeGroup>
+
+Represents an HTTP request to make.
+
+<ResponseField name="new http.Request(url, options?)">
+
+Creates a new `Request` object with the given `url` and `options`.
+
+The required `url` parameter must be a fully qualified URL of the request, including the protocol.
+For example, `"https://example.com"`.
+
+The optional `options` parameter is a [`RequestOptions`](#requestoptions) object that's used to set
+the HTTP method, headers, and body if needed.
+
+</ResponseField>
+
+<ResponseField name="Request.clone(request, options)">
+  Creates a new `Request` object by cloning the given `request` and applying the
+  `options` to it.
+</ResponseField>
+
 <ResponseField name="url" type="string">
-  The URL to send the request to. You must have a corresponding
-  [Host](/define-hosts) in your project's manifest.
-
-Example: https://example.com/whatever
-
+  The fully qualified URL of the request, including the protocol. For example,
+  `"https://example.com"`.
 </ResponseField>
+
 <ResponseField name="method" type="string">
-  The HTTP method to use for the request.
-
-Example: "GET"
-
+  The HTTP method of the request. For example, `"GET"`, `"POST"`, `"PUT"`, or
+  `"DELETE"`.
 </ResponseField>
+
 <ResponseField name="headers" type="Headers">
-  The HTTP headers for the request, as [defined in your
-  manifest](../define-hosts).
-</ResponseField>
-<ResponseField name="body" type="ArrayBuffer">
-  The raw HTTP request body, as an `ArrayBuffer`.
+  The HTTP headers of the request, as a [`Headers`](#headers) object.
 </ResponseField>
 
-#### Response object
+<ResponseField name="body" type="ArrayBuffer">
+  The raw binary content data of the request body.
+</ResponseField>
+
+<ResponseField name="text()">
+  Interprets the request body as a UTF-8 encoded string, and returns it as a
+  `string` value.
+</ResponseField>
+
+<ResponseField name="json<T>()">
+  Interprets the request body as a UTF-8 encoded string containing JSON in the
+  shape of type `T`, and returns it as a value of type `T`.
+</ResponseField>
+
+#### RequestOptions
+
+<CodeGroup>
+
+```ts AssemblyScript
+class RequestOptions {
+  method: string | null;
+  headers: Headers;
+  body: Content | null;
+}
+```
+
+</CodeGroup>
+
+#### Response
+
+<CodeGroup>
+
+```ts AssemblyScript
+class Response {
+  readonly status: u16;
+  readonly statusText: string;
+  readonly headers: Headers;
+  readonly body: ArrayBuffer;
+  readonly ok: bool;
+  text(): string;
+  json<T>(): T;
+}
+```
+
+</CodeGroup>
 
 <ResponseField name="status" type="u16">
   The HTTP response status code.
