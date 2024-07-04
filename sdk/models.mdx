@@ -5,4 +5,78 @@ description: "Easily invoke AI models from your functions."
 
 {/* <!-- vale Google.Headings = NO --> */}
 
+Hypermode's Models API allows you to invoke AI models directly from your functions,
+both for models hosted at Hypermode, and for models hosted by external services.
+
+Since many models have unique interfaces, the design of the Models API is extremely
+flexible. A common base class forms the core of the API, which extends to conform to
+any model's required schema.
+
+A separate library, [`models-as`](https://github.com/hypermodeAI/models-as) contains
+both the base classes and pre-defined implementations for many commonly used models.
+You can either use one of the pre-defined classes, or can create custom classes for
+any model you like, by extending from the base `Model` class.
+
+## Example project
+
+For your reference, several complete examples for using the Models API are available
+on GitHub in the `hypermodeAI/functions-as` repository:
+
+- [/examples/classification](https://github.com/hypermodeAI/functions-as/tree/main/examples/classification)
+- [/examples/embedding](https://github.com/hypermodeAI/functions-as/tree/main/examples/embedding)
+- [/examples/textgeneration](https://github.com/hypermodeAI/functions-as/tree/main/examples/textgeneration)
+
+Each demonstrates using different types of AI models for different purposes.
+However, the Models interface isn't limited to these purposes. You can use it for any
+task that an AI model can perform.
+
+<Note>
+  Currently, the models interface isn't designed for models that require
+  streaming of either request or response content. We plan to address this
+  limitation in a future release.
+</Note>
+
+## Import from the SDK
+
+To begin, import the `models` namespace from the SDK.
+
+<CodeGroup>
+
+```ts AssemblyScript
+import { models } from "@hypermode/functions-as";
+```
+
+</CodeGroup>
+
+You'll also need to import one or more classes for the model you are working with.
+
+For example:
+
+<CodeGroup>
+
+```ts AssemblyScript
+import { ClassificationModel } from "@hypermode/models-as/models/experimental/classification";
+```
+
+Refer to the `models-as` repository and the examples in the `functions-as` repository
+for the full list of available models.
+
+</CodeGroup>
+
+## Models APIs
+
+The APIs in the `models` namespace are below, organized by category.
+
+<Tip>
+  We're constantly introducing new APIs through ongoing development with build
+  partners. [Let's chat](mailto:help@hypermode.com) about what would make the
+  Functions SDK even more powerful for your next use case!
+</Tip>
+
+### Functions
+
+TODO
+
+### Objects
+
 TODO
