@@ -273,6 +273,38 @@ class RequestOptions {
 
 </CodeGroup>
 
+Options for the HTTP request.
+
+<ResponseField name="method" type="string | null">
+  The HTTP method of the request. For example, `"GET"`, `"POST"`, `"PUT"`, or
+  `"DELETE"`. If `null` (the default), the request uses the `GET` method.
+</ResponseField>
+
+<ResponseField name="headers" type="Headers">
+
+The HTTP headers of the request, as a [`Headers`](#headers) object.
+
+<Tip>
+
+By default, the `RequestOptions` contains an empty `Headers` object
+which you can add headers to using the `append` method.
+
+</Tip>
+
+</ResponseField>
+
+<ResponseField name="body" type="Content | null">
+
+Content to pass in the request body, as a [`Content`](#content) object,
+or `null` (the default) if there is no body to pass.
+
+<Tip>
+  It's generally recommended to supply a `Content-Type` header for any requests
+  that have a body.
+</Tip>
+
+</ResponseField>
+
 #### Response
 
 <CodeGroup>
@@ -291,25 +323,40 @@ class Response {
 
 </CodeGroup>
 
+Represents the response received from the HTTP server.
+
 <ResponseField name="status" type="u16">
-  The HTTP response status code.
-
-Example: 200
-
+  The HTTP response status code, such as `200` for success.
 </ResponseField>
+
 <ResponseField name="statusText" type="string">
-  The HTTP response status text.
-
-Example: "OK"
-
+  The HTTP response status text associated with the status code, such as `"OK"`
+  for success.
 </ResponseField>
+
 <ResponseField name="headers" type="Headers">
-  The HTTP response headers.
+  The HTTP headers received with the response, as a [`Headers`](#headers)
+  object.
 </ResponseField>
-<ResponseField name="body" type="ArrayBuffer">
-  The raw HTTP response body, as an `ArrayBuffer`.
 
-  <Tip>
-    The response body isn't normally read directly. Instead, use `response.text()` or `response.json<T>()` functions.
-  </Tip>
+<ResponseField name="body" type="ArrayBuffer">
+
+The raw binary content data of the response body.
+
+<Tip>
+  The response body isn't normally read directly. Instead, use the `text` or
+  `json` functions. You should only read the `body` directly if you expect to
+  receive binary data in the response.
+</Tip>
+
+</ResponseField>
+
+<ResponseField name="text()">
+  Interprets the response body content as a UTF-8 encoded string, and returns it
+  as a `string` value.
+</ResponseField>
+
+<ResponseField name="json<T>()">
+  Interprets the response body content as a UTF-8 encoded string containing JSON
+  in the shape of type `T`, and returns it as a value of type `T`.
 </ResponseField>
