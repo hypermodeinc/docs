@@ -67,14 +67,19 @@
       ]
     },
     {
-      "group": "Write Functions",
+      "group": "Functions SDK",
       "pages": [
         "sdk/functions-sdk",
-        "sdk/http",
-        "sdk/connection",
-        "sdk/inference",
-        "sdk/search",
-        "sdk/console"
+        {
+          "group": "API Reference",
+          "pages": [
+            "sdk/collections",
+            "sdk/console",
+            "sdk/graphql",
+            "sdk/http",
+            "sdk/models"
+          ]
+        }
       ]
     },
     {
