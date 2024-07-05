@@ -82,7 +82,7 @@ The APIs in the `models` namespace are below, organized by category.
 
 #### getModel
 
-Get a model instance by name.
+Get a model instance by name and type.
 
 <CodeGroup>
 
@@ -92,6 +92,105 @@ models.getModel<T>(modelName: string): T
 
 </CodeGroup>
 
+<ResponseField name="T" type="Type" required>
+  The type of model to return. This can be any class that extends the `Model`
+  base class.
+</ResponseField>
+
+<ResponseField name="modelName" type="string" required>
+  The name of the model to retrieve. This must match the name of a model defined
+  in your project's manifest file.
+</ResponseField>
+
 ### Objects
 
-TODO
+#### Model
+
+<CodeGroup>
+
+```ts AssemblyScript
+abstract class Model<TInput, TOutput> {
+  static invoker: ModelInvoker | null;
+  debug: boolean;
+  info: ModelInfo;
+  invoke(input: TInput): TOutput;
+}
+```
+
+</CodeGroup>
+
+The base class for all models that Hypermode functions can invoke.
+
+<Tip>
+
+If you are implementing a custom model, you should extend this class.
+You'll also need classes to represent the input and output types for your model.
+See the implementations of the pre-defined models in the `models-as` repository
+for examples.
+
+</Tip>
+
+<ResponseField name="TInput" type="Type" required>
+  The type of the input data for the model. This can be any type, including a
+  custom type defined in your project. It should match the shape of the data
+  expected by the model. It's usually a class.
+</ResponseField>
+
+<ResponseField name="TOutput" type="Type" required>
+  The type of the output data from the model. This can be any type, including a
+  custom type defined in your project. It should match the shape of the data
+  returned by the model. It's usually a class.
+</ResponseField>
+
+<ResponseField name="debug" type="boolean">
+  A flag to enable debug mode for the model. When enabled, Hypermode
+  automatically logs the full request and response data to the console.
+  implementations can also use this flag to enable additional debug logging.
+  Defaults to `false`.
+</ResponseField>
+
+<ResponseField name="info" type="ModelInfo">
+  Information about the model set by the Hypermode Runtime when creating the
+  instance. See the [`ModelInfo`](#modelinfo) object for more information.
+</ResponseField>
+
+<ResponseField name="invoke(input)" type="function" required>
+  Invokes the model with input data and returns the output data.
+</ResponseField>
+
+#### ModelInfo
+
+<CodeGroup>
+
+```ts AssemblyScript
+class ModelInfo {
+  readonly name: string;
+  readonly fullName: string;
+}
+```
+
+</CodeGroup>
+
+Information about a model that's used to construct a `Model` instance.
+It's also available as a property on the `Model` class.
+
+<Info>
+
+This class relays information from the Hypermode Runtime to the model implementation.
+Generally, you don't need to create `ModelInfo` instances directly.
+
+However, if you are implementing a custom model, you may wish to use a property from
+this class, such as the `fullName`, for model providers that require the model
+name in the input request body.
+
+We may add additional properties to this class in the future, as needed.
+
+</Info>
+
+<ResponseField name="name" type="string">
+  The name of the model from the Hypermode manifest.
+</ResponseField>
+
+<ResponseField name="fullName" type="string">
+  The full name or identifier of the model, as defined by the model provider.
+</ResponseField>
