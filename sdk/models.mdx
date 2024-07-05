@@ -26,14 +26,15 @@ on GitHub in the `hypermodeAI/functions-as` repository:
 - [/examples/embedding](https://github.com/hypermodeAI/functions-as/tree/main/examples/embedding)
 - [/examples/textgeneration](https://github.com/hypermodeAI/functions-as/tree/main/examples/textgeneration)
 
-Each demonstrates using different types of AI models for different purposes.
+Each example demonstrates using different types of AI models for different purposes.
 However, the Models interface isn't limited to these purposes. You can use it for any
 task that an AI model can perform.
 
 <Note>
-  Currently, the models interface isn't designed for models that require
-  streaming of either request or response content. We plan to address this
-  limitation in a future release.
+  Currently, the models interface doesn't support streaming data, either for
+  input or output. For example, you can't use it with models that process
+  streaming audio or video, nor provide streaming text output. We plan to
+  address this limitation in a future release.
 </Note>
 
 ## Import from the SDK
@@ -58,8 +59,12 @@ For example:
 import { ClassificationModel } from "@hypermode/models-as/models/experimental/classification";
 ```
 
-Refer to the `models-as` repository and the examples in the `functions-as` repository
-for the full list of available models.
+Refer to the [`hypermodeAI/models-as`](https://github.com/hypermodeAI/models-as/tree/main/src/models)
+repository for the full list of available models. We're constantly adding new models, so the
+list may have grown since you last checked.
+
+If you would like to request a new model, please [open an issue](https://github.com/hypermodeAI/models-as/issues)
+on the `models-as` repository. You can also send a pull request, if you'd like to contribute a new model yourself.
 
 </CodeGroup>
 
@@ -75,7 +80,17 @@ The APIs in the `models` namespace are below, organized by category.
 
 ### Functions
 
-TODO
+#### getModel
+
+Get a model instance by name.
+
+<CodeGroup>
+
+```ts AssemblyScript
+models.getModel<T>(modelName: string): T
+```
+
+</CodeGroup>
 
 ### Objects
 
