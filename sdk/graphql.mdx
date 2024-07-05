@@ -45,16 +45,16 @@ Execute a GraphQL statement to call a query or apply mutation against a GraphQL 
 <CodeGroup>
 
 ```ts AssemblyScript
-graphql.execute<TData> (
+graphql.execute<T> (
   hostName: string,
   statement: string,
   variables?: Variables
-): Response<TData>
+): Response<T>
 ```
 
 </CodeGroup>
 
-<ResponseField name="TData" type="Type" required>
+<ResponseField name="T" type="Type" required>
   Type of object to use for the data returned from the query.
   This can be any type, including a custom type defined in your project.
   It should match the shape of the data returned from the GraphQL query.
