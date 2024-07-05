@@ -110,7 +110,6 @@ models.getModel<T>(modelName: string): T
 
 ```ts AssemblyScript
 abstract class Model<TInput, TOutput> {
-  static invoker: ModelInvoker | null;
   debug: boolean;
   info: ModelInfo;
   invoke(input: TInput): TOutput;
