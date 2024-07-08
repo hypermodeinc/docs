@@ -1,34 +1,195 @@
 ---
 title: Console
-description: "Add debugging steps within your functions"
+description: "Capture errors and debugging information in your functions."
 ---
 
 {/* <!-- vale Google.Headings = NO --> */}
 
-Console APIs allow you to interact with the Hypermode Console.
+The Console API allows you to capture information from your functions, such as errors and
+other information that can help you debug your functions.
+
+<Info>
+
+Unlike other APIs, the Console API is globally available by default in all functions, you don't
+need to import it.
+
+</Info>
+
+The Console API mimics the behavior of the AssemblyScript [`console`](https://www.assemblyscript.org/stdlib/console.html)
+object, but directs the output to Hypermode as follows:
+
+- All console output is available in the Hypermode UI, in the "Function Runs" section.
+- Output from `console.error` is also sent to the GraphQL response.
+- Errors thrown with the `throw` keyword are also sent to the GraphQL response.
+
+## Example project
+
+For your reference, an example that uses the Console APIs is available on GitHub in the
+`hypermodeAI/functions-as` repository, at [/examples/simple](https://github.com/hypermodeAI/functions-as/tree/main/examples/simple).
+
+You'll also find the Console APIs used throughout other examples in the repository.
+
+## Console APIs
+
+The APIs in the `console` namespace are below, organized by category.
 
 <Tip>
-  We're introducing new APIs consistently through ongoing development with build
+  We're constantly introducing new APIs through ongoing development with build
   partners. [Let's chat](mailto:help@hypermode.com) about what would make the
   Functions SDK even more powerful for your next use case!
 </Tip>
 
-### log
+### Assertion Functions
 
-Generate a log message for debugging at runtime.
+#### assert
 
-```ts
-log (
-  message: string,
-  level?: string
-)
+Asserts that a condition is true, and logs an error if it's not.
+
+<CodeGroup>
+
+```ts AssemblyScript
+console.assert(assertion: any, message?: string): void
 ```
 
-<ResponseField name="message" type="string" required>
-  Contextual information to understand the behavior of the function at runtime.
+</CodeGroup>
+
+<ResponseField name="assertion" type="any" required>
+  The condition to assert. Typically a boolean value. In the case of an object,
+  asserts that the object isn't `null`.
 </ResponseField>
 
-<ResponseField name="level" type="string">
-  Severity of log message, one of `info` (default), `error`, `warning` or
-  `debug`.
+<ResponseField name="message" type="string">
+  An error message to log, if the assertion is false.
+</ResponseField>
+
+### Logging Functions
+
+#### log
+
+Generate a log message, with no particular logging level.
+
+<CodeGroup>
+
+```ts AssemblyScript
+console.log(message?: string): void
+```
+
+</CodeGroup>
+
+<ResponseField name="message" type="string">
+  A message you want to log.
+</ResponseField>
+
+#### debug
+
+Generate a log message with the "debug" logging level.
+
+<CodeGroup>
+
+```ts AssemblyScript
+console.debug(message?: string): void
+```
+
+</CodeGroup>
+
+<ResponseField name="message" type="string">
+  A debug message you want to log.
+</ResponseField>
+
+#### info
+
+Generate a log message with the "info" logging level.
+
+<CodeGroup>
+
+```ts AssemblyScript
+console.info(message?: string): void
+```
+
+</CodeGroup>
+
+<ResponseField name="message" type="string">
+  An informational message you want to log.
+</ResponseField>
+
+#### warn
+
+Generate a log message with the "warning" logging level.
+
+<CodeGroup>
+
+```ts AssemblyScript
+console.warn(message?: string): void
+```
+
+</CodeGroup>
+
+<ResponseField name="message" type="string">
+  A warning message you want to log.
+</ResponseField>
+
+#### error
+
+Generate a log message with the "error" logging level.
+
+<CodeGroup>
+
+```ts AssemblyScript
+console.error(message?: string): void
+```
+
+</CodeGroup>
+
+<ResponseField name="message" type="string">
+  An error message you want to log.
+</ResponseField>
+
+### Timing Functions
+
+#### time
+
+Starts a new timer using the specified label.
+
+<CodeGroup>
+
+```ts AssemblyScript
+console.time(label?: string): void
+```
+
+</CodeGroup>
+
+<ResponseField name="label" type="string">
+  An optional label for the timer.
+</ResponseField>
+
+#### timeLog
+
+Logs the current value of a timer previously started with `console.time`.
+
+<CodeGroup>
+
+```ts AssemblyScript
+console.timeLog(label?: string): void
+```
+
+</CodeGroup>
+
+<ResponseField name="label" type="string">
+  An optional label for the timer.
+</ResponseField>
+
+#### timeEnd
+
+Logs the current value of a timer previously started with `console.time`, and discards the timer.
+
+<CodeGroup>
+
+```ts AssemblyScript
+console.timeEnd(label?: string): void
+```
+
+</CodeGroup>
+
+<ResponseField name="label" type="string">
+  An optional label for the timer.
 </ResponseField>

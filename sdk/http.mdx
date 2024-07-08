@@ -1,80 +1,362 @@
 ---
 title: HTTP
-description: ""
+description: "Access external HTTP endpoints from your functions."
 ---
 
 {/* <!-- vale Google.Headings = NO --> */}
 
-The HTTP API allows you to securely call and fetch data from an HTTP endpoint.
+Hypermode's HTTP API allows you to securely call and fetch data from an HTTP endpoint.
+It's similar to the HTTP [`fetch`](https://developer.mozilla.org/docs/Web/API/Fetch_API) API used in JavaScript,
+but with some modifications to work with Hypermode Functions.
+
+<Note>
+
+As a security measure, you can only call HTTP endpoints that you've [defined in your project's manifest](../define-hosts).
+Any attempt to access an arbitrary URL, for a host not defined in your project's manifest, results in an error.
+
+Additionally, you should use placeholders for host secrets in the manifest, rather than hardcoding them in your functions.
+Enter the values for each hosts' secrets via the Hypermode UI. This ensures that your secrets are securely stored, aren't
+committed to your repository, and aren't visible or accessible from your functions code.
+
+</Note>
+
+## Example project
+
+For your reference, A complete example for using the HTTP API is available on GitHub in the
+`hypermodeAI/functions-as` repository, at [/examples/http](https://github.com/hypermodeAI/functions-as/tree/main/examples/http).
+
+## Import from the SDK
+
+To begin, import the `http` namespace from the SDK:
+
+<CodeGroup>
+
+```ts AssemblyScript
+import { http } from "@hypermode/functions-as";
+```
+
+</CodeGroup>
+
+## HTTP APIs
+
+The APIs in the `http` namespace are below, organized by category.
 
 <Tip>
-  We're introducing new APIs consistently through ongoing development with build
+  We're constantly introducing new APIs through ongoing development with build
   partners. [Let's chat](mailto:help@hypermode.com) about what would make the
   Functions SDK even more powerful for your next use case!
 </Tip>
 
-### fetch
+### Functions
+
+#### fetch
 
 Invoke an HTTP endpoint to retrieve data or trigger external action.
 
-```ts
-fetch (
-  request: Request,
+Returns a [`Response`](#response) object with the HTTP response data.
+
+<CodeGroup>
+
+```ts AssemblyScript
+http.fetch(
+  requestOrUrl: string | Request,
+  options: RequestOptions = new RequestOptions(),
 ): Response
 ```
 
-<ResponseField name="request" type="Request" required>
-  A [Request](#request-object) object for calling an HTTP endpoint.
+</CodeGroup>
+
+<ResponseField name="requestOrUrl" type="string | Request" required>
+
+Either a URL `string` or a [`Request`](#request) object, describing the HTTP request to make.
+
+If a `string`, the operation uses the `GET` HTTP method with no headers other than
+those defined in the manifest entry of the host.
+
+<Note>
+  Each request must match to a host entry in the manifest, using the `baseUrl`
+  field. The request URL passed to the `fetch` function (or via a `Request`
+  object) must start with the manifest entry's `baseUrl` value to match.
+</Note>
+
 </ResponseField>
 
-<ResponseField name="response" type="Response">
-  A [Response](#response-object) object from the HTTP endpoint.
+<ResponseField name="options" type="RequestOptions">
+  A [`RequestOptions`](#requestoptions) object with additional options for the
+  request, such as the HTTP method, headers, and body.
 </ResponseField>
 
-### Request object
+### Objects
+
+#### Content
+
+<CodeGroup>
+
+```ts AssemblyScript
+class Content {
+  static from(value: any): Content;
+  readonly data: ArrayBuffer;
+  text(): string;
+  json<T>(): T;
+}
+```
+
+</CodeGroup>
+
+Represents content used in the body of an HTTP request or response.
+
+<ResponseField name="Content.from(value)">
+  Creates a new `Content` object from the given value.
+</ResponseField>
+
+<ResponseField name="data" type="ArrayBuffer">
+  The raw binary content data.
+</ResponseField>
+
+<ResponseField name="text()">
+  Interprets the content as a UTF-8 encoded string, and returns it as a `string`
+  value.
+</ResponseField>
+
+<ResponseField name="json<T>()">
+  Interprets the content as a UTF-8 encoded string containing JSON in the shape
+  of type `T`, and returns it as a value of type `T`.
+</ResponseField>
+
+#### Header
+
+<CodeGroup>
+
+```ts AssemblyScript
+class Header {
+  name: string;
+  values: string[];
+}
+```
+
+</CodeGroup>
+
+Represents an HTTP request or response header.
+
+<ResponseField name="name" type="string">
+  The name of the header.
+</ResponseField>
+
+<ResponseField name="values" type="string[]">
+  An array of values for the header. Typically a header has a single value, but
+  some headers can have multiple values.
+</ResponseField>
+
+#### Headers
+
+<CodeGroup>
+
+```ts AssemblyScript
+class Headers {
+  static from(
+    value: string[][] | Map<string, string> | Map<string, string[]>,
+  ): Headers;
+  append(name: string, value: string): void;
+  entries(): string[][];
+  get(name: string): string | null;
+}
+```
+
+</CodeGroup>
+
+Represents a collection of HTTP headers.
+
+<ResponseField name="Headers.from(value)">
+
+Creates a new `Headers` object from the given `value` object.
+
+The `value` object must be one of the following types:
+
+- A `string[][]`, where each inner array contains a header name and value.
+- A `Map<string, string>`, where the keys are header names and the values are header values.
+- A `Map<string, string[]>`, where the keys are header names and the values are arrays of header values.
+
+</ResponseField>
+
+<ResponseField name="append(name, value)">
+  Appends a new header with the given `name` and `value` to the collection.
+</ResponseField>
+
+<ResponseField name="entries()">
+  Returns a `string[][]`, where each inner array contains a header name and
+  value.
+</ResponseField>
+
+<ResponseField name="get(name)">
+  Returns the value of the header with the given `name`, or `null` if the header
+  doesn't exist. If there are multiple values for the header, this function
+  concatenates them with a comma to form a single string.
+</ResponseField>
+
+#### Request
+
+<CodeGroup>
+
+```ts AssemblyScript
+class Request {
+  constructor(url: string, options?: RequestOptions);
+  static clone(request: Request, options: RequestOptions): Request;
+  readonly url: string;
+  readonly method: string;
+  readonly headers: Headers;
+  readonly body: ArrayBuffer;
+  text(): string;
+  json<T>(): T;
+}
+```
+
+</CodeGroup>
+
+Represents an HTTP request to make.
+
+<ResponseField name="new http.Request(url, options?)">
+
+Creates a new `Request` object with the given `url` and `options`.
+
+The required `url` parameter must be a fully qualified URL of the request, including the protocol.
+For example, `"https://example.com"`.
+
+The optional `options` parameter is a [`RequestOptions`](#requestoptions) object that's used to set
+the HTTP method, headers, and body if needed.
+
+</ResponseField>
+
+<ResponseField name="Request.clone(request, options)">
+  Creates a new `Request` object by cloning the given `request` and applying the
+  `options` to it.
+</ResponseField>
 
 <ResponseField name="url" type="string">
-  The URL to send the request to. You must have a corresponding
-  [Host](/define-hosts) in your project's manifest.
-
-Example: https://example.com/whatever
-
+  The fully qualified URL of the request, including the protocol. For example,
+  `"https://example.com"`.
 </ResponseField>
+
 <ResponseField name="method" type="string">
-  The HTTP method to use for the request.
-
-Example: "GET"
-
+  The HTTP method of the request. For example, `"GET"`, `"POST"`, `"PUT"`, or
+  `"DELETE"`.
 </ResponseField>
+
 <ResponseField name="headers" type="Headers">
-  The HTTP headers for the request, as [defined in your
-  manifest](../define-hosts).
-</ResponseField>
-<ResponseField name="body" type="ArrayBuffer">
-  The raw HTTP request body, as an `ArrayBuffer`.
+  The HTTP headers of the request, as a [`Headers`](#headers) object.
 </ResponseField>
 
-### Response object
+<ResponseField name="body" type="ArrayBuffer">
+  The raw binary content data of the request body.
+</ResponseField>
+
+<ResponseField name="text()">
+  Interprets the request body as a UTF-8 encoded string, and returns it as a
+  `string` value.
+</ResponseField>
+
+<ResponseField name="json<T>()">
+  Interprets the request body as a UTF-8 encoded string containing JSON in the
+  shape of type `T`, and returns it as a value of type `T`.
+</ResponseField>
+
+#### RequestOptions
+
+<CodeGroup>
+
+```ts AssemblyScript
+class RequestOptions {
+  method: string | null;
+  headers: Headers;
+  body: Content | null;
+}
+```
+
+</CodeGroup>
+
+Options for the HTTP request.
+
+<ResponseField name="method" type="string | null">
+  The HTTP method of the request. For example, `"GET"`, `"POST"`, `"PUT"`, or
+  `"DELETE"`. If `null` (the default), the request uses the `GET` method.
+</ResponseField>
+
+<ResponseField name="headers" type="Headers">
+
+The HTTP headers of the request, as a [`Headers`](#headers) object.
+
+<Tip>
+
+By default, the `RequestOptions` contains an empty `Headers` object
+which you can add headers to using the `append` method.
+
+</Tip>
+
+</ResponseField>
+
+<ResponseField name="body" type="Content | null">
+
+Content to pass in the request body, as a [`Content`](#content) object,
+or `null` (the default) if there is no body to pass.
+
+<Tip>
+  It's generally recommended to supply a `Content-Type` header for any requests
+  that have a body.
+</Tip>
+
+</ResponseField>
+
+#### Response
+
+<CodeGroup>
+
+```ts AssemblyScript
+class Response {
+  readonly status: u16;
+  readonly statusText: string;
+  readonly headers: Headers;
+  readonly body: ArrayBuffer;
+  readonly ok: bool;
+  text(): string;
+  json<T>(): T;
+}
+```
+
+</CodeGroup>
+
+Represents the response received from the HTTP server.
 
 <ResponseField name="status" type="u16">
-  The HTTP response status code.
-
-Example: 200
-
+  The HTTP response status code, such as `200` for success.
 </ResponseField>
+
 <ResponseField name="statusText" type="string">
-  The HTTP response status text.
-
-Example: "OK"
-
+  The HTTP response status text associated with the status code, such as `"OK"`
+  for success.
 </ResponseField>
+
 <ResponseField name="headers" type="Headers">
-  The HTTP response headers.
+  The HTTP headers received with the response, as a [`Headers`](#headers)
+  object.
 </ResponseField>
-<ResponseField name="body" type="ArrayBuffer">
-  The raw HTTP response body, as an `ArrayBuffer`.
 
-  <Tip>
-    The response body isn't normally read directly. Instead, use `response.text()` or `response.json<T>()` functions.
-  </Tip>
+<ResponseField name="body" type="ArrayBuffer">
+
+The raw binary content data of the response body.
+
+<Tip>
+  The response body isn't normally read directly. Instead, use the `text` or
+  `json` functions. You should only read the `body` directly if you expect to
+  receive binary data in the response.
+</Tip>
+
+</ResponseField>
+
+<ResponseField name="text()">
+  Interprets the response body content as a UTF-8 encoded string, and returns it
+  as a `string` value.
+</ResponseField>
+
+<ResponseField name="json<T>()">
+  Interprets the response body content as a UTF-8 encoded string containing JSON
+  in the shape of type `T`, and returns it as a value of type `T`.
 </ResponseField>

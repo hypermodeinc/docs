@@ -71,16 +71,6 @@
       "pages": [
         "sdk/functions-sdk",
         {
-          "group": "APIs",
-          "pages": [
-            "sdk/http",
-            "sdk/connection",
-            "sdk/inference",
-            "sdk/search",
-            "sdk/console"
-          ]
-        },
-        {
           "group": "Languages",
           "pages": [
             {
@@ -91,6 +81,16 @@
                 "sdk/assemblyscript/json"
               ]
             }
+          ]
+        },
+        {
+          "group": "API Reference",
+          "pages": [
+            "sdk/collections",
+            "sdk/console",
+            "sdk/graphql",
+            "sdk/http",
+            "sdk/models"
           ]
         }
       ]

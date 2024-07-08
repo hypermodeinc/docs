@@ -1,0 +1,448 @@
+---
+title: Collections
+description: "Add basic storage and search capabilities to your functions."
+---
+
+{/* <!-- vale Google.Headings = NO --> */}
+
+Hypermode Collections provide a built-in key-value storage mechanism that supports vector
+embeddings, that you can use from your functions. After [defining collections](../define-collections)
+in your project's manifest, you can use the following APIs to interact with the data.
+
+## Example project
+
+For your reference, A complete example for using the Collections APIs is available on GitHub in the
+`hypermodeAI/functions-as` repository, at [/examples/collection](https://github.com/hypermodeAI/functions-as/tree/main/examples/collection).
+
+## Import from the SDK
+
+To begin, import the `collections` namespace from the SDK:
+
+<CodeGroup>
+
+```ts AssemblyScript
+import { collections } from "@hypermode/functions-as";
+```
+
+</CodeGroup>
+
+## Collections APIs
+
+The APIs in the `collections` namespace are below, organized by category.
+
+<Tip>
+  We're constantly introducing new APIs through ongoing development with build
+  partners. [Let's chat](mailto:help@hypermode.com) about what would make the
+  Functions SDK even more powerful for your next use case!
+</Tip>
+
+### Mutation Functions
+
+#### upsert
+
+Inserts or updates an item into a collection.
+
+<Note>
+  If an item with the same key already exists, the original text is overwritten
+  with the new text.
+</Note>
+
+<CodeGroup>
+
+```ts AssemblyScript
+collections.upsert(
+  collection: string,
+  key: string | null,
+  text: string,
+): CollectionMutationResult
+```
+
+</CodeGroup>
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>
+
+<ResponseField name="key" type="string">
+  An optional key for the item. If `null`, Hypermode assigns a new UUID as the
+  key for the item.
+</ResponseField>
+
+<ResponseField name="text" type="string" required>
+  The text of the item to add to the collection.
+</ResponseField>
+
+#### upsertBatch
+
+Inserts or updates a batch of items into a collection.
+
+<Note>
+  If an item with the same key already exists, the original text is overwritten
+  with the new text.
+</Note>
+
+<CodeGroup>
+
+```ts AssemblyScript
+collections.upsertBatch(
+  collection: string,
+  keys: string[] | null,
+  texts: string[],
+): CollectionMutationResult
+```
+
+</CodeGroup>
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>
+
+<ResponseField name="keys" type="string[]">
+  Array of keys for the item to add to the collection. If you pass `null` for
+  any key, Hypermode assigns a new UUID as the key for the item.
+</ResponseField>
+
+<ResponseField name="texts" type="string[]" required>
+  Array of texts for the items to add to the collection.
+</ResponseField>
+
+#### remove
+
+Removes an item from the collection.
+
+<CodeGroup>
+
+```ts AssemblyScript
+collections.remove(
+  collection: string,
+  key: string,
+): CollectionMutationResult
+```
+
+</CodeGroup>
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>
+
+<ResponseField name="key" type="string" required>
+  The key of the item to delete from the collection.
+</ResponseField>
+
+### Search and Retrieval Functions
+
+#### search
+
+Search for an item in the collection by using natural language search.
+
+<Note>
+  Hypermode uses the same embedder for both inserting text into the collection,
+  and for the text used when searching the collection.
+</Note>
+
+<CodeGroup>
+
+```ts AssemblyScript
+collections.search(
+  collection: string,
+  searchMethod: string,
+  text: string,
+  limit: i32,
+  returnText: bool = false,
+): CollectionSearchResult
+```
+
+</CodeGroup>
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>
+
+<ResponseField name="searchMethod" type="string" required>
+  The search method used to calculate embedding for text & search against.
+</ResponseField>
+
+<ResponseField name="text" type="string" required>
+  The text to compute natural language search on.
+</ResponseField>
+
+<ResponseField name="limit" type="i32" required>
+  The number of result objects to return.
+</ResponseField>
+
+<ResponseField name="returnText" type="bool">
+  A flag to return the texts in the response.
+</ResponseField>
+
+#### computeSimilarity
+
+Computes similarity between two keys in a collection using a search method's embedder.
+
+<CodeGroup>
+
+```ts AssemblyScript
+collections.computeSimilarity(
+  collection: string,
+  searchMethod: string,
+  key1: string,
+  key2: string,
+): CollectionSearchResultObject
+```
+
+</CodeGroup>
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>
+
+<ResponseField name="searchMethod" type="string" required>
+  The search method used to calculate embedding for key's texts.
+</ResponseField>
+
+<ResponseField name="key1, key2" type="string" required>
+  Keys to compute similarity on.
+</ResponseField>
+
+#### getText
+
+Gets an item's text from a collection, give the item's key.
+
+<CodeGroup>
+
+```ts AssemblyScript
+collections.getText(collection: string, key: string): string
+```
+
+</CodeGroup>
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>
+
+<ResponseField name="key" type="string" required>
+  The key of the item to retrieve.
+</ResponseField>
+
+#### getTexts
+
+Get all items from a collection.
+The result is a map of key to text for all items in the collection.
+
+<CodeGroup>
+
+```ts AssemblyScript
+collections.getTexts(collection: string): Map<string, string>
+```
+
+</CodeGroup>
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>
+
+### Maintenance Functions
+
+#### recomputeSearchMethod
+
+Recomputes the embeddings for all texts in a collection, for a specific search method.
+
+<CodeGroup>
+
+```ts AssemblyScript
+collections.recomputeSearchMethod(
+  collection: string,
+  searchMethod: string,
+): collections.SearchMethodMutationResult
+```
+
+</CodeGroup>
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>
+
+<ResponseField name="searchMethod" type="string" required>
+  The search method to recompute embeddings for.
+</ResponseField>
+
+### Objects
+
+#### CollectionMutationResult
+
+<CodeGroup>
+
+```ts AssemblyScript
+class CollectionMutationResult {
+  collection: string;
+  status: CollectionStatus;
+  error: string;
+  isSuccessful: bool;
+  operation: string;
+  keys: string[];
+}
+```
+
+</CodeGroup>
+
+Represents the result of a mutation operation on a collection.
+
+<ResponseField name="collection" type="string">
+  Name of the collection.
+</ResponseField>
+
+<ResponseField name="status" type="CollectionStatus">
+  The status of the operation.
+</ResponseField>
+
+<ResponseField name="error" type="string">
+  Error message, if any.
+</ResponseField>
+
+<ResponseField name="isSuccessful" type="bool">
+  Whether the operation was successful.
+</ResponseField>
+
+<ResponseField name="operation" type="string">
+  The operation performed.
+</ResponseField>
+
+<ResponseField name="keys" type="string[]">
+  The keys of the items affected by the operation.
+</ResponseField>
+
+#### CollectionSearchResult
+
+<CodeGroup>
+
+```ts AssemblyScript
+class CollectionSearchResult {
+  collection: string;
+  status: CollectionStatus;
+  error: string;
+  isSuccessful: bool;
+  searchMethod: string;
+  objects: CollectionSearchResultObject[];
+}
+```
+
+</CodeGroup>
+
+Represents the result of a search operation on a collection.
+
+<ResponseField name="collection" type="string">
+  Name of the collection.
+</ResponseField>
+
+<ResponseField name="status" type="CollectionStatus">
+  The status of the operation.
+</ResponseField>
+
+<ResponseField name="error" type="string">
+  Error message, if any.
+</ResponseField>
+
+<ResponseField name="isSuccessful" type="bool">
+  Whether the operation was successful.
+</ResponseField>
+
+<ResponseField name="searchMethod" type="string">
+  The search method used in the operation.
+</ResponseField>
+
+<ResponseField name="objects" type="CollectionSearchResultObject[]">
+  The search results.
+</ResponseField>
+
+#### CollectionSearchResultObject
+
+<CodeGroup>
+
+```ts AssemblyScript
+class CollectionSearchResultObject {
+  key: string;
+  text: string;
+  score: f64;
+}
+```
+
+</CodeGroup>
+
+Represents an object in the search results.
+
+<ResponseField name="key" type="string">
+  The key of the item found as part of the search.
+</ResponseField>
+
+<ResponseField name="text" type="string">
+  The text of the item found as part of the search.
+</ResponseField>
+
+<ResponseField name="score" type="f64">
+  The similarity score of the item found, as it pertains to the search.
+</ResponseField>
+
+#### CollectionStatus
+
+<CodeGroup>
+
+```ts AssemblyScript
+enum CollectionStatus {
+  Success = "success";
+  Error = "error";
+}
+```
+
+</CodeGroup>
+
+The status of a collection operation.
+
+<ResponseField name="Success" type="string">
+  The operation was successful.
+</ResponseField>
+
+<ResponseField name="Error" type="string">
+  The operation encountered an error.
+</ResponseField>
+
+#### SearchMethodMutationResult
+
+<CodeGroup>
+
+```ts AssemblyScript
+class SearchMethodMutationResult {
+  collection: string;
+  status: CollectionStatus;
+  error: string;
+  isSuccessful: bool;
+  operation: string;
+  searchMethod: string;
+}
+```
+
+</CodeGroup>
+
+Represents the result of a mutation operation on a search method.
+
+<ResponseField name="collection" type="string">
+  Name of the collection.
+</ResponseField>
+
+<ResponseField name="status" type="CollectionStatus">
+  The status of the operation.
+</ResponseField>
+
+<ResponseField name="error" type="string">
+  Error message, if any.
+</ResponseField>
+
+<ResponseField name="isSuccessful" type="bool">
+  Whether the operation was successful.
+</ResponseField>
+
+<ResponseField name="operation" type="string">
+  The operation performed.
+</ResponseField>
+
+<ResponseField name="searchMethod" type="string">
+  The search method affected by the operation.
+</ResponseField>
