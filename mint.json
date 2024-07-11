@@ -27,8 +27,8 @@
     }
   ],
   "topbarCtaButton": {
-    "name": "Request Access",
-    "url": "https://hypermode.com/home"
+    "name": "Start Now",
+    "url": "https://hypermode.com/new"
   },
   "topAnchor": {
     "name": "Docs",
@@ -44,27 +44,43 @@
       "name": "Blog",
       "icon": "newspaper",
       "url": "https://hypermode.com/blog"
+    },
+    {
+      "name": "Templates",
+      "icon": "sparkles",
+      "url": "https://justship.ai"
     }
   ],
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["introduction", "quickstart"]
+      "pages": ["introduction", "quickstart", "worlds-fair-workshop"]
     },
     {
       "group": "Configure Project",
-      "pages": ["manifest", "define-models", "define-hosts", "define-schema"]
+      "pages": [
+        "manifest",
+        "define-models",
+        "define-hosts",
+        "define-collections",
+        "define-schema"
+      ]
     },
     {
-      "group": "Write Functions",
+      "group": "Functions SDK",
       "pages": [
         "sdk/functions-sdk",
-        "sdk/http",
-        "sdk/postgresql",
-        "sdk/connection",
-        "sdk/inference",
-        "sdk/search",
-        "sdk/console"
+        {
+          "group": "API Reference",
+          "pages": [
+            "sdk/collections",
+            "sdk/console",
+            "sdk/graphql",
+            "sdk/http",
+            "sdk/models",
+            "sdk/postgresql"
+          ]
+        }
       ]
     },
     {

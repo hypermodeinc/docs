@@ -1,42 +1,59 @@
 ---
-title: Functions SDK
-description: "APIs to accelerate AI feature development"
+title: Hypermode Functions SDK Overview
+sidebarTitle: Overview
+description: "Providing the foundation for your Hypermode projects."
 mode: "wide"
 ---
 
-The Functions SDK gives your project access to a set of APIs that simplify the development and ongoing iteration of AI-powered features and assistants.
+The SDK provides:
+
+- A project structure to organize your functions
+- A set of APIs to interact with data, AI models, and other services
+- A local development environment to download dependencies and compile your functions
+- A CI/CD workflow that automatically deploys your functions on Hypermode when pushing changes to your repository
 
 <Note>
-  The Functions SDK includes support for AssemblyScript, a portable
+  The Functions SDK currently includes support for AssemblyScript, a
   TypeScript-like language. Additional language support is in development.
 </Note>
 
-For inspiration on getting started, reference the [examples in the Function SDK repo](https://github.com/hypermodeAI/functions-as/tree/main/examples).
+The SDK is available at [https://github.com/hypermodeAI/functions-as](https://github.com/hypermodeAI/functions-as).
+
+For inspiration on getting started, reference the [examples in the SDK repository](https://github.com/hypermodeAI/functions-as/tree/main/examples).
 
 ## APIs
 
+The following APIs are available in the Functions SDK:
+
+<Tip>
+  We're constantly introducing new APIs through ongoing development with build
+  partners. [Let's chat](mailto:help@hypermode.com) about what would make the
+  Functions SDK even more powerful for your next use case!
+</Tip>
+
 <CardGroup cols={2}>
-  <Card title="HTTP" icon="server" href="/sdk/http">
-    Securely call and fetch data from an HTTP endpoint.
-  </Card>
-  <Card title="Postgresql" icon="database" href="/sdk/postgresql">
-    Securely fetch data from your postgresql database.
-  </Card>
-  <Card title="Connection" icon="database" href="/sdk/connection">
-    Augment functions with secure access to data in your databases and APIs.
-  </Card>
-  <Card title="Inference" icon="message-plus" href="/sdk/inference">
-    Use AI models for classifying, summarizing, and generation use cases.
-  </Card>
-  <Card title="Search" icon="searchengin" href="/sdk/search">
-    Use embeddings for semantic similarity search, clustering, and outlier
-    detection.
+  <Card title="Collections" icon="searchengin" href="/sdk/collections">
+    Access a built-in key-value store to add storage and AI-based search
+    capabilities.
   </Card>
   <Card title="Console" icon="browsers" href="/sdk/console">
-    Access logging and annotate feedback to iterate faster.
+    Capture log messages, errors, and timing operations to iterate faster.
+  </Card>
+  <Card title="GraphQL" icon="database" href="/sdk/graphql">
+    Access remote data from GraphQL-enabled databases and APIs.
+  </Card>
+  <Card title="HTTP" icon="server" href="/sdk/http">
+    Securely call and fetch data from any HTTP endpoint.
+  </Card>
+  <Card title="Models" icon="message-plus" href="/sdk/models">
+    Use AI models for use cases such as classification, summarization, content
+    generation, and more.
+  </Card>
+  <Card title="Postgresql" icon="database" href="/sdk/postgresql">
+    Securely fetch data from PostgreSQL databases.
   </Card>
 </CardGroup>
 
 ## Installation
 
-The easiest way to start with Hypermode is using the [template project](https://github.com/hypermodeAI/template-project). This project includes the [AssemblyScript Library](https://www.npmjs.com/package/@hypermode/functions-as) from the SDK.
+The easiest way to start with Hypermode is using the [template project](https://github.com/hypermodeAI/template-project).

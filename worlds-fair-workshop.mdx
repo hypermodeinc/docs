@@ -1,0 +1,745 @@
+---
+title: AI Engineer World's Fair Workshop
+description: "git push, get AI API"
+---
+
+In this workshop you'll build a demo that augments an app with AI for classification,
+natural language search, and summarization. Then you'll learn how to iteratively improve
+before and after shipping to prod. We'll use Hypermode to move fast and reduce infra overhead.
+You'll walk away with a greater intuition for when & how to integrate AI without refactoring.
+
+If you need help at any point, please don't hesitate to ask.
+
+## Prerequisites
+
+To get the most out of this workshop, you'll need:
+
+- A GitHub account where you can create a new repo
+- [Node.js 20](https://nodejs.org/) or higher installed and activated.
+- An IDE or text editor such as [VS Code](https://code.visualstudio.com/)
+
+You can install Node.js with any supported method, including:
+
+- Downloading the official [prebuilt installer](https://nodejs.org/en/download)
+- Using a [package manager](https://nodejs.org/en/download/package-manager)
+
+<Tip>
+  [Join the
+  conversation](https://ai-engineer-workspace.slack.com/archives/C079FEPGY69) on
+  the AI Engineer Slack. ([Slack
+  Invite](https://join.slack.com/t/ai-engineer-workspace/shared_invite/zt-2lcyging7-nb9owJrFthJb0dbfdt3cpw))
+</Tip>
+
+## Agenda
+
+We'll spend our time together on the following:
+
+{/* <!-- vale Google.Passive = NO --> */}
+
+1. Playing a familiar game, using AI to scale the format
+2. Understanding how the game is constructed, using both large and small models
+3. Applying the same building blocks to an app triaging GitHub issues
+4. Generalizing the concepts for adding AI to your apps
+
+{/* <!-- vale Google.Passive = YES --> */}
+
+## Hypercategories
+
+We're going to first play a game called Hypercategories, a scaled-variant of the game
+[Scattergories](https://en.wikipedia.org/wiki/Scattergories). In Scattergories, players
+receive a list of categories and a letter. They have to come up with a unique word that
+fits each category and starts with the given letter.
+
+In Hypercategories, for each submission that matches the category and letter, you'll
+receive a point. If other submissions match yours, you'll split the point.
+
+### Let's play
+
+When the game starts, scan the QR code or go to https://tinyurl.com/4mdhx29j
+
+### AI-powered filtering and scoring
+
+## GitHub issue triage
+
+We're going to apply what we learned from Hypercategories to a real-world problem:
+triaging GitHub issues. We'll build a tool that helps you quickly understand trends,
+classify, and identify similar issues in their repos.
+
+### Set up your project
+
+Hypermode makes it easy to spin up new projects for experimentation.
+
+- Go to [justship.ai](https://justship.ai) and select `GitHub Issue Triage`
+- Click `Deploy` to start the onboarding flow
+- Authenticate your account with GitHub and edit the repo name as needed
+- Click `Create` to deploy your project
+
+While your project is spinning up, personalize your workspace.
+
+### Set up local environment
+
+- Clone the newly created GitHub repository locally, using any method you prefer.
+
+  For example, you can use the GitHub CLI:
+
+  ```sh
+  gh repo clone <your-repo-name>
+  ```
+
+  Or the Git CLI:
+
+  ```sh
+  git clone <your-repo-uri>
+  ```
+
+  Or you can use a graphical client like [GitHub Desktop](https://desktop.github.com/).
+
+- Open the local repository in your IDE or text editor.
+
+- Using a terminal window (preferably from within your IDE), open the `functions` directory,
+  install dependencies, and build the project:
+
+  ```sh
+  cd functions
+  npm install
+  npm run build
+  ```
+
+<Accordion title="Build Output">
+
+```none
+Building issue-triage@1.0.0 in debug mode...
+
+     __ __                                __
+    / // /_ _____  ___ ______ _  ___  ___/ /__
+   / _  / // / _ \/ -_) __/  ' \/ _ \/ _  / -_)
+  /_//_/\_, / .__/\__/_/ /_/_/_/\___/\_,_/\__/
+       /___/_/
+
+Plugin Metadata:
+  Plugin Name:     issue-triage@1.0.0
+  Library:         @hypermode/functions-as@0.9.1
+  Build ID:        cptr9kv9lp6m35581s7g
+  Build Timestamp: 2024-06-26T06:27:31.320Z
+  Git Repo:        https://github.com/hypermodeAI/ship-issue-triage
+  Git Commit:      556a604357827e0e135cd530432ec5dd7d21489a
+
+Hypermode Functions:
+  classifyIssue(id: string, title: string, description: string): string
+  trendSummary(owner: string, repo: string): string
+```
+
+</Accordion>
+
+#### What just happened?
+
+You compiled a Hypermode project written in [AssemblyScript](https://www.assemblyscript.org/),
+a TypeScript-like language that compiles to WebAssembly for fast, secure, and efficient execution.
+
+A successful compilation indicates that the resulting project is ready to deploy on Hypermode.
+The Hypermode Functions listed in the output automatically become part of the project's GraphQL API.
+
+In this case, you can see two functions:
+
+- `classifyIssue` that takes an issue ID, title, and description and returns a classification label.
+- `trendSummary` that takes a GitHub owner and repo and returns a summary of trends for that repo.
+
+Since you created the project from a template, this version of the code is already deployed.
+When you make any changes, simply commit and push back to the GitHub repository.
+The changes deploy automatically using the GitHub Actions workflow set up in the project.
+
+### Review and modify the code
+
+For this next step of the workshop, we'll review the code of the Hypermode Functions
+in the project and make some small modifications.
+
+We'll start this together, as a group. Please follow along in your own project.
+
+<Tip>
+  If using VS Code, you may be seeing files and code underlined in red at this stage,
+  even though the project built successfully. This is because the TypeScript language services
+  aren't yet aware of the AssemblyScript dependency.
+
+You can fix this by forcing a reset of the TypeScript language services, in any of these ways:
+
+- You can close and reopen the project in VS Code.
+- You can open the VS Code command pallette (`Cmd+Shift+P` on Mac, `Ctrl+Shift+P` on Windows)
+  and run the command `TypeScript: Restart TS server`.
+- You can modify the `assembly/tsconfig.json` file by adding a comment or whitespace and saving it.
+- On Linux or Mac, you can open a terminal and run `touch assembly/tsconfig.json`.
+
+</Tip>
+
+### Trend summarization
+
+Have a look at the function `trendSummary` in [functions/assembly/trends.ts](https://github.com/hypermodeAI/ship-issue-triage/blob/main/functions/assembly/trends.ts)
+
+The purpose of this function is to summarize the trends of the issues in a GitHub repository.
+
+The function performs the following steps:
+
+- Fetches the issues from the repository, using the GitHub REST API.
+- Concatenates several pieces of information from each issue into a single string.
+- Sends that string to an OpenAI model to generate a summary.
+- Returns the summary as the output of the function.
+
+<Accordion title="Code">
+
+```ts
+export function trendSummary(owner: string, repo: string): string {
+  const issues = getGithubIssues(owner, repo);
+
+  const summary = issues
+    .map<string>(
+      (issue) =>
+        `${issue.createdAt} ${issue.user ? "From " + issue.user!.login : ""} : ${issue.title}`,
+    )
+    .join("\n");
+
+  const model = models.getModel<OpenAIChatModel>("text-generator");
+  const instruction = `Provide a summary of the trends in the repository based on the issues created.`;
+
+  const input = model.createInput([
+    new SystemMessage(instruction),
+    new UserMessage(summary),
+  ]);
+
+  input.temperature = 0.7;
+
+  const output = model.invoke(input);
+
+  return output.choices[0].message.content.trim();
+}
+```
+
+</Accordion>
+
+<Accordion title="Example Query">
+
+```graphql
+query GetTrendSummary {
+  trendSummary(owner: "huggingface", repo: "transformers")
+}
+```
+
+</Accordion>
+
+### Issue type classification
+
+Next let's examine the `classifyIssue` function in [functions/assembly/classify.ts](https://github.com/hypermodeAI/ship-issue-triage/blob/main/functions/assembly/classify.ts)
+
+The purpose of this function is to classify an issue based on its title and description.
+
+The function performs the following steps:
+
+- Concatenates the title and description of the issue into a single string.
+- Sends that string to a purpose-built classification model to classify the issue.
+- Returns the classification label as the output of the function.
+
+Along the way, it also logs some information to Hypermode that can be useful
+for debugging and monitoring the function's behavior.
+
+<Accordion title="Code">
+
+```ts
+export function classifyIssue(
+  id: string,
+  title: string,
+  description: string,
+): string {
+  console.log(`Classifying issue ${id}`);
+  const summary = `${title}\n${description}`;
+
+  const model = models.getModel<ClassificationModel>("issue-classifier");
+  const input = model.createInput([summary]);
+  const output = model.invoke(input).predictions[0];
+
+  console.log(`Issue ${id} classified as ${output.label}`);
+  return output.label;
+}
+```
+
+</Accordion>
+
+<Accordion title="Example Query">
+
+````graphql
+query ClassifyIssueText {
+  classifyIssue(
+    id: "31622"
+    title: "Unable to export Phi-3-vision model to PyTorch exported program"
+    description: "### System Info\n\n- `transformers` version: 4.41.2
+\n- Platform: Linux-6.5.0-35-generic-x86_64-with-glibc2.35
+\n- Python version: 3.10.14
+\n- Huggingface_hub version: 0.23.0
+\n- Safetensors version: 0.4.3
+\n- Accelerate version: 0.30.1
+\n- Accelerate config:    not found
+\n- PyTorch version (GPU?): 2.4.0.dev20240412+cu121 (True)
+\n- Tensorflow version (GPU?): not installed (NA)
+\n- Flax version (CPU?/GPU?/TPU?): not installed (NA)
+\n- Jax version: not installed
+\n- JaxLib version: not installed
+\n- Using GPU in script?: yes
+\n- Using distributed or parallel set-up in script?: no\n\n### Who can help?\n\n@amyeroberts\n\n### Information\n\n- [ ] The official example scripts\n- [X] My own modified scripts\n\n### Tasks\n\n- [ ] An officially supported task in the `examples` folder (such as GLUE/SQuAD, ...)\n- [X] My own task or dataset (give details below)\n\n### Reproduction\n\nI'm trying to export the Phi-3-vision model to PyTorch exported program.
+\n
+\nRepro:
+\n```python
+\nimport requests
+\nimport torch
+\nfrom PIL import Image
+\nfrom transformers import AutoModelForCausalLM, AutoProcessor
+\nfrom ml_dtypes import bfloat16
+\nimport numpy as np
+\n
+\n
+\nmodel_id = \"microsoft/Phi-3-vision-128k-instruct\"
+\nprocessor = AutoProcessor.from_pretrained(model_id, trust_remote_code=True)
+\nmodel = AutoModelForCausalLM.from_pretrained(
+\n    model_id, trust_remote_code=True, torch_dtype=\"auto\"
+\n).to('cuda')
+\n
+\nuser_prompt = \"<|user|>\\n\"
+\nassistant_prompt = \"<|assistant|>\\n\"
+\nprompt_suffix = \"<|end|>\\n\"
+\n
+\n# single-image prompt
+\nprompt = f\"{user_prompt}<|image_1|>\\nWhat is shown in this image?{prompt_suffix}{assistant_prompt}\"
+\nurl = \"https://www.ilankelman.org/stopsigns/australia.jpg\"
+\nprint(f\">>> Prompt\\n{prompt}\")
+\n
+\nimage = Image.open(requests.get(url, stream=True).raw)
+\ninputs = processor(prompt, image, return_tensors=\"pt\").to(\"cuda:0\")
+\n
+\n# Initialize
+\n# inputs.keys: dict_keys(['input_ids', 'pixel_values', 'image_sizes'])
+\ninput_ids = inputs[\"input_ids\"]
+\nstart_point = input_ids.shape[1]
+\npixel_values = inputs[\"pixel_values\"]
+\nimage_sizes = inputs[\"image_sizes\"]
+\ninputs.pop(\"attention_mask\")
+\n
+\nwith torch.no_grad():
+\n    # max=1024 has contraint violation error. https://github.com/pytorch/pytorch/issues/125604
+\n    seq_len = torch.export.Dim(\"seq_len\", min=1, max=4096)
+\n    kwargs = {\"input_ids\": input_ids, \"pixel_values\": pixel_values, \"image_sizes\": image_sizes}
+\n    ep = torch.export.export(
+\n        model,
+\n        args=tuple(),
+\n        kwargs=kwargs,
+\n        dynamic_shapes=({1: seq_len}, {}, {}),
+\n        strict=False,
+\n    )
+\n```
+\n
+\nError message:
+\n
+\n```
+\nTraceback (most recent call last):
+\n  File \"/home/zewenl/Documents/pytorch/TensorRT/examples/dynamo/phi3.py\", line 39, in <module>
+\n    ep = torch.export.export(
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/export/__init__.py\", line 174, in export
+\n    return _export(
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/export/_trace.py\", line 900, in wrapper
+\n    raise e
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/export/_trace.py\", line 883, in wrapper
+\n    ep = fn(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/export/exported_program.py\", line 85, in wrapper
+\n    return fn(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/export/_trace.py\", line 1062, in _export
+\n    ep_non_strict = _export_non_strict(
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/export/_trace.py\", line 583, in _export_non_strict
+\n    gm, graph_signature = transform(aot_export_module)(
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/export/_trace.py\", line 1023, in _aot_export_non_strict
+\n    gm, sig = aot_export(wrapped_mod, args, kwargs=kwargs, **flags)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_functorch/aot_autograd.py\", line 1059, in aot_export_module
+\n    fx_g, metadata, in_spec, out_spec = _aot_export_function(
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_functorch/aot_autograd.py\", line 1249, in _aot_export_function
+\n    fx_g, meta = create_aot_dispatcher_function(
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_dynamo/utils.py\", line 265, in time_wrapper
+\n    r = func(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_functorch/aot_autograd.py\", line 549, in create_aot_dispatcher_function
+\n    fw_metadata = run_functionalized_fw_and_collect_metadata(
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_functorch/_aot_autograd/collect_metadata_analysis.py\", line 150, in inner
+\n    flat_f_outs = f(*flat_f_args)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_functorch/_aot_autograd/utils.py\", line 174, in flat_fn
+\n    tree_out = fn(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_functorch/_aot_autograd/traced_function_transforms.py\", line 709, in functional_call
+\n    out = mod(*args[params_len:], **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/nn/modules/module.py\", line 1532, in _wrapped_call_impl
+\n    return self._call_impl(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/nn/modules/module.py\", line 1541, in _call_impl
+\n    return forward_call(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/export/_trace.py\", line 1010, in forward
+\n    tree_out = self._export_root(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/nn/modules/module.py\", line 1532, in _wrapped_call_impl
+\n    return self._call_impl(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/nn/modules/module.py\", line 1541, in _call_impl
+\n    return forward_call(*args, **kwargs)
+\n  File \"/home/zewenl/.cache/huggingface/modules/transformers_modules/microsoft/Phi-3-vision-128k-instruct/7b92b8c62807f5a98a9fa47cdfd4144f11fbd112/modeling_phi3_v.py\", line 1301, in forward
+\n    outputs = self.model(
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/nn/modules/module.py\", line 1532, in _wrapped_call_impl
+\n    return self._call_impl(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/nn/modules/module.py\", line 1541, in _call_impl
+\n    return forward_call(*args, **kwargs)
+\n  File \"/home/zewenl/.cache/huggingface/modules/transformers_modules/microsoft/Phi-3-vision-128k-instruct/7b92b8c62807f5a98a9fa47cdfd4144f11fbd112/modeling_phi3_v.py\", line 1129, in forward
+\n    inputs_embeds = self.vision_embed_tokens(input_ids, pixel_values=pixel_values, image_sizes=image_sizes)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/nn/modules/module.py\", line 1532, in _wrapped_call_impl
+\n    return self._call_impl(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/nn/modules/module.py\", line 1541, in _call_impl
+\n    return forward_call(*args, **kwargs)
+\n  File \"/home/zewenl/.cache/huggingface/modules/transformers_modules/microsoft/Phi-3-vision-128k-instruct/7b92b8c62807f5a98a9fa47cdfd4144f11fbd112/image_embedding_phi3_v.py\", line 170, in forward
+\n    if len(positions.tolist()) > 0:
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_subclasses/functional_tensor.py\", line 219, in tolist
+\n    return [elem.tolist() for elem in self.elem]
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_tensor.py\", line 1066, in __iter__
+\n    return iter(self.unbind(0))
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_subclasses/functional_tensor.py\", line 421, in __torch_dispatch__
+\n    outs_unwrapped = func._op_dk(
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/utils/_stats.py\", line 20, in wrapper
+\n    return fn(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_subclasses/fake_tensor.py\", line 842, in __torch_dispatch__
+\n    return self.dispatch(func, types, args, kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_subclasses/fake_tensor.py\", line 1187, in dispatch
+\n    return self._cached_dispatch_impl(func, types, args, kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_subclasses/fake_tensor.py\", line 920, in _cached_dispatch_impl
+\n    output = self._dispatch_impl(func, types, args, kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_subclasses/fake_tensor.py\", line 1339, in _dispatch_impl
+\n    return decomposition_table[func](*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_refs/__init__.py\", line 3906, in unbind
+\n    if t.shape[dim] == 0:
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/__init__.py\", line 377, in __bool__
+\n    return self.node.bool_()
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/fx/experimental/sym_node.py\", line 439, in bool_
+\n    return self.guard_bool(\"\", 0)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/fx/experimental/sym_node.py\", line 377, in guard_bool
+\n    r = self.shape_env.evaluate_expr(self.expr, self.hint, fx_node=self.fx_node)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/fx/experimental/recording.py\", line 265, in wrapper
+\n    return event.run(self)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/fx/experimental/recording.py\", line 160, in run
+\n    return self.f(*args, **kwargs)
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/fx/experimental/symbolic_shapes.py\", line 4269, in evaluate_expr
+\n    raise self._make_data_dependent_error(
+\ntorch.fx.experimental.symbolic_shapes.GuardOnDataDependentSymNode: Could not guard on data-dependent expression Eq(u0, 0) (unhinted: Eq(u0, 0)).  (Size-like symbols: u0)
+\n
+\nATTENTION: guard_size_oblivious would fix the error, evaluating expression to False.
+\nMaybe you need to add guard_size_oblivious to framework code, see doc below for more guidance.
+\n
+\nPotential framework code culprit (scroll up for full backtrace):
+\n  File \"/home/zewenl/anaconda3/envs/trt-10-py310/lib/python3.10/site-packages/torch/_refs/__init__.py\", line 3906, in unbind
+\n    if t.shape[dim] == 0:
+\n
+\nFor more information, run with TORCH_LOGS=\"dynamic\"
+\nFor extended logs when we create symbols, also add TORCHDYNAMO_EXTENDED_DEBUG_CREATE_SYMBOL=\"u0\"
+\nIf you suspect the guard was triggered from C++, add TORCHDYNAMO_EXTENDED_DEBUG_CPP=1
+\nFor more debugging help, see https://docs.google.com/document/d/1HSuTTVvYH1pTew89Rtpeu84Ht3nQEFTYhAX3Ypa_xJs/edit?usp=sharing
+\n
+\nFor C++ stack trace, run with TORCHDYNAMO_EXTENDED_DEBUG_CPP=1
+\n```
+\n
+\nIt seems the error is due to:
+\n```
+\nFile \"/home/zewenl/.cache/huggingface/modules/transformers_modules/microsoft/Phi-3-vision-128k-instruct/7b92b8c62807f5a98a9fa47cdfd4144f11fbd112/image_embedding_phi3_v.py\", line 170, in forward
+\n    if len(positions.tolist()) > 0:
+\n```\n\n### Expected behavior\n\nThe code should be able to run correctly.
+\nI'm not sure the issue is from huggingface or pytorch. I submitted a issue to pytorch as well [here](https://github.com/pytorch/pytorch/issues/128906) for your reference."
+  )
+}
+````
+
+</Accordion>
+
+#### Modify the function
+
+As an exercise, let's modify the `classifyIssue` function to only return labels
+that have a confidence score of a certain threshold or higher.
+
+See if you can figure out how to do this. If you get stuck, ask for help,
+or view the solution below.
+
+<Accordion title="Code (Solution Spoiler)">
+
+```ts
+export function classifyIssue(
+  id: string,
+  title: string,
+  description: string,
+): string {
+  console.log(`Classifying issue ${id}`);
+  const summary = `${title}\n${description}`;
+
+  const model = models.getModel<ClassificationModel>("issue-classifier");
+  const input = model.createInput([summary]);
+  const output = model.invoke(input).predictions[0];
+
+  // This is the new code that checks the confidence score.
+  if (output.confidence < 0.6) {
+    console.log(
+      `Issue ${id} couldn't be classified. Confidence: ${output.confidence}`,
+    );
+    return "unknown";
+  }
+
+  console.log(`Issue ${id} classified as ${output.label}`);
+  return output.label;
+}
+```
+
+</Accordion>
+
+#### Deploy the changes for classification
+
+Commit and push the changes to the GitHub repository, using any method you prefer.
+
+For example, using the Git CLI:
+
+```sh
+git add .
+git commit -m "Add threshold to classification"
+git push
+```
+
+#### Test the classification function
+
+Using a web browser, sign in to hypermode.com and navigate to your project.
+You can test the `classifyIssue` function with sample inputs using the GraphiQL
+interface provided by the Hypermode UI.
+
+### Issue similarity search
+
+In order to find similar issues, we need to:
+
+- Define a collection to store issues
+- Create a function that knows how to compute vector embeddings
+- Create a Hypermode function that uses the collection to find similar issues
+- Deploy the code changes
+- Insert issues data into the collection, and test the function
+
+#### Define a collection
+
+Open the `hypermode.json` (in the root of the repo directory) and add the following section:
+
+```json
+  "collections": {
+    "issuesCollection": {
+      "searchMethods": {
+        "byTitle": {
+          "embedder": "minilmEmbedder"
+        }
+      }
+    }
+  }
+```
+
+This tells Hypermode to create a collection named `issuesCollection`,
+and to search by title using an embedder function named `minilmEmbedder`.
+
+In order to compute vector embeddings, we also need to declare another model
+in the `hypermode.json` file.
+
+Add the following to the existing `"models"` section:
+
+```json
+    "minilm": {
+      "sourceModel": "sentence-transformers/all-MiniLM-L6-v2",
+      "host": "hypermode",
+      "provider": "hugging-face"
+    }
+```
+
+<Accordion title="Complete Manifest File">
+
+The complete `hypermode.json` manifest file should now be as follows:
+
+```json
+{
+  "$schema": "https://manifest.hypermode.com/hypermode.json",
+
+  "models": {
+    "issue-classifier": {
+      "sourceModel": "AntoineMC/distilbart-mnli-github-issues",
+      "provider": "hugging-face",
+      "host": "hypermode"
+    },
+    "text-generator": {
+      "sourceModel": "gpt-3.5-turbo",
+      "host": "openai",
+      "path": "v1/chat/completions"
+    },
+    "minilm": {
+      "sourceModel": "sentence-transformers/all-MiniLM-L6-v2",
+      "host": "hypermode",
+      "provider": "hugging-face"
+    }
+  },
+
+  "hosts": {
+    "github": {
+      "baseUrl": "https://api.github.com/",
+      "headers": {
+        "Authorization": "Bearer {{AUTH_TOKEN}}"
+      }
+    },
+    "openai": {
+      "baseUrl": "https://api.openai.com/",
+      "headers": {
+        "Authorization": "Bearer {{API_KEY}}"
+      }
+    }
+  },
+
+  "collections": {
+    "issuesCollection": {
+      "searchMethods": {
+        "byTitle": {
+          "embedder": "minilmEmbedder"
+        }
+      }
+    }
+  }
+}
+```
+
+</Accordion>
+
+#### Create the embedder function
+
+Create a new file `embedder.ts` in the `functions/assembly` folder.
+
+This function uses the MiniLM model to create vector embeddings for the input text.
+
+```ts
+import { models } from "@hypermode/functions-as";
+import { EmbeddingsModel } from "@hypermode/models-as/models/experimental/embeddings";
+
+export function minilmEmbedder(text: string[]): f32[][] {
+  const model = models.getModel<EmbeddingsModel>("minilm");
+  const input = model.createInput(text);
+  const output = model.invoke(input);
+
+  return output.predictions;
+}
+```
+
+You'll also need to modify the `functions/assembly/index.ts` file to export the new function.
+
+Add the following line to the end of the file:
+
+```ts
+export * from "./embedder";
+```
+
+#### Create the search function
+
+Create a new file `similar.ts` in the `functions/assembly` folder.
+
+This function uses the collection to search for similar issues based on the title.
+
+```ts
+import { collections } from "@hypermode/functions-as";
+
+// Define the structure we expect for the output of the similarity search function.
+@json
+class SimilarIssue {
+  id!: string;
+  title!: string;
+  similarity!: f64;
+}
+
+export function similarIssues(title: string): SimilarIssue[] {
+  const response = collections.search(
+    "issuesCollection",
+    "byTitle",
+    title, // the text to search for
+    3, // return the top 3 results
+    true, // include text in the results
+  );
+
+  return response.objects.map<SimilarIssue>(
+    (o) =>
+      <SimilarIssue>{
+        id: o.key,
+        title: o.text,
+        similarity: o.score,
+      },
+  );
+}
+```
+
+You'll also need to modify the `functions/assembly/index.ts` file to export the new function.
+
+Add the following line to the end of the file:
+
+```ts
+export * from "./similar";
+```
+
+#### Deploy the changes for similarity search
+
+Commit and push the changes to the GitHub repository, using any method you prefer.
+
+For example, using the Git CLI:
+
+```sh
+git add .
+git commit -m "Add similarity search"
+git push
+```
+
+#### Insert issues data into the collection
+
+- Download an [example CSV data file](https://github.com/hypermodeAI/ship-issue-triage/blob/final/extras/issues.csv),
+  and save it to your local machine.
+
+- Then, in the Hypermode UI, navigate to your project and find the collection named `issuesCollection`.
+
+- Click the `Upload` link and upload a CSV file containing the issues data.
+
+The import process starts, and should complete within a few seconds, adding all your issues
+to the collection.
+
+Alternatively, you can add the data programmatically.
+For example, you can create a new function that inserts data directly into
+the collection.
+
+```ts
+export function addIssue(id: string, title: string): string {
+  const result = collections.upsert("issuesCollection", id, title);
+  return result.status;
+}
+```
+
+#### Test the similarity function
+
+Like before, you can navigate to your project at hypermode.com and test the `similarIssues`
+function with sample inputs using the GraphiQL interface provided by the Hypermode UI.
+
+<Accordion title="Example Query">
+
+```graphql
+query FindSimilarIssues {
+  similarIssues(title: "Add Spanish Readme") {
+    id
+    title
+    similarity
+  }
+}
+```
+
+</Accordion>
+
+### Production-ready API
+
+As you've seen, Hypermode makes it easy to build and deploy AI-powered functions.
+
+When you're ready to take the next step, you can start incorporating these functions
+into your own applications. Hypermode provides a GraphQL API that you can use to
+interact with your functions. You can obtain an API key from the settings page
+in the Hypermode UI, then use any GraphQL tool or client library you wish.
+
+## What's next
+
+You can apply the building blocks of filtering, summarization, categorization, and search
+into a wide variety of applications. Hypermode makes it easy to iterate on your AI features.
+
+For further inspiration, explore [justship.ai](https://justship.ai) and deploy today!
