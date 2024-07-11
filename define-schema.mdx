@@ -10,12 +10,17 @@ When deployed, your API is available on your project's endpoint, visible in the 
 For example, with the following index.ts file:
 
 ```ts
-import { inference } from "@hypermode/functions-as";
+import { models } from "@hypermode/functions-as";
+import { ClassificationModel } from "@hypermode/models-as/models/experimental/classification";
+
+const modelName = "sentiment-classifier";
 
 export function testClassifier(text: string): string {
-  const modelName = "sentiment-classifier";
-  const threshold: f32 = 0.5;
-  return inference.classifyText(modelName, text, threshold);
+  const model = models.getModel<ClassificationModel>(modelName);
+  const input = model.createInput([text]);
+  const output = model.invoke(input);
+
+  return output.predictions[0];
 }
 ```
 
