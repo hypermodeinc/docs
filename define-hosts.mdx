@@ -3,8 +3,45 @@ title: Define Hosts
 description: "Securely connect to your data"
 ---
 
-Hosts establish connectivity for AI models and other external endpoints.
-The `hosts` object in the [project manifest](/manifest) allows you to define hosts, for secure access from within a function.
+## Overview
+
+Hosts establish connectivity to external services. They're used for HTTP and GraphQL APIs,
+database connections, and externally hosted AI models. The `hosts` object in the
+[project manifest](/manifest) allows you to define these hosts, for secure access from within a function.
+
+Each host requires a unique name, specified as a key containing only alphanumeric characters and hyphens.
+
+Each host has a `type` property, which controls how it's used and which additional properties are available.
+If not provided, the default type is `http`. The following table lists the available host types:
+
+| Type         | Purpose                                | Functions Namespaces        |
+| :----------- | :------------------------------------- | :-------------------------- |
+| `http`       | Connect to an HTTP or HTTPS web server | `http`, `graphql`, `models` |
+| `postgresql` | Connect to a PostgreSQL database       | `postgresql`                |
+
+We'll update this table as we add more host types.
+
+<Warning>
+### Caution
+
+Don't include secrets directly in the manifest!
+
+If your host requires authentication, you can include _placeholders_ in host properties
+which resolve to their respective secrets at runtime. Set the actual secrets via the
+Hypermode Console, where they're securely stored until needed.
+
+</Warning>
+
+{/* <!-- vale Google.Headings = NO --> */}
+
+## HTTP Host
+
+This host type supports the HTTP and HTTPS protocols to communicate with external hosts.
+You can use the [HTTP APIs](/sdk/http) in the Functions SDK to interact with the host.
+
+This host type is also used for [GraphQL APIs](/sdk/graphql) and to invoke externally hosted AI [models](/sdk/models).
+
+**Example:**
 
 ```json hypermode.json
 {
@@ -19,20 +56,10 @@ The `hosts` object in the [project manifest](/manifest) allows you to define hos
 }
 ```
 
-Each host requires a unique name, specified as a key, containing only alphanumeric characters and hyphens.
-
-<Note>You must include either a `baseUrl` or an `endpoint` (not both).</Note>
-
-<Warning>
-Don't include secrets directly in the manifest!
-
-If your host requires authentication, you can specify `headers` and/or `queryParameters` properties.
-Those values can include _placeholders_ which resolve to their respective secrets at runtime.
-Set the actual secrets via the Hypermode Console, where they're securely stored until needed.
-
-</Warning>
-
-## Properties
+<ResponseField name="type" type="string">
+  Always set to `"http"` for this host type. This is the default if not
+  specified.
+</ResponseField>
 
 <ResponseField name="baseUrl" type="string" required>
   Base URL for connections to the host.
@@ -41,8 +68,6 @@ Set the actual secrets via the Hypermode Console, where they're securely stored 
 
 Example: `"https://api.example.com/v1/"`
 
-_If providing the entire URL, use the `endpoint` field instead._
-
 </ResponseField>
 
 <ResponseField name="endpoint" type="string" required>
@@ -50,9 +75,17 @@ _If providing the entire URL, use the `endpoint` field instead._
 
 Example: `"https://models.example.com/v1/classifier"`
 
-_If providing only the base of the URL, use the `baseUrl` field instead._
-
 </ResponseField>
+
+<Note>
+  You must include either a `baseUrl` or an `endpoint`, but not both.
+  - Use `baseUrl` for connections to a host with a common base URL.
+  - Use `endpoint` for connections to a specific URL.
+
+Typically, you'll use the `baseUrl` field. However, some APIs, such as `graphql.execute`,
+require the full URL in the `endpoint` field.
+
+</Note>
 
 <ResponseField name="headers" type="object">
   If provided, requests to the host include these headers. Each key-value pair is a header name and value.
@@ -106,4 +139,51 @@ This example specifies a query parameter named `key` provided by a secret named 
 ```
 
   </Accordion>
+</ResponseField>
+
+## PostgreSQL Host
+
+This host type supports connecting to PostgreSQL databases.
+You can use the [PostgreSQL APIs](/sdk/postgresql) in the Functions SDK to interact with the database.
+
+**Example:**
+
+```json hypermode.json
+{
+  "hosts": {
+    "my-database": {
+      "type": "postgresql",
+      "connString": "postgresql://{{PG_USER}}:{{PG_PASSWORD}}@db.example.com:5432/data?sslmode=require"
+    }
+  }
+}
+```
+
+<ResponseField name="type" type="string" required>
+  Always set to `"postgresql"` for this host type.
+</ResponseField>
+
+<ResponseField name="connString" type="string" required>
+  The connection string for the PostgreSQL database.
+
+Values may include variables using the `{{VARIABLE}}` template syntax, which resolve at runtime to secrets
+provided for each host, via the Hypermode Console.
+
+The connection string in the preceding example includes:
+
+- A username and password provided by secrets named `PG_USER` & `PG_PASSWORD`
+- A host named `db.example.com` on port `5432`
+- A database named `data`
+- SSL mode set to `require` - which is highly recommended for secure connections
+
+Refer to [the PostgreSQL documentation](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING) for more details on connection strings.
+
+<Tip>
+
+Managed PostgreSQL providers often provide a pre-made connection string for you to copy. Check your provider's documentation for details.
+
+For example, if using Neon, refer to the [Neon documentation](https://neon.tech/docs/connect/connect-from-any-app).
+
+</Tip>
+
 </ResponseField>

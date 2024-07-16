@@ -77,7 +77,8 @@
             "sdk/console",
             "sdk/graphql",
             "sdk/http",
-            "sdk/models"
+            "sdk/models",
+            "sdk/postgresql"
           ]
         }
       ]

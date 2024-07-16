@@ -1,0 +1,414 @@
+---
+title: PostgreSQL
+description: "Execute queries against a PostgreSQL database."
+---
+
+{/* <!-- vale Google.Headings = NO --> */}
+
+Hypermode's PostgreSQL API allows you to run queries against PostgreSQL or any PostgreSQL compatible database
+platform, such as [Neon](https://neon.tech/).
+After [defining a host](../define-hosts) for the PostgreSQL endpoint in your project's manifest,
+you can use the following APIs to interact with the data.
+
+## Example project
+
+For your reference, A complete example for using the GraphQL APIs is available on GitHub in the
+`hypermodeAI/functions-as` repository, at [/examples/postgresql](https://github.com/hypermodeAI/functions-as/tree/main/examples/postgresql).
+
+## Import from the SDK
+
+To begin, import the `postgresql` namespace from the SDK:
+
+<CodeGroup>
+
+```ts AssemblyScript
+import { postgresql } from "@hypermode/functions-as";
+```
+
+</CodeGroup>
+
+## PostgreSQL APIs
+
+The APIs in the `postgresql` namespace are below, organized by category.
+
+<Tip>
+  We're constantly introducing new APIs through ongoing development with build
+  partners. [Let's chat](mailto:help@hypermode.com) about what would make the
+  Functions SDK even more powerful for your next use case!
+</Tip>
+
+### Functions
+
+#### execute
+
+Execute a SQL statement against a PostgreSQL database, without any data returned.
+Use this for insert, update, or delete operations, or for other SQL statements that don't return data.
+
+<Tip>
+  The `execute` function is for operations that don't return data. However, some
+  insert/update/delete operations may still return data, such as an identifier
+  for a newly inserted row. In these cases, you can use the `queryScalar`
+  function instead (for a single row's identifier), or the `query` function (for
+  multiple rows).
+</Tip>
+
+<CodeGroup>
+
+```ts AssemblyScript
+function postgresql.execute (
+  hostName: string,
+  statement: string,
+  params?: Params
+): Response
+```
+
+</CodeGroup>
+
+<ResponseField name="hostName" type="string" required>
+  Name of the host, as [defined in the manifest](../define-hosts).
+</ResponseField>
+
+<ResponseField name="statement" type="string" required>
+  SQL statement containing the query or mutation operation to execute.
+
+<Warning>
+  While it's possible to directly include parameter values into your SQL
+  statement, it's highly recommended to pass a [`Params`](#params) object
+  instead. This can help to prevent against injection attacks and other security
+  vulnerabilities.
+</Warning>
+
+</ResponseField>
+
+<ResponseField name="params" type="Params">
+
+Optional parameters to include with the query.
+
+See the details of the [`Params`](#params) object for more information.
+
+</ResponseField>
+
+#### query
+
+Execute a SQL statement against a PostgreSQL database, returning a set of rows.
+In the results, each row converts to an object of type `T`, with fields matching the column names.
+
+<CodeGroup>
+
+```ts AssemblyScript
+function postgresql.query<T>(
+  hostName: string,
+  statement: string,
+  params?: Params,
+): QueryResponse<T>
+```
+
+</CodeGroup>
+
+<ResponseField name="T" type="Type" required>
+  Type of object to use for the data returned from the query.
+  This can be any type, including a custom type defined in your project.
+  It should match the shape of the row returned from the SQL query.
+
+<Tip>
+
+Define custom types in the project's source code.
+In AssemblyScript, create classes decorated with `@json`.
+
+All types, including classes, base classes, and field types must be JSON serializable.
+You can also use built-in types such as strings, numbers, arrays, and maps.
+
+If working with PostgreSQL's `point` data type, you can use a [`Point`](#point) or
+[`Location`](#location) object to represent the data.
+
+</Tip>
+
+</ResponseField>
+
+<ResponseField name="hostName" type="string" required>
+  Name of the host, as [defined in the manifest](../define-hosts).
+</ResponseField>
+
+<ResponseField name="statement" type="string" required>
+  SQL statement containing the query or mutation operation to execute.
+
+<Warning>
+  While it's possible to directly include parameter values into your SQL
+  statement, it's highly recommended to pass a [`Params`](#params) object
+  instead. This can help to prevent against injection attacks and other security
+  vulnerabilities.
+</Warning>
+
+</ResponseField>
+
+<ResponseField name="params" type="Params">
+
+Optional parameters to include with the query.
+
+See the details of the [`Params`](#params) object for more information.
+
+</ResponseField>
+
+#### queryScalar
+
+Execute a SQL statement against a PostgreSQL database, returning a single scalar value.
+For example, the result could be a count, sum, or average, or it could be an identifier.
+
+<CodeGroup>
+
+```ts AssemblyScript
+function postgresql.queryScalar<T> (
+  hostName: string,
+  statement: string,
+  params?: Params
+): ScalarResponse<T>
+```
+
+</CodeGroup>
+
+<ResponseField name="T" type="Type" required>
+  Type of object to use for the data returned from the query. This should
+  generally be a scalar data type, such as a number or string. It should match
+  the type of the data returned from the SQL query.
+</ResponseField>
+
+<ResponseField name="hostName" type="string" required>
+  Name of the host, as [defined in the manifest](../define-hosts).
+</ResponseField>
+
+<ResponseField name="statement" type="string" required>
+  SQL statement containing the query or mutation operation to execute.
+
+<Warning>
+  While it's possible to directly include parameter values into your SQL
+  statement, it's highly recommended to pass a [`Params`](#params) object
+  instead. This can help to prevent against injection attacks and other security
+  vulnerabilities.
+</Warning>
+
+</ResponseField>
+
+<ResponseField name="params" type="Params">
+
+Optional parameters to include with the query.
+
+See the details of the [`Params`](#params) object for more information.
+
+</ResponseField>
+
+### Objects
+
+#### Params
+
+<CodeGroup>
+
+```ts AssemblyScript
+class Params {
+  public push(value: any): void;
+  public toJSON(): string;
+}
+```
+
+</CodeGroup>
+
+A container for parameters to include with a SQL operation.
+
+To use this feature, create a new `Params` object and call the `push` method
+for each parameter you want to include. Then pass the object to the `execute`,
+`query`, or `queryScalar` function along with your SQL statement.
+
+<ResponseField name="push(value)">
+
+Push a parameter value into the list included with the SQL operation.
+The sequence of calls to `push` determines the order of the parameters in the
+SQL statement. This corresponds to the order of the `?` placeholders or `$1`, `$2`, etc.
+
+<Accordion title="Parameters">
+
+<ResponseField name="value" type="any" required>
+
+The value of the parameter to include in the SQL operation.
+
+The value can be of any type that's JSON serializable, including strings, numbers,
+boolean values, arrays, maps, and custom objects decorated with `@json`, as long
+as the database supports it.
+
+<Tip>
+  If working with PostgreSQL's `Point` data type, you can either pass separate
+  parameters for the coordinates and use a `point()` function in the SQL
+  statement, or you can pass a [`Point`](#point) or [`Location`](#location)
+  object as a single parameter.
+</Tip>
+
+</ResponseField>
+
+</Accordion>
+
+<Accordion title="Example">
+
+<CodeGroup>
+
+```ts AssemblyScript
+const params = new postgresql.Params();
+params.push(firstName);
+params.push(lastName);
+
+const response = postgresql.query<Person>(host, query, params);
+```
+
+</CodeGroup>
+
+</Accordion>
+
+</ResponseField>
+
+<ResponseField name="toJSON()" type="string">
+
+Serializes the parameters to a JSON string for inclusion in the SQL
+operation. The SDK functions call this automatically when you pass a
+`Params` object. You typically don't need to call it directly.
+
+</ResponseField>
+
+#### Response
+
+<CodeGroup>
+
+```ts AssemblyScript
+class Response {
+  error: string | null;
+  rowsAffected: u32;
+}
+```
+
+</CodeGroup>
+
+Represents the response from an [`execute`](#execute) operation.
+Also serves as the base class for `QueryResponse<T>` and `ScalarResponse<T>`.
+
+<ResponseField name="error" type="string | null">
+  An error message, if an error occurred during the operation. Otherwise, this
+  field is `null`.
+</ResponseField>
+
+<ResponseField name="rowsAffected" type="u32">
+  The number of rows affected by the operation.
+</ResponseField>
+
+#### QueryResponse
+
+<CodeGroup>
+
+```ts AssemblyScript
+class QueryResponse<T> {
+  error: string | null;
+  rowsAffected: u32;
+  rows: T[];
+}
+```
+
+</CodeGroup>
+
+Represents the response from a [`query`](#query) operation.
+
+<ResponseField name="error" type="string | null">
+  An error message, if an error occurred during the operation. Otherwise, this
+  field is `null`.
+</ResponseField>
+
+<ResponseField name="rowsAffected" type="u32">
+  The number of rows affected by the operation.
+</ResponseField>
+
+<ResponseField name="rows" type="T[]">
+  An array of objects, each representing a row returned from the query. Each
+  object has fields corresponding to the columns in the result set.
+</ResponseField>
+
+#### ScalarResponse
+
+<CodeGroup>
+
+```ts AssemblyScript
+class ScalarResponse<T> {
+  error: string | null;
+  rowsAffected: u32;
+  value: T;
+}
+```
+
+</CodeGroup>
+
+Represents the response from a [`queryScalar`](#queryscalar) operation.
+
+<ResponseField name="error" type="string | null">
+  An error message, if an error occurred during the operation. Otherwise, this
+  field is `null`.
+</ResponseField>
+
+<ResponseField name="rowsAffected" type="u32">
+  The number of rows affected by the operation.
+</ResponseField>
+
+<ResponseField name="value" type="T">
+  The scalar value returned from the query.
+</ResponseField>
+
+#### Point
+
+<CodeGroup>
+
+```ts AssemblyScript
+class Point {
+ x: f64,
+ y: f64,
+}
+```
+
+</CodeGroup>
+
+Represents a point in 2D space, having `x` and `y` coordinates.
+Correctly serializes to and from PostgreSQL's point type, in (x, y) order.
+
+<Info>
+  This class is identical to the [Location](#location) class, but uses different
+  field names.
+</Info>
+
+<ResponseField name="x" type="f64" required>
+  The x coordinate of the point.
+</ResponseField>
+
+<ResponseField name="y" type="f64" required>
+  The y coordinate of the point.
+</ResponseField>
+
+#### Location
+
+<CodeGroup>
+
+```ts AssemblyScript
+class Location {
+ longitude: f64,
+ latitude: f64,
+}
+```
+
+</CodeGroup>
+
+Represents a location on Earth, having `longitude` and `latitude` coordinates.
+
+Correctly serializes to and from PostgreSQL's point type, in (longitude, latitude) order.
+
+<Info>
+  This class is identical to the [Point](#point) class, but uses different field
+  names.
+</Info>
+
+<ResponseField name="longitude" type="f64" required>
+  The longitude coordinate of the location, in degrees.
+</ResponseField>
+
+<ResponseField name="latitude" type="f64" required>
+  The latitude coordinate of the location, in degrees.
+</ResponseField>
