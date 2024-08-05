@@ -89,8 +89,9 @@
     }
   ],
   "footerSocials": {
-    "twitter": "https://twitter.com/hypermodeAI",
+    "discord": "https://discord.hypermode.com",
     "github": "https://github.com/hypermodeAI",
+    "twitter": "https://twitter.com/hypermodeAI",
     "linkedin": "https://www.linkedin.com/company/hypermode"
   },
   "analytics": {
