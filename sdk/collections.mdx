@@ -31,9 +31,10 @@ import { collections } from "@hypermode/functions-as";
 The APIs in the `collections` namespace are below, organized by category.
 
 <Tip>
-  We're constantly introducing new APIs through ongoing development with build
-  partners. [Let's chat](mailto:help@hypermode.com) about what would make the
-  Functions SDK even more powerful for your next use case!
+  New APIs are constantly introduced through ongoing development with build
+  partners. Please contact us at [help@hypermode.com](mailto:help@hypermode.com)
+  about what would make the Functions SDK even more powerful for your next use
+  case.
 </Tip>
 
 ### Mutation Functions
@@ -54,6 +55,8 @@ collections.upsert(
   collection: string,
   key: string | null,
   text: string,
+  labels: string[] = [],
+  namespace: string = "",
 ): CollectionMutationResult
 ```
 
@@ -72,6 +75,14 @@ collections.upsert(
   The text of the item to add to the collection.
 </ResponseField>
 
+<ResponseField name="labels" type="string[]">
+  An optional array of labels to associate with the item.
+</ResponseField>
+
+<ResponseField name="namespace" type="string">
+  An optional namespace to associate with the item.
+</ResponseField>
+
 #### upsertBatch
 
 Inserts or updates a batch of items into a collection.
@@ -88,6 +99,8 @@ collections.upsertBatch(
   collection: string,
   keys: string[] | null,
   texts: string[],
+  labelsArr: string[][] = [],
+  namespace: string = "",
 ): CollectionMutationResult
 ```
 
@@ -106,6 +119,14 @@ collections.upsertBatch(
   Array of texts for the items to add to the collection.
 </ResponseField>
 
+<ResponseField name="labelsArr" type="string[][]">
+  An optional array of arrays of labels to associate with the items.
+</ResponseField>
+
+<ResponseField name="namespace" type="string">
+  An optional namespace to associate with the items.
+</ResponseField>
+
 #### remove
 
 Removes an item from the collection.
@@ -116,6 +137,7 @@ Removes an item from the collection.
 collections.remove(
   collection: string,
   key: string,
+  namespace: string = "",
 ): CollectionMutationResult
 ```
 
@@ -127,6 +149,10 @@ collections.remove(
 
 <ResponseField name="key" type="string" required>
   The key of the item to delete from the collection.
+</ResponseField>
+
+<ResponseField name="namespace" type="string">
+  An optional namespace to associate with the item.
 </ResponseField>
 
 ### Search and Retrieval Functions
@@ -149,6 +175,7 @@ collections.search(
   text: string,
   limit: i32,
   returnText: bool = false,
+  namespaces: string[] = [],
 ): CollectionSearchResult
 ```
 
@@ -174,18 +201,104 @@ collections.search(
   A flag to return the texts in the response.
 </ResponseField>
 
-#### computeSimilarity
+<ResponseField name="namespaces" type="string[]">
+  An optional array of namespaces to search within.
+</ResponseField>
 
-Computes similarity between two keys in a collection using a search method's embedder.
+#### searchByVector
+
+Search for an item in the collection by using a vector.
+
+<Note>
+  Hypermode uses the same embedder for both inserting text into the collection,
+  and for the vector used when searching the collection.
+</Note>
 
 <CodeGroup>
 
 ```ts AssemblyScript
-collections.computeSimilarity(
+collections.searchByVector(
+  collection: string,
+  searchMethod: string,
+  vector: f64[],
+  limit: i32,
+  returnText: bool = false,
+  namespaces: string[] = [],
+): CollectionSearchResult
+```
+
+</CodeGroup>
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>
+
+<ResponseField name="searchMethod" type="string" required>
+  The search method used to calculate embedding for vector & search against.
+</ResponseField>
+
+<ResponseField name="vector" type="f64[]" required>
+  The vector to compute search on.
+</ResponseField>
+
+<ResponseField name="limit" type="i32" required>
+  The number of result objects to return.
+</ResponseField>
+
+<ResponseField name="returnText" type="bool">
+  A flag to return the texts in the response.
+</ResponseField>
+
+<ResponseField name="namespaces" type="string[]">
+  An optional array of namespaces to search within.
+</ResponseField>
+
+#### nnClassify
+
+Classify an item in the collection using previous vectors' labels.
+
+<CodeGroup>
+
+```ts AssemblyScript
+  collections.nnClassify(
+  collection: string,
+  searchMethod: string,
+  text: string,
+  namespace: string = "",
+): CollectionClassificationResult
+```
+
+</CodeGroup>
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>
+
+<ResponseField name="searchMethod" type="string" required>
+  The search method used to calculate embedding for text & search against.
+</ResponseField>
+
+<ResponseField name="text" type="string" required>
+  The text to compute natural language search on.
+</ResponseField>
+
+<ResponseField name="namespace" type="string">
+  An optional namespace to associate with the item.
+</ResponseField>
+
+#### computeDistance
+
+Computes distance between two keys in a collection using a search method's embedder.
+
+<CodeGroup>
+
+```ts AssemblyScript
+collections.computeDistance(
   collection: string,
   searchMethod: string,
   key1: string,
   key2: string,
+  namespace: string = "",
 ): CollectionSearchResultObject
 ```
 
@@ -203,6 +316,10 @@ collections.computeSimilarity(
   Keys to compute similarity on.
 </ResponseField>
 
+<ResponseField name="namespace" type="string">
+  An optional namespace to associate with the item.
+</ResponseField>
+
 #### getText
 
 Gets an item's text from a collection, give the item's key.
@@ -210,7 +327,11 @@ Gets an item's text from a collection, give the item's key.
 <CodeGroup>
 
 ```ts AssemblyScript
-collections.getText(collection: string, key: string): string
+collections.getText(
+  collection: string,
+  key: string,
+  namespace: string = "",
+): string
 ```
 
 </CodeGroup>
@@ -223,6 +344,10 @@ collections.getText(collection: string, key: string): string
   The key of the item to retrieve.
 </ResponseField>
 
+<ResponseField name="namespace" type="string">
+  An optional namespace to associate with the item.
+</ResponseField>
+
 #### getTexts
 
 Get all items from a collection.
@@ -231,13 +356,71 @@ The result is a map of key to text for all items in the collection.
 <CodeGroup>
 
 ```ts AssemblyScript
-collections.getTexts(collection: string): Map<string, string>
+collections.getTexts(
+  collection: string,
+  namespace: string = "",
+): Map<string, string>
 ```
 
 </CodeGroup>
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>
+
+<ResponseField name="namespace" type="string">
+  An optional namespace to associate with the item.
+</ResponseField>
+
+#### getNamespaces
+
+Get all namespaces in a collection.
+
+<CodeGroup>
+
+```ts AssemblyScript
+collections.getNamespaces(
+  collection: string,
+): string[]
+```
+
+</CodeGroup>
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>
+
+#### getVector
+
+Get the vector for an item in a collection.
+
+<CodeGroup>
+
+```ts AssemblyScript
+collections.getVector(
+  collection: string,
+  searchMethod: string,
+  key: string,
+  namespace: string = "",
+): f64[]
+```
+
+</CodeGroup>
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>
+
+<ResponseField name="searchMethod" type="string" required>
+  The search method used to calculate embedding for key's texts.
+</ResponseField>
+
+<ResponseField name="key" type="string" required>
+  The key of the item to retrieve.
+</ResponseField>
+
+<ResponseField name="namespace" type="string">
+  An optional namespace to associate with the item.
 </ResponseField>
 
 ### Maintenance Functions
@@ -252,6 +435,7 @@ Recomputes the embeddings for all texts in a collection, for a specific search m
 collections.recomputeSearchMethod(
   collection: string,
   searchMethod: string,
+  namespace: string = "",
 ): collections.SearchMethodMutationResult
 ```
 
@@ -263,6 +447,10 @@ collections.recomputeSearchMethod(
 
 <ResponseField name="searchMethod" type="string" required>
   The search method to recompute embeddings for.
+</ResponseField>
+
+<ResponseField name="namespace" type="string">
+  An optional namespace to associate with the item.
 </ResponseField>
 
 ### Objects
@@ -359,8 +547,10 @@ Represents the result of a search operation on a collection.
 
 ```ts AssemblyScript
 class CollectionSearchResultObject {
+  namespace: string;
   key: string;
   text: string;
+  distance: f64;
   score: f64;
 }
 ```
@@ -368,6 +558,10 @@ class CollectionSearchResultObject {
 </CodeGroup>
 
 Represents an object in the search results.
+
+<ResponseField name="namespace" type="string">
+  The namespace of the item found as part of the search.
+</ResponseField>
 
 <ResponseField name="key" type="string">
   The key of the item found as part of the search.
@@ -377,8 +571,116 @@ Represents an object in the search results.
   The text of the item found as part of the search.
 </ResponseField>
 
+<ResponseField name="distance" type="f64">
+  The distance of the item from the search text.
+</ResponseField>
+
 <ResponseField name="score" type="f64">
   The similarity score of the item found, as it pertains to the search.
+</ResponseField>
+
+#### CollectionClassificationResult
+
+<CodeGroup>
+
+```ts AssemblyScript
+class CollectionClassificationResult {
+  collection: string;
+  status: CollectionStatus;
+  error: string;
+  isSuccessful: bool;
+  searchMethod: string;
+  labelsResult: CollectionClassificationLabelObject[];
+  cluster: CollectionClassificationResultObject[];
+}
+```
+
+</CodeGroup>
+
+Represents the result of a classification operation on a collection.
+
+<ResponseField name="collection" type="string">
+  Name of the collection.
+</ResponseField>
+
+<ResponseField name="status" type="CollectionStatus">
+  The status of the operation.
+</ResponseField>
+
+<ResponseField name="error" type="string">
+  Error message, if any.
+</ResponseField>
+
+<ResponseField name="isSuccessful" type="bool">
+  Whether the operation was successful.
+</ResponseField>
+
+<ResponseField name="searchMethod" type="string">
+  The search method used in the operation.
+</ResponseField>
+
+<ResponseField name="labelsResult" type="CollectionClassificationLabelObject[]">
+  The classification labels.
+</ResponseField>
+
+<ResponseField name="cluster" type="CollectionClassificationResultObject[]">
+  The classification results.
+</ResponseField>
+
+#### CollectionClassificationLabelObject
+
+<CodeGroup>
+
+```ts AssemblyScript
+class CollectionClassificationLabelObject {
+  label: string;
+  confidence: f64;
+}
+```
+
+</CodeGroup>
+
+Represents a classification label.
+
+<ResponseField name="label" type="string">
+  The classification label.
+</ResponseField>
+
+<ResponseField name="confidence" type="f64">
+  The confidence score of the classification label.
+</ResponseField>
+
+#### CollectionClassificationResultObject
+
+<CodeGroup>
+
+```ts AssemblyScript
+class CollectionClassificationResultObject {
+  key: string;
+  labels: string[];
+  distance: f64;
+  score: f64;
+}
+```
+
+</CodeGroup>
+
+Represents an object in the classification results.
+
+<ResponseField name="key" type="string">
+  The key of the item classified.
+</ResponseField>
+
+<ResponseField name="labels" type="string[]">
+  The classification labels.
+</ResponseField>
+
+<ResponseField name="distance" type="f64">
+  The distance of the item from the classification labels.
+</ResponseField>
+
+<ResponseField name="score" type="f64">
+  The similarity score of the item classified.
 </ResponseField>
 
 #### CollectionStatus
