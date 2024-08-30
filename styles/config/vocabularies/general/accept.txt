@@ -29,3 +29,4 @@ triaging
 upsert
 UUID
 nnClassify
+getVector
