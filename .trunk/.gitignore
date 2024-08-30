@@ -3,7 +3,6 @@
 *actions
 *notifications
 *tools
-node_modules
 plugins
 user_trunk.yaml
 user.yaml
