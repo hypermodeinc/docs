@@ -1,6 +1,6 @@
 ---
 title: Getting Started with Hypermode
-description: "Learn how to instantly get strated with Hypermode."
+description: "Learn how to instantly get started with Hypermode."
 ---
 
 This guide will walk you through getting started instantly with Hypermode using the [Instant Vector Search template](https://github.com/hypermodeAI/hyper-commerce). You’ll also learn how to customize your functions to tailor the application to your needs.
@@ -57,7 +57,7 @@ Behind the scenes, Hypermode automatically exposes the functions from the backen
 If you selected sample data, no additional setup is required. You can move on to Step 3 and immediately start exploring the project and its features. If you chose to use your own data, follow these steps to seed your data into the collections:
 
 1. Ensure you have [Python](https://www.python.org/downloads/) installed on your machine. You can verify this by running `python --version` or `python3 --version` in your terminal.
-2. Prepare your CSV file with the following headers: `Uniq Id,Product Name,Category,Selling Price,About Product,Image,Num Stars,In Stock`.
+2. Prepare your CSV file with the following headers: `Unique Id,Product Name,Category,Selling Price,About Product,Image,Num Stars,In Stock`.
 3. Copy the script from [this file](https://www.notion.so/Getting-Started-with-Hypermode-1fba345ba60c4ecbade5663a2251eedc?pvs=21).
 4. Update the script with your endpoint (located in your projects dashboard), API key (located in the settings tab of your Hypermode console), and the path to your CSV file.
 5. Install the necessary dependencies:
@@ -84,10 +84,10 @@ In the Hypermode console, you’ll see several key components of your project:
    />
 </Frame>
 
-- [\*\*Functions](https://docs.hypermode.com/sdk/functions-sdk):\*\* These are serverless functions written in AssemblyScript (a TypeScript-like language) that are automatically exposed as GraphQL APIs. Once deployed, these functions can be queried within your application.
-- [\*\*Collections](https://docs.hypermode.com/sdk/collections):\*\* Hypermode offers built-in key-value storage, known as collections, with support for vector embeddings. This allows you to store and retrieve data efficiently, without requiring a database for basic use cases.
-- [\*\*Models](https://docs.hypermode.com/sdk/models):\*\* This section represents the AI models defined for your project. These models handle tasks like embedding text into vectors for search. Hypermode provides open source shared and dedicated model hosting for rapid experimentation. You can also connect to your preferred LLM, including OpenAI, Anthropic, and Gemini.
-- [\*\*Hosts](https://docs.hypermode.com/define-hosts#define-hosts):\*\* All external connections from your functions are declared as hosts, with the runtime denying all other egress for secure-by-default processing.
+- **[Functions](https://docs.hypermode.com/sdk/functions-sdk):** These are serverless functions written in AssemblyScript (a TypeScript-like language) that are automatically exposed as GraphQL APIs. Once deployed, these functions can be queried within your application.
+- **[Collections](https://docs.hypermode.com/sdk/collections):** Hypermode offers built-in key-value storage, known as collections, with support for vector embeddings. This allows you to store and retrieve data efficiently, without requiring a database for basic use cases.
+- **[Models](https://docs.hypermode.com/sdk/models):** This section represents the AI models defined for your project. These models handle tasks like embedding text into vectors for search. Hypermode provides open source shared and dedicated model hosting for rapid experimentation. You can also connect to your preferred LLM, including OpenAI, Anthropic, and Gemini.
+- **[Hosts](https://docs.hypermode.com/define-hosts#define-hosts):** All external connections from your functions are declared as hosts, with the runtime denying all other egress for secure-by-default processing.
 - **Endpoint:** You will also see the GraphQL endpoint, which you’ll use to interact with your APIs and query your data.
 
 ### Step 4: Querying Your Data
