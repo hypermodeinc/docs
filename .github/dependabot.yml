@@ -9,6 +9,6 @@ updates:
     groups:
       actions:
         update-types:
-          - "patch"
-          - "minor"
-          - "major"
+          - patch
+          - minor
+          - major
