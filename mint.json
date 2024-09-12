@@ -54,7 +54,11 @@
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["introduction", "quickstart", "worlds-fair-workshop"]
+      "pages": [
+        "introduction",
+        "quickstart",
+        "getting-started-with-hyper-commerce"
+      ]
     },
     {
       "group": "Configure Project",
