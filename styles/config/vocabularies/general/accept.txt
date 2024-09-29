@@ -31,3 +31,4 @@ UUID
 nnClassify
 serverless
 getVector
+getLabels
