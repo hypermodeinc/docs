@@ -34,3 +34,6 @@ getVector
 gRPC
 DGraph
 dgraph
+alterSchema
+dropAll
+NQuads
