@@ -1,0 +1,4 @@
+extends: terms
+message: 'Consider using "{{ .Match }}" instead of "{{ .Match }}"'
+ignore:
+  - Dgraph
