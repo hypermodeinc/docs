@@ -168,7 +168,8 @@ class Query {
 
 <ResponseField name="new dgraph.Query(query, variables)">
   Creates a new `Query` object with the given `query` and `variables`. `query`
-  is a DQL query string, and `variables` is a [`Variables`](#variables) object.
+  is a DGraph Query Language (DQL) query string, and `variables` is a
+  [`Variables`](#variables) object.
 </ResponseField>
 
 <ResponseField name="query" type="string">
@@ -245,6 +246,5 @@ class Mutation {
 </ResponseField>
 
 <ResponseField name="condition" type="string">
-  A string representing the condition query for the mutation, which is used in
-  conditional mutations.
+  A string representing the condition query for the mutation.
 </ResponseField>
