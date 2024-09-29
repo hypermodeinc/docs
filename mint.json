@@ -82,7 +82,8 @@
             "sdk/graphql",
             "sdk/http",
             "sdk/models",
-            "sdk/postgresql"
+            "sdk/postgresql",
+            "sdk/dgraph"
           ]
         }
       ]

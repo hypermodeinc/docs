@@ -31,3 +31,6 @@ UUID
 nnClassify
 serverless
 getVector
+gRPC
+DGraph
+dgraph

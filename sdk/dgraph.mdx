@@ -1,0 +1,250 @@
+---
+title: DGraph
+description: "Execcute queries and mutations against a DGraph database."
+---
+
+{/* <!-- vale Google.Headings = NO --> */}
+
+Hypermode's DGraph APIs allow you to run queries and mutations against a DGraph database, as well as alter
+the schema if necessary.
+After [defining a host](../define-hosts) for your DGraph gRPC endpoint in your project's manifest,
+you can use the following APIs to interact with the database.
+
+## Example project
+
+For your reference, a complete example using the DGraph APIs is available on GitHub in the
+`hypermodeAI/functions-as` repository, at [/examples/dgraph](https://github.com/hypermodeAI/functions-as/tree/main/examples/dgraph).
+
+## Import from the SDK
+
+To begin, import the `dgraph` namespace from the SDK:
+
+<CodeGroup>
+
+```ts AssemblyScript
+import { dgraph } from "@hypermode/functions-as";
+```
+
+</CodeGroup>
+
+## DGraph APIs
+
+The APIs in the `dgraph` namespace are below.
+
+<Tip>
+  We're constantly introducing new APIs through ongoing development with build
+  partners. [Let's chat](mailto:help@hypermode.com) about what would make the
+  Functions SDK even more powerful for your next use case!
+</Tip>
+
+### Functions
+
+#### execute
+
+Execute a DGraph query or mutation using a DGraph Request object.
+
+<CodeGroup>
+
+```ts AssemblyScript
+function execute(hostName: string, request: Request): Response;
+```
+
+</CodeGroup>
+
+<ResponseField name="hostName" type="string" required>
+  Name of the host, as [defined in the manifest](../define-hosts).
+</ResponseField>
+
+<ResponseField name="request" type="Request" required>
+  A DGraph [`Request`](#request) object, describing the query or mutation to
+  execute.
+</ResponseField>
+
+#### alterSchema
+
+Alter the schema of a DGraph database.
+
+<CodeGroup>
+
+```ts AssemblyScript
+function alterSchema(hostName: string, schema: string): string;
+```
+
+</CodeGroup>
+
+<ResponseField name="hostName" type="string" required>
+  Name of the host, as [defined in the manifest](../define-hosts).
+</ResponseField>
+
+<ResponseField name="schema" type="string" required>
+  The schema to apply to the DGraph database.
+</ResponseField>
+
+#### dropAttr
+
+Drop an attribute from a DGraph schema.
+
+<CodeGroup>
+
+```ts AssemblyScript
+function dropAttr(hostName: string, attr: string): string;
+```
+
+</CodeGroup>
+
+<ResponseField name="hostName" type="string" required>
+  Name of the host, as [defined in the manifest](../define-hosts).
+</ResponseField>
+
+<ResponseField name="attr" type="string" required>
+  The attribute to drop from the DGraph schema.
+</ResponseField>
+
+#### dropAll
+
+Drop all data from a DGraph database.
+
+<CodeGroup>
+
+```ts AssemblyScript
+function dropAll(hostName: string): string;
+```
+
+</CodeGroup>
+
+<ResponseField name="hostName" type="string" required>
+  Name of the host, as [defined in the manifest](../define-hosts).
+</ResponseField>
+
+### Objects
+
+#### Request
+
+A DGraph request object, used to execute queries and mutations.
+
+<CodeGroup>
+
+```ts AssemblyScript
+class Request {
+  constructor(Query: Query | null = null, Mutations: Mutation[] | null = null);
+  query: Query = new Query();
+  mutations: Mutation[] = [];
+}
+```
+
+</CodeGroup>
+
+<ResponseField name="new dgraph.Request(query, mutations)">
+
+Creates a new `Request` object with the given `query` and `mutations`.
+
+The [`query`](#query) and [`mutations`](#mutation) fields are optional and default to `null`.
+
+</ResponseField>
+
+<ResponseField name="query" type="Query">
+  A DGraph [`query`](#query) object.
+</ResponseField>
+
+<ResponseField name="mutations" type="Mutation[]">
+  An array of DGraph [`mutation`](#mutation) objects.
+</ResponseField>
+
+#### Query
+
+A DGraph query object, used to execute queries.
+
+<CodeGroup>
+
+```ts AssemblyScript
+class Query {
+  constructor(query: string = "", variables: Variables = new Variables());
+  query: string = "";
+  variables: Map<string, string> = new Map<string, string>();
+}
+```
+
+</CodeGroup>
+
+<ResponseField name="new dgraph.Query(query, variables)">
+  Creates a new `Query` object with the given `query` and `variables`. `query`
+  is a DQL query string, and `variables` is a [`Variables`](#variables) object.
+</ResponseField>
+
+<ResponseField name="query" type="string">
+  The DQL query to execute.
+</ResponseField>
+
+<ResponseField name="variables" type="Map<string, string>">
+  A map of query variables.
+</ResponseField>
+
+#### Variables
+
+A Variables object used to set query variables in a DGraph query.
+
+<CodeGroup>
+
+```ts AssemblyScript
+class Variables {
+  public set<T>(name: string, value: T): void;
+  public toMap(): Map<string, string>;
+}
+```
+
+</CodeGroup>
+
+<ResponseField name="Variables.set(name, value)">
+  Sets a query variable with the given `name` and `value`. `name` is of type
+  `string`, and `value` can be of any type.
+</ResponseField>
+
+<ResponseField name="Variables.toMap()">
+  Returns a map of all query variables set in the `Variables` object.
+</ResponseField>
+
+#### Mutation
+
+A DGraph mutation object, used to execute mutations.
+
+<CodeGroup>
+
+```ts AssemblyScript
+class Mutation {
+  constructor(
+    public setJson: string = "",
+    public delJson: string = "",
+    public setNquads: string = "",
+    public delNquads: string = "",
+    public condition: string = "",
+  )
+}
+```
+
+</CodeGroup>
+
+<ResponseField name="new dgraph.Mutation(setJson, delJson, setNquads, delNquads, condition)">
+  Creates a new `Mutation` object with the given `setJson`, `delJson`,
+  `setNquads`, `delNquads`, and `condition` fields.
+</ResponseField>
+
+<ResponseField name="setJson" type="string">
+  A JSON string representing the data to set in the mutation.
+</ResponseField>
+
+<ResponseField name="delJson" type="string">
+  A JSON string representing the data to delete in the mutation.
+</ResponseField>
+
+<ResponseField name="setNquads" type="string">
+  A string representing the data to set in the mutation in NQuads format.
+</ResponseField>
+
+<ResponseField name="delNquads" type="string">
+  A string representing the data to delete in the mutation in NQuads format.
+</ResponseField>
+
+<ResponseField name="condition" type="string">
+  A string representing the condition query for the mutation, which is used in
+  conditional mutations.
+</ResponseField>
