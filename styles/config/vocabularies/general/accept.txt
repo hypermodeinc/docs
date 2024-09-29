@@ -32,8 +32,7 @@ nnClassify
 serverless
 getVector
 gRPC
-Dgraph
-dgraph
+[Dd]graph
 alterSchema
 dropAll
 NQuads
