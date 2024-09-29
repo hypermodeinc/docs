@@ -18,7 +18,7 @@ If not provided, the default type is `http`. The following table lists the avail
 | :----------- | :------------------------------------- | :-------------------------- |
 | `http`       | Connect to an HTTP or HTTPS web server | `http`, `graphql`, `models` |
 | `postgresql` | Connect to a PostgreSQL database       | `postgresql`                |
-| `dgraph`     | Connect to a DGraph database           | `dgraph`                    |
+| `dgraph`     | Connect to a Dgraph database           | `dgraph`                    |
 
 We'll update this table as we add more host types.
 
@@ -189,10 +189,10 @@ For example, if using Neon, refer to the [Neon documentation](https://neon.tech/
 
 </ResponseField>
 
-## DGraph Host
+## Dgraph Host
 
-This host type supports connecting to DGraph databases.
-You can use the [DGraph APIs](/sdk/dgraph) in the Functions SDK to interact with the database.
+This host type supports connecting to Dgraph databases.
+You can use the [Dgraph APIs](/sdk/dgraph) in the Functions SDK to interact with the database.
 
 **Example:**
 
@@ -213,9 +213,9 @@ You can use the [DGraph APIs](/sdk/dgraph) in the Functions SDK to interact with
 </ResponseField>
 
 <ResponseField name="grpcTarget" type="string" required>
-  The gRPC target for the DGraph database.
+  The gRPC target for the Dgraph database.
 </ResponseField>
 
 <ResponseField name="key" type="string" required>
-  The API key for the DGraph database.
+  The API key for the Dgraph database.
 </ResponseField>

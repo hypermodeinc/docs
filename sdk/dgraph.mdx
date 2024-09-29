@@ -1,18 +1,18 @@
 ---
-title: DGraph
-description: "Execcute queries and mutations against a DGraph database."
+title: Dgraph
+description: "Execcute queries and mutations against a Dgraph database."
 ---
 
 {/* <!-- vale Google.Headings = NO --> */}
 
-Hypermode's DGraph APIs allow you to run queries and mutations against a DGraph database, as well as alter
+Hypermode's Dgraph APIs allow you to run queries and mutations against a Dgraph database, as well as alter
 the schema if necessary.
-After [defining a host](../define-hosts) for your DGraph gRPC endpoint in your project's manifest,
+After [defining a host](../define-hosts) for your Dgraph gRPC endpoint in your project's manifest,
 you can use the following APIs to interact with the database.
 
 ## Example project
 
-For your reference, a complete example using the DGraph APIs is available on GitHub in the
+For your reference, a complete example using the Dgraph APIs is available on GitHub in the
 `hypermodeAI/functions-as` repository, at [/examples/dgraph](https://github.com/hypermodeAI/functions-as/tree/main/examples/dgraph).
 
 ## Import from the SDK
@@ -27,7 +27,7 @@ import { dgraph } from "@hypermode/functions-as";
 
 </CodeGroup>
 
-## DGraph APIs
+## Dgraph APIs
 
 The APIs in the `dgraph` namespace are below.
 
@@ -41,7 +41,7 @@ The APIs in the `dgraph` namespace are below.
 
 #### execute
 
-Execute a DGraph query or mutation using a DGraph Request object.
+Execute a Dgraph query or mutation using a Dgraph Request object.
 
 <CodeGroup>
 
@@ -56,13 +56,13 @@ function execute(hostName: string, request: Request): Response;
 </ResponseField>
 
 <ResponseField name="request" type="Request" required>
-  A DGraph [`Request`](#request) object, describing the query or mutation to
+  A Dgraph [`Request`](#request) object, describing the query or mutation to
   execute.
 </ResponseField>
 
 #### alterSchema
 
-Alter the schema of a DGraph database.
+Alter the schema of a Dgraph database.
 
 <CodeGroup>
 
@@ -77,12 +77,12 @@ function alterSchema(hostName: string, schema: string): string;
 </ResponseField>
 
 <ResponseField name="schema" type="string" required>
-  The schema to apply to the DGraph database.
+  The schema to apply to the Dgraph database.
 </ResponseField>
 
 #### dropAttr
 
-Drop an attribute from a DGraph schema.
+Drop an attribute from a Dgraph schema.
 
 <CodeGroup>
 
@@ -97,12 +97,12 @@ function dropAttr(hostName: string, attr: string): string;
 </ResponseField>
 
 <ResponseField name="attr" type="string" required>
-  The attribute to drop from the DGraph schema.
+  The attribute to drop from the Dgraph schema.
 </ResponseField>
 
 #### dropAll
 
-Drop all data from a DGraph database.
+Drop all data from a Dgraph database.
 
 <CodeGroup>
 
@@ -120,7 +120,7 @@ function dropAll(hostName: string): string;
 
 #### Request
 
-A DGraph request object, used to execute queries and mutations.
+A Dgraph request object, used to execute queries and mutations.
 
 <CodeGroup>
 
@@ -143,16 +143,16 @@ The [`query`](#query) and [`mutations`](#mutation) fields are optional and defau
 </ResponseField>
 
 <ResponseField name="query" type="Query">
-  A DGraph [`query`](#query) object.
+  A Dgraph [`query`](#query) object.
 </ResponseField>
 
 <ResponseField name="mutations" type="Mutation[]">
-  An array of DGraph [`mutation`](#mutation) objects.
+  An array of Dgraph [`mutation`](#mutation) objects.
 </ResponseField>
 
 #### Query
 
-A DGraph query object, used to execute queries.
+A Dgraph query object, used to execute queries.
 
 <CodeGroup>
 
@@ -168,7 +168,7 @@ class Query {
 
 <ResponseField name="new dgraph.Query(query, variables)">
   Creates a new `Query` object with the given `query` and `variables`. `query`
-  is a DGraph Query Language (DQL) query string, and `variables` is a
+  is a Dgraph Query Language (DQL) query string, and `variables` is a
   [`Variables`](#variables) object.
 </ResponseField>
 
@@ -182,7 +182,7 @@ class Query {
 
 #### Variables
 
-A Variables object used to set query variables in a DGraph query.
+A Variables object used to set query variables in a Dgraph query.
 
 <CodeGroup>
 
@@ -206,7 +206,7 @@ class Variables {
 
 #### Mutation
 
-A DGraph mutation object, used to execute mutations.
+A Dgraph mutation object, used to execute mutations.
 
 <CodeGroup>
 
