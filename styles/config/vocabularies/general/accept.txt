@@ -31,3 +31,9 @@ UUID
 nnClassify
 serverless
 getVector
+gRPC
+[Dd]graph
+alterSchema
+dropAll
+NQuads
+dropAttr
