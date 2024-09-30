@@ -32,3 +32,9 @@ nnClassify
 serverless
 getVector
 getLabels
+gRPC
+[Dd]graph
+alterSchema
+dropAll
+NQuads
+dropAttr
