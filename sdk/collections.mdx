@@ -423,6 +423,34 @@ collections.getVector(
   An optional namespace to associate with the item.
 </ResponseField>
 
+#### getLabels
+
+Get the labels for an item in a collection.
+
+<CodeGroup>
+
+```ts AssemblyScript
+collections.getLabels(
+  collection: string,
+  key: string,
+  namespace: string = "",
+): string[]
+```
+
+</CodeGroup>
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the manifest](../define-collections).
+</ResponseField>
+
+<ResponseField name="key" type="string" required>
+  The key of the item to retrieve.
+</ResponseField>
+
+<ResponseField name="namespace" type="string">
+  An optional namespace to associate with the item.
+</ResponseField>
+
 ### Maintenance Functions
 
 #### recomputeSearchMethod
@@ -550,6 +578,7 @@ class CollectionSearchResultObject {
   namespace: string;
   key: string;
   text: string;
+  labels: string[];
   distance: f64;
   score: f64;
 }

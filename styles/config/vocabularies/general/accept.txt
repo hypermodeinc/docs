@@ -31,6 +31,7 @@ UUID
 nnClassify
 serverless
 getVector
+getLabels
 gRPC
 [Dd]graph
 alterSchema
