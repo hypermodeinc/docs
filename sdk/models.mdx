@@ -12,7 +12,7 @@ Since many models have unique interfaces, the design of the Models API is extrem
 flexible. A common base class forms the core of the API, which extends to conform to
 any model's required schema.
 
-A separate library, [`models-as`](https://github.com/hypermodeAI/models-as) contains
+A separate library, [`models-as`](https://github.com/hypermodeinc/models-as) contains
 both the base classes and pre-defined implementations for many commonly used models.
 You can either use one of the pre-defined classes, or can create custom classes for
 any model you like, by extending from the base `Model` class.
@@ -20,11 +20,11 @@ any model you like, by extending from the base `Model` class.
 ## Example project
 
 For your reference, several complete examples for using the Models API are available
-on GitHub in the `hypermodeAI/functions-as` repository:
+on GitHub in the `hypermodeinc/functions-as` repository:
 
-- [/examples/classification](https://github.com/hypermodeAI/functions-as/tree/main/examples/classification)
-- [/examples/embedding](https://github.com/hypermodeAI/functions-as/tree/main/examples/embedding)
-- [/examples/textgeneration](https://github.com/hypermodeAI/functions-as/tree/main/examples/textgeneration)
+- [/examples/classification](https://github.com/hypermodeinc/functions-as/tree/main/examples/classification)
+- [/examples/embedding](https://github.com/hypermodeinc/functions-as/tree/main/examples/embedding)
+- [/examples/textgeneration](https://github.com/hypermodeinc/functions-as/tree/main/examples/textgeneration)
 
 Each example demonstrates using different types of AI models for different purposes.
 However, the Models interface isn't limited to these purposes. You can use it for any
@@ -59,11 +59,11 @@ For example:
 import { ClassificationModel } from "@hypermode/models-as/models/experimental/classification";
 ```
 
-Refer to the [`hypermodeAI/models-as`](https://github.com/hypermodeAI/models-as/tree/main/src/models)
+Refer to the [`hypermodeinc/models-as`](https://github.com/hypermodeinc/models-as/tree/main/src/models)
 repository for the full list of available models. We're constantly adding new models, so the
 list may have grown since you last checked.
 
-If you would like to request a new model, please [open an issue](https://github.com/hypermodeAI/models-as/issues)
+If you would like to request a new model, please [open an issue](https://github.com/hypermodeinc/models-as/issues)
 on the `models-as` repository. You can also send a pull request, if you'd like to contribute a new model yourself.
 
 </CodeGroup>
