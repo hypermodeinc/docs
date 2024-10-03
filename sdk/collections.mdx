@@ -11,7 +11,7 @@ Hypermode allows you to [define collections](../define-collections) and interact
 
 ## Example project
 
-To see Collections in action, explore the example on GitHub: [Example Project](https://github.com/hypermodeinc/functions-as/tree/main/examples/collection). This example demonstrates how to manage a collection of products using Hypermode's Collections and Models APIs, covering core CRUD operations, embedding usage, search capabilities, and vector-based comparisons.
+To see Collections in action, explore the [example project](https://github.com/hypermodeinc/functions-as/tree/main/examples/collection) on GitHub. This example demonstrates how to manage a collection of products using Hypermode's Collections and Models APIs, covering core create,read,update, and delete operations, embedding usage, search capabilities, and vector-based comparisons.
 
 ## Import from the SDK
 
@@ -43,8 +43,8 @@ The APIs in the `collections` namespace are below, organized by category.
 Inserts or updates an item in a key-value collection.
 
 <Note>
-  If the key already exists, the function will overwrite the previous entry; if
-  not, it will create a new one.
+  If the key already exists, the function overwrites the previous entry. If not,
+  it creates a new one.
 </Note>
 
 <CodeGroup>
@@ -66,8 +66,8 @@ collections.upsert(
 </ResponseField>
 
 <ResponseField name="key" type="string">
-  The unique identifier for the item in the namespace. If null, a UUID will be
-  generated.
+  The unique identifier for the item in the namespace. If null, the function
+  generates a unique identifier.
 </ResponseField>
 
 <ResponseField name="text" type="string" required>
@@ -286,7 +286,7 @@ Classify an item in the collection using previous vectors' labels.
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  Namespace to search the items from. Defaults to the default namespace if not
+  namespace to search the items from. Defaults to the default namespace if not
   provided.
 </ResponseField>
 
@@ -321,7 +321,7 @@ collections.computeDistance(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  Namespace to search the items from. Defaults to the default namespace if not
+  namespace to search the items from. Defaults to the default namespace if not
   provided.
 </ResponseField>
 
@@ -350,7 +350,7 @@ collections.getText(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  Namespace to get the item from. Defaults to the default namespace if not
+  namespace to get the item from. Defaults to the default namespace if not
   provided.
 </ResponseField>
 
@@ -375,7 +375,7 @@ collections.getTexts(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  Namespace to get the items from. Defaults to the default namespace if not
+  namespace to get the items from. Defaults to the default namespace if not
   provided.
 </ResponseField>
 
@@ -427,7 +427,7 @@ collections.getVector(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  Namespace to get the item from. Defaults to the default namespace if not
+  namespace to get the item from. Defaults to the default namespace if not
   provided.
 </ResponseField>
 
@@ -456,7 +456,7 @@ collections.getLabels(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  Namespace to get the item from. Defaults to the default namespace if not
+  namespace to get the item from. Defaults to the default namespace if not
   provided.
 </ResponseField>
 
@@ -488,7 +488,7 @@ collections.recomputeSearchMethod(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  Namespace in which the recompute is performed. Defaults to the default
+  namespace in which the recompute is performed. Defaults to the default
   namespace if not provided.
 </ResponseField>
 
