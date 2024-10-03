@@ -102,9 +102,6 @@
   "analytics": {
     "fathom": {
       "siteId": "LQSVRZXR"
-    },
-    "clearbit": {
-      "publicApiKey": "pk_94c123bfbaba3aa66f67b9c71727f731"
     }
   }
 }
