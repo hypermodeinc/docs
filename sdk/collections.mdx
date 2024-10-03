@@ -1,18 +1,17 @@
 ---
 title: Collections
-description: "Add basic storage and search capabilities to your functions."
+description: "Add key-value storage and vector search capabilities to your functions."
 ---
 
 {/* <!-- vale Google.Headings = NO --> */}
+Add key-value storage and vector search capabilities to your functions using Hypermode Collections.
+A Collection is a built-in key-value storage that supports vector embeddings.
 
-Hypermode Collections provide a built-in key-value storage mechanism that supports vector
-embeddings, that you can use from your functions. After [defining collections](../define-collections)
-in your project's manifest, you can use the following APIs to interact with the data.
+Hypermode allows you to [define collections](../define-collections) and interact with them through an easy-to-use API.
 
 ## Example project
 
-For your reference, A complete example for using the Collections APIs is available on GitHub in the
-`hypermodeinc/functions-as` repository, at [/examples/collection](https://github.com/hypermodeinc/functions-as/tree/main/examples/collection).
+To see Collections in action, explore the example on GitHub: [Example Project](https://github.com/hypermodeinc/functions-as/tree/main/examples/collection). This example demonstrates how to manage a collection of products using Hypermode's Collections and Models APIs, covering core CRUD operations, embedding usage, search capabilities, and vector-based comparisons.
 
 ## Import from the SDK
 
@@ -41,11 +40,11 @@ The APIs in the `collections` namespace are below, organized by category.
 
 #### upsert
 
-Inserts or updates an item into a collection.
+Inserts or updates an item in a key-value collection.
 
 <Note>
-  If an item with the same key already exists, the original text is overwritten
-  with the new text.
+  If the key already exists, the function will overwrite the previous entry; if
+  not, it will create a new one.
 </Note>
 
 <CodeGroup>
@@ -67,8 +66,8 @@ collections.upsert(
 </ResponseField>
 
 <ResponseField name="key" type="string">
-  An optional key for the item. If `null`, Hypermode assigns a new UUID as the
-  key for the item.
+  The unique identifier for the item in the namespace. If null, a UUID will be
+  generated.
 </ResponseField>
 
 <ResponseField name="text" type="string" required>
@@ -80,7 +79,8 @@ collections.upsert(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  An optional namespace to associate with the item.
+  Associates the item with a specific namespace. Defaults to an empty namespace
+  if not provided.
 </ResponseField>
 
 #### upsertBatch
@@ -124,7 +124,8 @@ collections.upsertBatch(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  An optional namespace to associate with the items.
+  Associates the item with a specific namespace. Defaults to an empty namespace
+  if not provided.
 </ResponseField>
 
 #### remove
@@ -152,14 +153,15 @@ collections.remove(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  An optional namespace to associate with the item.
+  The namespace to remove the item from. Defaults to the default namespace if
+  not provided.
 </ResponseField>
 
 ### Search and Retrieval Functions
 
 #### search
 
-Search for an item in the collection by using natural language search.
+Perform a natural language search on items within a collection. This method is useful for finding items that match a search query based on semantic meaning.
 
 <Note>
   Hypermode uses the same embedder for both inserting text into the collection,
@@ -202,12 +204,13 @@ collections.search(
 </ResponseField>
 
 <ResponseField name="namespaces" type="string[]">
-  An optional array of namespaces to search within.
+  A list of namespaces to search the item from. Defaults to the default
+  namespace if not provided.
 </ResponseField>
 
 #### searchByVector
 
-Search for an item in the collection by using a vector.
+Perform a vector-based search on a collection, which is helpful for scenarios requiring precise similarity calculations between pre-computed embeddings.
 
 <Note>
   Hypermode uses the same embedder for both inserting text into the collection,
@@ -283,7 +286,8 @@ Classify an item in the collection using previous vectors' labels.
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  An optional namespace to associate with the item.
+  Namespace to search the items from. Defaults to the default namespace if not
+  provided.
 </ResponseField>
 
 #### computeDistance
@@ -317,7 +321,8 @@ collections.computeDistance(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  An optional namespace to associate with the item.
+  Namespace to search the items from. Defaults to the default namespace if not
+  provided.
 </ResponseField>
 
 #### getText
@@ -345,7 +350,8 @@ collections.getText(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  An optional namespace to associate with the item.
+  Namespace to get the item from. Defaults to the default namespace if not
+  provided.
 </ResponseField>
 
 #### getTexts
@@ -369,7 +375,8 @@ collections.getTexts(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  An optional namespace to associate with the item.
+  Namespace to get the items from. Defaults to the default namespace if not
+  provided.
 </ResponseField>
 
 #### getNamespaces
@@ -420,7 +427,8 @@ collections.getVector(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  An optional namespace to associate with the item.
+  Namespace to get the item from. Defaults to the default namespace if not
+  provided.
 </ResponseField>
 
 #### getLabels
@@ -448,14 +456,16 @@ collections.getLabels(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  An optional namespace to associate with the item.
+  Namespace to get the item from. Defaults to the default namespace if not
+  provided.
 </ResponseField>
 
 ### Maintenance Functions
 
 #### recomputeSearchMethod
 
-Recomputes the embeddings for all texts in a collection, for a specific search method.
+Recalculates the embeddings for all items in a collection.
+Use this when updating the method for embedding calculation, as it can be resource-intensive.
 
 <CodeGroup>
 
@@ -478,7 +488,8 @@ collections.recomputeSearchMethod(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  An optional namespace to associate with the item.
+  Namespace in which the recompute is performed. Defaults to the default
+  namespace if not provided.
 </ResponseField>
 
 ### Objects
@@ -515,7 +526,8 @@ Represents the result of a mutation operation on a collection.
 </ResponseField>
 
 <ResponseField name="isSuccessful" type="bool">
-  Whether the operation was successful.
+  A boolean indicating whether the operation completed successfully. Use this to
+  confirm success before handling the result.
 </ResponseField>
 
 <ResponseField name="operation" type="string">
@@ -558,7 +570,8 @@ Represents the result of a search operation on a collection.
 </ResponseField>
 
 <ResponseField name="isSuccessful" type="bool">
-  Whether the operation was successful.
+  A boolean indicating whether the operation completed successfully. Use this to
+  confirm success before handling the result.
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string">
@@ -641,7 +654,8 @@ Represents the result of a classification operation on a collection.
 </ResponseField>
 
 <ResponseField name="isSuccessful" type="bool">
-  Whether the operation was successful.
+  A boolean indicating whether the operation completed successfully. Use this to
+  confirm success before handling the result.
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string">
@@ -767,7 +781,8 @@ Represents the result of a mutation operation on a search method.
 </ResponseField>
 
 <ResponseField name="isSuccessful" type="bool">
-  Whether the operation was successful.
+  A boolean indicating whether the operation completed successfully. Use this to
+  confirm success before handling the result.
 </ResponseField>
 
 <ResponseField name="operation" type="string">
