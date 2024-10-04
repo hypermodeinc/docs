@@ -6,7 +6,7 @@ description: "Access external GraphQL data sources from your functions."
 {/* <!-- vale Google.Headings = NO --> */}
 
 Hypermode's GraphQL APIs allows you to securely call and fetch data from any GraphQL endpoint.
-After [defining a host](../define-hosts) for the GraphQL endpoint in your project's manifest,
+After [defining a host](../app-manifest#hosts) for the GraphQL endpoint in your project's manifest,
 you can use the following APIs to interact with the data.
 
 ## Example project
@@ -68,7 +68,7 @@ You can also use built-in types such as strings, numbers, arrays, and maps.
 </ResponseField>
 
 <ResponseField name="hostName" type="string" required>
-  Name of the host, as [defined in the manifest](../define-hosts).
+  Name of the host, as [defined in the manifest](../app-manifest#hosts).
 </ResponseField>
 
 <ResponseField name="statement" type="string" required>

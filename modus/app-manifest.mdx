@@ -1,13 +1,27 @@
 ---
-title: Define Hosts
-description: "Securely connect to your data"
+title: App Manifest
+description: "Define your models and hosts"
 ---
 
-## Overview
+The manifest in a Hypermode project allows you to configure the resources your functions have access to at runtime. You define the manifest in the `hypermode.json` file within the root of your project directory.
+
+<CardGroup cols={2}>
+  <Card title="Models" icon="message-plus" href="#models">
+    Define inference services for use in your functions
+  </Card>
+  <Card title="Hosts" icon="server" href="#hosts">
+    Establish connectivity for models and other external endpoints
+  </Card>
+  <Card title="Collections" icon="server" href="#collections">
+    Define groups of text data to enable natural language search
+  </Card>
+</CardGroup>
+
+## Hosts
 
 Hosts establish connectivity to external services. They're used for HTTP and GraphQL APIs,
 database connections, and externally hosted AI models. The `hosts` object in the
-[project manifest](/manifest) allows you to define these hosts, for secure access from within a function.
+app manifest allows you to define these hosts, for secure access from within a function.
 
 Each host requires a unique name, specified as a key containing only alphanumeric characters and hyphens.
 
@@ -35,12 +49,12 @@ Hypermode Console, where they're securely stored until needed.
 
 {/* <!-- vale Google.Headings = NO --> */}
 
-## HTTP Host
+### HTTP Host
 
 This host type supports the HTTP and HTTPS protocols to communicate with external hosts.
-You can use the [HTTP APIs](/sdk/http) in the Functions SDK to interact with the host.
+You can use the [HTTP APIs](/modus/sdk/http) in the Functions SDK to interact with the host.
 
-This host type is also used for [GraphQL APIs](/sdk/graphql) and to invoke externally hosted AI [models](/sdk/models).
+This host type is also used for [GraphQL APIs](/modus/sdk/graphql) and to invoke externally hosted AI [models](/modus/sdk/models).
 
 **Example:**
 
@@ -142,10 +156,10 @@ This example specifies a query parameter named `key` provided by a secret named 
   </Accordion>
 </ResponseField>
 
-## PostgreSQL Host
+### PostgreSQL Host
 
 This host type supports connecting to PostgreSQL databases.
-You can use the [PostgreSQL APIs](/sdk/postgresql) in the Functions SDK to interact with the database.
+You can use the [PostgreSQL APIs](/modus/sdk/postgresql) in the Functions SDK to interact with the database.
 
 **Example:**
 
@@ -189,10 +203,10 @@ For example, if using Neon, refer to the [Neon documentation](https://neon.tech/
 
 </ResponseField>
 
-## Dgraph Host
+### Dgraph Host
 
 This host type supports connecting to Dgraph databases.
-You can use the [Dgraph APIs](/sdk/dgraph) in the Functions SDK to interact with the database.
+You can use the [Dgraph APIs](/modus/sdk/dgraph) in the Functions SDK to interact with the database.
 
 **Example:**
 
@@ -218,4 +232,129 @@ You can use the [Dgraph APIs](/sdk/dgraph) in the Functions SDK to interact with
 
 <ResponseField name="key" type="string" required>
   The API key for the Dgraph database.
+</ResponseField>
+
+## Models
+
+AI models are a core resource for inferencing.
+The `models` object in the app manifest allows you to easily define models, whether hosted by Hypermode or another host.
+
+```json hypermode.json
+{
+  "models": {
+    "sentiment-classifier": {
+      "task": "classification",
+      "sourceModel": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+      "provider": "hugging-face",
+      "host": "hypermode"
+    }
+  }
+}
+```
+
+Each model requires a unique name, specified as a key, containing only alphanumeric characters and hyphens.
+
+### Models Properties
+
+<ResponseField name="task" type="string" required>
+  Training intent of the model. Currently, must be one of: `classification`,
+  `embedding`, or `generation`.
+</ResponseField>
+
+<ResponseField name="sourceModel" type="string" required>
+  Original relative path of the model within the provider's repository.
+</ResponseField>
+
+<ResponseField name="provider" type="string" required>
+  Organization or directory that provided the source model, such as
+  `hugging-face` or `openai`.
+</ResponseField>
+
+<ResponseField name="host" type="string" required>
+  Host for the model instance.
+
+- Specify `"hypermode"` for models that are automatically deployed by Hypermode.
+- Otherwise, specify a name that matches a host defined in the [`hosts`](#hosts) section of the manifest.
+
+</ResponseField>
+
+### Auto-deployed models
+
+When using `hugging-face` as the `provider` and `hypermode` as the `host`, Hypermode automatically deploys a dedicated
+instance of the defined `sourceModel` when deploying your project. Your project's functions securely connect to the
+hosted model, with no further configuration required.
+
+## Collections
+
+Collections are a key integration aspect with [models](#models) to create smart, searchable text.
+The `collections` object in the app manifest allows you to define groupings of text and functions to embed inserted text with.
+
+```json hypermode.json
+{
+  "collections": {
+    // This defines a collection of products, having two search methods.
+    "myProducts": {
+      "searchMethods": {
+        "searchMethod1": {
+          // The embedder is the name of the function that will be used to generate vector embeddings.
+          // By default, it uses a sequential index.
+          "embedder": "embed"
+        },
+
+        // This is an example of a second search method.
+        // It could use a different embedder or index type, if desired.
+        "searchMethod2": {
+          "embedder": "embed",
+          "index": {
+            "type": "sequential"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+Each collection requires a unique name, specified as a key, containing only alphanumeric characters and hyphens.
+
+### Collections Properties
+
+<ResponseField name="searchMethods" type="object">
+  If provided, adds an index on top of the collection. Each key-value pair is a
+  search method and values.
+
+  <ResponseField name="embedder" type="string">
+  An exported function name used by the search method to embed text in the collection. Function must have a call signature with input `string[]` and return type `f32[][]`.
+
+  <Accordion title="Examples">
+  This example specifies a `searchMethod` with an embedder named `embed`
+
+```json
+"searchMethod1": {
+  "embedder": "embed"
+}
+```
+
+  </Accordion>
+
+  </ResponseField>
+
+  <ResponseField name="index" type="string">
+  If provided, describes the index mechanism used by the search method. `type`: specifies the type of the index. For example, `sequential` (default).
+
+  <Accordion title="Examples">
+  This example specifies a `searchMethod` with an embedder named `embed` and an index with type `sequential`
+
+```json
+"searchMethod1": {
+  "embedder": "embed"
+  "index": {
+    "type": "sequential"
+  }
+}
+```
+
+  </Accordion>
+
+  </ResponseField>
 </ResponseField>

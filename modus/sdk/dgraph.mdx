@@ -7,7 +7,7 @@ description: "Execute queries and mutations against a Dgraph database."
 
 Hypermode's Dgraph APIs allow you to run queries and mutations against a Dgraph database, as well as alter
 the schema if necessary.
-After [defining a host](../define-hosts) for your Dgraph gRPC endpoint in your project's manifest,
+After [defining a host](../app-manifest#hosts) for your Dgraph gRPC endpoint in your project's manifest,
 you can use the following APIs to interact with the database.
 
 ## Example project
@@ -48,7 +48,7 @@ function execute(hostName: string, request: Request): Response;
 ```
 
 <ResponseField name="hostName" type="string" required>
-  Name of the host, as [defined in the manifest](../define-hosts).
+  Name of the host, as [defined in the manifest](../app-manifest#hosts).
 </ResponseField>
 
 <ResponseField name="request" type="Request" required>
@@ -65,7 +65,7 @@ function alterSchema(hostName: string, schema: string): string;
 ```
 
 <ResponseField name="hostName" type="string" required>
-  Name of the host, as [defined in the manifest](../define-hosts).
+  Name of the host, as [defined in the manifest](../app-manifest#hosts).
 </ResponseField>
 
 <ResponseField name="schema" type="string" required>
@@ -81,7 +81,7 @@ function dropAttr(hostName: string, attr: string): string;
 ```
 
 <ResponseField name="hostName" type="string" required>
-  Name of the host, as [defined in the manifest](../define-hosts).
+  Name of the host, as [defined in the manifest](../app-manifest#hosts).
 </ResponseField>
 
 <ResponseField name="attr" type="string" required>
@@ -97,7 +97,7 @@ function dropAll(hostName: string): string;
 ```
 
 <ResponseField name="hostName" type="string" required>
-  Name of the host, as [defined in the manifest](../define-hosts).
+  Name of the host, as [defined in the manifest](../app-manifest#hosts).
 </ResponseField>
 
 ### Objects

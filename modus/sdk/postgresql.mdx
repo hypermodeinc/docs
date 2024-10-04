@@ -7,7 +7,7 @@ description: "Execute queries against a PostgreSQL database."
 
 Hypermode's PostgreSQL API allows you to run queries against PostgreSQL or any PostgreSQL compatible database
 platform, such as [Neon](https://neon.tech/).
-After [defining a host](../define-hosts) for the PostgreSQL endpoint in your project's manifest,
+After [defining a host](../app-manifest#hosts) for the PostgreSQL endpoint in your project's manifest,
 you can use the following APIs to interact with the data.
 
 ## Example project
@@ -61,7 +61,7 @@ function postgresql.execute (
 ```
 
 <ResponseField name="hostName" type="string" required>
-  Name of the host, as [defined in the manifest](../define-hosts).
+  Name of the host, as [defined in the manifest](../app-manifest#hosts).
 </ResponseField>
 
 <ResponseField name="statement" type="string" required>
@@ -118,7 +118,7 @@ If working with PostgreSQL's `point` data type, you can use a [`Point`](#point) 
 </ResponseField>
 
 <ResponseField name="hostName" type="string" required>
-  Name of the host, as [defined in the manifest](../define-hosts).
+  Name of the host, as [defined in the manifest](../app-manifest#hosts).
 </ResponseField>
 
 <ResponseField name="statement" type="string" required>
@@ -161,7 +161,7 @@ function postgresql.queryScalar<T> (
 </ResponseField>
 
 <ResponseField name="hostName" type="string" required>
-  Name of the host, as [defined in the manifest](../define-hosts).
+  Name of the host, as [defined in the manifest](../app-manifest#hosts).
 </ResponseField>
 
 <ResponseField name="statement" type="string" required>

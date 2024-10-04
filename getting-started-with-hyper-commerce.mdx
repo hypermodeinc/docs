@@ -7,7 +7,7 @@ This guide walks you through getting started instantly with Hypermode using the 
 
 ## What's Hypermode?
 
-[Hypermode](/introduction) is framework designed to simplify the development and deployment of AI features and assistants. With its [Functions SDK](/sdk/functions-sdk) and runtime, developers can quickly deploy intelligent features into production without the need for extensive data wrangling. Hypermode supports rapid iteration, allowing you to start with a large language model and later fine-tune smaller, open source models. Its production-ready GraphQL API auto-generates and enables seamless integration. Hypermode is ideal for developers looking to quickly prototype and evolve AI capabilities.
+[Hypermode](/introduction) is framework designed to simplify the development and deployment of AI features and assistants. With its [Functions SDK](/modus) and runtime, developers can quickly deploy intelligent features into production without the need for extensive data wrangling. Hypermode supports rapid iteration, allowing you to start with a large language model and later fine-tune smaller, open source models. Its production-ready GraphQL API auto-generates and enables seamless integration. Hypermode is ideal for developers looking to quickly prototype and evolve AI capabilities.
 
 ## Quickstart
 
@@ -84,10 +84,10 @@ In the Hypermode console, you’ll see several key components of your project:
   />
 </Frame>
 
-- **[Functions](/sdk/functions-sdk):** These are serverless functions written in AssemblyScript (a TypeScript-like language) that are automatically exposed as GraphQL APIs. Once deployed, you can query these functions within your app.
-- **[Collections](/sdk/collections):** Hypermode offers built-in key-value storage, known as collections, with support for vector embeddings. This allows you to store and retrieve data efficiently, without requiring a database for basic use cases.
-- **[Models](/sdk/models):** This section represents the AI models defined for your project. These models handle tasks like embedding text into vectors for search. Hypermode provides open source shared and dedicated model hosting for rapid experimentation. You can also connect to your preferred large language model, including OpenAI, Anthropic, and Gemini.
-- **[Hosts](/define-hosts#define-hosts):** You define all external connections from your functions as hosts, with the runtime denying all other egress for secure-by-default processing.
+- **[Functions](/modus):** These are serverless functions written in AssemblyScript (a TypeScript-like language) that are automatically exposed as GraphQL APIs. Once deployed, you can query these functions within your app.
+- **[Collections](/modus/sdk/collections):** Hypermode offers built-in key-value storage, known as collections, with support for vector embeddings. This allows you to store and retrieve data efficiently, without requiring a database for basic use cases.
+- **[Models](/modus/sdk/models):** This section represents the AI models defined for your project. These models handle tasks like embedding text into vectors for search. Hypermode provides open source shared and dedicated model hosting for rapid experimentation. You can also connect to your preferred large language model, including OpenAI, Anthropic, and Gemini.
+- **[Hosts](/modus/app-manifest#hosts):** You define all external connections from your functions as hosts, with the runtime denying all other egress for secure-by-default processing.
 - **Endpoint:** The GraphQL endpoint for your project, which you’ll use to interact with your APIs and query your data.
 
 ### Step 4: Querying your data

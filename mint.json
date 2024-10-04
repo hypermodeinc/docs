@@ -22,75 +22,103 @@
   },
   "topbarLinks": [
     {
-      "name": "Support",
-      "url": "mailto:help@hypermode.com"
+      "name": "Company",
+      "url": "https://hypermode.com/home"
     }
   ],
   "topbarCtaButton": {
     "name": "Start Now",
     "url": "https://hypermode.com/sign-up"
   },
-  "topAnchor": {
-    "name": "Docs",
-    "icon": "book-open-cover"
+  "primaryTab": {
+    "name": "Hypermode"
   },
-  "anchors": [
+  "tabs": [
     {
-      "name": "Home",
-      "icon": "house",
-      "url": "https://hypermode.com/home"
-    },
-    {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://hypermode.com/blog"
-    },
-    {
-      "name": "Templates",
-      "icon": "sparkles",
-      "url": "https://justship.ai"
+      "name": "Modus",
+      "url": "modus"
     }
   ],
   "navigation": [
     {
       "group": "Get Started",
+      "pages": ["introduction", "quickstart"]
+    },
+    {
+      "group": "Develop",
       "pages": [
-        "introduction",
-        "quickstart",
-        "getting-started-with-hyper-commerce"
+        "work-locally",
+        "deploy",
+        "configure-environment",
+        "integrate-api",
+        "observe-functions"
       ]
     },
     {
-      "group": "Configure Project",
+      "group": "Manage",
       "pages": [
-        "manifest",
-        "define-models",
-        "define-hosts",
-        "define-collections",
-        "define-schema"
+        "create-project",
+        "modify-project",
+        "modify-organization",
+        "user-management"
       ]
     },
     {
-      "group": "Functions SDK",
+      "group": "Tools",
+      "pages": ["hosted-models", "hyp-cli"]
+    },
+    {
+      "group": "Resources",
+      "pages": ["security", "community-and-support"]
+    },
+    {
+      "group": "Getting Started",
+      "pages": ["modus/overview", "modus/project-structure", "modus/quickstart"]
+    },
+    {
+      "group": "Examples",
+      "pages": ["modus/basic-functions", "modus/ai-enabled-apps"]
+    },
+    {
+      "group": "Building Your App",
       "pages": [
-        "sdk/functions-sdk",
-        {
-          "group": "API Reference",
-          "pages": [
-            "sdk/collections",
-            "sdk/console",
-            "sdk/graphql",
-            "sdk/http",
-            "sdk/models",
-            "sdk/postgresql",
-            "sdk/dgraph"
-          ]
-        }
+        "modus/app-manifest",
+        "modus/data-fetching",
+        "modus/model-invoking",
+        "modus/search",
+        "modus/api-generation",
+        "modus/authentication",
+        "modus/error-handling",
+        "modus/testing",
+        "modus/deploying",
+        "modus/upgrading"
       ]
     },
     {
-      "group": "Observe and Iterate",
-      "pages": ["deploy", "function-observability"]
+      "group": "API Reference",
+      "pages": [
+        "modus/sdk/collections",
+        "modus/sdk/console",
+        "modus/sdk/dgraph",
+        "modus/sdk/graphql",
+        "modus/sdk/http",
+        "modus/sdk/models",
+        "modus/sdk/postgresql"
+      ]
+    },
+    {
+      "group": "Tools",
+      "pages": ["modus/modus-cli"]
+    },
+    {
+      "group": "Resources",
+      "pages": [
+        "modus/architecture",
+        "modus/troubleshooting",
+        "modus/roadmap",
+        "modus/contributing",
+        "modus/changelog"
+      ]
     }
   ],
   "footerSocials": {

@@ -6,7 +6,7 @@ description: "Add basic storage and search capabilities to your functions."
 {/* <!-- vale Google.Headings = NO --> */}
 
 Hypermode Collections provide a built-in key-value storage mechanism that supports vector
-embeddings, that you can use from your functions. After [defining collections](../define-collections)
+embeddings, that you can use from your functions. After [defining collections](../app-manifest#collections)
 in your project's manifest, you can use the following APIs to interact with the data.
 
 ## Example project
@@ -59,7 +59,8 @@ collections.upsert(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../define-collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="key" type="string">
@@ -99,7 +100,8 @@ collections.upsertBatch(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../define-collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="keys" type="string[]">
@@ -132,7 +134,8 @@ collections.remove(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../define-collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="key" type="string" required>
@@ -166,7 +169,8 @@ collections.search(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../define-collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string" required>
@@ -210,7 +214,8 @@ collections.searchByVector(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../define-collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string" required>
@@ -247,7 +252,8 @@ Classify an item in the collection using previous vectors' labels.
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../define-collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string" required>
@@ -277,7 +283,8 @@ collections.computeDistance(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../define-collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string" required>
@@ -305,7 +312,8 @@ collections.getText(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../define-collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="key" type="string" required>
@@ -329,7 +337,8 @@ collections.getTexts(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../define-collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
@@ -347,7 +356,8 @@ collections.getNamespaces(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../define-collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 #### getVector
@@ -364,7 +374,8 @@ collections.getVector(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../define-collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string" required>
@@ -392,7 +403,8 @@ collections.getLabels(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../define-collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="key" type="string" required>
@@ -418,7 +430,8 @@ collections.recomputeSearchMethod(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../define-collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string" required>
