@@ -1,4 +1,331 @@
 ---
 title: Search
-description: ""
+description: "Implementing search using collections"
 ---
+
+The Hypermode Collections API enables developers to store, retrieve, and search data within collections using both natural language and vector-based search methods.
+
+## Prerequisites
+
+Before implementing search, ensure you have defined a collection in the `hypermode.json` manifest and have a working Hypermode setup.
+
+### Understanding Key Components
+
+- **Collections**: A collection is a storage unit for data, similar to a table in a database. In this example, `myProducts` is the collection used to store product descriptions.
+- **Search Methods**: The code defines multiple search methods (`searchMethod1` and `searchMethod2`) that the system uses to query the collection. These methods could be different algorithms or configurations for vector search.
+
+## Add Items to the Collection
+
+First, we need to populate the collection with items (e.g., product descriptions). You can insert individual or multiple items using the `upsert` and `upsertBatch` methods, respectively.
+
+### Add Single Item
+
+Use `collections.upsert` to insert a product description into the collection. If you don't specify a key, a unique key will be generated for you.
+
+```ts
+export function addProduct(description: string): string[] {
+  const response = collections.upsert("myProducts", null, description);
+  return response.keys;
+}
+```
+
+### Add Multiple Items
+
+To add a batch of product descriptions, use the `collections.upsertBatch` method.
+
+```ts
+export function addProducts(descriptions: string[]): string[] {
+  const response = collections.upsertBatch("myProducts", [], descriptions);
+  return response.keys;
+}
+```
+
+## Step 2: Generate Embeddings for Text
+
+The search functionality in Hypermode Collections relies on vector embeddings. Each item in the collection must be converted into a vector representation, which is used for vector-based search and comparison.
+
+```ts
+export function embed(text: string[]): f32[][] {
+  const model = models.getModel<OpenAIEmbeddingsModel>("embeddings");
+  const input = model.createInput(text);
+  const output = model.invoke(input);
+  return output.data.map<f32[]>((d) => d.embedding);
+}
+```
+
+## Step 3: Implement Natural Language Search
+
+With the products stored, you can now search the collection using natural language. The `collections.search` function computes an embedding for the search query and compares it with the embeddings of the items in the collection.
+
+```ts
+export function searchProducts(
+  product: string,
+  maxItems: i32,
+): collections.CollectionSearchResult[] {
+  const responseArr: collections.CollectionSearchResult[] = [];
+  const searchMethods = ["searchMethod1", "searchMethod2"]; // defined search methods
+
+  for (let i = 0; i < searchMethods.length; i++) {
+    const response = collections.search(
+      "myProducts",
+      searchMethods[i],
+      product,
+      maxItems,
+      true,
+    );
+    responseArr.push(response);
+  }
+
+  return responseArr;
+}
+```
+
+In this example, the search query is compared with the items using two different search methods (`searchMethod1`, `searchMethod2`). Results for both methods are returned, which gives flexibility for fine-tuning search behavior.
+
+### Search Result Format
+
+Each search returns an array of `CollectionSearchResult`, containing the following fields:
+
+- `collection`: The name of the collection.
+- `status`: The status of the operation (e.g., success, error).
+- `objects`: The search result items with their text, distance, and score values.
+
+```json
+{
+  "collection": "myProducts",
+  "status": "success",
+  "objects": [
+    {
+      "key": "item-key-123",
+      "text": "Sample product description",
+      "distance": 0.05,
+      "score": 0.95
+    }
+  ]
+}
+```
+
+## Step 4: Search by Vector
+
+If you want to search using a vector (instead of text), you can retrieve the vector associated with an item by its key, then perform a search using that vector.
+
+```ts
+export function searchProductsById(
+  productId: string,
+  maxItems: i32,
+): collections.CollectionSearchResult[] {
+  const responseArr: collections.CollectionSearchResult[] = [];
+  const searchMethods = ["searchMethod1", "searchMethod2"];
+
+  for (let i = 0; i < searchMethods.length; i++) {
+    const vec = collections.getVector(
+      "myProducts",
+      searchMethods[i],
+      productId,
+    );
+    const response = collections.searchByVector(
+      "myProducts",
+      searchMethods[i],
+      vec,
+      maxItems,
+      true,
+    );
+    responseArr.push(response);
+  }
+
+  return responseArr;
+}
+```
+
+This method is useful when you have an item's ID and want to find similar items in the collection by comparing vectors.
+
+## Step 5: Compute Distance Between Items
+
+If you need to compute the similarity between two items in the collection, you can use the `computeDistance` function. It calculates the distance between the vector embeddings of two items, with smaller distances indicating higher similarity.
+
+```ts
+export function computeDistanceBetweenProducts(
+  key1: string,
+  key2: string,
+): f64 {
+  return collections.computeDistance("myProducts", "searchMethod1", key1, key2)
+    .distance;
+}
+```
+
+## Step 6: Recomputing Search Indexes
+
+Sometimes, you may need to recompute the embeddings for all items in the collection for a specific search method. This can be useful if you change the underlying embedding model.
+
+```ts
+export function recomputeIndexes(): Map<string, string> {
+  const responseArr: Map<string, string> = new Map<string, string>();
+  const searchMethods = ["searchMethod1", "searchMethod2"];
+
+  for (let i = 0; i < searchMethods.length; i++) {
+    const response = collections.recomputeSearchMethod(
+      "myProducts",
+      searchMethods[i],
+    );
+    if (!response.isSuccessful) {
+      responseArr.set(searchMethods[i], response.error);
+    }
+    responseArr.set(searchMethods[i], response.status);
+  }
+
+  return responseArr;
+}
+```
+
+## Conclusion
+
+By following these steps, you can implement both natural language and vector-based search functionality using the Hypermode Collections API. This allows for flexible search implementations, making it possible to store, retrieve, and search items based on text similarity or vector embeddings.
+
+### Prerequisites
+
+Ensure that you have configured your project to use Modus by adding the required dependencies to your `hypermode.json` manifest file.
+
+### Add Data to the Collection
+
+Before you can search, you need to add product descriptions to the collection. The sample provides two methods:
+
+- **Single Product Addition**:
+
+  ```typescript
+  export function addProduct(description: string): string[] {
+    const response = collections.upsert(myProducts, null, description);
+    return response.keys;
+  }
+  ```
+
+  This method adds a single product to the collection. The `upsert` method is used to insert a new product description.
+
+- **Multiple Products Addition**:
+  ```typescript
+  export function addProducts(descriptions: string[]): string[] {
+    const response = collections.upsertBatch(myProducts, [], descriptions);
+    return response.keys;
+  }
+  ```
+  Use this method to add multiple product descriptions in a batch.
+
+### Search Using Product Descriptions
+
+The `searchProducts` function allows you to perform a natural language search within the product collection using predefined search methods.
+
+#### Example:
+
+```typescript
+export function searchProducts(
+  product: string,
+  maxItems: i32,
+): collections.CollectionSearchResult[] {
+  const responseArr: collections.CollectionSearchResult[] = [];
+  for (let i: i32 = 0; i < searchMethods.length; i++) {
+    const response = collections.search(
+      myProducts,
+      searchMethods[i],
+      product,
+      maxItems,
+      true,
+    );
+    responseArr.push(response);
+  }
+  return responseArr;
+}
+```
+
+Here’s how it works:
+
+- **Input**: A string (`product`) that describes the product you are searching for.
+- **Search Method**: The code iterates through each search method in `searchMethods` to perform the search.
+- **Result**: The results are returned in the form of an array of `CollectionSearchResult` objects, each corresponding to a search method.
+
+#### Parameters:
+
+- `product`: The search term (description of the product).
+- `maxItems`: The maximum number of items you want to retrieve.
+
+#### Example Usage:
+
+```typescript
+const searchResults = searchProducts("laptop", 10);
+```
+
+This would search the `myProducts` collection for products related to "laptop" and return up to 10 results.
+
+### 4. **Search Using Vector Embeddings**
+
+In cases where you want to search using vector similarity (for example, comparing two products based on their descriptions), you can use the `searchProductsById` method.
+
+#### Example:
+
+```typescript
+export function searchProductsById(
+  productId: string,
+  maxItems: i32,
+): collections.CollectionSearchResult[] {
+  const responseArr: collections.CollectionSearchResult[] = [];
+  for (let i: i32 = 0; i < searchMethods.length; i++) {
+    const vec = collections.getVector(myProducts, searchMethods[i], productId);
+    const response = collections.searchByVector(
+      myProducts,
+      searchMethods[i],
+      vec,
+      maxItems,
+      true,
+    );
+    responseArr.push(response);
+  }
+  return responseArr;
+}
+```
+
+#### Explanation:
+
+- **Input**: The product ID (`productId`) that you want to use as the basis for the search.
+- **Search Method**: This method retrieves the vector embedding of the product and uses that vector for similarity search.
+- **Result**: The result is an array of `CollectionSearchResult` objects, one for each search method.
+
+#### Example Usage:
+
+```typescript
+const searchResultsById = searchProductsById("product123", 5);
+```
+
+This searches for the top 5 products that are most similar to `product123` based on their vector embeddings.
+
+### 5. **Recomputing Search Indexes**
+
+If you update or modify the collection frequently, you may need to recompute the search indexes. This ensures that your search methods remain accurate.
+
+#### Example:
+
+```typescript
+export function recomputeIndexes(): Map<string, string> {
+  const responseArr: Map<string, string> = new Map<string, string>();
+  for (let i: i32 = 0; i < searchMethods.length; i++) {
+    const response = collections.recomputeSearchMethod(
+      myProducts,
+      searchMethods[i],
+    );
+    if (!response.isSuccessful) {
+      responseArr.set(searchMethods[i], response.error);
+    }
+    responseArr.set(searchMethods[i], response.status);
+  }
+  return responseArr;
+}
+```
+
+#### Example Usage:
+
+```typescript
+const recomputeResponse = recomputeIndexes();
+```
+
+This function will recalculate the embeddings and search indexes for all products in the `myProducts` collection.
+
+### Conclusion
+
+This guide explains how to implement search using Hypermode’s collection API, whether you're performing natural language-based or vector similarity searches. By following these steps, you can build a robust search functionality for any collection of text data, such as product descriptions, using the power of vector embeddings and search methods.
