@@ -44,6 +44,18 @@
       "url": "modus"
     }
   ],
+  "anchors": [
+    {
+      "name": "Hypermode",
+      "icon": "cloud",
+      "url": ""
+    },
+    {
+      "name": "Modus",
+      "icon": "code",
+      "url": "modus"
+    }
+  ],
   "navigation": [
     {
       "group": "Getting Started",
