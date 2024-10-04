@@ -40,7 +40,7 @@ The APIs in the `collections` namespace are below, organized by category.
 
 #### upsert
 
-Inserts or updates an item in a key-value collection.
+Inserts or updates an item in a collection.
 
 <Note>
   If the key already exists, the function overwrites the previous entry. If not,
@@ -286,7 +286,7 @@ Classify an item in the collection using previous vectors' labels.
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  namespace to search the items from. Defaults to the default namespace if not
+  Namespace to search the items from. Defaults to the default namespace if not
   provided.
 </ResponseField>
 
@@ -321,8 +321,8 @@ collections.computeDistance(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  namespace to search the items from. Defaults to the default namespace if not
-  provided.
+  The namespace to search the items from. Defaults to the default namespace if
+  not provided.
 </ResponseField>
 
 #### getText
@@ -350,7 +350,7 @@ collections.getText(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  namespace to get the item from. Defaults to the default namespace if not
+  The namespace to get the item from. Defaults to the default namespace if not
   provided.
 </ResponseField>
 
@@ -375,7 +375,7 @@ collections.getTexts(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  namespace to get the items from. Defaults to the default namespace if not
+  The namespace to get the items from. Defaults to the default namespace if not
   provided.
 </ResponseField>
 
@@ -427,7 +427,7 @@ collections.getVector(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  namespace to get the item from. Defaults to the default namespace if not
+  The namespace to get the item from. Defaults to the default namespace if not
   provided.
 </ResponseField>
 
@@ -456,7 +456,7 @@ collections.getLabels(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  namespace to get the item from. Defaults to the default namespace if not
+  The namespace to get the item from. Defaults to the default namespace if not
   provided.
 </ResponseField>
 
@@ -465,7 +465,7 @@ collections.getLabels(
 #### recomputeSearchMethod
 
 Recalculates the embeddings for all items in a collection.
-Use this when updating the method for embedding calculation, as it can be resource-intensive.
+It can be resource-intensive, use it when necessary, for example after you have updated the method for embedding calculation and want to re-compute the embeddings for existing data in the collection.
 
 <CodeGroup>
 
@@ -486,12 +486,11 @@ collections.recomputeSearchMethod(
 <ResponseField name="searchMethod" type="string" required>
   The search method to recompute embeddings for.
 </ResponseField>
-{/* <!-- vale off -->*/}
+
 <ResponseField name="namespace" type="string">
-  namespace in which the recompute is performed. Defaults to the default
-  namespace if not provided.
+  The namespace to use. Defaults to the default namespace if not provided.
 </ResponseField>
-{/* <!-- vale on -->*/}}
+
 ### Objects
 
 #### CollectionMutationResult
