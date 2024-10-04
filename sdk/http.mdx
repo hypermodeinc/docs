@@ -55,16 +55,12 @@ Invoke an HTTP endpoint to retrieve data or trigger external action.
 
 Returns a [`Response`](#response) object with the HTTP response data.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 http.fetch(
   requestOrUrl: string | Request,
   options: RequestOptions = new RequestOptions(),
 ): Response
 ```
-
-</CodeGroup>
 
 <ResponseField name="requestOrUrl" type="string | Request" required>
 
@@ -90,9 +86,7 @@ those defined in the manifest entry of the host.
 
 #### Content
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class Content {
   static from(value: any): Content;
   readonly data: ArrayBuffer;
@@ -100,8 +94,6 @@ class Content {
   json<T>(): T;
 }
 ```
-
-</CodeGroup>
 
 Represents content used in the body of an HTTP request or response.
 
@@ -125,16 +117,12 @@ Represents content used in the body of an HTTP request or response.
 
 #### Header
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class Header {
   name: string;
   values: string[];
 }
 ```
-
-</CodeGroup>
 
 Represents an HTTP request or response header.
 
@@ -149,9 +137,7 @@ Represents an HTTP request or response header.
 
 #### Headers
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class Headers {
   static from(
     value: string[][] | Map<string, string> | Map<string, string[]>,
@@ -161,8 +147,6 @@ class Headers {
   get(name: string): string | null;
 }
 ```
-
-</CodeGroup>
 
 Represents a collection of HTTP headers.
 
@@ -195,9 +179,7 @@ The `value` object must be one of the following types:
 
 #### Request
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class Request {
   constructor(url: string, options?: RequestOptions);
   static clone(request: Request, options: RequestOptions): Request;
@@ -209,8 +191,6 @@ class Request {
   json<T>(): T;
 }
 ```
-
-</CodeGroup>
 
 Represents an HTTP request to make.
 
@@ -261,17 +241,13 @@ the HTTP method, headers, and body if needed.
 
 #### RequestOptions
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class RequestOptions {
   method: string | null;
   headers: Headers;
   body: Content | null;
 }
 ```
-
-</CodeGroup>
 
 Options for the HTTP request.
 
@@ -307,9 +283,7 @@ or `null` (the default) if there is no body to pass.
 
 #### Response
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class Response {
   readonly status: u16;
   readonly statusText: string;
@@ -320,8 +294,6 @@ class Response {
   json<T>(): T;
 }
 ```
-
-</CodeGroup>
 
 Represents the response received from the HTTP server.
 

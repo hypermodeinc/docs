@@ -84,13 +84,9 @@ The APIs in the `models` namespace are below, organized by category.
 
 Get a model instance by name and type.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 models.getModel<T>(modelName: string): T
 ```
-
-</CodeGroup>
 
 <ResponseField name="T" type="Type" required>
   The type of model to return. This can be any class that extends the `Model`
@@ -106,17 +102,13 @@ models.getModel<T>(modelName: string): T
 
 #### Model
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 abstract class Model<TInput, TOutput> {
   debug: boolean;
   info: ModelInfo;
   invoke(input: TInput): TOutput;
 }
 ```
-
-</CodeGroup>
 
 The base class for all models that Hypermode functions can invoke.
 
@@ -159,16 +151,12 @@ for examples.
 
 #### ModelInfo
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class ModelInfo {
   readonly name: string;
   readonly fullName: string;
 }
 ```
-
-</CodeGroup>
 
 Information about a model that's used to construct a `Model` instance.
 It's also available as a property on the `Model` class.
