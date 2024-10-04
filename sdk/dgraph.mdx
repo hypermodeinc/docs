@@ -43,13 +43,9 @@ The APIs in the `dgraph` namespace are below.
 
 Execute a Dgraph query or mutation using a Dgraph Request object.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 function execute(hostName: string, request: Request): Response;
 ```
-
-</CodeGroup>
 
 <ResponseField name="hostName" type="string" required>
   Name of the host, as [defined in the manifest](../define-hosts).
@@ -64,13 +60,9 @@ function execute(hostName: string, request: Request): Response;
 
 Alter the schema of a Dgraph database.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 function alterSchema(hostName: string, schema: string): string;
 ```
-
-</CodeGroup>
 
 <ResponseField name="hostName" type="string" required>
   Name of the host, as [defined in the manifest](../define-hosts).
@@ -84,13 +76,9 @@ function alterSchema(hostName: string, schema: string): string;
 
 Drop an attribute from a Dgraph schema.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 function dropAttr(hostName: string, attr: string): string;
 ```
-
-</CodeGroup>
 
 <ResponseField name="hostName" type="string" required>
   Name of the host, as [defined in the manifest](../define-hosts).
@@ -104,13 +92,9 @@ function dropAttr(hostName: string, attr: string): string;
 
 Drop all data from a Dgraph database.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 function dropAll(hostName: string): string;
 ```
-
-</CodeGroup>
 
 <ResponseField name="hostName" type="string" required>
   Name of the host, as [defined in the manifest](../define-hosts).
@@ -122,17 +106,13 @@ function dropAll(hostName: string): string;
 
 A Dgraph request object, used to execute queries and mutations.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class Request {
   constructor(Query: Query | null = null, Mutations: Mutation[] | null = null);
   query: Query = new Query();
   mutations: Mutation[] = [];
 }
 ```
-
-</CodeGroup>
 
 <ResponseField name="new dgraph.Request(query, mutations)">
 
@@ -154,17 +134,13 @@ The [`query`](#query) and [`mutations`](#mutation) fields are optional and defau
 
 A Dgraph query object, used to execute queries.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class Query {
   constructor(query: string = "", variables: Variables = new Variables());
   query: string = "";
   variables: Map<string, string> = new Map<string, string>();
 }
 ```
-
-</CodeGroup>
 
 <ResponseField name="new dgraph.Query(query, variables)">
   Creates a new `Query` object with the given `query` and `variables`. `query`
@@ -184,16 +160,12 @@ class Query {
 
 A Variables object used to set query variables in a Dgraph query.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class Variables {
   public set<T>(name: string, value: T): void;
   public toMap(): Map<string, string>;
 }
 ```
-
-</CodeGroup>
 
 <ResponseField name="Variables.set(name, value)">
   Sets a query variable with the given `name` and `value`. `name` is of type
@@ -208,9 +180,7 @@ class Variables {
 
 A Dgraph mutation object, used to execute mutations.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class Mutation {
   constructor(
     public setJson: string = "",
@@ -221,8 +191,6 @@ class Mutation {
   )
 }
 ```
-
-</CodeGroup>
 
 <ResponseField name="new dgraph.Mutation(setJson, delJson, setNquads, delNquads, condition)">
   Creates a new `Mutation` object with the given `setJson`, `delJson`,

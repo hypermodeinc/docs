@@ -45,13 +45,9 @@ The APIs in the `console` namespace are below, organized by category.
 
 Asserts that a condition is true, and logs an error if it's not.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 console.assert(assertion: any, message?: string): void
 ```
-
-</CodeGroup>
 
 <ResponseField name="assertion" type="any" required>
   The condition to assert. Typically a boolean value. In the case of an object,
@@ -68,13 +64,9 @@ console.assert(assertion: any, message?: string): void
 
 Generate a log message, with no particular logging level.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 console.log(message?: string): void
 ```
-
-</CodeGroup>
 
 <ResponseField name="message" type="string">
   A message you want to log.
@@ -84,13 +76,9 @@ console.log(message?: string): void
 
 Generate a log message with the "debug" logging level.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 console.debug(message?: string): void
 ```
-
-</CodeGroup>
 
 <ResponseField name="message" type="string">
   A debug message you want to log.
@@ -100,13 +88,9 @@ console.debug(message?: string): void
 
 Generate a log message with the "info" logging level.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 console.info(message?: string): void
 ```
-
-</CodeGroup>
 
 <ResponseField name="message" type="string">
   An informational message you want to log.
@@ -116,13 +100,9 @@ console.info(message?: string): void
 
 Generate a log message with the "warning" logging level.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 console.warn(message?: string): void
 ```
-
-</CodeGroup>
 
 <ResponseField name="message" type="string">
   A warning message you want to log.
@@ -132,13 +112,9 @@ console.warn(message?: string): void
 
 Generate a log message with the "error" logging level.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 console.error(message?: string): void
 ```
-
-</CodeGroup>
 
 <ResponseField name="message" type="string">
   An error message you want to log.
@@ -150,13 +126,9 @@ console.error(message?: string): void
 
 Starts a new timer using the specified label.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 console.time(label?: string): void
 ```
-
-</CodeGroup>
 
 <ResponseField name="label" type="string">
   An optional label for the timer.
@@ -166,13 +138,9 @@ console.time(label?: string): void
 
 Logs the current value of a timer previously started with `console.time`.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 console.timeLog(label?: string): void
 ```
-
-</CodeGroup>
 
 <ResponseField name="label" type="string">
   An optional label for the timer.
@@ -182,13 +150,9 @@ console.timeLog(label?: string): void
 
 Logs the current value of a timer previously started with `console.time`, and discards the timer.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 console.timeEnd(label?: string): void
 ```
-
-</CodeGroup>
 
 <ResponseField name="label" type="string">
   An optional label for the timer.

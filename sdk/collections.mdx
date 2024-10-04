@@ -48,9 +48,7 @@ Inserts or updates an item into a collection.
   with the new text.
 </Note>
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 collections.upsert(
   collection: string,
   key: string | null,
@@ -59,8 +57,6 @@ collections.upsert(
   namespace: string = "",
 ): CollectionMutationResult
 ```
-
-</CodeGroup>
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the manifest](../define-collections).
@@ -92,9 +88,7 @@ Inserts or updates a batch of items into a collection.
   with the new text.
 </Note>
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 collections.upsertBatch(
   collection: string,
   keys: string[] | null,
@@ -103,8 +97,6 @@ collections.upsertBatch(
   namespace: string = "",
 ): CollectionMutationResult
 ```
-
-</CodeGroup>
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the manifest](../define-collections).
@@ -131,17 +123,13 @@ collections.upsertBatch(
 
 Removes an item from the collection.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 collections.remove(
   collection: string,
   key: string,
   namespace: string = "",
 ): CollectionMutationResult
 ```
-
-</CodeGroup>
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the manifest](../define-collections).
@@ -166,9 +154,7 @@ Search for an item in the collection by using natural language search.
   and for the text used when searching the collection.
 </Note>
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 collections.search(
   collection: string,
   searchMethod: string,
@@ -178,8 +164,6 @@ collections.search(
   namespaces: string[] = [],
 ): CollectionSearchResult
 ```
-
-</CodeGroup>
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the manifest](../define-collections).
@@ -214,9 +198,7 @@ Search for an item in the collection by using a vector.
   and for the vector used when searching the collection.
 </Note>
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 collections.searchByVector(
   collection: string,
   searchMethod: string,
@@ -226,8 +208,6 @@ collections.searchByVector(
   namespaces: string[] = [],
 ): CollectionSearchResult
 ```
-
-</CodeGroup>
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the manifest](../define-collections).
@@ -257,9 +237,7 @@ collections.searchByVector(
 
 Classify an item in the collection using previous vectors' labels.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
   collections.nnClassify(
   collection: string,
   searchMethod: string,
@@ -267,8 +245,6 @@ Classify an item in the collection using previous vectors' labels.
   namespace: string = "",
 ): CollectionClassificationResult
 ```
-
-</CodeGroup>
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the manifest](../define-collections).
@@ -290,9 +266,7 @@ Classify an item in the collection using previous vectors' labels.
 
 Computes distance between two keys in a collection using a search method's embedder.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 collections.computeDistance(
   collection: string,
   searchMethod: string,
@@ -301,8 +275,6 @@ collections.computeDistance(
   namespace: string = "",
 ): CollectionSearchResultObject
 ```
-
-</CodeGroup>
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the manifest](../define-collections).
@@ -324,17 +296,13 @@ collections.computeDistance(
 
 Gets an item's text from a collection, give the item's key.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 collections.getText(
   collection: string,
   key: string,
   namespace: string = "",
 ): string
 ```
-
-</CodeGroup>
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the manifest](../define-collections).
@@ -353,16 +321,12 @@ collections.getText(
 Get all items from a collection.
 The result is a map of key to text for all items in the collection.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 collections.getTexts(
   collection: string,
   namespace: string = "",
 ): Map<string, string>
 ```
-
-</CodeGroup>
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the manifest](../define-collections).
@@ -376,15 +340,11 @@ collections.getTexts(
 
 Get all namespaces in a collection.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 collections.getNamespaces(
   collection: string,
 ): string[]
 ```
-
-</CodeGroup>
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the manifest](../define-collections).
@@ -394,9 +354,7 @@ collections.getNamespaces(
 
 Get the vector for an item in a collection.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 collections.getVector(
   collection: string,
   searchMethod: string,
@@ -404,8 +362,6 @@ collections.getVector(
   namespace: string = "",
 ): f64[]
 ```
-
-</CodeGroup>
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the manifest](../define-collections).
@@ -427,17 +383,13 @@ collections.getVector(
 
 Get the labels for an item in a collection.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 collections.getLabels(
   collection: string,
   key: string,
   namespace: string = "",
 ): string[]
 ```
-
-</CodeGroup>
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the manifest](../define-collections).
@@ -457,17 +409,13 @@ collections.getLabels(
 
 Recomputes the embeddings for all texts in a collection, for a specific search method.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 collections.recomputeSearchMethod(
   collection: string,
   searchMethod: string,
   namespace: string = "",
 ): collections.SearchMethodMutationResult
 ```
-
-</CodeGroup>
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the manifest](../define-collections).
@@ -485,9 +433,7 @@ collections.recomputeSearchMethod(
 
 #### CollectionMutationResult
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class CollectionMutationResult {
   collection: string;
   status: CollectionStatus;
@@ -497,8 +443,6 @@ class CollectionMutationResult {
   keys: string[];
 }
 ```
-
-</CodeGroup>
 
 Represents the result of a mutation operation on a collection.
 
@@ -528,9 +472,7 @@ Represents the result of a mutation operation on a collection.
 
 #### CollectionSearchResult
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class CollectionSearchResult {
   collection: string;
   status: CollectionStatus;
@@ -540,8 +482,6 @@ class CollectionSearchResult {
   objects: CollectionSearchResultObject[];
 }
 ```
-
-</CodeGroup>
 
 Represents the result of a search operation on a collection.
 
@@ -571,9 +511,7 @@ Represents the result of a search operation on a collection.
 
 #### CollectionSearchResultObject
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class CollectionSearchResultObject {
   namespace: string;
   key: string;
@@ -583,8 +521,6 @@ class CollectionSearchResultObject {
   score: f64;
 }
 ```
-
-</CodeGroup>
 
 Represents an object in the search results.
 
@@ -610,9 +546,7 @@ Represents an object in the search results.
 
 #### CollectionClassificationResult
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class CollectionClassificationResult {
   collection: string;
   status: CollectionStatus;
@@ -623,8 +557,6 @@ class CollectionClassificationResult {
   cluster: CollectionClassificationResultObject[];
 }
 ```
-
-</CodeGroup>
 
 Represents the result of a classification operation on a collection.
 
@@ -658,16 +590,12 @@ Represents the result of a classification operation on a collection.
 
 #### CollectionClassificationLabelObject
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class CollectionClassificationLabelObject {
   label: string;
   confidence: f64;
 }
 ```
-
-</CodeGroup>
 
 Represents a classification label.
 
@@ -681,9 +609,7 @@ Represents a classification label.
 
 #### CollectionClassificationResultObject
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class CollectionClassificationResultObject {
   key: string;
   labels: string[];
@@ -691,8 +617,6 @@ class CollectionClassificationResultObject {
   score: f64;
 }
 ```
-
-</CodeGroup>
 
 Represents an object in the classification results.
 
@@ -714,16 +638,12 @@ Represents an object in the classification results.
 
 #### CollectionStatus
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 enum CollectionStatus {
   Success = "success";
   Error = "error";
 }
 ```
-
-</CodeGroup>
 
 The status of a collection operation.
 
@@ -737,9 +657,7 @@ The status of a collection operation.
 
 #### SearchMethodMutationResult
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class SearchMethodMutationResult {
   collection: string;
   status: CollectionStatus;
@@ -749,8 +667,6 @@ class SearchMethodMutationResult {
   searchMethod: string;
 }
 ```
-
-</CodeGroup>
 
 Represents the result of a mutation operation on a search method.
 

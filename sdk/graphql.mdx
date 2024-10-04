@@ -42,17 +42,13 @@ The APIs in the `graphql` namespace are below, organized by category.
 
 Execute a GraphQL statement to call a query or apply mutation against a GraphQL API endpoint.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 graphql.execute<T> (
   hostName: string,
   statement: string,
   variables?: Variables
 ): Response<T>
 ```
-
-</CodeGroup>
 
 <ResponseField name="T" type="Type" required>
   Type of object to use for the data returned from the query.
@@ -99,16 +95,12 @@ See the details of the [`Variables`](#variables) object for more information.
 
 #### Variables
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class Variables {
   public set(name: string, value: any): void;
   public toJSON(): string;
 }
 ```
-
-</CodeGroup>
 
 A container for variables to include with a GraphQL operation.
 
@@ -164,16 +156,12 @@ operation. The `execute` function calls this automatically when you pass a
 
 #### Response
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class Response<T> {
   errors: ErrorResult[] | null;
   data: T | null;
 }
 ```
-
-</CodeGroup>
 
 A response object from the GraphQL query.
 
@@ -199,17 +187,13 @@ If data is absent due to errors, this field is `null`.
 
 #### ErrorResult
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class ErrorResult {
   message: string;
   locations: CodeLocation[] | null;
   path: string[] | null;
 }
 ```
-
-</CodeGroup>
 
 The details of an error incurred as part of a GraphQL operation.
 
@@ -232,16 +216,12 @@ Each item in the array represents a segment of the path.
 
 #### CodeLocation
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class CodeLocation {
   line: u32;
   column: u32;
 }
 ```
-
-</CodeGroup>
 
 The location of specific code within a GraphQL statement.
 

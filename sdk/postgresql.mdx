@@ -52,17 +52,13 @@ Use this for insert, update, or delete operations, or for other SQL statements t
   multiple rows).
 </Tip>
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 function postgresql.execute (
   hostName: string,
   statement: string,
   params?: Params
 ): Response
 ```
-
-</CodeGroup>
 
 <ResponseField name="hostName" type="string" required>
   Name of the host, as [defined in the manifest](../define-hosts).
@@ -93,17 +89,13 @@ See the details of the [`Params`](#params) object for more information.
 Execute a SQL statement against a PostgreSQL database, returning a set of rows.
 In the results, each row converts to an object of type `T`, with fields matching the column names.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 function postgresql.query<T>(
   hostName: string,
   statement: string,
   params?: Params,
 ): QueryResponse<T>
 ```
-
-</CodeGroup>
 
 <ResponseField name="T" type="Type" required>
   Type of object to use for the data returned from the query.
@@ -154,17 +146,13 @@ See the details of the [`Params`](#params) object for more information.
 Execute a SQL statement against a PostgreSQL database, returning a single scalar value.
 For example, the result could be a count, sum, or average, or it could be an identifier.
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 function postgresql.queryScalar<T> (
   hostName: string,
   statement: string,
   params?: Params
 ): ScalarResponse<T>
 ```
-
-</CodeGroup>
 
 <ResponseField name="T" type="Type" required>
   Type of object to use for the data returned from the query. This should
@@ -200,16 +188,12 @@ See the details of the [`Params`](#params) object for more information.
 
 #### Params
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class Params {
   public push(value: any): void;
   public toJSON(): string;
 }
 ```
-
-</CodeGroup>
 
 A container for parameters to include with a SQL operation.
 
@@ -272,16 +256,12 @@ operation. The SDK functions call this automatically when you pass a
 
 #### Response
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class Response {
   error: string | null;
   rowsAffected: u32;
 }
 ```
-
-</CodeGroup>
 
 Represents the response from an [`execute`](#execute) operation.
 Also serves as the base class for `QueryResponse<T>` and `ScalarResponse<T>`.
@@ -297,17 +277,13 @@ Also serves as the base class for `QueryResponse<T>` and `ScalarResponse<T>`.
 
 #### QueryResponse
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class QueryResponse<T> {
   error: string | null;
   rowsAffected: u32;
   rows: T[];
 }
 ```
-
-</CodeGroup>
 
 Represents the response from a [`query`](#query) operation.
 
@@ -327,17 +303,13 @@ Represents the response from a [`query`](#query) operation.
 
 #### ScalarResponse
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class ScalarResponse<T> {
   error: string | null;
   rowsAffected: u32;
   value: T;
 }
 ```
-
-</CodeGroup>
 
 Represents the response from a [`queryScalar`](#queryscalar) operation.
 
@@ -356,16 +328,12 @@ Represents the response from a [`queryScalar`](#queryscalar) operation.
 
 #### Point
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class Point {
  x: f64,
  y: f64,
 }
 ```
-
-</CodeGroup>
 
 Represents a point in 2D space, having `x` and `y` coordinates.
 Correctly serializes to and from PostgreSQL's point type, in (x, y) order.
@@ -385,16 +353,12 @@ Correctly serializes to and from PostgreSQL's point type, in (x, y) order.
 
 #### Location
 
-<CodeGroup>
-
-```ts AssemblyScript
+```go
 class Location {
  longitude: f64,
  latitude: f64,
 }
 ```
-
-</CodeGroup>
 
 Represents a location on Earth, having `longitude` and `latitude` coordinates.
 
