@@ -25,11 +25,15 @@
     {
       "name": "Company",
       "url": "https://hypermode.com/home"
+    },
+    {
+      "name": "Start Now",
+      "url": "https://hypermode.com/sign-up"
     }
   ],
   "topbarCtaButton": {
-    "name": "Start Now",
-    "url": "https://hypermode.com/sign-up"
+    "type": "github",
+    "url": "https://github.com/hypermodeinc/modus"
   },
   "primaryTab": {
     "name": "Hypermode"
