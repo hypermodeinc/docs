@@ -16,15 +16,46 @@ Before implementing search, ensure you have [defined a collection in the manifes
 
 In this example, `myProducts` is the collection used to store product descriptions.
 
-- **Search Methods**: <TO DO>
+- **Search Methods**: A **search methods** is associated with a collection. It defines how to convert collection's items into a vector representation and provides indexing parameters.
+
+- **Vetor embedding**: In order to be used for vector-based search and comparison, each item in the collection must be converted into a vector representation called **embedding**. By embedding data, you enable powerful natural language and similarity-based searches. When configured, Modus runtime automatically compute the embeddings when items are added or updated.
 
 # Configure your search method
 
-The search functionality relies on vector embeddings. In order to be used for vector-based search and comparison, each item in the collection must be converted into a vector representation.
+The search functionality relies on a search method and embedding function. To configure your search method
+
+- export an embedding functio
+
+  n
+
+- declare a search method
 
 ### Export an embedding function
 
-TO DO explain signature and refer to models change example to use minilm
+An embedding function in any function that transforms text into vectors that represent their meaning in a high-dimensional space.
+
+Embeddings functions must be exported from the index.ts file of your project and have the following signature
+
+<CodeGroup>
+
+```ts AssemblyScript
+export function embed(text: string[]): f32[][] {
+  ...
+}
+```
+
+```ts Go
+package main
+
+func Embed(text []string) ([][]float32, error) {
+  ...
+}
+
+```
+
+</CodeGroup>
+
+TO DO introduce examples for OpenAI and minilm
 
 <CodeGroup>
 
