@@ -18,23 +18,25 @@ In this example, `myProducts` is the collection used to store product descriptio
 
 - **Search Methods**: A **search methods** is associated with a collection. It defines how to convert collection's items into a vector representation and provides indexing parameters.
 
-- **Vetor embedding**: In order to be used for vector-based search and comparison, each item in the collection must be converted into a vector representation called **embedding**. By embedding data, you enable powerful natural language and similarity-based searches. When configured, Modus runtime automatically compute the embeddings when items are added or updated.
+- **Vetor embedding**: In order to be used for vector-based search and comparison, each item in the collection must be converted into a vector representation called **embedding**. By embedding data, you enable powerful natural language and similarity-based searches.
+  <Note>
+    Modus runtime automatically compute the embeddings, according to your
+    configuration, when items are added or updated.
+  </Note>
 
 # Configure your search method
 
 The search functionality relies on a search method and embedding function. To configure your search method
 
-- export an embedding functio
+- create an embedding function
 
-  n
+- declare a [search method](../app-manifest#collections-properties) in the application manifest
 
-- declare a search method
+## Create an embedding function
 
-### Export an embedding function
+An embedding function is any API function that transforms text into vectors that represent their meaning in a high-dimensional space.
 
-An embedding function in any function that transforms text into vectors that represent their meaning in a high-dimensional space.
-
-Embeddings functions must be exported from the index.ts file of your project and have the following signature
+Embeddings functions must have the following signature
 
 <CodeGroup>
 
@@ -44,7 +46,7 @@ export function embed(text: string[]): f32[][] {
 }
 ```
 
-```ts Go
+```go Go
 package main
 
 func Embed(text []string) ([][]float32, error) {
@@ -55,20 +57,43 @@ func Embed(text []string) ([][]float32, error) {
 
 </CodeGroup>
 
-TO DO introduce examples for OpenAI and minilm
+Embeddings are usually computed using an embedding models. Here are few examples
+
+### Compute embedding with Hugging face [all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2){target="\_blank"},
+
+[Declare the model]([search method](../app-manifest#models) in the application manifest
+
+```json
+  "models": {
+    // This defines a model hosted on Hypermode
+    // that can be used for vector embeddings.
+    "minilm": {
+      "sourceModel": "sentence-transformers/all-MiniLM-L6-v2",
+      "provider": "hugging-face",
+      "host": "hypermode" //Specify "hypermode" for models deployed by Hypermode
+    }
+  }
+```
+
+Create the embedding function using the embedding model:
 
 <CodeGroup>
 
 ```ts AssemblyScript
-export function embed(text: string[]): f32[][] {
-  const model = models.getModel<OpenAIEmbeddingsModel>("embeddings");
-  const input = model.createInput(text);
+import { models } from "@hypermode/functions-as";
+import { EmbeddingsModel } from "@hypermode/models-as/models/experimental/embeddings";
+
+export function embed(texts: string[]): f32[][] {
+  // "minilm" is the model name declared in the application manifest
+
+  const model = models.getModel<EmbeddingsModel>("minilm");
+  const input = model.createInput(texts);
   const output = model.invoke(input);
-  return output.data.map<f32[]>((d) => d.embedding);
+  return output.predictions;
 }
 ```
 
-```ts Go
+```go Go
 package main
 
 import (
@@ -77,52 +102,148 @@ import (
 )
 
 func Embed(text []string) ([][]float32, error) {
-model, err := models.GetModel[experimental.EmbeddingsModel]("minilm")
-if err != nil {
-return nil, err
-}
+    model, err := models.GetModel[experimental.EmbeddingsModel]("minilm")
+    // "minilm" is the model name declared in the application manifest
+    if err != nil {
+        return nil, err
+    }
 
     input, err := model.CreateInput(text...)
     if err != nil {
-    	return nil, err
+        return nil, err
     }
     output, err := model.Invoke(input)
     if err != nil {
-    	return nil, err
+        return nil, err
     }
     return output.Predictions, nil
-
 }
 
 ```
 
 </CodeGroup>
 
-TO DO: explain how to export from index.ts if exported from embed.ts
+### Compute embedding using OpenAI embedding model
 
-### declare the search method
+[Declare the model]([search method](../app-manifest#models) in the application manifest
 
-TO DO: reference to manifest
+```json
+  "models": {
+    // This defines a model hosted on OpenAI that can be used for vector embeddings.
+    "openai-embeddings": {
+      "sourceModel": "text-embedding-3-small",
+      "host": "openai",
+      "path": "v1/embeddings"
+    }
+  },
+  "hosts": {
+    // This defines the OpenAI host, which is used by the OpenAI embeddings model above.
+    // The {{API_KEY}} will be replaced by the secret provided in the Hypermode Console.
+    "openai": {
+      "baseUrl": "https://api.openai.com/",
+      "headers": {
+        "Authorization": "Bearer {{API_KEY}}"
+      }
+    }
+  }
+```
+
+Create the embedding function using the embedding model:
+
+<CodeGroup>
+
+```ts AssemblyScript
+export function embed(text: string[]): f32[][] {
+  const model = models.getModel<OpenAIEmbeddingsModel>("openai-embeddings");
+  // "openai-embeddings is the model name declared in the application manifest
+  const input = model.createInput(text);
+  const output = model.invoke(input);
+  return output.data.map<f32[]>((d) => d.embedding);
+}
+```
+
+```go Go
+package main
+
+import (
+	"github.com/hypermodeAI/functions-go/pkg/models"
+	"github.com/hypermodeAI/functions-go/pkg/models/experimental"
+)
+
+func Embed(texts ...string) ([][]float32, error) {
+	// Retrieve the model for OpenAI embeddings
+    // "openai-embeddings is the model name declared in the application manifest
+	model, err := models.GetModel[openai.EmbeddingsModel]("openai-embeddings")
+	if err != nil {
+		return nil, fmt.Errorf("failed to get OpenAI embeddings model: %w", err)
+	}
+
+	// Create input for the model using the provided texts
+	input, err := model.CreateInput(texts)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create input for OpenAI embeddings: %w", err)
+	}
+
+	// Invoke the model with the generated input
+	output, err := model.Invoke(input)
+	if err != nil {
+		return nil, fmt.Errorf("failed to invoke OpenAI embeddings model: %w", err)
+	}
+
+	// Prepare the result slice based on the size of the output data
+	results := make([][]float32, len(output.Data))
+
+	// Copy embeddings from output into the result slice
+	for i, d := range output.Data {
+		results[i] = d.Embedding
+	}
+
+	return results, nil
+}
+```
+
+</CodeGroup>
+
+### Declare the search method
+
+With an embedding function in place, declare a search method in the [collection properties](../app-manifest#collections-properties)
+
+```json
+  "collections": {
+    // This defines a collection of products
+    "myProducts": {
+        "searchMethods": {
+            "searchMethod1": {
+                "embedder": "embed" // embedding function name
+            }
+        }
+    }
+  }
+
+```
 
 ## Add Items to the Collection
 
-First, we need to populate the collection with items (e.g., product descriptions). You can insert individual or multiple items using the `upsert` and `upsertBatch` methods, respectively.
+First, we need to populate the collection with items (e.g., product descriptions). You can insert individual or multiple items using the [collections.upser](../sdk/collections.mdx#upsert) and [collections.upsertBatch](../sdk/collections.mdx#upsertbatch) methods, respectively.
 
-Use `collections.upsert` to insert a product description into the collection. If you don't specify a key, a unique key will be generated for you.
+Use [collections.upsert](../sdk/collections.mdx#upsert) to insert a product description into the collection. If you don't specify a key, a unique key will be generated for you.
 
 <CodeGroup>
+
 ```ts AssemblyScript
 export function addProduct(description: string): string {
   const response = collections.upsert(
-    "myProducts",  // Collection name defined in the manifest
-    null,          // using null to let Modus generate a unique ID
-    description    // the text to store
-    );
+    "myProducts", // Collection name defined in the manifest
+    null, // using null to let Modus generate a unique ID
+    description, // the text to store
+    // no labels for this item
+    // no namespace provided, use defautl namespace
+  );
   return response.keys[0]; // return the identifier of the item
 }
-````
+```
 
-```ts Go
+```go Go
 func AddProduct(description string) ([]string, error) {
 	res, err := collections.Upsert(
         "myProducts",  // Collection name defined in the manifest
@@ -139,43 +260,31 @@ func AddProduct(description string) ([]string, error) {
 
 </CodeGroup>
 
-To add a batch of product descriptions, use the `collections.upsertBatch` method.
+To add a batch of product descriptions, use the [collections.upsertBatch](../sdk/collections.mdx#upsertbatch) method.
 
 ## Implement Natural Language Search
 
-With the products stored, you can now search the collection using natural language. The `collections.search` function computes an embedding for the search query and compares it with the embeddings of the items in the collection.
-
-TO DO : change the example to use only one searchMethod
+With the products stored, you can now search the collection by semantic similarity. The [collections.search](../sdk/collections.mdx#search) api computes an embedding for the provided text, compares it with the embeddings of the items in the collection, and returns the most similar items.
 
 ```ts
 export function searchProducts(
-  product: string,
+  product_description: string,
   maxItems: i32,
 ): collections.CollectionSearchResult[] {
   const responseArr: collections.CollectionSearchResult[] = [];
   const searchMethods = ["searchMethod1", "searchMethod2"]; // defined search methods
 
-  for (let i = 0; i < searchMethods.length; i++) {
-    const response = collections.search(
-      "myProducts",
-      searchMethods[i],
-      product,
-      maxItems,
-      true,
-    );
-    responseArr.push(response);
-  }
-
-  return responseArr;
+  const response = collections.search(
+    "myProducts", // collection name declated in the application manifest
+    "searchMethod1", // search method declared for this collection in the manifest
+    product_description, // text to search for
+    maxItems,
+    true, //  returnText: bool, true to return the items text.
+    // no namespace provide, use the default namespace
+  );
+  return response;
 }
 ```
-
-Here’s how it works:
-
-- **Input**: A string (`product`) that describes the product you are searching for.
-- **Search Method**: The code iterates through each search method in `searchMethods` to perform the search.
-- `maxItems`: The maximum number of items you want to retrieve.
-- **Result**: The results are returned in the form of an array of `CollectionSearchResult` objects, each corresponding to a search method.
 
 ### Search Result Format
 
@@ -200,11 +309,13 @@ Each search returns an array of `CollectionSearchResult`, containing the followi
 }
 ```
 
+TO DO: clarify we have a list of objects in this example and we are saying that we return a list of CollectionSearchResult. Do we have a list of list? why?
 TO DO: explain distance and score range (-1 1 or 0 1 ?)
 
 ## Search by Vector
 
-If you want to search using a vector (instead of text), you can retrieve the vector associated with an item by its key, then perform a search using that vector.
+TO DO: explain why this use case is interresting instead of "if you want"
+If you want to search using a vector instead of text, you can retrieve the vector associated with an item by its key, then perform a search using that vector.
 
 ```ts
 export function searchProductsById(
