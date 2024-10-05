@@ -1,38 +1,41 @@
 ---
 title: Search
-description: "Adding search function to your app"
+description: "Learn how to add powerful search functionality to your applicatio using natural language and vector-based search with the Modus Collections API"
 ---
 
-The Modus Collections API enables developers to store, retrieve, and search data within collections using both natural language and vector-based search methods.
+The Modus Collections API provides a robust way to store, retrieve, and search through data using both natural language and vector-based search methods. By leveraging embeddings, developers can enable semantic and similarity-based searches, improving the relevance of search results within their applications.
+
+For example, with natural language similarity, if you search for a product description like "sleek red sports car", the search method will return similar product descriptions such as "luxury sports car in red" or "high-speed car with sleek design."
 
 ## Prerequisites
 
-Before implementing search, ensure you have [defined a collection in the manifest](../app-manifest#collections) and have a working Hypermode setup.
-
-### Understanding Key Components
-
-- **Collections**: A **collection** is a structured storage that organizes and stores textual data and associated metadata, such as vectors or labels.
-  Collections enable sophisticated search, retrieval, and classification tasks using embeddings and vectors.
+Before implementing search, ensure you have [defined a collection in the manifest](./app-manifest#collections) and have a working Hypermode setup.
 
 In this example, `myProducts` is the collection used to store product descriptions.
 
-- **Search Methods**: A **search methods** is associated with a collection. It defines how to convert collection's items into a vector representation and provides indexing parameters.
+## Understanding Key Components
+
+- **Collections**: A **collection** is a structured storage that organizes and stores textual data and associated metadata.
+  Collections enable sophisticated search, retrieval, and classification tasks using vector embeddings.
+
+- **Search Methods**: A **search methods** is associated with a collection. It defines how to convert collection items into a vector representation and provides indexing parameters.
 
 - **Vetor embedding**: In order to be used for vector-based search and comparison, each item in the collection must be converted into a vector representation called **embedding**. By embedding data, you enable powerful natural language and similarity-based searches.
   <Note>
     Modus runtime automatically compute the embeddings, according to your
     configuration, when items are added or updated.
   </Note>
+  <Note>You can associate several search methods to a collection.</Note>
 
-# Configure your search method
+## Configure your search method
 
 The search functionality relies on a search method and embedding function. To configure your search method
 
 - create an embedding function
 
-- declare a [search method](../app-manifest#collections-properties) in the application manifest
+- declare a [search method](./app-manifest#collections-properties) in the application manifest
 
-## Create an embedding function
+### Step 1: Create an embedding function
 
 An embedding function is any API function that transforms text into vectors that represent their meaning in a high-dimensional space.
 
@@ -59,18 +62,18 @@ func Embed(text []string) ([][]float32, error) {
 
 Embeddings are usually computed using an embedding models. Here are few examples
 
-### Compute embedding with Hugging face [all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2){target="\_blank"},
+#### Example 1: Compute embedding with Hugging face [all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2){target=""}
 
-[Declare the model]([search method](../app-manifest#models) in the application manifest
+[Declare the model](./app-manifest#models) in the application manifest
 
 ```json
   "models": {
     // This defines a model hosted on Hypermode
     // that can be used for vector embeddings.
     "minilm": {
-      "sourceModel": "sentence-transformers/all-MiniLM-L6-v2",
-      "provider": "hugging-face",
-      "host": "hypermode" //Specify "hypermode" for models deployed by Hypermode
+      "sourceModel": "sentence-transformers/all-MiniLM-L6-v2", // Model identifier
+      "provider": "hugging-face", // Provider for this model
+      "host": "hypermode" // Host where the model is running
     }
   }
 ```
@@ -123,9 +126,9 @@ func Embed(text []string) ([][]float32, error) {
 
 </CodeGroup>
 
-### Compute embedding using OpenAI embedding model
+#### Example 2: Compute embedding using OpenAI embedding model
 
-[Declare the model]([search method](../app-manifest#models) in the application manifest
+[Declare the model](./app-manifest#models) in the application manifest
 
 ```json
   "models": {
@@ -204,9 +207,9 @@ func Embed(texts ...string) ([][]float32, error) {
 
 </CodeGroup>
 
-### Declare the search method
+### Step 2: Declare the search method
 
-With an embedding function in place, declare a search method in the [collection properties](../app-manifest#collections-properties)
+With an embedding function in place, declare a search method in the [collection properties](./app-manifest#collections-properties)
 
 ```json
   "collections": {
@@ -222,11 +225,111 @@ With an embedding function in place, declare a search method in the [collection 
 
 ```
 
-## Add Items to the Collection
+## Implement Semantic Similarity Search
 
-First, we need to populate the collection with items (e.g., product descriptions). You can insert individual or multiple items using the [collections.upser](../sdk/collections.mdx#upsert) and [collections.upsertBatch](../sdk/collections.mdx#upsertbatch) methods, respectively.
+With the products stored, you can now search the collection by semantic similarity. The [collections.search](./sdk/collections.mdx#search) api computes an embedding for the provided text, compares it with the embeddings of the items in the collection, and returns the most similar items.
 
-Use [collections.upsert](../sdk/collections.mdx#upsert) to insert a product description into the collection. If you don't specify a key, a unique key will be generated for you.
+```ts
+export function searchProducts(
+  product_description: string,
+  maxItems: i32,
+): collections.CollectionSearchResult {
+  const response = collections.search(
+    "myProducts", // collection name declared in the application manifest
+    "searchMethod1", // search method declared for this collection in the manifest
+    product_description, // text to search for
+    maxItems,
+    true, //  returnText: bool, true to return the items text.
+    // no namespace provide, use the default namespace
+  );
+  return response;
+}
+```
+
+### Search Result Format
+
+The search response is a [CollectionSearchResult](./sdk/collections.mdx#collectionsearchresult), containing the following fields:
+
+- `collection`: The name of the collection.
+- `status`: The status of the operation (e.g., success, error).
+- `objects`: The search result items with their text, distance, and score values.
+
+```json
+{
+  "collection": "myProducts",
+  "status": "success",
+  "objects": [
+    {
+      "key": "item-key-123",
+      "text": "Sample product description",
+      "distance": 0.05,
+      "score": 0.95
+    }
+  ]
+}
+```
+
+**distance**: A lower value indicates a closer match between the search query and the item in the collection.
+**score**: A higher value (closer to 1) represents a better match.
+
+## Search for similar Items
+
+When you need to search similar items to a given item, use the [collections.searchByVector](./sdk/collections.mdx#searchByVector) api: retrieve the vector associated with the given item by its key, then perform a search using that vector.
+
+<CodeGroup>
+
+```ts AssemblyScript
+export function searchSimilarProducts(
+  productId: string,
+  maxItems: i32,
+): collections.CollectionSearchResult {
+  const embedding_vector = collections.getVector(
+    "myProducts", // Collection name defined in the manifest
+    "searchMethod1", // search method declared for the collection
+    productId, // key of the collection item to retrieve
+  );
+  // search for similar products using the embedding vector
+  const response = collections.searchByVector(
+    "myProducts",
+    "searchMethod1",
+    embedding_vector,
+    maxItems,
+    true, // get the product description
+  );
+
+  return response;
+}
+```
+
+```go Go
+func SearchSimilarProduct(productKey string, maxItems int) (*collections.CollectionSearchResult, error) {
+	vec, err := collections.GetVector(
+        "myProducts",
+        "searchMethod1",
+        productKey)
+
+	if err != nil {
+		return nil, err
+	}
+	return collections.SearchByVector(
+        "myProducts",
+        "searchMethod1",
+        vec,
+        collections.WithLimit(maxItems),
+        collections.WithReturnText(true)
+        )
+}
+```
+
+</CodeGroup>
+
+## Testing
+
+### Add Items to the Collection
+
+First, we need to populate the collection with items (e.g., product descriptions). You can insert individual or multiple items using the [collections.upser](./sdk/collections.mdx#upsert) and [collections.upsertBatch](./sdk/collections.mdx#upsertbatch) methods, respectively.
+
+Use [collections.upsert](./sdk/collections.mdx#upsert) to insert a product description into the collection. If you don't specify a key, a unique key will be generated for you.
 
 <CodeGroup>
 
@@ -260,118 +363,13 @@ func AddProduct(description string) ([]string, error) {
 
 </CodeGroup>
 
-To add a batch of product descriptions, use the [collections.upsertBatch](../sdk/collections.mdx#upsertbatch) method.
+To add a batch of product descriptions, use the [collections.upsertBatch](./sdk/collections.mdx#upsertbatch) method.
 
-## Implement Natural Language Search
+### testing your API
 
-With the products stored, you can now search the collection by semantic similarity. The [collections.search](../sdk/collections.mdx#search) api computes an embedding for the provided text, compares it with the embeddings of the items in the collection, and returns the most similar items.
-
-```ts
-export function searchProducts(
-  product_description: string,
-  maxItems: i32,
-): collections.CollectionSearchResult[] {
-  const responseArr: collections.CollectionSearchResult[] = [];
-  const searchMethods = ["searchMethod1", "searchMethod2"]; // defined search methods
-
-  const response = collections.search(
-    "myProducts", // collection name declated in the application manifest
-    "searchMethod1", // search method declared for this collection in the manifest
-    product_description, // text to search for
-    maxItems,
-    true, //  returnText: bool, true to return the items text.
-    // no namespace provide, use the default namespace
-  );
-  return response;
-}
-```
-
-### Search Result Format
-
-Each search returns an array of `CollectionSearchResult`, containing the following fields:
-
-- `collection`: The name of the collection.
-- `status`: The status of the operation (e.g., success, error).
-- `objects`: The search result items with their text, distance, and score values.
-
-```json
-{
-  "collection": "myProducts",
-  "status": "success",
-  "objects": [
-    {
-      "key": "item-key-123",
-      "text": "Sample product description",
-      "distance": 0.05,
-      "score": 0.95
-    }
-  ]
-}
-```
-
-TO DO: clarify we have a list of objects in this example and we are saying that we return a list of CollectionSearchResult. Do we have a list of list? why?
-TO DO: explain distance and score range (-1 1 or 0 1 ?)
-
-## Search by Vector
-
-TO DO: explain why this use case is interresting instead of "if you want"
-If you want to search using a vector instead of text, you can retrieve the vector associated with an item by its key, then perform a search using that vector.
-
-```ts
-export function searchProductsById(
-  productId: string,
-  maxItems: i32,
-): collections.CollectionSearchResult[] {
-  const responseArr: collections.CollectionSearchResult[] = [];
-  const searchMethods = ["searchMethod1", "searchMethod2"];
-
-  for (let i = 0; i < searchMethods.length; i++) {
-    const vec = collections.getVector(
-      "myProducts",
-      searchMethods[i],
-      productId,
-    );
-    const response = collections.searchByVector(
-      "myProducts",
-      searchMethods[i],
-      vec,
-      maxItems,
-      true,
-    );
-    responseArr.push(response);
-  }
-
-  return responseArr;
-}
-```
-
-This method is useful when you have an item's ID and want to find similar items in the collection by comparing vectors.
-
-## Recomputing Search Indexes
-
-Sometimes, you may need to recompute the embeddings for all items in the collection for a specific search method. This can be useful if you change the underlying embedding model.
-
-```ts
-export function recomputeIndexes(): Map<string, string> {
-  const responseArr: Map<string, string> = new Map<string, string>();
-  const searchMethods = ["searchMethod1", "searchMethod2"];
-
-  for (let i = 0; i < searchMethods.length; i++) {
-    const response = collections.recomputeSearchMethod(
-      "myProducts",
-      searchMethods[i],
-    );
-    if (!response.isSuccessful) {
-      responseArr.set(searchMethods[i], response.error);
-    }
-    responseArr.set(searchMethods[i], response.status);
-  }
-
-  return responseArr;
-}
-```
+TO DO: < add an explanation for testing from GraphQL API>
 
 ## Conclusion
 
-This guide explains how to implement natural language-based or vector similarity searches in your application. By following these steps, you can build a robust search API for any collection of text data, such as product descriptions, using the power of vector embeddings and search methods.
-TO DO: conclusion, use cases and next steps (simialrity clustering ...) multiple search method, image embedding etc ...
+You can easily add natural language-based or vector similarity searches to your application, by using the power of collection, vector embeddings and search methods.
+By leveraging Modus search, you can significantly enhance the search experience in your application, providing users with accurate and relevant results.
