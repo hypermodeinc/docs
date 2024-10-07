@@ -100,8 +100,8 @@ export function embed(texts: string[]): f32[][] {
 package main
 
 import (
-	"github.com/hypermodeAI/functions-go/pkg/models"
-	"github.com/hypermodeAI/functions-go/pkg/models/experimental"
+"github.com/hypermodeAI/functions-go/pkg/models"
+"github.com/hypermodeAI/functions-go/pkg/models/experimental"
 )
 
 func Embed(text []string) ([][]float32, error) {
@@ -169,39 +169,39 @@ export function embed(text: string[]): f32[][] {
 package main
 
 import (
-	"github.com/hypermodeAI/functions-go/pkg/models"
-	"github.com/hypermodeAI/functions-go/pkg/models/experimental"
+  "github.com/hypermodeAI/functions-go/pkg/models"
+  "github.com/hypermodeAI/functions-go/pkg/models/experimental"
 )
 
 func Embed(texts ...string) ([][]float32, error) {
-	// Retrieve the model for OpenAI embeddings
-    // "openai-embeddings is the model name declared in the application manifest
-	model, err := models.GetModel[openai.EmbeddingsModel]("openai-embeddings")
-	if err != nil {
-		return nil, fmt.Errorf("failed to get OpenAI embeddings model: %w", err)
-	}
+  // Retrieve the model for OpenAI embeddings
+  // "openai-embeddings is the model name declared in the application manifest
+  model, err := models.GetModel[openai.EmbeddingsModel]("openai-embeddings")
+  if err != nil {
+    return nil, fmt.Errorf("failed to get OpenAI embeddings model: %w", err)
+  }
 
-	// Create input for the model using the provided texts
-	input, err := model.CreateInput(texts)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create input for OpenAI embeddings: %w", err)
-	}
+  // Create input for the model using the provided texts
+  input, err := model.CreateInput(texts)
+  if err != nil {
+    return nil, fmt.Errorf("failed to create input for OpenAI embeddings: %w", err)
+  }
 
-	// Invoke the model with the generated input
-	output, err := model.Invoke(input)
-	if err != nil {
-		return nil, fmt.Errorf("failed to invoke OpenAI embeddings model: %w", err)
-	}
+  // Invoke the model with the generated input
+  output, err := model.Invoke(input)
+  if err != nil {
+    return nil, fmt.Errorf("failed to invoke OpenAI embeddings model: %w", err)
+  }
 
-	// Prepare the result slice based on the size of the output data
-	results := make([][]float32, len(output.Data))
+  // Prepare the result slice based on the size of the output data
+  results := make([][]float32, len(output.Data))
 
-	// Copy embeddings from output into the result slice
-	for i, d := range output.Data {
-		results[i] = d.Embedding
-	}
+  // Copy embeddings from output into the result slice
+  for i, d := range output.Data {
+    results[i] = d.Embedding
+  }
 
-	return results, nil
+  return results, nil
 }
 ```
 
@@ -303,21 +303,21 @@ export function searchSimilarProducts(
 
 ```go Go
 func SearchSimilarProduct(productKey string, maxItems int) (*collections.CollectionSearchResult, error) {
-	vec, err := collections.GetVector(
-        "myProducts",
-        "searchMethod1",
-        productKey)
+  vec, err := collections.GetVector(
+    "myProducts",
+    "searchMethod1",
+    productKey)
 
-	if err != nil {
-		return nil, err
-	}
-	return collections.SearchByVector(
-        "myProducts",
-        "searchMethod1",
-        vec,
-        collections.WithLimit(maxItems),
-        collections.WithReturnText(true)
-        )
+  if err != nil {
+    return nil, err
+  }
+  return collections.SearchByVector(
+    "myProducts",
+    "searchMethod1",
+    vec,
+    collections.WithLimit(maxItems),
+    collections.WithReturnText(true)
+  )
 }
 ```
 
@@ -348,16 +348,16 @@ export function addProduct(description: string): string {
 
 ```go Go
 func AddProduct(description string) ([]string, error) {
-	res, err := collections.Upsert(
-        "myProducts",  // Collection name defined in the manifest
-        nil,           // using nil to let Modus generate a unique ID
-        description,   // the text to store
-        nil            // we don't have labels for this item
-        )
-	if err != nil {
-		return nil, err
-	}
-	return res.Keys, nil
+  res, err := collections.Upsert(
+    "myProducts",  // Collection name defined in the manifest
+    nil,           // using nil to let Modus generate a unique ID
+    description,   // the text to store
+    nil            // we don't have labels for this item
+    )
+  if err != nil {
+    return nil, err
+  }
+  return res.Keys, nil
 }
 ```
 
