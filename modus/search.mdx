@@ -5,7 +5,7 @@ description: "Learn how to add powerful search functionality to your applicatio 
 
 The Modus Collections API provides a robust way to store, retrieve, and search through data using both natural language and vector-based search methods. By leveraging embeddings, developers can enable semantic and similarity-based searches, improving the relevance of search results within their applications.
 
-For example, with natural language similarity, if you search for a product description like "sleek red sports car", the search method will return similar product descriptions such as "luxury sports car in red" or "high-speed car with sleek design."
+For example, with natural language similarity, if you search for a product description like "sleek red sports car", the search method returns similar product descriptions such as "luxury sports car in red" or "high-speed car with sleek design".
 
 ## Prerequisites
 
@@ -13,27 +13,27 @@ Before implementing search, ensure you have [defined a collection in the manifes
 
 In this example, `myProducts` is the collection used to store product descriptions.
 
-## Understanding Key Components
+## Understanding key components
 
 - **Collections**: A **collection** is a structured storage that organizes and stores textual data and associated metadata.
   Collections enable sophisticated search, retrieval, and classification tasks using vector embeddings.
 
-- **Search Methods**: A **search methods** is associated with a collection. It defines how to convert collection items into a vector representation and provides indexing parameters.
+- **Search Methods**: A **search methods** associated with a collection, defines how to convert collection items into a vector representation and provides indexing parameters.
 
-- **Vetor embedding**: In order to be used for vector-based search and comparison, each item in the collection must be converted into a vector representation called **embedding**. By embedding data, you enable powerful natural language and similarity-based searches.
+- **Vector embedding**: In order to use for vector-based search and comparison, each item in the collection must be converted into a vector representation called **embedding**. By embedding data, you enable powerful natural language and similarity-based searches.
   <Note>
     Modus runtime automatically compute the embeddings, according to your
-    configuration, when items are added or updated.
+    configuration, when you add or update items.
   </Note>
   <Note>You can associate several search methods to a collection.</Note>
 
 ## Configure your search method
 
-The search functionality relies on a search method and embedding function. To configure your search method
+The search capability relies on a search method and embedding function. To configure your search method
 
 - create an embedding function
 
-- declare a [search method](./app-manifest#collections-properties) in the application manifest
+- declare a [search method](./app-manifest#collections-properties) in the app manifest
 
 ### Step 1: Create an embedding function
 
@@ -62,9 +62,9 @@ func Embed(text []string) ([][]float32, error) {
 
 Embeddings are usually computed using an embedding models. Here are few examples
 
-#### Example 1: Compute embedding with Hugging face [all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2){target=""}
+#### Example 1: compute embedding with Hugging Face [all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2){target=""}
 
-[Declare the model](./app-manifest#models) in the application manifest
+[Declare the model](./app-manifest#models) in the app manifest
 
 ```json
   "models": {
@@ -128,7 +128,7 @@ func Embed(text []string) ([][]float32, error) {
 
 #### Example 2: Compute embedding using OpenAI embedding model
 
-[Declare the model](./app-manifest#models) in the application manifest
+[Declare the model](./app-manifest#models) in the app manifest
 
 ```json
   "models": {
@@ -225,9 +225,9 @@ With an embedding function in place, declare a search method in the [collection 
 
 ```
 
-## Implement Semantic Similarity Search
+## Implement semantic similarity search
 
-With the products stored, you can now search the collection by semantic similarity. The [collections.search](./sdk/collections.mdx#search) api computes an embedding for the provided text, compares it with the embeddings of the items in the collection, and returns the most similar items.
+With the products stored, you can now search the collection by semantic similarity. The [collections.search](./sdk/collections.mdx#search) method computes an embedding for the provided text, compares it with the embeddings of the items in the collection, and returns the most similar items.
 
 ```ts
 export function searchProducts(
@@ -246,12 +246,12 @@ export function searchProducts(
 }
 ```
 
-### Search Result Format
+### Search result format
 
 The search response is a [CollectionSearchResult](./sdk/collections.mdx#collectionsearchresult), containing the following fields:
 
 - `collection`: The name of the collection.
-- `status`: The status of the operation (e.g., success, error).
+- `status`: The status of the operation.
 - `objects`: The search result items with their text, distance, and score values.
 
 ```json
@@ -269,12 +269,12 @@ The search response is a [CollectionSearchResult](./sdk/collections.mdx#collecti
 }
 ```
 
-**distance**: A lower value indicates a closer match between the search query and the item in the collection.
-**score**: A higher value (closer to 1) represents a better match.
+**distance**: a lower value indicates a closer match between the search query and the item in the collection.
+**score**: a higher value (closer to 1) represents a better match.
 
 ## Search for similar Items
 
-When you need to search similar items to a given item, use the [collections.searchByVector](./sdk/collections.mdx#searchByVector) api: retrieve the vector associated with the given item by its key, then perform a search using that vector.
+When you need to search similar items to a given item, use the [collections.searchByVector](./sdk/collections.mdx#searchByVector) method: retrieve the vector associated with the given item by its key, then perform a search using that vector.
 
 <CodeGroup>
 
@@ -325,11 +325,11 @@ func SearchSimilarProduct(productKey string, maxItems int) (*collections.Collect
 
 ## Testing
 
-### Add Items to the Collection
+### Add items to the collection
 
-First, we need to populate the collection with items (e.g., product descriptions). You can insert individual or multiple items using the [collections.upser](./sdk/collections.mdx#upsert) and [collections.upsertBatch](./sdk/collections.mdx#upsertbatch) methods, respectively.
+First, we need to populate the collection with items (for example, product descriptions). You can insert individual or multiple items using the [collections.upser](./sdk/collections.mdx#upsert) and [collections.upsertBatch](./sdk/collections.mdx#upsertbatch) methods, respectively.
 
-Use [collections.upsert](./sdk/collections.mdx#upsert) to insert a product description into the collection. If you don't specify a key, a unique key will be generated for you.
+Use [collections.upsert](./sdk/collections.mdx#upsert) to insert a product description into the collection. If you don't specify a key, Modus generates a unique key for you.
 
 <CodeGroup>
 
@@ -365,11 +365,11 @@ func AddProduct(description string) ([]string, error) {
 
 To add a batch of product descriptions, use the [collections.upsertBatch](./sdk/collections.mdx#upsertbatch) method.
 
-### testing your API
+### Testing your API
 
 TO DO: < add an explanation for testing from GraphQL API>
 
 ## Conclusion
 
-You can easily add natural language-based or vector similarity searches to your application, by using the power of collection, vector embeddings and search methods.
-By leveraging Modus search, you can significantly enhance the search experience in your application, providing users with accurate and relevant results.
+You can easily add natural language-based or vector similarity searches to your app, by using the power of collection, vector embeddings and search methods.
+By leveraging Modus search, you can significantly enhance the search experience in your app, providing users with accurate and relevant results.
