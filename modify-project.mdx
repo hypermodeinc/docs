@@ -4,3 +4,23 @@ description: ""
 ---
 
 <Warning>- updating project name and slug - updating GitHub connection</Warning>
+
+Once a project has been created, you can modify its name and slug through the project’s settings.
+
+### Steps to Modify an Existing Project
+
+1. **Navigate to the Project Settings**  
+   To edit a project, first navigate to the top-level navigation bar and select the project you want to modify. Once you are in the project scope, go to the **Settings** tab, which is located in the left-side navigation menu.
+
+2. **Edit Project Settings**  
+   In the **Project Settings** section, you can:
+
+   - **Change the Display Name**: Update the display name of your project to reflect new functionalities or naming conventions.
+   - **Update the Project Slug**: Modify the project slug if needed.
+     > **Note**: Changing the project slug will also update the project's GraphQL endpoint. Ensure that any clients or integrations using the old endpoint are updated accordingly.
+
+### Saving Changes
+
+After making any modifications, click the **Save Changes** button to apply your updates. Keep in mind that updating the project slug may temporarily disrupt service availability until the updates are fully applied.
+
+> **Important**: If you update the project slug, any existing integrations that use the old GraphQL endpoint must be reconfigured to point to the new endpoint. Make sure to communicate these changes with your team or stakeholders.
