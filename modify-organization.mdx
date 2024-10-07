@@ -2,3 +2,40 @@
 title: Modify Organization
 description: ""
 ---
+
+Within an organization, you can modify the name and slug to align with your naming conventions and organizational structure.
+
+### Steps to Modify an Existing Organization
+
+1. **Navigate to the Organization Settings**  
+   To modify an organization, navigate to the top-level navigation bar and select the organization you want to update. Once you are in the organization’s scope, go to the **Settings** tab in the horizontal navigation.
+
+2. **Edit Organization Settings**  
+   In the **Organization Settings** section, you can:
+
+   - **Change the Organization Name**: Update the organization’s name as needed to reflect your current organizational structure or naming conventions.
+   - **Update the Organization Slug**: Modify the organization slug if required.
+
+     - **Slug Requirements**: Organization slugs must be 25 characters or less and can only contain letters and numbers. They must not start or end with a dash (`-`).
+
+     > **Note**: Changing the organization or project slug will also update the GraphQL endpoints for all associated projects. Ensure that any clients or integrations using the old endpoints are updated accordingly.
+
+### Saving Changes
+
+After making any modifications, click the **Save** button to apply your updates. Keep in mind that updating the organization slug may temporarily disrupt service availability until the updates are fully applied.
+
+<Warning>
+
+If you update the organization slug, any existing integrations that use the old GraphQL
+endpoint must be reconfigured to point to the new endpoint. Make sure to communicate
+these changes with your team or stakeholders.
+
+</Warning>
+
+### Deleting a Organization
+
+If you no longer need an organization, you can delete it permanently. To delete an organization, all projects must be deleted first.
+
+To delete an organization, go to the top-level navigation bar and select the organization you want to delete. Navigate to the organization's **Settings** tab located in the horizontal navigation.
+
+Within **Settings** click on the **Delete** section. Click on the **Delete** button and enter the organization's name as confirmation. This action is irreversible and will permanently delete your organization.
