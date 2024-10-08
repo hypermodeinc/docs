@@ -40,3 +40,9 @@ timeEnd
 triaging
 upsert
 UUID
+Inference History
+Function Runs
+API Endpoint
+API Token
+Shared vs Dedicated Models
+Host Secrets

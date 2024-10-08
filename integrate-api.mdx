@@ -1,6 +1,39 @@
 ---
 title: Integrate API
-description: ""
+description: "Use the project's API endpoint and token"
 ---
 
-<Warning>API endpoint + keys</Warning>
+## API Endpoint
+
+You can find your project's API endpoint in your project dashboard. The endpoint follows this format: `https://<project-slug>-<org-slug>.hypermode.app/graphql`.
+
+## API Token
+
+In your project dashboard, navigate to Settings -> API Keys to find your API token.
+
+You can access the API by passing the API token in the `Authorization` header. Here's an example using the `fetch` API in JavaScript:
+
+<CodeGroup>
+
+```javascript index.js
+const endpoint = ""; // your API endpoint
+const key = ""; // your API key
+// your graphql query
+const query = `query {
+  ...
+}`;
+
+const response = await fetch(endpoint, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: key,
+  },
+  body: JSON.stringify({
+    query: query,
+  }),
+});
+const data = await response.json();
+```
+
+</CodeGroup>
