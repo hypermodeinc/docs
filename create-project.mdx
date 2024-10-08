@@ -3,36 +3,73 @@ title: Create Project
 description: ""
 ---
 
-Each project within Hypermode includes its own GraphQL endpoint, configuration settings, and data store.
+This section walks you through the process of setting up a new project using Hypermode's toolchain, from installation to deployment.
 
-- **Project endpoint**: The structure of the project's endpoint is `<project-slug>-<org-slug>.hypermode.app`. This unique endpoint allows you to interact with your project's data and capabilities by hitting `/graphql`. For more details on integrating with the API, see [Integrate API](/integrate-api).
+<Note>
+  A Modus app and the Hypermode CLI are required to create a project. To create
+  a Modus app, see the [Modus Docs](/modus/quickstart).
+</Note>
 
-### Steps to create a new project
+### Hypermode CLI
 
-1. **Select an organization**  
-   To create a new project, navigate to the top-level navigation bar and select the organization under which the project will be created.
+1. **Install the Hypermode CLI**
+   First install the Hypermode CLI to deploy your Modus app to Hypermode:
 
-   - **Empty state**: If your organization does not have any projects yet, click "Create a Project" in the empty state section of the page.
-   - **Existing organizations**: For organizations with existing projects, use the "New Project" button located on the right side of the organization’s **Projects** tab.
+<CodeGroup>
+  ```bash MacOS 
+  brew install hypermode
+  ```
 
-2. **Choose a template**  
-   Select a template that best matches your use case or start with the [Base Template](https://github.com/hypermodeinc/base-template) to configure your project from scratch. Available options include:
+```bash Windows
+TODO:
+```
 
-   - **Predefined templates**: Ready-to-use configurations for common scenarios, providing a quick start.
-   - **Expert template**: A more advanced configuration option, allowing customization of data sources and structure.
-   - **Modus Git repository import**: Import a Modus-based Git repository to integrate with your existing project workflows. Follow the prompts to connect with [GitHub](https://github.com/), then select the repository you'd like to import.
+```bash
+Linux TODO:
+```
 
-   > **Note**: If you select the Expert template, you have the option to populate the data store with sample data or upload your own custom data with a .csv file after the project is created.
+</CodeGroup>
 
-3. **Deploy the project**  
-   After choosing a template or importing a repository, click **Deploy**. This action initiates the deployment process, setting up your project's endpoint and configurations based on the selected template.
+2. **Authenticate**
+   Sign up or log in to authenticate:
 
-### Next steps
+<CodeGroup>
+```bash Signup
+hyp signup
+```
 
-Once the deployment process is complete, you can:
+```bash Login
+hyp login
+```
 
-- Access the project’s GraphQL endpoint (`<project-slug>-<org-slug>@hypermode.app/graphql`) from your project's **Home**.
-- Configure additional project settings.
-- Begin integrating with your project's API by following the steps outlined in the [Integrate API](/integrate-api) section.
+</CodeGroup>
 
-For further guidance on project configuration and management, refer to the [Modify Project](/modify-project) documentation.
+3. **Initialize the project**
+   To configure CI/CD integration and import project settings from Hypermode, run:
+
+```bash
+hyp init
+```
+
+This command adds a default GitHub Action to build and deploy your Hypermode functions, along with importing any additional configuration files.
+
+4. **Push app to GitHub**
+   Push your app to GitHub to initiate the deployment.
+
+5. **View your project** Find your project by signing in to the [Hypermode Platform](hypermode.com/sign-in).
+
+Alternatively:
+
+If you’re starting from the Hypermode Platform instead of the CLI, follow these steps:
+
+1. **Create an account**  
+   Visit the [Hypermode Sign-Up Page](http://hypermode.com/sign-up) to create an account and an organization.
+
+2. **Access your organization home**  
+   After signing up, navigate to the [Organization Home](http://hypermode.com/go) to view and manage your organization.
+
+3. **Create a new project**  
+   From the organization home, create a new project by clicking [New Project](http://hypermode.com/new). Provide the project name, description, and select your language or runtime (e.g., AS/Go).
+
+4. **Sync your project**
+   When initializng your project from the Hypermode CLI, select your existing project to sync to your Modus App.
