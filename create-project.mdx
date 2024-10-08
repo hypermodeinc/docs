@@ -12,13 +12,14 @@ This section walks you through the process of setting up a new project using Hyp
 
 ### Hypermode CLI
 
-1. **Install the Hypermode CLI**
-   First install the Hypermode CLI to deploy your Modus app to Hypermode:
+<Steps>
+  <Step title="Install the Hypermode CLI">
+    First install the Hypermode CLI to deploy your Modus app to Hypermode:
 
-<CodeGroup>
-  ```bash MacOS 
-  brew install hypermode
-  ```
+  <CodeGroup>
+    ```bash MacOS 
+    brew install hypermode
+    ```
 
 ```bash Windows
 TODO:
@@ -28,23 +29,25 @@ TODO:
 Linux TODO:
 ```
 
-</CodeGroup>
+  </CodeGroup>
+  </Step>
 
-2. **Authenticate**
+  <Step title="Authenticate">
    Sign up or log in to authenticate:
 
-<CodeGroup>
-```bash Signup
-hyp signup
-```
+    <CodeGroup>
+    ```bash Signup
+    hyp signup
+    ```
 
-```bash Login
-hyp login
-```
+    ```bash Login
+    hyp login
+    ```
 
-</CodeGroup>
+    </CodeGroup>
 
-3. **Initialize the project**
+  </Step>
+<Step title="Initialize the project">
    To build and prepare your Modus app for the Hypermode Platform, run:
 
 ```bash
@@ -53,23 +56,35 @@ hyp init
 
 This command adds a default GitHub Action to build and deploy your Hypermode functions, along with importing any additional configuration files.
 
-4. **Push app to GitHub**
+</Step>
+<Step title="Push app to GitHub">
    Push your app to GitHub to initiate the deployment.
-
-5. **View your project** Find your project by signing in to the [Hypermode Platform](hypermode.com/sign-in).
+</Step>
+<Step title="View your project"> 
+Find your project by signing in to the [Hypermode Platform](hypermode.com/sign-in).
+</Step>
+</Steps>
 
 #### Alternatively:
 
 If you’re starting from the Hypermode Platform instead of the CLI, follow these steps:
 
-1. **Create an account**  
-   Visit the [Hypermode Sign-Up Page](http://hypermode.com/sign-up) to create an account and an organization.
-
-2. **Access your organization home**  
-   After signing up, navigate to the [Organization Home](http://hypermode.com/go) to view and manage your organization.
-
-3. **Create a new project**  
-   From the organization home, create a new project by clicking [New Project](http://hypermode.com/new). Provide the project name, description, and select your language or runtime (e.g., AS/Go).
-
-4. **Sync your project**
-   When initializng your project from the Hypermode CLI, select your existing project to sync to your Modus app.
+<Steps>
+  <Step title="Create an account">
+    Visit the [Hypermode Sign-Up Page](http://hypermode.com/sign-up) to create
+    an account and an organization.
+  </Step>
+  <Step title="Access your organization home">
+    After signing up, navigate to the [Organization
+    Home](http://hypermode.com/go) to view and manage your organization.
+  </Step>
+  <Step title="Create a new project">
+    From the organization home, create a new project by clicking [New
+    Project](http://hypermode.com/new). Provide the project name, description,
+    and select your language or runtime (e.g., AS/Go).
+  </Step>
+  <Step title="Sync your project">
+    When initializng your project from the Hypermode CLI, select your existing
+    project to sync to your Modus app.
+  </Step>
+</Steps>
