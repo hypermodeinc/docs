@@ -1,6 +1,31 @@
 ---
 title: Configure Environnment
-description: ""
+description: "Configure the project's environment in Hypermode Console"
 ---
 
-<Warning>- host secrets - shared vs. dedicated models - scaling</Warning>
+## Host Secrets
+
+In your project dashboard, navigate to Settings -> Hosts. Here you can configure secrets that are used for connecting to external hosts.
+
+## Shared vs Dedicated Models
+
+By default, models hosted on Hypermode run on a shared instance. All new projects use shared models. You can specify `"dedicated": true` in your `hypermode.json` to enable dedicated models:
+
+```json
+{
+  ...
+  "models": {
+    "text-generator": {
+      "sourceModel": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+      "provider": "hugging-face",
+      "host": "hypermode",
+      "dedicated": true
+    }
+  }
+  ...
+}
+```
+
+## Scaling
+
+WIP

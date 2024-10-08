@@ -5,6 +5,44 @@ description: "Understand what's happening within your functions"
 
 <Warning>- function invocation logs - model inferences</Warning>
 
-When you invoke a function within your project, the service records each execution. In addition to duration, logs are available for each execution to enable integrated debugging.
+When you invoke a function within your project, Hypermode records the execution. In addition to duration, logs are available for each execution to enable integrated debugging.
 
-To access the run history, navigate to the Function Runs tab of your project within the Hypermode Console.
+## Function Runs
+
+In your function code, you can add logs to help debug your functions:
+
+<CodeGroup>
+
+```typescript index.ts
+console.log("This is a simple log message.");
+console.debug("This is a debug message.");
+console.info("This is an info message.");
+console.warn("This is a warning message.");
+console.error("This is an error message.");
+```
+
+```go main.go
+package main
+
+import (
+	"github.com/hypermodeinc/modus/sdk/go/pkg/console"
+)
+
+console.Log("This is a simple log message.")
+console.Debug("This is a debug message.")
+console.Info("This is an info message.")
+console.Warn("This is a warning message.")
+console.Error("This is an error message.")
+```
+
+</CodeGroup>
+
+In your project dashboard, navigate to the Function Runs tab to view execution logs of your functions. 
+
+![function runs](images/observe-functions/function-runs.png)
+
+## Inference History
+
+For each model invocation, Hypermode records the model inference. This includes the input and output of the model, as well as the timestamp and duration of the inference.
+
+![inference history](images/observe-functions/inference-history.png)
