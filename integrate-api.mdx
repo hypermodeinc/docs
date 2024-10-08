@@ -16,12 +16,12 @@ You can access the API by passing the API token in the `Authorization` header. H
 <CodeGroup>
 
 ```javascript index.js
-const endpoint = '' // your API endpoint
-const key = '' // your API key
- // your graphql query
+const endpoint = ""; // your API endpoint
+const key = ""; // your API key
+// your graphql query
 const query = `query {
   ...
-}`
+}`;
 
 const response = await fetch(endpoint, {
   method: "POST",
@@ -32,8 +32,8 @@ const response = await fetch(endpoint, {
   body: JSON.stringify({
     query: query,
   }),
-})
-const data = await response.json()
+});
+const data = await response.json();
 ```
 
 </CodeGroup>
