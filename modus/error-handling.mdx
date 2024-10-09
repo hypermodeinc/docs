@@ -13,14 +13,32 @@ Modus facilitates the inclusion of error codes or messages within the `errors` s
 <CodeGroup>
 
 ```ts AssemblyScript
-throw new Error("Invalid input provided.");
+export function TestError(input: string): string {
+  if (input == "") {
+    console.error("input is empty");
+    // this is a non-fatal error reported in GraphQL response.
+    // the function continues
+    return "Can't process your input";
+    // GraphQL response contains both a data section and an errors section with all reported errors
+  }
+  if (input == "error") {
+    throw new Error(`This is a fatal error.`);
+    // a fatal error appears in the log
+    // the errors section in GraphQL responses contains only one entry with
+    // "message": "error calling function"
+    // the function does not continue
+    // the data section in GraphQL response is empty
+  }
+
+  return "You said: " + input;
+}
 ```
 
 ```ts Go
 // In Go, error handling is typically done by returning an `error` object as the last result of a function.
 // Modus transforms this into logging and error handling automatically,
 // ensuring all errors are logged before being sent to the response.
-func TestNormalError(input string) (string, error) {
+func TestError(input string) (string, error) {
     if input == "" {
         return "", errors.New("input is empty")
     }
@@ -72,7 +90,7 @@ Structured logging in Modus separates the log message and additional fields for 
 
 ### Best practices for error handling
 
-- **Handle non-fatal errors** using `console.error` for , allowing the function to continue. The GraphQL response may have both a `data` section and an `errors` section.
+- **Handle non-fatal errors** using `console.error`, allowing the function to continue. The GraphQL response may have both a `data` section and an `errors` section.
 
 - **Handle critical errors** using AssemblyScript `throw` keyword or the Go idiomatic error object to stop the function's execution.
 
