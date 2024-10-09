@@ -2,3 +2,128 @@
 title: Error Handling
 description: ""
 ---
+
+### Error Handling Guide for Modus Framework
+
+In this guide, we'll explore best practices for handling errors in the **Modus framework** using both **AssemblyScript** and **Go**.
+
+**Modus framework** leverages the **Console API** and **GraphQL error responses**.
+
+### Error reporting in GraphQL
+
+GraphQL responses have a standard structure that includes both a `data` and an `errors` section. Errors should returned either:
+Modus facilitates the inclusion of error codes or messages within the `errors` section, enhancing how errors are communicated to the front end.
+
+#### Example (AssemblyScript):
+
+```typescript
+throw new Error("Invalid input provided.");
+```
+
+This will return an error that appears in the `errors` section of the GraphQL response.
+
+---
+
+### Leveraging the Console API
+
+The **Console API** in Modus is globally available in all functions. It allows developers to capture log messages and errors, which are automatically shown in the Hypermode UI under the "Function Runs" section.
+
+**Console logging levels**:
+
+- `console.log()`: Basic log messages.
+- `console.debug()`: Debug-level messages.
+- `console.info()`: Informational messages.
+- `console.warn()`: Warning messages.
+- `console.error()`: Logs error messages and sends them to the GraphQL response.
+
+All log messages are stored in structured logs, which means additional fields like "text", "message", and others are captured for each log.
+
+#### Example (AssemblyScript):
+
+```typescript
+console.log("This is a simple log message.");
+console.error("This is an error message.");
+```
+
+#### Example (Go):
+
+```go
+func TestNormalError(input string) (string, error) {
+    if input == "" {
+        return "", errors.New("input is empty")
+    }
+    return "You said: " + input, nil
+}
+```
+
+---
+
+### Error handling in AssemblyScript
+
+In AssemblyScript, you can handle errors using `console.error` for non-fatal errors and the `throw` keyword for critical errors that stop the function's execution.
+
+#### Logging and throwing errors (AssemblyScript):
+
+```typescript
+export function testErrors(): void {
+  console.log("This is a log message.");
+  console.error("This is an error message.");
+
+  // Throwing an error stops the function.
+  throw new Error("This is a fatal error.");
+}
+```
+
+Using `console.error` logs the message while allowing the function to continue. `throw` immediately halts execution and logs the error in the GraphQL response.
+
+---
+
+### Error handling in Go
+
+In Go, error handling is typically done by returning an `error` object as the last result of a function. Modus transforms this into logging and error handling automatically, ensuring all errors are logged before being sent to the response.
+
+#### Example (Go):
+
+```go
+func TestNormalError(input string) (string, error) {
+    if input == "" {
+        return "", errors.New("input is empty")
+    }
+    return "You said: " + input, nil
+}
+```
+
+You can also log errors directly without returning them by using `console.Error`:
+
+```go
+func TestAlternativeError(input string) string {
+    if input == "" {
+        console.Error("input is empty")
+        return ""
+    }
+    return "You said: " + input
+}
+```
+
+This is less idiomatic in Go, but it allows for handling non-fatal errors and logging them without interrupting the function flow.
+
+---
+
+### Structured logging
+
+Structured logging in Modus separates the log message and additional fields for better clarity. This allows you to distinguish between different levels of severity and categories of errors in a systematic way.
+
+In the **Console UI**, the message itself is stored in a field called `text`, while other fields such as `user_visible`, `execution_id`, and `plugin` help filter or categorize logs.
+
+### Best practices for error handling
+
+- **Use Console API for logging**: All levels of logs should be captured with appropriate severity (`info`, `warn`, `error`).
+- **Return clear error messages**: When returning errors, include concise and informative error messages that help diagnose the issue.
+- **Leverage structured logs**: Take advantage of Modus's structured logging to include context and metadata in your error reports.
+- **Use GraphQL's error sections effectively**: Add relevant information to the `errors` section when working with GraphQL, ensuring clear communication to the client.
+
+---
+
+### Conclusion
+
+Error handling in Modus combines the power of **structured logging**, **GraphQL error sections**, and the **Console API** to provide both a clear debugging process for developers and informative responses for end-users. Whether you're working in **AssemblyScript** or **Go**, implementing these best practices will ensure your application is resilient and easy to maintain.
