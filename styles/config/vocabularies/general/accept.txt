@@ -19,6 +19,7 @@ gRPC
 hardcoding
 [Hh]ttp
 Hugging Face
+Hyp
 [Hh]ypercategories
 [Hh]ypermode
 inferencing
