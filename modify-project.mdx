@@ -3,23 +3,24 @@ title: Modify Project
 description: ""
 ---
 
-<Warning>- updating project name and slug - updating GitHub connection</Warning>
-
 Once a project has been created, you can modify its name and slug through the project’s settings.
 
-### Steps to Modify an Existing Project
+### Steps to modify an existing project
 
-1. **Navigate to the Project Settings**  
+<Steps>
+  <Step title="Navigate to the project settings">
    To edit a project, first navigate to the top-level navigation bar and select the project you want to modify. Once you are in the project scope, go to the **Settings** tab, which is located in the left-side navigation menu.
-
-2. **Edit Project Settings**  
+</Step>
+    <Step title="Edit project settings">
    In the **Project Settings** section, you can:
 
-   - **Change the Display Name**: Update the display name of your project to reflect new functionalities or naming conventions.
-   - **Update the Project Slug**: Modify the project slug if needed. Project slugs must be 100 characters or less, must not start or end with a dash (`-`), and only include letters and numbers.
-     > **Note**: Changing the organization slug or project slug will also update the project's GraphQL endpoint. If the project slug is longer than 31 characters, the slug will be truncated and will include a random string to maintain uniqueness. Ensure that any clients or integrations using the old endpoint are updated accordingly.
+    - **Change the display name**: Update the display name of your project to reflect new functionalities or naming conventions.
+    - **Update the project slug**: Modify the project slug if needed. Project slugs must be 100 characters or less, must not start or end with a dash (`-`), and only include letters and numbers. > **Note**: Changing the organization slug or project slug will also update the project's GraphQL endpoint. If the project slug is longer than 31 characters, the slug will be truncated and will include a random string to maintain uniqueness. Ensure that any clients or integrations using the old endpoint are updated accordingly.
 
-### Saving Changes
+  </Step>
+</Steps>
+
+### Saving changes
 
 After making any modifications, click the **Save** button to apply your updates. Keep in mind that updating the project slug may temporarily disrupt service availability until the updates are fully applied.
 
@@ -31,10 +32,10 @@ these changes with your team or stakeholders.
 
 </Warning>
 
-### Deleting a Project
+### Deleting a project
 
 If you no longer need a project, you can delete it permanently. Deleting a project will remove all associated data, configurations, and its GraphQL endpoint.
 
-To delete a project, go to the top-level navigation bar and select the project you want to delete. In the project scope, click on the **Settings** tab located in the left-side navigation menu.
+To delete a project, go to the top-level navigation bar and select the project you want to delete. In the project scope, click the **Settings** tab located in the left-side navigation menu.
 
-Within **Settings** click on the **Delete** section. Click on the **Delete** button and enter the project’s name as confirmation. This action is irreversible and will permanently delete all project data and configurations.
+Within **Settings** click the **Delete** section. Click **Delete** and enter the project’s name as confirmation. This action is irreversible and will permanently delete all project data and configurations.

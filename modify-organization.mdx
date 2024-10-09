@@ -5,22 +5,26 @@ description: ""
 
 Within an organization, you can modify the name and slug to align with your naming conventions and organizational structure.
 
-### Steps to Modify an Existing Organization
+### Steps to modify an existing organization
 
-1. **Navigate to the Organization Settings**  
+<Steps>
+  <Step title="Navigate to the organization settings">
    To modify an organization, navigate to the top-level navigation bar and select the organization you want to update. Once you are in the organization’s scope, go to the **Settings** tab in the horizontal navigation.
-
-2. **Edit Organization Settings**  
+</Step>
+<Step title="Edit organization settings">
    In the **Organization Settings** section, you can:
 
-   - **Change the Organization Name**: Update the organization’s name as needed to reflect your current organizational structure or naming conventions.
-   - **Update the Organization Slug**: Modify the organization slug if required.
+    - **Change the organization name**: Update the organization’s name as needed to reflect your current organizational structure or naming conventions.
+    - **Update the organization slug**: Modify the organization slug if required.
+       - **Slug requirements**: Organization slugs must be 25 characters or less and can only contain letters and numbers. They must not start or end with a dash (`-`).
 
-     - **Slug Requirements**: Organization slugs must be 25 characters or less and can only contain letters and numbers. They must not start or end with a dash (`-`).
+       > **Note**: Changing the organization or project slug will also update the GraphQL endpoints for all associated projects. Ensure that any clients or integrations using the old endpoints are updated accordingly.
 
-     > **Note**: Changing the organization or project slug will also update the GraphQL endpoints for all associated projects. Ensure that any clients or integrations using the old endpoints are updated accordingly.
+</Step>
 
-### Saving Changes
+</Steps>
+
+### Saving changes
 
 After making any modifications, click the **Save** button to apply your updates. Keep in mind that updating the organization slug may temporarily disrupt service availability until the updates are fully applied.
 
@@ -32,7 +36,7 @@ these changes with your team or stakeholders.
 
 </Warning>
 
-### Deleting an Organization
+### Deleting an organization
 
 If you no longer need an organization, you can delete it permanently. To delete an organization, all projects must be deleted first.
 
