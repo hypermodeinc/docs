@@ -1,4 +1,177 @@
 ---
 title: Model Invoking
-description: ""
+description: "Invoke your models with the Modus Models API"
 ---
+
+Modus enables you to easily integrate AI models into your app. In just a few steps, you can generate text,
+classify items, compute embeddings, and many more using the Models API.
+
+## Prerequisites
+
+Ensure that you have a working Modus setup locally.
+
+## Understanding key components
+
+- **Models**: You can invoke **models** hosted on Hypermode, OpenAI, Anthropic, and many more.
+- **Models API**: The **Models API** provides a set of host functions that you can import and call from your Modus functions.
+
+## Define your models
+
+You can define models in the [manifest](./app-manifest#models), here are some examples.
+
+### Example 1: Meta's [Llama-3.1-8B-Instruct](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct) model from Hugging Face, hosted on Hypermode
+
+```json hypermode.json
+{
+  ...
+  "models": {
+    "text-generator": {
+      "sourceModel": "meta-llama/Llama-3.1-8B-Instruct", // Model name on the provider
+      "provider": "hugging-face", // Provider for this model
+      "host": "hypermode" // Host where the model is running
+    }
+  }
+  ...
+}
+```
+
+### Example 2: OpenAI's [GPT-4o](https://platform.openai.com/docs/models/gpt-4o)
+
+```json hypermode.json
+{
+  ...
+  "models": {
+    "text-generator": {
+      "sourceModel": "gpt-4o",
+      "host": "openai",
+      "path": "v1/chat/completions"
+    }
+  },
+  // For externally hosted models, you need to define the host
+  "hosts": {
+    "openai": {
+      "baseUrl": "https://api.openai.com/",
+      "headers": {
+        "Authorization": "Bearer {{API_KEY}}"
+      }
+    }
+  }
+  ...
+}
+```
+
+### Example 3: Anthropic's [Claude 3.5 Sonnet](https://docs.anthropic.com/en/docs/about-claude/models#model-comparison-table)
+
+```json hypermode.json
+{
+  ...
+  "models": {
+    "text-generator": {
+      "sourceModel": "claude-3-5-sonnet-20240620",
+      "host": "anthropic",
+      "path": "v1/messages"
+    }
+  },
+  // For externally hosted models, you need to define the host
+  "hosts": {
+    "anthropic": {
+      "baseUrl": "https://api.anthropic.com/",
+      "headers": {
+        "x-api-key": "{{API_KEY}}",
+        "anthropic-version": "2023-06-01"
+      }
+    },
+  }
+  ...
+}
+```
+
+## Invoking a model for inference
+
+To invoke a model, you need to import the Models API from the SDK.
+
+### LLMs
+
+Currently, the Models API support the OpenAI, Anthropic, and Gemini interface. Let's see
+how to invoke a model using the OpenAI interface. You can see https://platform.openai.com/docs/api-reference/chat/create for more details
+about the options available on the model, which you can set on the input object.
+
+<Note>
+  Hypermode-hosted LLMs implements the OpenAI API, so to use that, you can use
+  the OpenAI interface.
+</Note>
+
+<CodeGroup>
+
+```ts AssemblyScript
+import { models } from "@hypermode/modus-sdk-as";
+import {
+  OpenAIChatModel,
+  ResponseFormat,
+  SystemMessage,
+  UserMessage,
+} from "@hypermode/modus-sdk-as/models/openai/chat";
+
+// This model name should match the one defined in the hypermode.json manifest.
+const modelName: string = "text-generator";
+
+export function generateText(instruction: string, prompt: string): string {
+  const model = models.getModel<OpenAIChatModel>(modelName);
+  const input = model.createInput([
+    new SystemMessage(instruction),
+    new UserMessage(prompt),
+  ]);
+
+  // This is one of many optional parameters available for the OpenAI Chat model.
+  input.temperature = 0.7;
+
+  const output = model.invoke(input);
+  return output.choices[0].message.content.trim();
+}
+```
+
+```go Go
+package main
+
+import (
+    "encoding/json"
+    "fmt"
+    "strings"
+
+    "github.com/hypermodeinc/modus/sdk/go/pkg/models"
+    "github.com/hypermodeinc/modus/sdk/go/pkg/models/openai"
+)
+
+// This model name should match the one defined in the hypermode.json manifest file.
+const modelName = "text-generator"
+
+func GenerateText(instruction, prompt string) (string, error) {
+    model, err := models.GetModel[openai.ChatModel](modelName)
+    if err != nil {
+        return "", err
+    }
+
+    input, err := model.CreateInput(
+        openai.NewSystemMessage(instruction),
+        openai.NewUserMessage(prompt),
+    )
+    if err != nil {
+        return "", err
+    }
+
+    // This is one of many optional parameters available for the OpenAI Chat model.
+    input.Temperature = 0.7
+
+    output, err := model.Invoke(input)
+    if err != nil {
+        return "", err
+    }
+    return strings.TrimSpace(output.Choices[0].Message.Content), nil
+}
+```
+
+</CodeGroup>
+
+### Classification models
+
+TODO

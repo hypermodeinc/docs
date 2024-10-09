@@ -242,8 +242,8 @@ The `models` object in the app manifest allows you to easily define models, whet
 ```json hypermode.json
 {
   "models": {
-    "sentiment-classifier": {
-      "sourceModel": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+    "text-generator": {
+      "sourceModel": "meta-llama/Llama-3.1-8B-Instruct",
       "provider": "hugging-face",
       "host": "hypermode"
     }
@@ -259,11 +259,6 @@ Each model requires a unique name, specified as a key, containing only alphanume
   Original relative path of the model within the provider's repository.
 </ResponseField>
 
-<ResponseField name="provider" type="string" required>
-  Organization or directory that provided the source model, such as
-  `hugging-face` or `openai`.
-</ResponseField>
-
 <ResponseField name="host" type="string" required>
   Host for the model instance.
 
@@ -272,8 +267,16 @@ Each model requires a unique name, specified as a key, containing only alphanume
 
 </ResponseField>
 
-<ResponseField name="dedicated" type="boolean" optional>
-  Specify `yes` to use a dedicated instance of the model for your project.
+<ResponseField name="provider" type="string">
+  Source provider of the model. Only `"hugging-face"` is supported for now.
+</ResponseField>
+
+<ResponseField name="path" type="string">
+  Path to the model endpoint, applied to the `baseUrl` of the host.
+</ResponseField>
+
+<ResponseField name="dedicated" type="boolean">
+  Set to `true` to use a dedicated instance of the model for your project.
   Defaults to `false`.
 </ResponseField>
 
