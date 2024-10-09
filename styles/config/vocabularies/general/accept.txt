@@ -2,6 +2,7 @@ alterSchema
 APIs
 boolean
 CLI
+[Cc]onsole
 computeSimilarity
 [Dd]graph
 dropAll
@@ -19,6 +20,7 @@ gRPC
 hardcoding
 [Hh]ttp
 Hugging Face
+Hyp
 [Hh]ypercategories
 [Hh]ypermode
 inferencing
@@ -40,6 +42,3 @@ timeEnd
 triaging
 upsert
 UUID
-
-# models
-Meta-Llama-3.1-8B-Instruct
