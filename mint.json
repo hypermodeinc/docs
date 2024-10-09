@@ -2,11 +2,11 @@
   "$schema": "https://mintlify.com/schema.json",
   "name": "Hypermode",
   "logo": {
-    "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg",
+    "dark": "/images/logo/dark.svg",
+    "light": "/images/logo/light.svg",
     "href": "/"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "favicon.svg",
   "colors": {
     "primary": "#6342CB",
     "light": "#9C85E3",
