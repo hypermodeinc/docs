@@ -8,58 +8,61 @@ mode: "wide"
   - overview of the framework - use cases and benefits for developers
 </Warning>
 
-The SDK provides:
+**An open-source framework to make intelligent APIs real-time, incrementally adoptable, and universal.**
 
-- A project structure to organize your functions
-- A set of APIs to interact with data, AI models, and other services
-- A local development environment to download dependencies and compile your functions
-- A CI/CD workflow that automatically deploys your functions on Hypermode when pushing changes to your repository
+## Quick install
+
+
+```bash
+brew install modus
+```
+
+
+## What is this?
+Modus is an open-source, serverless framework for building functions and APIs, powered by WebAssembly. This framework is aimed at assisting in the development of the next generation of APIs and services.
+
+To build the applications and services we want-- applications that are thoughtful, fun, and effective. 
+
+We often need to integrate models (Large Languages Models, Machine Learning Models, Deep Learning Models, etc.) with our application code. 
+
+These applications can be simple CRUD (Create, Read, Update, and Delete) applications that have a simple model that resolves duplicates, or then can be complex agentic reasoning applications that chain together dozens of models and data sources.
+
+*Standing up services that arrange data, models, and logic into useful chains of inputs, outputs, and loops shouldn’t be difficult.* 
+
+Modus exists to make it easier for you to build the applications of your dreams.
+
+## What can I do with it?
+Modus is designed primarily as a general-purpose application framework, it just happens to treat models as a first-class component. With Modus you can use models, as appropriate, without additional complexity. 
+
+However, Modus is best for applications that require sub-second response times. We've made trade-offs to optimize for speed and simplicity. 
+
+### Common use cases include:
+- **Search Engines**: instead of using keyword search or basic filters, you can use cost-effective models to understand the user's intent and return the most relevant results.
+- **Recommendation Engines**: instead of using pre-computed recommendations or collaborative filtering, you can use models to understand the user's preferences and return the most relevant recommendations or combine classical and generative AI methods into a superior recommendation engine.
+- **Spam/Fraud Detection**: instead of using simple rules or blacklists, you can generate embeddings of user generated content and compare it to known spam. This makes it much more difficult for bad actors to circumvent your filters. If you don't have any labeled data to start, you can use a larger model to classify "spam, not spam" until you fine tune a smaller, less expensive model.
+- **Agents**: chain together models and data sources to create agents that can reason about the world and take actions on your behalf.
+
+## How is it organized?
+
+### It aims to create:
+1. Strong defaults with infinite customization for managing data, logic, and models that reduce the complexity required to work with non-deterministic systems ("AI"). 
+2. Deployment patterns that facilitate sub-second intelligence within user-facing applications.
+3. A toolkit that allows teams to incrementally adopt models within their existing applications. 
+4. A multi-language framework with a lightweight footprint that makes AI usable for developers with varied needs and sophistication.
+
+### Modus provides:
+- A project structure to organize your functions.
+- A set of APIs to interact with data, AI models, and other services.
+- A local development environment to download dependencies and compile your functions.
+- A CI/CD workflow that automatically deploys your functions on [Hypermode](hypermode.com/new) when pushing changes to your repository.
 
 <Note>
-  The Functions SDK currently includes support for AssemblyScript, a
-  TypeScript-like language. Additional language support is in development.
+Modus is a multi-language framework. It currently includes support for GoLang and AssemblyScript, a WebAssembly compatible TypeScript-like language. Additional language support is in development. 
 </Note>
 
-The SDK is available at [https://github.com/hypermodeinc/functions-as](https://github.com/hypermodeinc/functions-as).
+### Where do I write my code? 
 
-For inspiration on getting started, reference the [examples in the SDK repository](https://github.com/hypermodeinc/functions-as/tree/main/examples).
+We organize your application into 2 primary components:
 
-## APIs
-
-The following APIs are available in the Functions SDK:
-
-<Tip>
-  We're constantly introducing new APIs through ongoing development with build
-  partners. [Let's chat](mailto:help@hypermode.com) about what would make the
-  Functions SDK even more powerful for your next use case!
-</Tip>
-
-<CardGroup cols={2}>
-  <Card title="Collections" icon="searchengin" href="/modus/sdk/collections">
-    Access a built-in key-value store to add storage and AI-based search
-    capabilities.
-  </Card>
-  <Card title="Console" icon="browsers" href="/modus/sdk/console">
-    Capture log messages, errors, and timing operations to iterate faster.
-  </Card>
-  <Card title="Dgraph" icon="database" href="/modus/sdk/dgraph">
-    Execute queries and mutations against a Dgraph database.
-  </Card>
-  <Card title="GraphQL" icon="database" href="/modus/sdk/graphql">
-    Access remote data from GraphQL-enabled databases and APIs.
-  </Card>
-  <Card title="HTTP" icon="server" href="/modus/sdk/http">
-    Securely call and fetch data from any HTTP endpoint.
-  </Card>
-  <Card title="Models" icon="message-plus" href="/modus/sdk/models">
-    Use AI models for use cases such as classification, summarization, content
-    generation, and more.
-  </Card>
-  <Card title="PostgreSQL" icon="database" href="/modus/sdk/postgresql">
-    Execute queries against a PostgreSQL database.
-  </Card>
-</CardGroup>
-
-## Installation
-
-The easiest way to start with Hypermode is using the [template project](https://github.com/hypermodeinc/base-template).
+- `modus.json` we call this your [Manifest](https://hypermode-modus-docs.mintlify.app/modus/app-manifest). Where you decide what models, data, and external services you’d like your functions to have access to. 
+- `/functions/` is where you put your function code. If you're writing in AssemblyScript, you'll publish your functions in the `/assembly/index.ts` file. For Golang, simply capitalizing a function's name will expose it in the Modus API. 
