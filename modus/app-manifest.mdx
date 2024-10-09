@@ -242,9 +242,8 @@ The `models` object in the app manifest allows you to easily define models, whet
 ```json hypermode.json
 {
   "models": {
-    "sentiment-classifier": {
-      "task": "classification",
-      "sourceModel": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+    "text-generator": {
+      "sourceModel": "meta-llama/Llama-3.1-8B-Instruct",
       "provider": "hugging-face",
       "host": "hypermode"
     }
@@ -256,18 +255,8 @@ Each model requires a unique name, specified as a key, containing only alphanume
 
 ### Models Properties
 
-<ResponseField name="task" type="string" required>
-  Training intent of the model. Currently, must be one of: `classification`,
-  `embedding`, or `generation`.
-</ResponseField>
-
 <ResponseField name="sourceModel" type="string" required>
   Original relative path of the model within the provider's repository.
-</ResponseField>
-
-<ResponseField name="provider" type="string" required>
-  Organization or directory that provided the source model, such as
-  `hugging-face` or `openai`.
 </ResponseField>
 
 <ResponseField name="host" type="string" required>
@@ -276,6 +265,19 @@ Each model requires a unique name, specified as a key, containing only alphanume
 - Specify `"hypermode"` for models that are automatically deployed by Hypermode.
 - Otherwise, specify a name that matches a host defined in the [`hosts`](#hosts) section of the manifest.
 
+</ResponseField>
+
+<ResponseField name="provider" type="string">
+  Source provider of the model. Only `"hugging-face"` is supported for now.
+</ResponseField>
+
+<ResponseField name="path" type="string">
+  Path to the model endpoint, applied to the `baseUrl` of the host.
+</ResponseField>
+
+<ResponseField name="dedicated" type="boolean">
+  Set to `true` to use a dedicated instance of the model for your project.
+  Defaults to `false`.
 </ResponseField>
 
 ### Auto-deployed models
