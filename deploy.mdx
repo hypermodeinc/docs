@@ -1,9 +1,9 @@
 ---
 title: Deploy Project
-description: "Deploying AI features is simple"
+description: "A git-based flow for simple deployment"
 ---
 
-Hypermode leverages a native GitHub integration for the deployment of Hypermode projects. The deployment includes both the project's [manifest](/modus/app-manifest) and functions.
+Hypermode features a native GitHub integration for the deployment of Hypermode projects. The deployment includes your Modus app as well as any models defined in the [app manifest](/modus/app-manifest).
 
 <Note>
   Preview environments for live validation of pull requests are in development.
@@ -11,29 +11,10 @@ Hypermode leverages a native GitHub integration for the deployment of Hypermode 
 
 ## Build
 
-All templates include a GitHub Action to build your project's functions. On success, the action deploys your functions to Hypermode when committing or merging to the branch defined in the Hypermode Console.
+When you initialize your project with Hypermode, the Hyp CLI adds a GitHub Actions workflow to your repo that builds your Modus app to Hypermode on commit.
 
 ## Deploy
 
-On successful build of your project or a change to your manifest in your connected GitHub repository, Hypermode automatically deploys your project changes.
+On successful build of your project, Hypermode automatically deploys your project changes. For [hosted models](/hosted-models), Hypermode creates a connection for your app to a shared or dedicated model instance.
 
-For [auto-deployed models](/modus/app-manifest#auto-deployed-models), Hypermode deploys a dedicated instance of the model.
-
-## Query
-
-Once deployed, your project becomes reachable through an API endpoint, protected by an API Token.
-Pass this value as a bearer token in the `Authorization` request header when making your GraphQL API calls.
-
-An example HTTP request:
-
-```http
-POST /graphql HTTP/1.1
-Host: example.hypermode.app
-Content-Type: application/json
-Authorization: Bearer <API_TOKEN>
-```
-
-You can find the endpoint and API token in the Hypermode UI after selecting a project.
-
-- The endpoint URL is on the `Home` page of the project.
-- The API token is on the `Settings` page of the project, under the `API Keys` tab.
+You can view the deployment status from the Deployment tab within the Hypermode Console.
