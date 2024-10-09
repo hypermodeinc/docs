@@ -2,3 +2,43 @@
 title: Hosted Models
 description: ""
 ---
+
+With Hypermode, you can simply pick a model from [Hugging Face](https://huggingface.co/), and we will manage and run it for you.
+
+<Note>Here (TODO) are the list of Hugging Face models we support today</Note>
+
+## Setup
+
+To use a Hypermode-hosted model, set `host: "hypermode"`, `provider: "hugging-face"`, and set `sourceModel` to be
+the model name as specified on Hugging Face.
+
+```json hypermode.json
+{
+  ...
+  "models": {
+    "text-generator": {
+      "sourceModel": "meta-llama/Llama-3.1-8B-Instruct",
+      "provider": "hugging-face",
+      "host": "hypermode"
+    }
+  }
+  ...
+}
+```
+
+## Mode of deployment
+
+Internally, we run our most popular models as multi-tenant, shared among different users.
+
+By default, if the model you use is available as a shared model, your inferences will run against these shared models.
+You can override this default behavior by setting `dedicated: true` on your model in the manifest.
+
+Otherwise, if the model you use isn't available as shared, we will spin up a dedicated instance of the model for you.
+
+<Note>
+  These are the models available today as shared:
+  - [meta-llama/Meta-Llama-3.1-8B-Instruct](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct)
+  - [sentence-transformers/all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)
+  - [AntoineMC/distilbart-mnli-github-issues](https://huggingface.co/AntoineMC/distilbart-mnli-github-issues)
+  - [distilbert/distilbert-base-uncased-finetuned-sst-2-english](https://huggingface.co/distilbert/distilbert-base-uncased-finetuned-sst-2-english)
+</Note>
