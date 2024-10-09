@@ -1,31 +1,20 @@
 ---
 title: Configure Environnment
-description: "Configure the project's environment in Hypermode Console"
+description: "Define environment paramaters for your app"
 ---
+
+On your first deployment, and when you add new hosts thereafter, you may need to adjust the configuration of your environment for your app to be ready for traffic.
 
 ## Host Secrets
 
-In your project dashboard, navigate to Settings -> Hosts. Here you can configure secrets that are used for connecting to external hosts.
+If you included parameters for Host Secrets in your [app manifest](/modus/app-manifest), you'll need to add the parameter values in the Hypermode Console.
 
-## Shared vs Dedicated Models
+From your project home, navigate to `Settings` -> `Hosts`. Add the values for your defined host authentication parameters.
 
-By default, models hosted on Hypermode run on a shared instance. All new projects use shared models. You can specify `"dedicated": true` in your `hypermode.json` to enable dedicated models:
+## Model hosting
 
-```json
-{
-  ...
-  "models": {
-    "text-generator": {
-      "sourceModel": "meta-llama/Meta-Llama-3.1-8B-Instruct",
-      "provider": "hugging-face",
-      "host": "hypermode",
-      "dedicated": true
-    }
-  }
-  ...
-}
-```
+Where available, Hypermode defaults to shared model instances. If your app requires dedicated instances, refer to the [Hosted Models](/modus/hosted-models) documentation for instructions on setting up dedicated models.
 
-## Scaling
+## Scaling your runtime resources
 
-Coming soon
+We're working to make runtime scaling self-service. In the meantime, reach out at [help@hypermode.com](mailto:help@hypermode.com) for assistance with this request.
