@@ -8,9 +8,9 @@ mode: "wide"
   - overview of the framework - use cases and benefits for developers
 </Warning>
 
-A framework to make intelligent APIs real-time, incrementally adoptable, and universal. 
+**An open-source framework to make intelligent APIs real-time, incrementally adoptable, and universal.**
 
-## Quick Install
+## Quick install
 
 
 ```bash
@@ -18,24 +18,37 @@ brew install modus
 ```
 
 
-## What is This?
-This framework is aimed at assisting in the development of intelligent APIs and services.
+## What is this?
+Modus is an open-source, serverless framework for building functions and APIs, powered by WebAssembly. This framework is aimed at assisting in the development of the next generation of APIs and services.
 
-To build the applications and services we want: applications that are thoughtful, fun, and effective. 
+To build the applications and services we want-- applications that are thoughtful, fun, and effective. 
 
 We often need to integrate models (Large Languages Models, Machine Learning Models, Deep Learning Models, etc.) with our application code. 
 
-These applications can be simple CRUD (Create, Read, Update, and Delete) applications that have a model that resolves duplicates, or then can be complex agentic reasoning applications. 
+These applications can be simple CRUD (Create, Read, Update, and Delete) applications that have a simple model that resolves duplicates, or then can be complex agentic reasoning applications that chain together dozens of models and data sources.
 
 *Standing up services that arrange data, models, and logic into useful chains of inputs, outputs, and loops shouldn’t be difficult.* 
 
+Modus exists to make it easier for you to build the applications of your dreams.
+
+## What can I do with it?
+Modus is designed primarily as a general-purpose application framework, it just happens to treat models as a first-class component. With Modus you can use models, as appropriate, without additional complexity. 
+
+However, Modus is best for applications that require sub-second response times. We've made trade-offs to optimize for speed and simplicity. 
+
+### Common use cases include:
+- **Search Engines**: instead of using keyword search or basic filters, you can use cost-effective models to understand the user's intent and return the most relevant results.
+- **Recommendation Engines**: instead of using pre-computed recommendations or collaborative filtering, you can use models to understand the user's preferences and return the most relevant recommendations or combine classical and generative AI methods into a superior recommendation engine.
+- **Spam/Fraud Detection**: instead of using simple rules or blacklists, you can generate embeddings of user generated content and compare it to known spam. This makes it much more difficult for bad actors to circumvent your filters. If you don't have any labeled data to start, you can use a larger model to classify "spam, not spam" until you fine tune a smaller, less expensive model.
+- **Agents**: chain together models and data sources to create agents that can reason about the world and take actions on your behalf.
+
+## How is it organized?
 
 ### It aims to create:
 1. Strong defaults with infinite customization for managing data, logic, and models that reduce the complexity required to work with non-deterministic systems ("AI"). 
 2. Deployment patterns that facilitate sub-second intelligence within user-facing applications.
 3. A toolkit that allows teams to incrementally adopt models within their existing applications. 
 4. A multi-language framework with a lightweight footprint that makes AI usable for developers with varied needs and sophistication.
-
 
 ### Modus provides:
 - A project structure to organize your functions.
@@ -47,9 +60,9 @@ These applications can be simple CRUD (Create, Read, Update, and Delete) applica
 Modus is a multi-language framework. It currently includes support for GoLang and AssemblyScript, a WebAssembly compatible TypeScript-like language. Additional language support is in development. 
 </Note>
 
-### How is Modus Organized? 
+### Where do I write my code? 
 
 We organize your application into 2 primary components:
 
 - `modus.json` we call this your [Manifest](https://hypermode-modus-docs.mintlify.app/modus/app-manifest). Where you decide what models, data, and external services you’d like your functions to have access to. 
-- `/functions/` is where you write your function code. If you're writing in AssemblyScript, you'll publish your functions in the `/assembly/index.ts` file. For Golang, simply capitalizing a function's name will expose it in the Modus API. 
+- `/functions/` is where you put your function code. If you're writing in AssemblyScript, you'll publish your functions in the `/assembly/index.ts` file. For Golang, simply capitalizing a function's name will expose it in the Modus API. 
