@@ -1,6 +1,41 @@
 ---
 title: Hyp CLI
-description: ""
+description: "Comprehensive refernce for the Hyp CLI commands and usage."
 ---
 
-<Warning>- setup - `login`, `deploy`, `import`</Warning>
+<Warning>- setup - `login`, `logout`, `org`, `init`</Warning>
+
+## Hyp CLI reference
+
+### Overview
+
+- The Hyp CLI is a command-line tool for managing your Hypermode account and projects.
+- To install, download from TODO: add link.
+- To get started, run `hyp login` and authenticate with your Hypermode account. Authenticating gives access to running
+  Hypermode hosted models from your local device.
+
+### Commands
+
+#### `login`
+
+- **Description**: Log in to your Hypermode account. `login` redirects to the Hypermode website to authenticate.
+  It then stores an authentication token locally, and prompts you to select a default org.
+- **Usage**: `hyp login`
+- **Options**: None
+- **Examples**:
+  - Log in to your Hypermode account: `hyp login`
+
+#### `logout`
+
+- **Description**: Log out of your Hypermode account. This command clears your local authentication token.
+- **Usage**: `hyp logout`
+- **Options**: None
+- **Examples**:
+  - Log out of your Hypermode account: `hyp logout`
+
+#### `org`
+
+- **Description**: The `org` command controls all org related operations.
+- **Usage**: `hyp org [command]`
+- **Options**:
+  - `switch`: Switch to a different org.
