@@ -24,7 +24,7 @@ Hyp
 [Hh]ypercategories
 [Hh]ypermode
 inferencing
-log
+[Ll]og
 [Mm]odus
 namespace
 nnClassify
