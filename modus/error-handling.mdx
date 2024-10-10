@@ -2,3 +2,106 @@
 title: Error Handling
 description: ""
 ---
+
+In this guide, we'll explore best practices for handling errors in the **Modus framework** leveraging the **Console API** and **GraphQL error responses**.
+
+### Error reporting in GraphQL
+
+GraphQL responses have a standard structure that includes both a `data` and an `errors` section.
+Modus facilitates the inclusion of error codes or messages within the `errors` section, enhancing how errors are communicated to the front end.
+
+<CodeGroup>
+
+```ts AssemblyScript
+export function TestError(input: string): string {
+  if (input == "") {
+    console.error("input is empty");
+    // this is a non-fatal error reported in GraphQL response.
+    // the function continues
+    return "Can't process your input";
+    // GraphQL response contains both a data section and an errors section with all reported errors
+  }
+  if (input == "error") {
+    throw new Error(`This is a fatal error.`);
+    // a fatal error appears in the log
+    // the errors section in GraphQL responses contains only one entry with
+    // "message": "error calling function"
+    // the function does not continue
+    // the data section in GraphQL response is empty
+  }
+
+  return "You said: " + input;
+}
+```
+
+```ts Go
+// In Go, error handling is typically done by returning an `error` object as the last result of a function.
+// Modus transforms this into logging and error handling automatically,
+// ensuring all errors are logged before being sent to the response.
+func TestError(input string) (string, error) {
+    if input == "" {
+        return "", errors.New("input is empty")
+    }
+    return "You said: " + input, nil
+}
+```
+
+</CodeGroup>
+
+The error automatically appears in the `errors` section of the GraphQL response and in Modus runtime execution logs.
+
+### Leveraging the Console API
+
+The **Console API** in Modus is globally available in all functions. It allows developers to capture log messages and errors, which are automatically included in Modus runtime execution logs. Logs are visible in Hypermode UI under the [Function Runs](../observe-functions#function-runs) section.
+
+**Console logging levels**:
+
+<CodeGroup>
+
+```typescript index.ts
+console.log("This is a simple log message.");
+console.debug("This is a debug message.");
+console.info("This is an info message.");
+console.warn("This is a warning message.");
+console.error("This is an error message.");
+```
+
+```go main.go
+package main
+
+import (
+    "github.com/hypermodeinc/modus/sdk/go/pkg/console"
+)
+
+console.Log("This is a simple log message.")
+console.Debug("This is a debug message.")
+console.Info("This is an info message.")
+console.Warn("This is a warning message.")
+console.Error("This is an error message.")
+```
+
+</CodeGroup>
+
+`console.error()` also sends the message to the GraphQL response.
+
+### Structured logging
+
+Structured logging in Modus separates the log message and additional fields for better clarity. This allows you to distinguish between different levels of severity and categories of errors in a systematic way.
+
+### Best practices for error handling
+
+- **Handle non-fatal errors** using `console.error`, allowing the function to continue. The GraphQL response may have both a `data` section and an `errors` section.
+
+- **Handle critical errors** using AssemblyScript `throw` keyword or the Go idiomatic error object to stop the function's execution.
+
+- **Return clear error messages**: When returning errors, include concise and informative error messages that help diagnose the issue.
+
+- **Leverage structured logs**: Take advantage of Modus's structured logging to include context and metadata in your error reports.
+
+- **Use GraphQL's error sections effectively**: Add relevant information to the `errors` section when working with GraphQL, ensuring clear communication to the client.
+
+---
+
+### Conclusion
+
+Error handling in Modus combines the power of **structured logging**, **GraphQL error sections**, and the **Console API** to provide both a clear debugging process for developers and informative responses for end-users. Whether you're working in **AssemblyScript** or **Go**, implementing these best practices ensures your app is resilient and easy to maintain.
