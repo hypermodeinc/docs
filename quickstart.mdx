@@ -101,6 +101,15 @@ query myPrompt {
 }
 ```
 
+<Frame>
+  <img
+    className="block"
+    src="/images/hyp-quickstart/graphiql-blackhole.png"
+    alt="Hypermode's console showing results of query 'how are black holes created'."
+     />
+</Frame>
+
+
 ### Step 5: Inference History
 
 Let's dig deeper into the behavior of our AI service by looking at the inference details in the inference tab. You can see the step-by-step inference process and the inputs and outputs of the function at each step. We can see in this case, it took Llama 4.4 seconds to reply to the prompt. We can also see the entirety the inputs (system, user, and parameters). 
@@ -121,6 +130,14 @@ Let's dig deeper into the behavior of our AI service by looking at the inference
   "temperature": 0.7
 }
 ```
+
+<Frame>
+  <img
+    className="block"
+    src="/images/hyp-quickstart/inference-history.png"
+    alt="Hypermode's console showing the inputs and outputs of the last model inference."
+     />
+</Frame>
 
 
 
@@ -168,6 +185,15 @@ git push origin main
 
 4. Test your changes
 Hypermode automatically redeploys whenever you push an update to your git repository. Go back to the Hypermode dashboard and run the same query as before. You should see the response now uses surfing analogies!
+
+<Frame>
+  <img
+    className="block"
+    src="/images/hyp-quickstart/graphiql-surfing.png"
+    alt="Hypermode's console showing results of new query."
+     />
+</Frame>
+
 
 ## Next Steps
 Hypermode and Modus provide a powerful platform for building and hosting AI models, data, and logic. You now know the basics of Hypermode. There's no limit to what you can build. 
