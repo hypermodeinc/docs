@@ -62,7 +62,7 @@ You can get started with Hypermode’s [Instant Vector Search](https://github.co
 
 In your terminal, run the following command to create a repo called "HypermodeQuickstart" based on our base template:
 ```bash
-gh repo create HypermodeQuickstart --template hypermodeinc/base-template
+gh repo create hypermode-quickstart --template hypermodeinc/base-template
 ```
 
 Clone the repository to your local machine:
@@ -70,13 +70,12 @@ Clone the repository to your local machine:
 <Warning> Make sure to replace `your-username` with your GitHub username. </Warning>
 
 ```bash
-git clone https://github.com/your-username/HypermodeQuickstart.git
+git clone https://github.com/your-username/hypermode-quickstart.git
 ```
 Naviagte into the cloned repository:
 ```bash
 cd base-template
 ```
-
 
 ### Step 2: Log in to Hypermode
 
@@ -89,7 +88,7 @@ hyp login
 When you execute the command `hyp deploy` in the project directory, Hypermode automatically triggers a build and deploy process, and you can monitor the progress in the console. If you had specified a custom model or collection in the manifest, Hypermode would automatically provision the infrastructure for you. However, in this case, the template uses a shared model and no collection.
 
 ```bash
-hyp deploy base-template
+hyp deploy hypermode-quickstart
 ```
 
 ### Step 4: Test your API
@@ -136,7 +135,18 @@ Our AI Service is responding using too formal of language. Let's update our `gen
 2. Modify the `generateText` to only respond like a surfer, like this:
 
 ```typescript AssemblyScript
- new SystemMessage("You are a helpful assistant. Only respond using surfing analogies and metaphors."),
+export function generateText(text: string): string {
+  const model = models.getModel<OpenAIChatModel>("text-generator");
+
+  const input = model.createInput([
+    new SystemMessage("You are a helpful assistant. Only respond using surfing analogies and metaphors."),
+    new UserMessage(text),
+  ]);
+
+  const output = model.invoke(input);
+
+  return output.choices[0].message.content.trim();
+}
 ```
 
 3. Save the file and push an update to your git repo
