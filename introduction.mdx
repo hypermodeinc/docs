@@ -4,13 +4,13 @@ description: "Build Intelligent APIs."
 mode: "wide"
 ---
 
-<Warning>to do: finalize CLI install command and interal reference links</Warning>
-
-# Hypermode Documentation
+<Warning>
+  to do: finalize CLI install command and internal reference links
+</Warning>
 
 Hypermode provides the workbench and infrastructure to create **powerful**, **engaging**, and **secure** AI assistants, APIs, and services.
 
-With every push to git, Hypermode automatically builds and deploys your functions. It creates a live, scalable API for you to preview, test, and promote to production. 
+With every push to git, Hypermode automatically builds and deploys your functions. It creates a live, scalable API for you to preview, test, and promote to production.
 
 ## Quick Install
 
@@ -26,40 +26,46 @@ npm install -g @hypermode/hyp
 
 </CodeGroup>
 
-## What is Hypermode?
+## What's Hypermode?
 
-Hypermode is a series of services and tools for developers to build and host their AI models, data, and logic. We are the best place to build and host [Modus](https://hypermode-modus-docs.mintlify.app/modus/overview) applications. 
+Hypermode is a series of services and tools for developers to build and host their AI models, data, and logic. We are the best place to build and host [Modus](https://hypermode-modus-docs.mintlify.app/modus/overview) applications.
 
 ### Functions
-Hypermode combined with Modus provides an AWS Lambda alternative for building functions and APIs, powered by WebAssembly. Functions are the building blocks of your application. They are small, reusable pieces of code that can be used to perform a single task. Functions can be combined to create more complex applications. 
+
+Hypermode combined with Modus provides an AWS Lambda alternative for building functions and APIs, powered by WebAssembly. Functions are the building blocks of your application. They are small, reusable pieces of code that can be used to perform a single task. Functions can be combined to create more complex applications.
 
 ### Infrastructure
-**Compute**
-  - Serverless Function Invocation:
-    - GraphQL API: Hypermode provides a managed GraphQL API for each project invoking your functions, paying only for the compute time you use.
 
-  - Model Hosting:
-    - [Shared Models](https://hypermode-modus-docs.mintlify.app/hosted-models#shared-models_): Hypermode includes a set of shared models available for integration into your app on a pay-per-token basis.
-    - [Dedicated Models](https://hypermode-modus-docs.mintlify.app/hosted-models): Hypermode can also spin up a dedicated instances of your preferred models on a per project basis.
-    - [Secure Model Connection](https://hypermode-modus-docs.mintlify.app/modus/sdk/models#models): Hypermode provides secure connections to externally hosted models over HTTPS using the [Modus Models SDK](https://hypermode-modus-docs.mintlify.app/modus/sdk/models#import-from-the-sdk). 
+**Compute**
+
+- Serverless Function Invocation:
+
+  - GraphQL API: Hypermode provides a managed GraphQL API for each project invoking your functions, paying only for the compute time you use.
+
+- Model Hosting:
+  - [Shared Models](https://hypermode-modus-docs.mintlify.app/hosted-models#shared-models_): Hypermode includes a set of shared models available for integration into your app on a pay-per-token basis.
+  - [Dedicated Models](https://hypermode-modus-docs.mintlify.app/hosted-models): Hypermode can also spin up a dedicated instances of your preferred models on a per project basis.
+  - [Secure Model Connection](https://hypermode-modus-docs.mintlify.app/modus/sdk/models#models): Hypermode provides secure connections to externally hosted models over HTTPS using the [Modus Models SDK](https://hypermode-modus-docs.mintlify.app/modus/sdk/models#import-from-the-sdk).
 
 **Storage**
-  - [Collections](https://hypermode-modus-docs.mintlify.app/modus/app-manifest#collections): Collections are a lightweight way to store and retrieve data in Hypermode. They are similar to tables in a database.
-  - Databases:
-    - Hosted Dgraph: (Coming Soon) Hypermode will be able to provide a hosted Dgraph database for your applications.
-    - External Databases: Hypermode can securely connect to your existing databases to provide data to your functions.
+
+- [Collections](https://hypermode-modus-docs.mintlify.app/modus/app-manifest#collections): Collections are a lightweight way to store and retrieve data in Hypermode. They are similar to tables in a database.
+- Databases:
+  - Hosted Dgraph: (Coming Soon) Hypermode will be able to provide a hosted Dgraph database for your applications.
+  - External Databases: Hypermode can securely connect to your existing databases to provide data to your functions.
 
 ### Management
-The Hypermode console gives developers and administrators a single place to manage all aspects of their AI applications and models. 
 
-  - [Project Management](https://hypermode-modus-docs.mintlify.app/modify-project)
-  - [User Management](https://hypermode-modus-docs.mintlify.app/user-management)
-  - [Function and Inference Observability](https://hypermode-modus-docs.mintlify.app/observe-functions)
+The Hypermode console gives developers and administrators a single place to manage all aspects of their AI applications and models.
+
+- [Project Management](https://hypermode-modus-docs.mintlify.app/modify-project)
+- [User Management](https://hypermode-modus-docs.mintlify.app/user-management)
+- [Function and Inference Observability](https://hypermode-modus-docs.mintlify.app/observe-functions)
 
 <Frame>
   <img
     className="block"
     src="/images/console-screenshot.png"
     alt="Hypermode's console showing project, model, and API management."
-     />
+  />
 </Frame>
