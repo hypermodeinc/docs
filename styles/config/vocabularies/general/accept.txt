@@ -1,10 +1,12 @@
 alterSchema
 APIs
+AWS
 boolean
 CLI
 [Cc]onsole
 computeSimilarity
 [Dd]graph
+distilbert
 dropAll
 dropAttr
 embedder
@@ -25,9 +27,11 @@ Hugging Face
 [Hh]ypermode
 inferencing
 [Ll]og
+LLM
 [Mm]odus
 namespace
 nnClassify
+npm
 NQuads
 onboarding
 [Pp]arams
@@ -37,7 +41,7 @@ repo
 REST
 Scattergories
 serializable
-serverless
+[Ss]erverless
 timeEnd
 triaging
 upsert

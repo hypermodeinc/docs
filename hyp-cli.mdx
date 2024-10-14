@@ -1,41 +1,36 @@
 ---
 title: Hyp CLI
-description: "Comprehensive refernce for the Hyp CLI commands and usage."
+description: "Comprehensive reference for the Hyp CLI commands and usage"
 ---
 
-<Warning>- setup - `login`, `logout`, `org`, `init`</Warning>
+Hyp CLI is a command-line tool for managing your Hypermode account and projects. When using Hyp CLI alongside the Modus CLI, users get access to [Hypermode-hosted models](/hosted-models).
 
-## Hyp CLI reference
+## Install
 
-### Overview
+Install Hyp CLI via a cURL command or npm.
 
-- The Hyp CLI is a command-line tool for managing your Hypermode account and projects.
-- To install, download from TODO: add link.
-- To get started, run `hyp login` and authenticate with your Hypermode account. Authenticating gives access to running
-  Hypermode hosted models from your local device.
+<CodeGroup>
 
-### Commands
+```bash cURL
+curl -sSL http://install.hypermode.com/hyp.sh | bash
+```
 
-#### `login`
+```js npm
+npm install -g @hypermode/hyp
+```
 
-- **Description**: Log in to your Hypermode account. `login` redirects to the Hypermode website to authenticate.
-  It then stores an authentication token locally, and prompts you to select a default org.
-- **Usage**: `hyp login`
-- **Options**: None
-- **Examples**:
-  - Log in to your Hypermode account: `hyp login`
+</CodeGroup>
 
-#### `logout`
+## Commands
 
-- **Description**: Log out of your Hypermode account. This command clears your local authentication token.
-- **Usage**: `hyp logout`
-- **Options**: None
-- **Examples**:
-  - Log out of your Hypermode account: `hyp logout`
+### `login`
 
-#### `org`
+Log in to your Hypermode account. When executed, this command redirects to the Hypermode website to authenticate. It stores an authentication token locally and prompts you to select your organization context.
 
-- **Description**: The `org` command controls all org related operations.
-- **Usage**: `hyp org [command]`
-- **Options**:
-  - `switch`: Switch to a different org.
+### `logout`
+
+Log out of your Hypermode account. This command clears your local authentication token.
+
+### `org switch`
+
+Switch to a different org context within the CLI session.

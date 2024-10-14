@@ -5,14 +5,11 @@ mode: "wide"
 ---
 
 <Warning>
-  TO DO: verify CLI urls and internal reference links
-  Verify CLI commands
-  Add screenshots
+  TO DO: verify CLI URLs and internal reference links Verify CLI commands Add
+  screenshots
 </Warning>
 
-# Getting started with Hypermode
-
-This guide walks you through getting started with Hypermode using the [Simple LLM Prompt Template](https://github.com/hypermodeinc/base-template). 
+This guide walks you through getting started with Hypermode using the [Simple LLM Prompt Template](https://github.com/hypermodeinc/base-template).
 
 You’ll also learn how to customize your functions to tailor an app to your needs.
 
@@ -25,7 +22,7 @@ During development, Hypermode provides tools to understand and debug your AI pro
 To get started, create an account with Hypermode. You can select the plan that's right for you.
 
 [Sign up](https://hypermode.com/sign-up)
-If you've never used Vercel before, sign up for a new Hypermode account
+If you've never used Hypermode before, sign up for a new Hypermode account
 
 [Log in](https://hypermode.com/sign-in)
 If you already have a Hypermode account, log in to get started
@@ -35,6 +32,7 @@ Once you create an account, you can choose to authenticate either with a Git pro
 ## Prerequisites
 
 Before you start, make sure you have the following:
+
 - [Github Account](https://github.com/join)
 - [Github CLI](https://cli.github.com/) installed
 - [Node.js](https://nodejs.org/en/download/package-manager) - v22 or higher
@@ -42,7 +40,7 @@ Before you start, make sure you have the following:
 
 ### Install the Hyp CLI
 
-While many of our instructions use the console, you can also use [Hyp CLI](https://hypermode-modus-docs.mintlify.app/hyp-cli#hyp-cli) to carry out most tasks on Hypermode. 
+While many of our instructions use the console, you can also use [Hyp CLI](https://hypermode-modus-docs.mintlify.app/hyp-cli#hyp-cli) to carry out most tasks on Hypermode.
 
 <CodeGroup>
 
@@ -53,26 +51,32 @@ curl -sSL http://install.hypermode.com/hyp.sh | bash
 ```js npm
 npm install -g @hypermode/hyp
 ```
-</CodeGroup>
 
+</CodeGroup>
 
 You can get started with Hypermode’s [Instant Vector Search](https://github.com/hypermodeinc/hyper-commerce) template using either sample data or your own, without needing to write any code or set up a GitHub repository. This lets you explore the template and Hypermode’s features before committing any time and effort.
 
 ### Step 1: Clone the template
 
 In your terminal, run the following command to create a repo called "HypermodeQuickstart" based on our base template:
+
 ```bash
 gh repo create hypermode-quickstart --template hypermodeinc/base-template
 ```
 
 Clone the repository to your local machine:
 
-<Warning> Make sure to replace `your-username` with your GitHub username. </Warning>
+<Warning>
+  {" "}
+  Make sure to replace `your-username` with your GitHub username.{" "}
+</Warning>
 
 ```bash
 git clone https://github.com/your-username/hypermode-quickstart.git
 ```
-Naviagte into the cloned repository:
+
+Navigate into the cloned repository:
+
 ```bash
 cd base-template
 ```
@@ -106,13 +110,12 @@ query myPrompt {
     className="block"
     src="/images/hyp-quickstart/graphiql-blackhole.png"
     alt="Hypermode's console showing results of query 'how are black holes created'."
-     />
+  />
 </Frame>
 
+### Step 5: Inference history
 
-### Step 5: Inference History
-
-Let's dig deeper into the behavior of our AI service by looking at the inference details in the inference tab. You can see the step-by-step inference process and the inputs and outputs of the function at each step. We can see in this case, it took Llama 4.4 seconds to reply to the prompt. We can also see the entirety the inputs (system, user, and parameters). 
+Let's dig deeper into the behavior of our AI service by looking at the inference details in the inference tab. You can see the step-by-step inference process and the inputs and outputs of the function at each step. We can see in this case, it took Llama 4.4 seconds to reply to the prompt. We can also see the entirety the inputs (system, user, and parameters).
 
 ```{
   "model": "meta-llama/Meta-Llama-3.1-8B-Instruct",
@@ -136,68 +139,74 @@ Let's dig deeper into the behavior of our AI service by looking at the inference
     className="block"
     src="/images/hyp-quickstart/inference-history.png"
     alt="Hypermode's console showing the inputs and outputs of the last model inference."
-     />
+  />
 </Frame>
-
-
 
 ### Step 6: Customizing your AI API
 
-Let's make a few changes to application to explore how easy it is to customize your AI services
+Let's make a few changes to app to explore how easy customizing your AI services is
 
 #### Update our function
-Our AI Service is responding using too formal of language. Let's update our `generateText` function to respond using exclusively surfing analogies. 
+
+Our AI Service is responding using too formal of language. Let's update our `generateText` function to respond using exclusively surfing analogies.
 
 1. Go to the `index.ts` file and locate the `generateText` function.
 2. Modify the `generateText` to only respond like a surfer, like this:
 
-```typescript AssemblyScript
-export function generateText(text: string): string {
-  const model = models.getModel<OpenAIChatModel>("text-generator");
+   ```typescript AssemblyScript
+   export function generateText(text: string): string {
+     const model = models.getModel<OpenAIChatModel>("text-generator");
 
-  const input = model.createInput([
-    new SystemMessage("You are a helpful assistant. Only respond using surfing analogies and metaphors."),
-    new UserMessage(text),
-  ]);
+     const input = model.createInput([
+       new SystemMessage(
+         "You are a helpful assistant. Only respond using surfing analogies and metaphors.",
+       ),
+       new UserMessage(text),
+     ]);
 
-  const output = model.invoke(input);
+     const output = model.invoke(input);
 
-  return output.choices[0].message.content.trim();
-}
-```
+     return output.choices[0].message.content.trim();
+   }
+   ```
 
 3. Save the file and push an update to your git repo
 
-Add the we modified to the git staging area:
-```bash
-git add index.ts
-```
+   Add the we modified to the git staging area:
 
-Commit your changes:
-```bash
-git commit -m "Update generateText function to use surfing analogies"
-```
+   ```bash
+   git add index.ts
+   ```
 
-Finally, push the changes to your GitHub repository:
-```bash
-git push origin main
-```
+   Commit your changes:
+
+   ```bash
+   git commit -m "Update generateText function to use surfing analogies"
+   ```
+
+   Finally, push the changes to your GitHub repository:
+
+   ```bash
+   git push origin main
+   ```
 
 4. Test your changes
-Hypermode automatically redeploys whenever you push an update to your git repository. Go back to the Hypermode dashboard and run the same query as before. You should see the response now uses surfing analogies!
+   Hypermode automatically redeploys whenever you push an update to your git repository. Go back to the Hypermode dashboard and run the same query as before. You should see the response now uses surfing analogies!
+
+{" "}
 
 <Frame>
   <img
     className="block"
     src="/images/hyp-quickstart/graphiql-surfing.png"
     alt="Hypermode's console showing results of new query."
-     />
+  />
 </Frame>
 
+## Next steps
 
-## Next Steps
-Hypermode and Modus provide a powerful platform for building and hosting AI models, data, and logic. You now know the basics of Hypermode. There's no limit to what you can build. 
+Hypermode and Modus provide a powerful platform for building and hosting AI models, data, and logic. You now know the basics of Hypermode. There's no limit to what you can build.
 
-Try chaining together multiple functions to create more complex applications or swapping out Llama 3.1 in the manifest (`modus.json`) for a model you see on HuggingFace, like [distilbert](https://huggingface.co/distilbert/distilgpt2). 
+Try chaining together multiple functions to create more complex applications or swapping out Llama 3.1 in the manifest (`modus.json`) for a model you see on HuggingFace, like [distilbert](https://huggingface.co/distilbert/distilgpt2).
 
 You can also explore the [Modus SDK](https://hypermode-modus-docs.mintlify.app/modus/sdk/models#import-from-the-sdk) to connect to external models securely.
