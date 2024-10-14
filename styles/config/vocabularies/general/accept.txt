@@ -1,3 +1,4 @@
+agentic
 alterSchema
 APIs
 AWS
@@ -21,7 +22,7 @@ GraphiQL
 GraphQL
 gRPC
 hardcoding
-HTTP
+HTTP|http
 Hugging Face
 [Hh]yp
 [Hh]ypercategories
@@ -36,7 +37,7 @@ npm
 NQuads
 onboarding
 [Pp]arams
-PostgreSQL
+PostgreSQL|postgresql
 PUT
 queryScalar
 repo

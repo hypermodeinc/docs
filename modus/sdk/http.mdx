@@ -29,7 +29,7 @@ import { http } from "@hypermode/modus-sdk-as"
 ```
 
 ```go Go
-TO DO
+import github.com/hypermodeinc/modus/sdk/go/pkg/http
 ```
 
 </CodeGroup>
@@ -150,7 +150,8 @@ The `value` object must be one of the following types:
 - A `string[][]`, where each inner array contains a header name and value.
 - A `Map<string, string>`, where the keys are header names and the values are header values.
 - A `Map<string, string[]>`, where the keys are header names and the values are arrays of header values.
-  </ResponseField>
+
+</ResponseField>
 
 <ResponseField name="append(name, value)">
   Appends a new header with the given `name` and `value` to the collection.

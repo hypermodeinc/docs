@@ -28,23 +28,3 @@ best practices for triaging issues effectively.
    Issue: Environment Variables Not Loading
    Symptoms: Environment variables defined in .env are not being recognized by your Modus functions.
    ```
-
-Resolution:
-
-Verify that the .env file is in the root directory of your project. Ensure that each variable is defined in the format
-KEY=VALUE without spaces around the = sign. Restart your development server to reload the environment variables: Issue:
-Incorrect Error Messages in modus.json Symptoms: The modus.json manifest file shows incorrect or confusing error
-messages.
-
-Resolution:
-
-Validate your modus.json file against the schema provided in the documentation. Use a JSON linter to check for syntax
-errors. Refer to the Modus documentation for correct configuration options. Best Practices for Triaging Issues Reproduce
-the Issue: Try to reproduce the issue in a controlled environment to understand its scope and impact. Check Logs: Review
-logs for any error messages or warnings that can provide clues about the issue. Consult Documentation: Refer to the
-official Modus documentation for guidance on common issues and their resolutions. Search Community Forums: Look for
-similar issues in the Modus Community Forum or on Stack Overflow. Isolate the Problem: Simplify your code to isolate the
-problem. This can help identify whether the issue is with Modus or your implementation. Update Dependencies: Ensure all
-your dependencies, including the Modus CLI, are up-to-date. Report Bugs: If you can't resolve the issue, report it on
-our GitHub repository with detailed information. By following these best practices, you can effectively troubleshoot and
-resolve issues in your Modus projects.

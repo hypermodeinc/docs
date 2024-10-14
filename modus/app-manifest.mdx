@@ -3,15 +3,18 @@ title: App Manifest
 description: "Define your models and hosts"
 ---
 
-The manifest in a Hypermode project allows you to configure the resources your functions have access to at runtime. You
-define the manifest in the `hypermode.json` file within the root of your project directory.
+The manifest for your Modus app allows you to configure the exposure and resources for your functions at runtime. You
+define the manifest in the `modus.json` file within the root of your project directory.
 
 <CardGroup cols={2}>
+  <Card title="Endpoints" icon="message-plus" href="#endpoints">
+    Expose your functions for integration into your frontend or federated API
+  </Card>
+  <Card title="Connections" icon="server" href="#hosts">
+    Establish connectivity for external endpoints and model hosts
+  </Card>
   <Card title="Models" icon="message-plus" href="#models">
     Define inference services for use in your functions
-  </Card>
-  <Card title="Hosts" icon="server" href="#hosts">
-    Establish connectivity for models and other external endpoints
   </Card>
   <Card title="Collections" icon="server" href="#collections">
     Define groups of text data to enable natural language search
@@ -26,16 +29,14 @@ from within a function.
 
 Each host requires a unique name, specified as a key containing only alphanumeric characters and hyphens.
 
-Each host has a `type` property, which controls how it's used and which additional properties are available. If not
-provided, the default type is `http`. The following table lists the available host types:
+Each host has a `type` property, which controls how it's used and which additional properties are available. The
+following table lists the available host types:
 
-| Type         | Purpose                                | Functions Namespaces        |
-| :----------- | :------------------------------------- | :-------------------------- |
-| `http`       | Connect to an HTTP or HTTPS web server | `http`, `graphql`, `models` |
-| `postgresql` | Connect to a PostgreSQL database       | `postgresql`                |
-| `dgraph`     | Connect to a Dgraph database           | `dgraph`                    |
-
-We'll update this table as we add more host types.
+| Type         | Purpose                          | Functions Namespaces        |
+| :----------- | :------------------------------- | :-------------------------- |
+| `http`       | Connect to an HTTP(S) web server | `http`, `graphql`, `models` |
+| `postgresql` | Connect to a PostgreSQL database | `postgresql`                |
+| `dgraph`     | Connect to a Dgraph database     | `dgraph`                    |
 
 <Warning>
 ### Caution
@@ -48,9 +49,7 @@ needed.
 
 </Warning>
 
-{/* <!-- vale Google.Headings = NO --> */}
-
-### HTTP Host
+### HTTP host
 
 This host type supports the HTTP and HTTPS protocols to communicate with external hosts. You can use the
 [HTTP APIs](/modus/sdk/http) in the Functions SDK to interact with the host.
@@ -160,7 +159,7 @@ This example specifies a query parameter named `key` provided by a secret named 
   </Accordion>
 </ResponseField>
 
-### PostgreSQL Host
+### PostgreSQL host
 
 This host type supports connecting to PostgreSQL databases. You can use the [PostgreSQL APIs](/modus/sdk/postgresql) in
 the Functions SDK to interact with the database.
@@ -209,7 +208,7 @@ For example, if using Neon, refer to the [Neon documentation](https://neon.tech/
 
 </ResponseField>
 
-### Dgraph Host
+### Dgraph host
 
 This host type supports connecting to Dgraph databases. You can use the [Dgraph APIs](/modus/sdk/dgraph) in the
 Functions SDK to interact with the database.
@@ -259,7 +258,7 @@ models, whether hosted by Hypermode or another host.
 
 Each model requires a unique name, specified as a key, containing only alphanumeric characters and hyphens.
 
-### Models Properties
+### Models properties
 
 <ResponseField name="sourceModel" type="string" required>
   Original relative path of the model within the provider's repository.
@@ -324,7 +323,7 @@ object in the app manifest allows you to define groupings of text and functions 
 
 Each collection requires a unique name, specified as a key, containing only alphanumeric characters and hyphens.
 
-### Collections Properties
+### Collections properties
 
 <ResponseField name="searchMethods" type="object">
   If provided, adds an index on top of the collection. Each key-value pair is a

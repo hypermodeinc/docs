@@ -3,18 +3,18 @@ title: API Generation
 description: "Create the signature for your API"
 ---
 
-Modus automatically creates an external API from the functions you export from your app.
+Modus automatically creates an external API from the functions you export from your app.
 
 ## Exporting functions
 
 Modus uses the default conventions for each language.
 
-Functions written in **AssemblyScript** use ESM-style `import` and `export` statements. With the default package
+Functions written in **AssemblyScript** use ES module-style `import` and `export` statements. With the default package
 configuration, Modus creates an external API for functions exported form the `index.ts` file located in the
 `functions/assembly` folder of your project.
 
-Functions written in **Go** using starting capital letters to expose functions as public. Modus creates an external API
-for public functions from any file that belongs to the `main` package.
+Functions written in **Go** using starting capital letters to expose functions as public. Modus creates an external API
+for public functions from any file that belongs to the `main` package.
 
 The functions below generate an API endpoint with the signature
 
@@ -60,17 +60,17 @@ function classify(text: string, threshold: f32): ClassifierResult[] {
 }
 ```
 
-Functions written in **Go** using starting capital letters to expose functions as public. Modus creates an external API
-for public functions from any file that belongs to the `main` package.
+Functions written in **Go** using starting capital letters to expose functions as public. Modus creates an external API
+for public functions from any file that belongs to the `main` package.
 
 ```go
 package main
 
 import (
-	"errors"
-	"fmt"
-	"github.com/hypermodeAI/functions-go/pkg/models"
-	"github.com/hypermodeAI/functions-go/pkg/models/experimental"
+  "errors"
+  "fmt"
+  "github.com/hypermodeAI/functions-go/pkg/models"
+  "github.com/hypermodeAI/functions-go/pkg/models/experimental"
 )
 
 const modelName = "my-classifier"
@@ -79,45 +79,45 @@ const modelName = "my-classifier"
 // classification label determined by the model, if the confidence is above the
 // threshold. Otherwise, it returns an empty string.
 func ClassifyText(text string, threshold float32) (string, error) {
-	predictions, err := classify(text)
-	if err != nil {
-		return "", err
-	}
+  predictions, err := classify(text)
+  if err != nil {
+    return "", err
+  }
 
-	prediction := predictions[0]
-	if prediction.Confidence < threshold {
-		return "", nil
-	}
+  prediction := predictions[0]
+  if prediction.Confidence < threshold {
+    return "", nil
+  }
 
-	return prediction.Label, nil
+  return prediction.Label, nil
 }
 
 
 func classify(texts ...string) ([]experimental.ClassifierResult, error) {
-	model, err := models.GetModel[experimental.ClassificationModel](modelName)
-	if err != nil {
-		return nil, err
-	}
+  model, err := models.GetModel[experimental.ClassificationModel](modelName)
+  if err != nil {
+    return nil, err
+  }
 
-	input, err := model.CreateInput(texts...)
-	if err != nil {
-		return nil, err
-	}
+  input, err := model.CreateInput(texts...)
+  if err != nil {
+    return nil, err
+  }
 
-	output, err := model.Invoke(input)
-	if err != nil {
-		return nil, err
-	}
+  output, err := model.Invoke(input)
+  if err != nil {
+    return nil, err
+  }
 
-	if len(output.Predictions) != len(texts) {
-		word := "prediction"
-		if len(texts) > 1 {
-			word += "s"
-		}
-		return nil, fmt.Errorf("expected %d %s, got %d", len(texts), word, len(output.Predictions))
-	}
+  if len(output.Predictions) != len(texts) {
+    word := "prediction"
+    if len(texts) > 1 {
+      word += "s"
+    }
+    return nil, fmt.Errorf("expected %d %s, got %d", len(texts), word, len(output.Predictions))
+  }
 
-	return output.Predictions, nil
+  return output.Predictions, nil
 }
 ```
 
