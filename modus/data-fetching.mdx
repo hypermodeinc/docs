@@ -2,3 +2,23 @@
 title: Data Fetching
 description: ""
 ---
+
+PostgreSQL Example
+
+```ts AssemblyScript
+const params = new postgresql.Params()
+params.push(firstName)
+params.push(lastName)
+
+const response = postgresql.query<Person>(host, query, params)
+```
+
+GraphQL Example
+
+```ts AssemblyScript
+const vars = new graphql.Variables()
+vars.set("firstName", firstName)
+vars.set("lastName", lastName)
+
+const response = graphql.execute<PeopleData>(hostName, statement, vars)
+```

@@ -18,9 +18,10 @@ getTexts
 getVector
 [Gg]it[Hh]ub
 GraphiQL
+GraphQL
 gRPC
 hardcoding
-[Hh]ttp
+HTTP
 Hugging Face
 [Hh]yp
 [Hh]ypercategories
@@ -35,15 +36,17 @@ npm
 NQuads
 onboarding
 [Pp]arams
+PostgreSQL
 PUT
 queryScalar
 repo
 REST
 Scattergories
-SDKs
+SDK
 serializable
 [Ss]erverless
 timeEnd
 triaging
 upsert
+URL|url
 UUID

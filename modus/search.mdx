@@ -1,17 +1,15 @@
 ---
 title: Search
-description:
-  "Learn how to add powerful search functionality to your applicatio using natural language and vector-based search with
-  the Modus Collections API"
+description: "Learn how to add powerful search functionality to your app using natural language search"
 ---
 
 The Modus Collections API provides a robust way to store, retrieve, and search through data using both natural language
 and vector-based search methods. By leveraging embeddings, developers can enable semantic and similarity-based searches,
 improving the relevance of search results within their applications.
 
-For example, with natural language similarity, if you search for a product description like "sleek red sports car", the
-search method returns similar product descriptions such as "luxury sports car in red" or "high-speed car with sleek
-design".
+For example, with natural language similarity, if you search for a product description like 'sleek red sports car', the
+search method returns similar product descriptions such as "luxury sports car in red" or 'high-speed car with sleek
+design'.
 
 ## Prerequisites
 
@@ -72,7 +70,7 @@ func Embed(text []string) ([][]float32, error) {
 
 Embeddings are usually computed using an embedding models. Here are few examples
 
-#### Example 1: compute embedding with Hugging Face [all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2){target=""}
+#### Example 1: compute embedding with Hugging Face [`all-MiniLM-L6-v2`](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)
 
 [Declare the model](./app-manifest#models) in the app manifest
 

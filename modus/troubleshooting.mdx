@@ -10,17 +10,18 @@ description: "Common issues, resolutions, and best practices for triaging issues
 Welcome to the Modus troubleshooting guide! This page covers common issues you might encounter, their resolutions, and
 best practices for triaging issues effectively.
 
-### Common Issues and Resolutions
+### Common issues and resolutions
 
-#### Issue: CLI Hangs During Project Initialization
+#### Issue: CLI hangs during project initialization
 
-**Symptoms**: The Modus CLI hangs indefinitely when running `modus init`.
+**Symptoms**: the Modus CLI hangs indefinitely when running `modus init`.
 
 **Resolution**:
 
 1. Ensure you have the latest version of the Modus CLI installed.
 2. Check your internet connection.
 3. Run the command with the `--verbose` flag to get more detailed output:
+
    ```sh
    modus init --verbose
    If the issue persists, try deleting the .modus directory in your home folder and re-running the command.
@@ -47,9 +48,3 @@ problem. This can help identify whether the issue is with Modus or your implemen
 your dependencies, including the Modus CLI, are up-to-date. Report Bugs: If you can't resolve the issue, report it on
 our GitHub repository with detailed information. By following these best practices, you can effectively troubleshoot and
 resolve issues in your Modus projects.
-
-<Note>
-  {" "}
-  For more detailed troubleshooting steps and advanced tips, please visit our [Troubleshooting
-  Guide](https://docs.hypermode.com/modus/troubleshooting).{" "}
-</Note>

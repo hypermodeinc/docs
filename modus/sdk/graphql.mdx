@@ -1,39 +1,36 @@
 ---
 title: GraphQL
-description: "Access external GraphQL data sources from your functions."
+description: "Access external GraphQL data sources from your functions"
 ---
 
-{/* <!-- vale Google.Headings = NO --> */}
+The Modus GraphQL API allows you to securely call and fetch data from any GraphQL endpoint.
 
-Hypermode's GraphQL APIs allows you to securely call and fetch data from any GraphQL endpoint. After
-[defining a host](../app-manifest#hosts) for the GraphQL endpoint in your project's manifest, you can use the following
-APIs to interact with the data.
-
-## Example project
-
-For your reference, A complete example for using the GraphQL APIs is available on GitHub in the
-`hypermodeinc/functions-as` repository, at
-[/examples/graphql](https://github.com/hypermodeinc/modus/tree/main/sdk/assemblyscript/examples/graphql).
-
-## Import from the SDK
+## Import
 
 To begin, import the `graphql` namespace from the SDK:
 
 <CodeGroup>
 
 ```ts AssemblyScript
-import { graphql } from "@hypermode/functions-as"
+import { http } from "@hypermode/modus-sdk-as"
+```
+
+```go Go
+TO DO
 ```
 
 </CodeGroup>
 
 ## GraphQL APIs
 
+{/* <!-- vale Google.Headings = NO --> */}
+
 The APIs in the `graphql` namespace are below, organized by category.
 
 <Tip>
-  We're constantly introducing new APIs through ongoing development with build partners. [Let's
-  chat](mailto:help@hypermode.com) about what would make the Functions SDK even more powerful for your next use case!
+  We're constantly introducing new APIs through ongoing development with early users. [Open an
+  issue](https://github.com/hypermodeinc/modus/issues) if you have ideas on what would make Modus even more powerful for
+  your next app!
 </Tip>
 
 ### Functions
@@ -51,19 +48,15 @@ graphql.execute<T> (
 ```
 
 <ResponseField name="T" type="Type" required>
-  Type of object to use for the data returned from the query.
-  This can be any type, including a custom type defined in your project.
-  It should match the shape of the data returned from the GraphQL query.
+  Type of object to use for the data returned from the query. This can be any type, including a custom type defined in your project. It should match the shape of the data returned from the GraphQL query.
 
-<Tip>
-
-Define custom types in the project's source code. In AssemblyScript, create classes decorated with `@json`.
+  <Tip>
+  Define custom types in the project's source code. In AssemblyScript, create classes decorated with `@json`.
 
 All types, including classes, base classes, and field types must be JSON serializable. You can also use built-in types
 such as strings, numbers, arrays, and maps.
 
-</Tip>
-
+  </Tip>
 </ResponseField>
 
 <ResponseField name="hostName" type="string" required>
@@ -82,8 +75,7 @@ such as strings, numbers, arrays, and maps.
 </ResponseField>
 
 <ResponseField name="variables" type="Variables">
-
-Optional variables to include with the query.
+  Optional variables to include with the query.
 
 See the details of the [`Variables`](#variables) object for more information.
 
@@ -106,49 +98,26 @@ To use this feature, create a new `Variables` object and call the `set` method f
 Then pass the object to the `execute` function.
 
 <ResponseField name="set(name, value)">
+  Set a variable with a name and value to include with the GraphQL operation.
 
-Set a variable with a name and value to include with the GraphQL operation.
-
-<Accordion title="Parameters">
+{" "}
 
 <ResponseField name="name" type="string" required>
   The name of the variable to include in the GraphQL operation.
 </ResponseField>
 
-<ResponseField name="value" type="any" required>
+  <ResponseField name="value" type="any" required>
+    The value of the variable to include in the GraphQL operation.
 
-The value of the variable to include in the GraphQL operation.
+    The value can be of any type that's JSON serializable, including strings, numbers, boolean values, arrays, maps, and
+    custom objects decorated with `@json`.
 
-The value can be of any type that's JSON serializable, including strings, numbers, boolean values, arrays, maps, and
-custom objects decorated with `@json`.
-
-</ResponseField>
-
-</Accordion>
-
-<Accordion title="Example">
-
-<CodeGroup>
-
-```ts AssemblyScript
-const vars = new graphql.Variables()
-vars.set("firstName", firstName)
-vars.set("lastName", lastName)
-
-const response = graphql.execute<PeopleData>(hostName, statement, vars)
-```
-
-</CodeGroup>
-
-</Accordion>
-
+  </ResponseField>
 </ResponseField>
 
 <ResponseField name="toJSON()" type="string">
-
-Serializes the variables to a JSON string for inclusion in the GraphQL operation. The `execute` function calls this
-automatically when you pass a `Variables` object. You typically don't need to call it directly.
-
+  Serializes the variables to a JSON string for inclusion in the GraphQL operation. The `execute` function calls this
+  automatically when you pass a `Variables` object. You typically don't need to call it directly.
 </ResponseField>
 
 #### Response
@@ -165,16 +134,14 @@ A response object from the GraphQL query.
 Either `errors` or `data` is present, depending on the result of the query.
 
 <ResponseField name="errors" type="ErrorResult[]">
-
-An array of errors incurred as part of your GraphQL request, if any.
+  An array of errors incurred as part of your GraphQL request, if any.
 
 Each error in the array is an [`ErrorResult`](#errorresult) object. If there are no errors, this field is `null`.
 
 </ResponseField>
 
 <ResponseField name="data" type="T">
-
-The resulting data selected by the GraphQL operation.
+  The resulting data selected by the GraphQL operation.
 
 The data has the type specified in the call to the `execute` function. If data is absent due to errors, this field is
 `null`.
@@ -198,8 +165,7 @@ The details of an error incurred as part of a GraphQL operation.
 </ResponseField>
 
 <ResponseField name="path" type="string[]">
-
-Path to the area of the GraphQL statement related to the error.
+  Path to the area of the GraphQL statement related to the error.
 
 Each item in the array represents a segment of the path.
 

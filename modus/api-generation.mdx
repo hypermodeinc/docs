@@ -3,20 +3,30 @@ title: API Generation
 description: "Create the signature for your API"
 ---
 
-Modus creates an external GraphQL API from the functions you export out of the module.
+Modus automatically creates an external API from the functions you export from your app.
 
-Export mechanism depends on the language you have chosen.
+## Exporting functions
 
-**AssemblyScript** uses ESM-style `import` and `export` statements. With the default package configuration, Modus
-creates an external API for functions exported form the `index.ts` file located in the `functions / assembly` folder of
-your project
+Modus uses the default conventions for each language.
 
-In **Go** project, functions that are named using a starting capital letter are exposed as public. Modus creates an
-external API for public functions from any file that belongs to the `main` package.
+Functions written in **AssemblyScript** use ESM-style `import` and `export` statements. With the default package
+configuration, Modus creates an external API for functions exported form the `index.ts` file located in the
+`functions/assembly` folder of your project.
 
-When deployed, your API is available on your project's endpoint.
+Functions written in **Go** using starting capital letters to expose functions as public. Modus creates an external API
+for public functions from any file that belongs to the `main` package.
 
-Here is an example:
+The functions below generate an API endpoint with the signature
+
+```graphql
+type Query {
+  classifyText(text: String!, threshold: Float!): String!
+}
+```
+
+<Info>
+  Since the function `classify` isn't exported from the module, Modus doesn't include it in the generated GraphQL API.
+</Info>
 
 <CodeGroup>
 
@@ -50,7 +60,10 @@ function classify(text: string, threshold: f32): ClassifierResult[] {
 }
 ```
 
-```ts Go
+Functions written in **Go** using starting capital letters to expose functions as public. Modus creates an external API
+for public functions from any file that belongs to the `main` package.
+
+```go
 package main
 
 import (
@@ -106,17 +119,6 @@ func classify(texts ...string) ([]experimental.ClassifierResult, error) {
 
 	return output.Predictions, nil
 }
-
 ```
 
 </CodeGroup>
-
-The [API endpoint](/deploy#query) serves the following GraphQL schema:
-
-```graphql
-type Query {
-  classifyText(text: String!, threshold: Float!): String!
-}
-```
-
-Note that the function `classify` is not exported from the module and does not appear in the generated GraphQL API.

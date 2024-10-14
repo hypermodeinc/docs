@@ -3,22 +3,9 @@ title: Collections
 description: "Add storage and vector search capabilities to your functions."
 ---
 
-{/* <!-- vale Google.Headings = NO --> */}
+The Modus Collection API allows you to add vector search within your functions.
 
-A Collection is a built-in storage that supports vector embeddings.
-
-Modus allows you to [define collections](../app-manifest#collections) and interact with them through an easy-to-use API.
-
-## Example project
-
-To see Collections in action, explore the
-[collection example in AssemblyScript](https://github.com/hypermodeinc/modus/tree/main/sdk/assemblyscript/examples/collection)
-or [collection example in GoLang](https://github.com/hypermodeinc/modus/tree/main/sdk/go/examples/collections) on
-GitHub. This example demonstrates how to manage a collection of products using Hypermode's Collections and Models APIs,
-covering core create,read,update, and delete operations, embedding usage, search capabilities, and vector-based
-comparisons.
-
-## Import from the SDK
+## Import
 
 To begin, import the `collections` namespace from the SDK:
 
@@ -28,16 +15,22 @@ To begin, import the `collections` namespace from the SDK:
 import { collections } from "@hypermode/functions-as"
 ```
 
+```go Go
+TO DO
+```
+
 </CodeGroup>
 
 ## Collections APIs
 
+{/* <!-- vale Google.Headings = NO --> */}
+
 The APIs in the `collections` namespace are below, organized by category.
 
 <Tip>
-  New APIs are constantly introduced through ongoing development with build partners. Please contact us at
-  [help@hypermode.com](mailto:help@hypermode.com) about what would make the Functions SDK even more powerful for your
-  next use case.
+  We're constantly introducing new APIs through ongoing development with early users. [Open an
+  issue](https://github.com/hypermodeinc/modus/issues) if you have ideas on what would make Modus even more powerful for
+  your next app!
 </Tip>
 
 ### Mutation Functions
@@ -147,7 +140,7 @@ Perform a natural language search on items within a collection. This method is u
 search query based on semantic meaning.
 
 <Note>
-  Hypermode uses the same embedder for both inserting text into the collection, and for the text used when searching the
+  Modus uses the same embedder for both inserting text into the collection, and for the text used when searching the
   collection.
 </Note>
 
@@ -192,8 +185,8 @@ Perform a vector-based search on a collection, which is helpful for scenarios re
 between pre-computed embeddings.
 
 <Note>
-  Hypermode uses the same embedder for both inserting text into the collection, and for the vector used when searching
-  the collection.
+  Modus uses the same embedder for both inserting text into the collection, and for the vector used when searching the
+  collection.
 </Note>
 
 ```go

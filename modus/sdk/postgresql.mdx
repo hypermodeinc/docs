@@ -3,14 +3,7 @@ title: PostgreSQL
 description: "Execute queries against a PostgreSQL database"
 ---
 
-{/* <!-- vale Google.Headings = NO --> */}
-
 The Modus PostgreSQL API allows you to run queries against PostgreSQL or any PostgreSQL-compatible database platform.
-
-<Note>
-  For your reference, A complete example for using the PostgreSQL APIs is available in the project's GitHub repo, at
-  [/examples/postgresql](https://github.com/hypermodeinc/modus/tree/main/sdk/assemblyscript/examples/postgresql).
-</Note>
 
 ## Import
 
@@ -22,9 +15,15 @@ To begin, import the `postgresql` namespace from the SDK:
 import { postgresql } from "@hypermode/modus-sdk-as"
 ```
 
+```go Go
+TO DO
+```
+
 </CodeGroup>
 
 ## PostgreSQL APIs
+
+{/* <!-- vale Google.Headings = NO --> */}
 
 The APIs in the `postgresql` namespace are below, organized by category.
 
@@ -41,11 +40,11 @@ The APIs in the `postgresql` namespace are below, organized by category.
 Execute a SQL statement against a PostgreSQL database, without any data returned. Use this for insert, update, or delete
 operations, or for other SQL statements that don't return data.
 
-<Tip>
+<Note>
   The `execute` function is for operations that don't return data. However, some insert/update/delete operations may
   still return data, such as an identifier for a newly inserted row. In these cases, you can use the `queryScalar`
   function instead (for a single row's identifier), or the `query` function (for multiple rows).
-</Tip>
+</Note>
 
 ```go
 function postgresql.execute (
@@ -62,17 +61,15 @@ function postgresql.execute (
 <ResponseField name="statement" type="string" required>
   SQL statement containing the query or mutation operation to execute.
 
-<Warning>
-  While it's possible to directly include parameter values into your SQL statement, it's highly recommended to pass a
-  [`Params`](#params) object instead. This can help to prevent against injection attacks and other security
-  vulnerabilities.
-</Warning>
-
+  <Warning>
+    While it's possible to directly include parameter values into your SQL statement, it's highly recommended to pass a
+    [`Params`](#params) object instead. This can help to prevent against injection attacks and other security
+    vulnerabilities.
+  </Warning>
 </ResponseField>
 
 <ResponseField name="params" type="Params">
-
-Optional parameters to include with the query.
+  Optional parameters to include with the query.
 
 See the details of the [`Params`](#params) object for more information.
 
@@ -92,13 +89,10 @@ function postgresql.query<T>(
 ```
 
 <ResponseField name="T" type="Type" required>
-  Type of object to use for the data returned from the query.
-  This can be any type, including a custom type defined in your project.
-  It should match the shape of the row returned from the SQL query.
+  Type of object to use for the data returned from the query. This can be any type, including a custom type defined in your project. It should match the shape of the row returned from the SQL query.
 
-<Tip>
-
-Define custom types in the project's source code. In AssemblyScript, create classes decorated with `@json`.
+  <Tip>
+  Define custom types in the app's source code. In AssemblyScript, create classes decorated with `@json`.
 
 All types, including classes, base classes, and field types must be JSON serializable. You can also use built-in types
 such as strings, numbers, arrays, and maps.
@@ -106,8 +100,7 @@ such as strings, numbers, arrays, and maps.
 If working with PostgreSQL's `point` data type, you can use a [`Point`](#point) or [`Location`](#location) object to
 represent the data.
 
-</Tip>
-
+  </Tip>
 </ResponseField>
 
 <ResponseField name="hostName" type="string" required>
@@ -117,17 +110,15 @@ represent the data.
 <ResponseField name="statement" type="string" required>
   SQL statement containing the query or mutation operation to execute.
 
-<Warning>
-  While it's possible to directly include parameter values into your SQL statement, it's highly recommended to pass a
-  [`Params`](#params) object instead. This can help to prevent against injection attacks and other security
-  vulnerabilities.
-</Warning>
-
+  <Warning>
+    While it's possible to directly include parameter values into your SQL statement, it's highly recommended to pass a
+    [`Params`](#params) object instead. This can help to prevent against injection attacks and other security
+    vulnerabilities.
+  </Warning>
 </ResponseField>
 
 <ResponseField name="params" type="Params">
-
-Optional parameters to include with the query.
+  Optional parameters to include with the query.
 
 See the details of the [`Params`](#params) object for more information.
 
@@ -158,17 +149,15 @@ function postgresql.queryScalar<T> (
 <ResponseField name="statement" type="string" required>
   SQL statement containing the query or mutation operation to execute.
 
-<Warning>
-  While it's possible to directly include parameter values into your SQL statement, it's highly recommended to pass a
-  [`Params`](#params) object instead. This can help to prevent against injection attacks and other security
-  vulnerabilities.
-</Warning>
-
+  <Warning>
+    While it's possible to directly include parameter values into your SQL statement, it's highly recommended to pass a
+    [`Params`](#params) object instead. This can help to prevent against injection attacks and other security
+    vulnerabilities.
+  </Warning>
 </ResponseField>
 
 <ResponseField name="params" type="Params">
-
-Optional parameters to include with the query.
+  Optional parameters to include with the query.
 
 See the details of the [`Params`](#params) object for more information.
 
@@ -191,52 +180,26 @@ To use this feature, create a new `Params` object and call the `push` method for
 Then pass the object to the `execute`, `query`, or `queryScalar` function along with your SQL statement.
 
 <ResponseField name="push(value)">
+  Push a parameter value into the list included with the SQL operation. The sequence of calls to `push` determines the
+  order of the parameters in the SQL statement. This corresponds to the order of the `?` placeholders or `$1`, `$2`, etc.
 
-Push a parameter value into the list included with the SQL operation. The sequence of calls to `push` determines the
-order of the parameters in the SQL statement. This corresponds to the order of the `?` placeholders or `$1`, `$2`, etc.
+  <ResponseField name="value" type="any" required>
+    The value of the parameter to include in the SQL operation.
 
-<Accordion title="Parameters">
+    The value can be of any type that's JSON serializable, including strings, numbers, boolean values, arrays, maps, and custom objects decorated with `@json`, as long as the database supports it.
 
-<ResponseField name="value" type="any" required>
+    <Tip>
+      If working with PostgreSQL's `Point` data type, you can either pass separate parameters for the coordinates and use a
+      `point()` function in the SQL statement, or you can pass a [`Point`](#point) or [`Location`](#location) object as a
+      single parameter.
+    </Tip>
 
-The value of the parameter to include in the SQL operation.
-
-The value can be of any type that's JSON serializable, including strings, numbers, boolean values, arrays, maps, and
-custom objects decorated with `@json`, as long as the database supports it.
-
-<Tip>
-  If working with PostgreSQL's `Point` data type, you can either pass separate parameters for the coordinates and use a
-  `point()` function in the SQL statement, or you can pass a [`Point`](#point) or [`Location`](#location) object as a
-  single parameter.
-</Tip>
-
-</ResponseField>
-
-</Accordion>
-
-<Accordion title="Example">
-
-<CodeGroup>
-
-```ts AssemblyScript
-const params = new postgresql.Params()
-params.push(firstName)
-params.push(lastName)
-
-const response = postgresql.query<Person>(host, query, params)
-```
-
-</CodeGroup>
-
-</Accordion>
-
+  </ResponseField>
 </ResponseField>
 
 <ResponseField name="toJSON()" type="string">
-
-Serializes the parameters to a JSON string for inclusion in the SQL operation. The SDK functions call this automatically
-when you pass a `Params` object. You typically don't need to call it directly.
-
+  Serializes the parameters to a JSON string for inclusion in the SQL operation. The SDK functions call this
+  automatically when you pass a `Params` object. You typically don't need to call it directly.
 </ResponseField>
 
 #### Response

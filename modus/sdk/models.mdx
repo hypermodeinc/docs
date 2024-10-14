@@ -1,12 +1,9 @@
 ---
 title: Models
-description: "Easily invoke AI models from your functions."
+description: "Invoke AI models from your functions"
 ---
 
-{/* <!-- vale Google.Headings = NO --> */}
-
-Hypermode's Models API allows you to invoke AI models directly from your functions, both for models hosted at Hypermode,
-and for models hosted by external services.
+The Modus Models API allows you to invoke AI models directly from your functions, irrespective of the model's host.
 
 Since many models have unique interfaces, the design of the Models API is extremely flexible. A common base class forms
 the core of the API, which extends to conform to any model's required schema.
@@ -33,14 +30,18 @@ limited to these purposes. You can use it for any task that an AI model can perf
   limitation in a future release.
 </Note>
 
-## Import from the SDK
+## Import
 
-To begin, import the `models` namespace from the SDK.
+To begin, import the `models` namespace from the SDK:
 
 <CodeGroup>
 
 ```ts AssemblyScript
 import { models } from "@hypermode/modus-sdk-as"
+```
+
+```go Go
+TO DO
 ```
 
 </CodeGroup>
@@ -66,11 +67,14 @@ the `models-as` repository. You can also send a pull request, if you'd like to c
 
 ## Models APIs
 
+{/* <!-- vale Google.Headings = NO --> */}
+
 The APIs in the `models` namespace are below, organized by category.
 
 <Tip>
-  We're constantly introducing new APIs through ongoing development with build partners. [Let's
-  chat](mailto:help@hypermode.com) about what would make the Functions SDK even more powerful for your next use case!
+  We're constantly introducing new APIs through ongoing development with early users. [Open an
+  issue](https://github.com/hypermodeinc/modus/issues) if you have ideas on what would make Modus even more powerful for
+  your next app!
 </Tip>
 
 ### Functions
@@ -106,11 +110,9 @@ abstract class Model<TInput, TOutput> {
 The base class for all models that Hypermode functions can invoke.
 
 <Tip>
-
-If you are implementing a custom model, you should extend this class. You'll also need classes to represent the input
-and output types for your model. See the implementations of the pre-defined models in the `models-as` repository for
-examples.
-
+  If you are implementing a custom model, you should extend this class. You'll also need classes to represent the input
+  and output types for your model. See the implementations of the pre-defined models in the `models-as` repository for
+  examples.
 </Tip>
 
 <ResponseField name="TInput" type="Type" required>
@@ -150,9 +152,8 @@ Information about a model that's used to construct a `Model` instance. It's also
 class.
 
 <Info>
-
-This class relays information from the Hypermode Runtime to the model implementation. Generally, you don't need to
-create `ModelInfo` instances directly.
+  This class relays information from the Hypermode Runtime to the model implementation. Generally, you don't need to
+  create `ModelInfo` instances directly.
 
 However, if you are implementing a custom model, you may wish to use a property from this class, such as the `fullName`,
 for model providers that require the model name in the input request body.
