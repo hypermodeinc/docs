@@ -5,15 +5,14 @@ description: "Execute queries and mutations against a Dgraph database."
 
 {/* <!-- vale Google.Headings = NO --> */}
 
-Hypermode's Dgraph APIs allow you to run queries and mutations against a Dgraph database, as well as alter
-the schema if necessary.
-After [defining a host](../app-manifest#hosts) for your Dgraph gRPC endpoint in your project's manifest,
-you can use the following APIs to interact with the database.
+Hypermode's Dgraph APIs allow you to run queries and mutations against a Dgraph database, as well as alter the schema if
+necessary. After [defining a host](../app-manifest#hosts) for your Dgraph gRPC endpoint in your project's manifest, you
+can use the following APIs to interact with the database.
 
 ## Example project
 
-For your reference, a complete example using the Dgraph APIs is available on GitHub in the
-`hypermodeinc/functions-as` repository, at [/examples/dgraph](https://github.com/hypermodeinc/modus/tree/main/sdk/assemblyscript/examples/dgraph).
+For your reference, a complete example using the Dgraph APIs is available on GitHub in the `hypermodeinc/functions-as`
+repository, at [/examples/dgraph](https://github.com/hypermodeinc/modus/tree/main/sdk/assemblyscript/examples/dgraph).
 
 ## Import from the SDK
 
@@ -22,7 +21,7 @@ To begin, import the `dgraph` namespace from the SDK:
 <CodeGroup>
 
 ```ts AssemblyScript
-import { dgraph } from "@hypermode/functions-as";
+import { dgraph } from "@hypermode/functions-as"
 ```
 
 </CodeGroup>
@@ -32,9 +31,8 @@ import { dgraph } from "@hypermode/functions-as";
 The APIs in the `dgraph` namespace are below.
 
 <Tip>
-  We're constantly introducing new APIs through ongoing development with build
-  partners. [Let's chat](mailto:help@hypermode.com) about what would make the
-  Functions SDK even more powerful for your next use case!
+  We're constantly introducing new APIs through ongoing development with build partners. [Let's
+  chat](mailto:help@hypermode.com) about what would make the Functions SDK even more powerful for your next use case!
 </Tip>
 
 ### Functions
@@ -52,8 +50,7 @@ function execute(hostName: string, request: Request): Response;
 </ResponseField>
 
 <ResponseField name="request" type="Request" required>
-  A Dgraph [`Request`](#request) object, describing the query or mutation to
-  execute.
+  A Dgraph [`Request`](#request) object, describing the query or mutation to execute.
 </ResponseField>
 
 #### alterSchema
@@ -143,9 +140,8 @@ class Query {
 ```
 
 <ResponseField name="new dgraph.Query(query, variables)">
-  Creates a new `Query` object with the given `query` and `variables`. `query`
-  is a Dgraph Query Language (DQL) query string, and `variables` is a
-  [`Variables`](#variables) object.
+  Creates a new `Query` object with the given `query` and `variables`. `query` is a Dgraph Query Language (DQL) query
+  string, and `variables` is a [`Variables`](#variables) object.
 </ResponseField>
 
 <ResponseField name="query" type="string">
@@ -168,8 +164,7 @@ class Variables {
 ```
 
 <ResponseField name="Variables.set(name, value)">
-  Sets a query variable with the given `name` and `value`. `name` is of type
-  `string`, and `value` can be of any type.
+  Sets a query variable with the given `name` and `value`. `name` is of type `string`, and `value` can be of any type.
 </ResponseField>
 
 <ResponseField name="Variables.toMap()">
@@ -193,8 +188,7 @@ class Mutation {
 ```
 
 <ResponseField name="new dgraph.Mutation(setJson, delJson, setNquads, delNquads, condition)">
-  Creates a new `Mutation` object with the given `setJson`, `delJson`,
-  `setNquads`, `delNquads`, and `condition` fields.
+  Creates a new `Mutation` object with the given `setJson`, `delJson`, `setNquads`, `delNquads`, and `condition` fields.
 </ResponseField>
 
 <ResponseField name="setJson" type="string">

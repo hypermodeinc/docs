@@ -7,9 +7,12 @@ Modus creates an external GraphQL API from the functions you export out of the 
 
 Export mechanism depends on the language you have chosen.
 
-**AssemblyScript** uses ESM-style `import` and `export` statements. With the default package configuration, Modus creates an external API for functions exported form the `index.ts` file located in the `functions / assembly` folder of your project
+**AssemblyScript** uses ESM-style `import` and `export` statements. With the default package configuration, Modus
+creates an external API for functions exported form the `index.ts` file located in the `functions / assembly` folder of
+your project
 
-In **Go** project, functions that are named using a starting capital letter are exposed as public. Modus creates an external API for public functions from any file that belongs to the `main` package.
+In **Go** project, functions that are named using a starting capital letter are exposed as public. Modus creates an
+external API for public functions from any file that belongs to the `main` package.
 
 When deployed, your API is available on your project's endpoint.
 
@@ -18,35 +21,32 @@ Here is an example:
 <CodeGroup>
 
 ```ts AssemblyScript
-import { models } from "@hypermode/functions-as";
-import {
-  ClassificationModel,
-  ClassifierResult,
-} from "@hypermode/models-as/models/experimental/classification";
+import { models } from "@hypermode/functions-as"
+import { ClassificationModel, ClassifierResult } from "@hypermode/models-as/models/experimental/classification"
 
 // This model name should match one defined in the hypermode.json manifest file.
-const modelName: string = "my-classifier";
+const modelName: string = "my-classifier"
 
 // This function takes input text and a probability threshold, and returns the
 // classification label determined by the model, if the confidence is above the
 // threshold. Otherwise, it returns an empty string.
 export function classifyText(text: string, threshold: f32): string {
-  const predictions = classify(text, threshold);
+  const predictions = classify(text, threshold)
 
-  const prediction = predictions[0];
+  const prediction = predictions[0]
   if (prediction.confidence < threshold) {
-    return "";
+    return ""
   }
 
-  return prediction.label;
+  return prediction.label
 }
 
 function classify(text: string, threshold: f32): ClassifierResult[] {
-  const model = models.getModel<ClassificationModel>(modelName);
-  const input = model.createInput([text]);
-  const output = model.invoke(input);
+  const model = models.getModel<ClassificationModel>(modelName)
+  const input = model.createInput([text])
+  const output = model.invoke(input)
 
-  return output.predictions;
+  return output.predictions
 }
 ```
 

@@ -5,14 +5,15 @@ description: "Access external GraphQL data sources from your functions."
 
 {/* <!-- vale Google.Headings = NO --> */}
 
-Hypermode's GraphQL APIs allows you to securely call and fetch data from any GraphQL endpoint.
-After [defining a host](../app-manifest#hosts) for the GraphQL endpoint in your project's manifest,
-you can use the following APIs to interact with the data.
+Hypermode's GraphQL APIs allows you to securely call and fetch data from any GraphQL endpoint. After
+[defining a host](../app-manifest#hosts) for the GraphQL endpoint in your project's manifest, you can use the following
+APIs to interact with the data.
 
 ## Example project
 
 For your reference, A complete example for using the GraphQL APIs is available on GitHub in the
-`hypermodeinc/functions-as` repository, at [/examples/graphql](https://github.com/hypermodeinc/modus/tree/main/sdk/assemblyscript/examples/graphql).
+`hypermodeinc/functions-as` repository, at
+[/examples/graphql](https://github.com/hypermodeinc/modus/tree/main/sdk/assemblyscript/examples/graphql).
 
 ## Import from the SDK
 
@@ -21,7 +22,7 @@ To begin, import the `graphql` namespace from the SDK:
 <CodeGroup>
 
 ```ts AssemblyScript
-import { graphql } from "@hypermode/functions-as";
+import { graphql } from "@hypermode/functions-as"
 ```
 
 </CodeGroup>
@@ -31,9 +32,8 @@ import { graphql } from "@hypermode/functions-as";
 The APIs in the `graphql` namespace are below, organized by category.
 
 <Tip>
-  We're constantly introducing new APIs through ongoing development with build
-  partners. [Let's chat](mailto:help@hypermode.com) about what would make the
-  Functions SDK even more powerful for your next use case!
+  We're constantly introducing new APIs through ongoing development with build partners. [Let's
+  chat](mailto:help@hypermode.com) about what would make the Functions SDK even more powerful for your next use case!
 </Tip>
 
 ### Functions
@@ -57,11 +57,10 @@ graphql.execute<T> (
 
 <Tip>
 
-Define custom types in the project's source code.
-In AssemblyScript, create classes decorated with `@json`.
+Define custom types in the project's source code. In AssemblyScript, create classes decorated with `@json`.
 
-All types, including classes, base classes, and field types must be JSON serializable.
-You can also use built-in types such as strings, numbers, arrays, and maps.
+All types, including classes, base classes, and field types must be JSON serializable. You can also use built-in types
+such as strings, numbers, arrays, and maps.
 
 </Tip>
 
@@ -75,9 +74,8 @@ You can also use built-in types such as strings, numbers, arrays, and maps.
   GraphQL statement containing the query or mutation operation to execute.
 
 <Warning>
-  While it's possible to directly include parameter values into your GraphQL
-  statement, it's highly recommended to pass a [`Variables`](#variables) object
-  instead. This can help to prevent against injection attacks and other security
+  While it's possible to directly include parameter values into your GraphQL statement, it's highly recommended to pass
+  a [`Variables`](#variables) object instead. This can help to prevent against injection attacks and other security
   vulnerabilities.
 </Warning>
 
@@ -104,8 +102,8 @@ class Variables {
 
 A container for variables to include with a GraphQL operation.
 
-To use this feature, create a new `Variables` object and call the `set` method
-for each variable you want to include. Then pass the object to the `execute` function.
+To use this feature, create a new `Variables` object and call the `set` method for each variable you want to include.
+Then pass the object to the `execute` function.
 
 <ResponseField name="set(name, value)">
 
@@ -121,8 +119,8 @@ Set a variable with a name and value to include with the GraphQL operation.
 
 The value of the variable to include in the GraphQL operation.
 
-The value can be of any type that's JSON serializable, including strings, numbers,
-boolean values, arrays, maps, and custom objects decorated with `@json`.
+The value can be of any type that's JSON serializable, including strings, numbers, boolean values, arrays, maps, and
+custom objects decorated with `@json`.
 
 </ResponseField>
 
@@ -133,11 +131,11 @@ boolean values, arrays, maps, and custom objects decorated with `@json`.
 <CodeGroup>
 
 ```ts AssemblyScript
-const vars = new graphql.Variables();
-vars.set("firstName", firstName);
-vars.set("lastName", lastName);
+const vars = new graphql.Variables()
+vars.set("firstName", firstName)
+vars.set("lastName", lastName)
 
-const response = graphql.execute<PeopleData>(hostName, statement, vars);
+const response = graphql.execute<PeopleData>(hostName, statement, vars)
 ```
 
 </CodeGroup>
@@ -148,9 +146,8 @@ const response = graphql.execute<PeopleData>(hostName, statement, vars);
 
 <ResponseField name="toJSON()" type="string">
 
-Serializes the variables to a JSON string for inclusion in the GraphQL
-operation. The `execute` function calls this automatically when you pass a
-`Variables` object. You typically don't need to call it directly.
+Serializes the variables to a JSON string for inclusion in the GraphQL operation. The `execute` function calls this
+automatically when you pass a `Variables` object. You typically don't need to call it directly.
 
 </ResponseField>
 
@@ -171,8 +168,7 @@ Either `errors` or `data` is present, depending on the result of the query.
 
 An array of errors incurred as part of your GraphQL request, if any.
 
-Each error in the array is an [`ErrorResult`](#errorresult) object.
-If there are no errors, this field is `null`.
+Each error in the array is an [`ErrorResult`](#errorresult) object. If there are no errors, this field is `null`.
 
 </ResponseField>
 
@@ -180,8 +176,8 @@ If there are no errors, this field is `null`.
 
 The resulting data selected by the GraphQL operation.
 
-The data has the type specified in the call to the `execute` function.
-If data is absent due to errors, this field is `null`.
+The data has the type specified in the call to the `execute` function. If data is absent due to errors, this field is
+`null`.
 
 </ResponseField>
 
@@ -210,8 +206,8 @@ Each item in the array represents a segment of the path.
 </ResponseField>
 
 <ResponseField name="locations" type="CodeLocation[]">
-  An array of [`CodeLocation`](#codelocation) objects that point to the specific
-  location of the error in the GraphQL statement.
+  An array of [`CodeLocation`](#codelocation) objects that point to the specific location of the error in the GraphQL
+  statement.
 </ResponseField>
 
 #### CodeLocation

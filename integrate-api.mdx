@@ -7,21 +7,24 @@ Hypermode makes it easy to incrementally add intelligence your app.
 
 ## API endpoint
 
-You can find your project's API endpoint in the Hypermode Console in the format of `https://<slug>.hypermode.app/<path>`.
+You can find your project's API endpoint in the Hypermode Console in the format of
+`https://<slug>.hypermode.app/<path>`.
 
 ## API token
 
-Hypermode protects your project's endpoint with an API key. In your project dashboard, navigate to **Settings** → **API Keys** to find and manage your API tokens.
+Hypermode protects your project's endpoint with an API key. In your project dashboard, navigate to **Settings** → **API
+Keys** to find and manage your API tokens.
 
-From your app, you can call the API by passing the API token in the `Authorization` header. Here's an example using the `fetch` API in JavaScript:
+From your app, you can call the API by passing the API token in the `Authorization` header. Here's an example using the
+`fetch` API in JavaScript:
 
 ```javascript
-const endpoint = ""; // your API endpoint
-const key = ""; // your API key
+const endpoint = "" // your API endpoint
+const key = "" // your API key
 // your graphql query
 const query = `query {
   ...
-}`;
+}`
 
 const response = await fetch(endpoint, {
   method: "POST",
@@ -32,12 +35,11 @@ const response = await fetch(endpoint, {
   body: JSON.stringify({
     query: query,
   }),
-});
-const data = await response.json();
+})
+const data = await response.json()
 ```
 
 <Note>
-  Additional authorization methods are under development. If your app requires a
-  different protocol, reach out at
+  Additional authorization methods are under development. If your app requires a different protocol, reach out at
   [help@hypermode.com](mailto:help@hypermode.com).
 </Note>

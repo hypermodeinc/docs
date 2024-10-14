@@ -3,8 +3,8 @@ title: Model Invoking
 description: "Invoke your models with the Modus Models API"
 ---
 
-Modus enables you to easily integrate AI models into your app. In just a few steps, you can generate text,
-classify items, compute embeddings, and many more using the Models API.
+Modus enables you to easily integrate AI models into your app. In just a few steps, you can generate text, classify
+items, compute embeddings, and many more using the Models API.
 
 ## Prerequisites
 
@@ -13,7 +13,8 @@ Ensure that you have a working Modus setup locally.
 ## Understanding key components
 
 - **Models**: You can invoke **models** hosted on Hypermode, OpenAI, Anthropic, and many more.
-- **Models API**: The **Models API** provides a set of host functions that you can import and call from your Modus functions.
+- **Models API**: The **Models API** provides a set of host functions that you can import and call from your Modus
+  functions.
 
 ## Define your models
 
@@ -92,41 +93,30 @@ To invoke a model, you need to import the Models API from the SDK.
 
 ### LLMs
 
-Currently, the Models API support the OpenAI, Anthropic, and Gemini interface. Let's see
-how to invoke a model using the OpenAI interface. You can see https://platform.openai.com/docs/api-reference/chat/create for more details
-about the options available on the model, which you can set on the input object.
+Currently, the Models API support the OpenAI, Anthropic, and Gemini interface. Let's see how to invoke a model using the
+OpenAI interface. You can see https://platform.openai.com/docs/api-reference/chat/create for more details about the
+options available on the model, which you can set on the input object.
 
-<Note>
-  Hypermode-hosted LLMs implements the OpenAI API, so to use that, you can use
-  the OpenAI interface.
-</Note>
+<Note>Hypermode-hosted LLMs implements the OpenAI API, so to use that, you can use the OpenAI interface.</Note>
 
 <CodeGroup>
 
 ```ts AssemblyScript
-import { models } from "@hypermode/modus-sdk-as";
-import {
-  OpenAIChatModel,
-  ResponseFormat,
-  SystemMessage,
-  UserMessage,
-} from "@hypermode/modus-sdk-as/models/openai/chat";
+import { models } from "@hypermode/modus-sdk-as"
+import { OpenAIChatModel, ResponseFormat, SystemMessage, UserMessage } from "@hypermode/modus-sdk-as/models/openai/chat"
 
 // This model name should match the one defined in the hypermode.json manifest.
-const modelName: string = "text-generator";
+const modelName: string = "text-generator"
 
 export function generateText(instruction: string, prompt: string): string {
-  const model = models.getModel<OpenAIChatModel>(modelName);
-  const input = model.createInput([
-    new SystemMessage(instruction),
-    new UserMessage(prompt),
-  ]);
+  const model = models.getModel<OpenAIChatModel>(modelName)
+  const input = model.createInput([new SystemMessage(instruction), new UserMessage(prompt)])
 
   // This is one of many optional parameters available for the OpenAI Chat model.
-  input.temperature = 0.7;
+  input.temperature = 0.7
 
-  const output = model.invoke(input);
-  return output.choices[0].message.content.trim();
+  const output = model.invoke(input)
+  return output.choices[0].message.content.trim()
 }
 ```
 
