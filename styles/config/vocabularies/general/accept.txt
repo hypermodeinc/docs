@@ -1,11 +1,13 @@
 agentic
 alterSchema
+Anthropic
 APIs
 AWS
 boolean
 CLI
 [Cc]onsole
 computeSimilarity
+CRUD
 [Dd]graph
 distilbert
 dropAll

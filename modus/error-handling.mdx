@@ -3,14 +3,14 @@ title: Error Handling
 description: ""
 ---
 
-In this guide, we'll explore best practices for handling errors in the **Modus framework** leveraging the **Console
-API** and **GraphQL error responses**.
+In this guide, we'll explore best practices for handling errors in the Modus framework leveraging the Console API and
+GraphQL error responses.
 
 ### Error reporting in GraphQL
 
-GraphQL responses have a standard structure that includes both a `data` and an `errors` section. Modus facilitates the
-inclusion of error codes or messages within the `errors` section, enhancing how errors are communicated to the front
-end.
+GraphQL responses have a standard structure that includes both `data` and `errors` sections. Modus allows for the
+inclusion of error codes or messages within the `errors` section to allow for downstream processing in addition to
+debugging.
 
 <CodeGroup>
 

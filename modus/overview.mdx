@@ -24,7 +24,7 @@ npm install -g @hypermode/modus
 
 </CodeGroup>
 
-## What is this?
+## What's this?
 
 Modus is an open source, serverless framework for building functions and APIs, powered by WebAssembly.
 
@@ -48,9 +48,9 @@ Modus exists to make it easier for you to build the applications of your dreams.
 4. A multi-language framework with a lightweight footprint that makes AI usable for developers with varied needs and
    sophistication.
 
-## What can I do with it?
+## What's Modus good for?
 
-Modus is designed primarily as a general-purpose application framework, it just happens to treat models as a first-class
+We designed Modus primarily as a general-purpose app framework, it just happens to treat models as a first-class
 component. With Modus you can use models, as appropriate, without additional complexity.
 
 However, Modus is best for applications that require sub-second response times. We've made trade-offs to optimize for
@@ -70,7 +70,7 @@ speed and simplicity.
 - **Agents**: chain together models and data sources to create agents that can reason about the world and take actions
   on your behalf.
 
-## How is it organized?
+## How's it organized?
 
 ### Modus provides
 
@@ -81,15 +81,16 @@ speed and simplicity.
   changes to your repository.
 
 <Note>
-  Modus is a multi-language framework. It currently includes support for GoLang and AssemblyScript, a WebAssembly
-  compatible TypeScript-like language. Additional language support is in development.
+  Modus is a multi-language framework. It currently includes support for Go and AssemblyScript, a WebAssembly compatible
+  TypeScript-like language. Additional language support is in development.
 </Note>
 
-### Where do I write my code?
+### Where does the app code live?
 
 We organize your app into 2 primary components:
 
 - `modus.json` we call this your [Manifest](https://hypermode-modus-docs.mintlify.app/modus/app-manifest). Where you
   decide what models, data, and external services you’d like your functions to have access to.
-- `/functions/` is where you put your function code. If you're writing in AssemblyScript, you'll publish your functions
-  in the `/assembly/index.ts` file. For Golang, simply capitalizing a function's name will expose it in the Modus API.
+- `/functions/` is where you store your function code. If you're writing in AssemblyScript, you'll publish your
+  functions in the `/assembly/index.ts` file. For Go, simply capitalizing a function's name exposes it on your app's
+  API.

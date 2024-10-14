@@ -183,18 +183,21 @@ Then pass the object to the `execute`, `query`, or `queryScalar` function along 
   Push a parameter value into the list included with the SQL operation. The sequence of calls to `push` determines the
   order of the parameters in the SQL statement. This corresponds to the order of the `?` placeholders or `$1`, `$2`, etc.
 
-  <ResponseField name="value" type="any" required>
-    The value of the parameter to include in the SQL operation.
+<ResponseField name="value" type="any" required>
+  The value of the parameter to include in the SQL operation.
 
-    The value can be of any type that's JSON serializable, including strings, numbers, boolean values, arrays, maps, and custom objects decorated with `@json`, as long as the database supports it.
+The value can be of any type that's JSON serializable, including strings, numbers, boolean values, arrays, maps, and
+custom objects decorated with `@json`, as long as the database supports it.
 
-    <Tip>
-      If working with PostgreSQL's `Point` data type, you can either pass separate parameters for the coordinates and use a
-      `point()` function in the SQL statement, or you can pass a [`Point`](#point) or [`Location`](#location) object as a
-      single parameter.
-    </Tip>
+{" "}
 
-  </ResponseField>
+<Tip>
+  If working with PostgreSQL's `Point` data type, you can either pass separate parameters for the coordinates and use a
+  `point()` function in the SQL statement, or you can pass a [`Point`](#point) or [`Location`](#location) object as a
+  single parameter.
+</Tip>
+
+</ResponseField>
 </ResponseField>
 
 <ResponseField name="toJSON()" type="string">
