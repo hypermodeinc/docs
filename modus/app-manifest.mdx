@@ -10,7 +10,7 @@ define the manifest in the `modus.json` file within the root of your project dir
   <Card title="Endpoints" icon="message-plus" href="#endpoints">
     Expose your functions for integration into your frontend or federated API
   </Card>
-  <Card title="Connections" icon="server" href="#hosts">
+  <Card title="Connections" icon="server" href="#connections">
     Establish connectivity for external endpoints and model hosts
   </Card>
   <Card title="Models" icon="message-plus" href="#models">
@@ -21,15 +21,15 @@ define the manifest in the `modus.json` file within the root of your project dir
   </Card>
 </CardGroup>
 
-## Hosts
+## Connections
 
-Hosts establish connectivity to external services. They're used for HTTP and GraphQL APIs, database connections, and
-externally hosted AI models. The `hosts` object in the app manifest allows you to define these hosts, for secure access
-from within a function.
+Connections establish connectivity to external services. They're used for HTTP and GraphQL APIs, database connections,
+and externally hosted AI models. The `connections` object in the app manifest allows you to define these hosts, for
+secure access from within a function.
 
-Each host requires a unique name, specified as a key containing only alphanumeric characters and hyphens.
+Each connection requires a unique name, specified as a key containing only alphanumeric characters and hyphens.
 
-Each host has a `type` property, which controls how it's used and which additional properties are available. The
+Each connection has a `type` property, which controls how it's used and which additional properties are available. The
 following table lists the available host types:
 
 | Type         | Purpose                          | Functions Namespaces        |
@@ -43,25 +43,25 @@ following table lists the available host types:
 
 Don't include secrets directly in the manifest!
 
-If your host requires authentication, you can include _placeholders_ in host properties which resolve to their
-respective secrets at runtime. Set the actual secrets via the Hypermode Console, where they're securely stored until
-needed.
+If your connection requires authentication, you can include _placeholders_ in connection properties which resolve to
+their respective secrets at runtime. Set the actual secrets via the Hypermode Console, where they're securely stored
+until needed.
 
 </Warning>
 
-### HTTP host
+### HTTP connection
 
-This host type supports the HTTP and HTTPS protocols to communicate with external hosts. You can use the
-[HTTP APIs](/modus/sdk/http) in the Functions SDK to interact with the host.
+This connection type supports the HTTP and HTTPS protocols to communicate with external hosts. You can use the
+[HTTP APIs](/modus/sdk/http) in the Modus SDK to interact with the host.
 
-This host type is also used for [GraphQL APIs](/modus/sdk/graphql) and to invoke externally hosted AI
+This connection type is also used for [GraphQL APIs](/modus/sdk/graphql) and to invoke externally hosted AI
 [models](/modus/sdk/models).
 
 **Example:**
 
-```json hypermode.json
+```json modus.json
 {
-  "hosts": {
+  "connections": {
     "openai": {
       "baseUrl": "https://api.openai.com/",
       "headers": {
@@ -73,7 +73,7 @@ This host type is also used for [GraphQL APIs](/modus/sdk/graphql) and to invoke
 ```
 
 <ResponseField name="type" type="string">
-  Always set to `"http"` for this host type. This is the default if not specified.
+  Always set to `"http"` for this connection type.
 </ResponseField>
 
 <ResponseField name="baseUrl" type="string" required>
@@ -103,10 +103,10 @@ Typically, you'll use the `baseUrl` field. However, some APIs, such as `graphql.
 </Note>
 
 <ResponseField name="headers" type="object">
-  If provided, requests to the host include these headers. Each key-value pair is a header name and value.
+  If provided, requests on the connection include these headers. Each key-value pair is a header name and value.
 
 Values may include variables using the `{{VARIABLE}}` template syntax, which resolve at runtime to secrets provided for
-each host, via the Hypermode Console.
+each connection, via the Hypermode Console.
 
   <Accordion title="Examples">
 
@@ -141,10 +141,10 @@ You can use a special syntax for hosts that require
 </ResponseField>
 
 <ResponseField name="queryParameters" type="object">
-  If provided, requests to the host include these query parameters, appended to the URL. Each key-value pair is a parameter name and value.
+  If provided, requests on the connection include these query parameters, appended to the URL. Each key-value pair is a parameter name and value.
 
 Values may include variables using the `{{VARIABLE}}` template syntax, which resolve at runtime to secrets provided for
-each host, via the Hypermode Console.
+each connection, via the Hypermode Console.
 
   <Accordion title="Example">
 
@@ -159,16 +159,16 @@ This example specifies a query parameter named `key` provided by a secret named 
   </Accordion>
 </ResponseField>
 
-### PostgreSQL host
+### PostgreSQL connection
 
-This host type supports connecting to PostgreSQL databases. You can use the [PostgreSQL APIs](/modus/sdk/postgresql) in
-the Functions SDK to interact with the database.
+This connection type supports connecting to PostgreSQL databases. You can use the
+[PostgreSQL APIs](/modus/sdk/postgresql) in the Modus SDK to interact with the database.
 
 **Example:**
 
-```json hypermode.json
+```json modus.json
 {
-  "hosts": {
+  "connections": {
     "my-database": {
       "type": "postgresql",
       "connString": "postgresql://{{PG_USER}}:{{PG_PASSWORD}}@db.example.com:5432/data?sslmode=require"
@@ -178,14 +178,14 @@ the Functions SDK to interact with the database.
 ```
 
 <ResponseField name="type" type="string" required>
-  Always set to `"postgresql"` for this host type.
+  Always set to `"postgresql"` for this connection type.
 </ResponseField>
 
 <ResponseField name="connString" type="string" required>
   The connection string for the PostgreSQL database.
 
 Values may include variables using the `{{VARIABLE}}` template syntax, which resolve at runtime to secrets provided for
-each host, via the Hypermode Console.
+each connection, via the Hypermode Console.
 
 The connection string in the preceding example includes:
 
@@ -208,16 +208,16 @@ For example, if using Neon, refer to the [Neon documentation](https://neon.tech/
 
 </ResponseField>
 
-### Dgraph host
+### Dgraph connection
 
-This host type supports connecting to Dgraph databases. You can use the [Dgraph APIs](/modus/sdk/dgraph) in the
-Functions SDK to interact with the database.
+This connection type supports connecting to Dgraph databases. You can use the [Dgraph APIs](/modus/sdk/dgraph) in the
+Modus SDK to interact with the database.
 
 **Example:**
 
-```json hypermode.json
+```json modus.json
 {
-  "hosts": {
+  "connections": {
     "my-dgraph": {
       "type": "dgraph",
       "grpcTarget": "frozen-mango.grpc.eu-central-1.aws.cloud.dgraph.io:443",
@@ -228,7 +228,7 @@ Functions SDK to interact with the database.
 ```
 
 <ResponseField name="type" type="string" required>
-  Always set to `"dgraph"` for this host type.
+  Always set to `"dgraph"` for this connection type.
 </ResponseField>
 
 <ResponseField name="grpcTarget" type="string" required>
