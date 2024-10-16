@@ -54,3 +54,4 @@ upsert
 URL|url
 urql
 UUID
+[Dd]eserialize
