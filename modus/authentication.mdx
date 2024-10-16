@@ -55,7 +55,7 @@ This is an example of how to use the `getJWTClaims()` function in Golang:
 package main
 
 import (
-	"github.com/hypermodeinc/modus/sdk/go/pkg/auth"
+    "github.com/hypermodeinc/modus/sdk/go/pkg/auth"
 )
 
 type ExampleClaims struct {
@@ -65,7 +65,7 @@ type ExampleClaims struct {
 }
 
 func GetClaims() (*ExampleClaims, error) {
-	return auth.GetJWTClaims[*ExampleClaims]()
+    return auth.GetJWTClaims[*ExampleClaims]()
 }
 
 ```
