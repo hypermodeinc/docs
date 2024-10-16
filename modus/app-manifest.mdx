@@ -1,31 +1,95 @@
 ---
 title: App Manifest
-description: "Define your models and hosts"
+description: "Define the resources for your app"
 ---
 
 The manifest for your Modus app allows you to configure the exposure and resources for your functions at runtime. You
-define the manifest in the `modus.json` file within the root of your project directory.
+define the manifest in the `modus.json` file within the root of directory of your app.
+
+## Structure
 
 <CardGroup cols={2}>
-  <Card title="Endpoints" icon="message-plus" href="#endpoints">
+  <Card title="Endpoints" icon="rectangle-code" href="#endpoints">
     Expose your functions for integration into your frontend or federated API
   </Card>
-  <Card title="Connections" icon="server" href="#connections">
+  <Card title="Connections" icon="router" href="#connections">
     Establish connectivity for external endpoints and model hosts
   </Card>
-  <Card title="Models" icon="message-plus" href="#models">
+  <Card title="Models" icon="cube" href="#models">
     Define inference services for use in your functions
   </Card>
-  <Card title="Collections" icon="server" href="#collections">
-    Define groups of text data to enable natural language search
+  <Card title="Collections" icon="table" href="#collections">
+    Define sets of text data to enable natural language search
   </Card>
 </CardGroup>
 
+### Base manifest
+
+A simple manifest, which exposes a single GraphQL endpoint with a bearer token for authentication, looks like this:
+
+```json modus.json
+{
+  "$schema": "https://schema.hypermode.com/modus.json",
+  "endpoints": {
+    "default": {
+      "type": "graphql",
+      "path": "/graphql",
+      "auth": "bearer-token"
+    }
+  }
+}
+```
+
+## Endpoints
+
+Endpoints make your functions available outside of your Modus app. The `endpoints` object in the app manifest allows you
+to define these endpoints for integration into your frontend or federated API.
+
+Each endpoint requires a unique name, specified as a key containing only alphanumeric characters and hyphens.
+
+<Note>
+  Only a GraphQL endpoint is available currently, but the modular design of Modus allows for the introduction of
+  additional endpoint types in the future.
+</Note>
+
+### GraphQL endpoint
+
+This endpoint type supports the GraphQL protocol to communicate with external clients. You can use a GraphQL client,
+such as [urql](https://github.com/urql-graphql/urql) or [Apollo Client](https://github.com/apollographql/apollo-client),
+to interact with the endpoint.
+
+**Example:**
+
+```json modus.json
+{
+  "endpoints": {
+    "default": {
+      "type": "graphql",
+      "path": "/graphql",
+      "auth": "bearer-token"
+    }
+  }
+}
+```
+
+<ResponseField name="type" type="string" required>
+  Always set to `"graphql"` for this endpoint type.
+</ResponseField>
+
+<ResponseField name="path" type="string" required>
+  The path for the endpoint. Must start with a forward slash `/`.
+</ResponseField>
+
+<ResponseField name="auth" type="string" required>
+  The authentication method for the endpoint. Options are `"bearer-token"` or `"none"`. See
+  [Authentication](/modus/authentication) for additional details.
+</ResponseField>
+
 ## Connections
 
-Connections establish connectivity to external services. They're used for HTTP and GraphQL APIs, database connections,
-and externally hosted AI models. The `connections` object in the app manifest allows you to define these hosts, for
-secure access from within a function.
+Connections establish connectivity and access to external services. They're used for HTTP and GraphQL APIs, database
+connections, and externally hosted AI models. The `connections` object in the app manifest allows you to define these
+hosts, for secure access from within a function.
 
 Each connection requires a unique name, specified as a key containing only alphanumeric characters and hyphens.
 
@@ -39,9 +103,7 @@ following table lists the available host types:
 | `dgraph`     | Connect to a Dgraph database     | `dgraph`                    |
 
 <Warning>
-### Caution
-
-Don't include secrets directly in the manifest!
+**Don't include secrets directly in the manifest!**
 
 If your connection requires authentication, you can include _placeholders_ in connection properties which resolve to
 their respective secrets at runtime. Set the actual secrets via the Hypermode Console, where they're securely stored
@@ -72,14 +134,12 @@ This connection type is also used for [GraphQL APIs](/modus/sdk/graphql) and to 
 }
 ```
 
-<ResponseField name="type" type="string">
+<ResponseField name="type" type="string" required>
   Always set to `"http"` for this connection type.
 </ResponseField>
 
 <ResponseField name="baseUrl" type="string" required>
-  Base URL for connections to the host.
-  - Must end with a trailing slash.
-  - May contain path segments if necessary.
+  Base URL for connections to the host. Must end with a trailing slash and may contain path segments if necessary.
 
 Example: `"https://api.example.com/v1/"`
 
@@ -244,73 +304,61 @@ Modus SDK to interact with the database.
 AI models are a core resource for inferencing. The `models` object in the app manifest allows you to easily define
 models, whether hosted by Hypermode or another host.
 
-```json hypermode.json
+Each model requires a unique name, specified as a key, containing only alphanumeric characters and hyphens.
+
+```json modus.json
 {
   "models": {
     "text-generator": {
       "sourceModel": "meta-llama/Llama-3.1-8B-Instruct",
       "provider": "hugging-face",
-      "host": "hypermode"
+      "connection": "hypermode"
     }
   }
 }
 ```
 
-Each model requires a unique name, specified as a key, containing only alphanumeric characters and hyphens.
-
-### Models properties
-
 <ResponseField name="sourceModel" type="string" required>
   Original relative path of the model within the provider's repository.
-</ResponseField>
-
-<ResponseField name="host" type="string" required>
-  Host for the model instance.
-
-- Specify `"hypermode"` for models that are automatically deployed by Hypermode.
-- Otherwise, specify a name that matches a host defined in the [`hosts`](#hosts) section of the manifest.
-
 </ResponseField>
 
 <ResponseField name="provider" type="string">
   Source provider of the model. `hugging-face` is currently the only supported option.
 </ResponseField>
 
-<ResponseField name="path" type="string">
-  Path to the model endpoint, applied to the `baseUrl` of the host.
+<ResponseField name="connection" type="string" required>
+  Connection for the model instance.
+
+- Specify `"hypermode"` for models that [Hypermode hosts](/hosted-models).
+- Otherwise, specify a name that matches a host defined in the [`connections`](#connections) section of the manifest.
+
 </ResponseField>
 
-<ResponseField name="dedicated" type="boolean">
-  Set to `true` to use a dedicated instance of the model for your project. Defaults to `false`.
-</ResponseField>
+<Tip>
 
-### Auto-deployed models
+When using `hugging-face` as the `provider` and `hypermode` as the `connection`, Hypermode automatically facilitates the
+connection to an instance of a shared or dedicated instance of the model. Your project's functions securely access the
+hosted model, with no further configuration required. For more details, see [hosted models](/hosted-models).
 
-When using `hugging-face` as the `provider` and `hypermode` as the `host`, Hypermode automatically deploys a dedicated
-instance of the defined `sourceModel` when deploying your project. Your project's functions securely connect to the
-hosted model, with no further configuration required.
+</Tip>
 
 ## Collections
 
-Collections are a key integration aspect with [models](#models) to create smart, searchable text. The `collections`
-object in the app manifest allows you to define groupings of text and functions to embed inserted text with.
+Collections simplify the usage of vector embeddings to build natural language search features. The `collections` object
+allows you to define indexed data types that are automatically embedded and searchable based on the search method you
+define.
 
-```json hypermode.json
+Each collection requires a unique name, specified as a key, containing only alphanumeric characters and hyphens.
+
+For more detail on implementing collections, see [Search](/modus/search).
+
+```json modus.json
 {
   "collections": {
-    // This defines a collection of products, having two search methods.
     "myProducts": {
       "searchMethods": {
-        "searchMethod1": {
-          // The embedder is the name of the function that will be used to generate vector embeddings.
-          // By default, it uses a sequential index.
-          "embedder": "embed"
-        },
-
-        // This is an example of a second search method.
-        // It could use a different embedder or index type, if desired.
-        "searchMethod2": {
-          "embedder": "embed",
+        "searchMethod": {
+          "embedder": "myEmbedder",
           "index": {
             "type": "sequential"
           }
@@ -321,46 +369,15 @@ object in the app manifest allows you to define groupings of text and functions 
 }
 ```
 
-Each collection requires a unique name, specified as a key, containing only alphanumeric characters and hyphens.
+<ResponseField name="searchMethods" type="object" required>
+  Search methods define a pair of an embedder and index to make available for searching the data in your collection.
+</ResponseField>
 
-### Collections properties
+<ResponseField name="embedder" type="string" required>
+  The function name to embed text added to the collection.
+</ResponseField>
 
-<ResponseField name="searchMethods" type="object">
-  If provided, adds an index on top of the collection. Each key-value pair is a
-  search method and values.
-
-  <ResponseField name="embedder" type="string">
-  An exported function name used by the search method to embed text in the collection. Function must have a call signature with input `string[]` and return type `f32[][]`.
-
-  <Accordion title="Examples">
-  This example specifies a `searchMethod` with an embedder named `embed`
-
-```json
-"searchMethod1": {
-  "embedder": "embed"
-}
-```
-
-  </Accordion>
-
-  </ResponseField>
-
-  <ResponseField name="index" type="string">
-  If provided, describes the index mechanism used by the search method. `type`: specifies the type of the index. For example, `sequential` (default).
-
-  <Accordion title="Examples">
-  This example specifies a `searchMethod` with an embedder named `embed` and an index with type `sequential`
-
-```json
-"searchMethod1": {
-  "embedder": "embed"
-  "index": {
-    "type": "sequential"
-  }
-}
-```
-
-  </Accordion>
-
-  </ResponseField>
+<ResponseField name="index" type="string">
+  If provided, describes the index mechanism used by the search method. `type`: specifies the type of the index. For
+  example, `sequential` (default).
 </ResponseField>

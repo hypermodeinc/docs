@@ -19,9 +19,9 @@ getModel
 getText
 getTexts
 getVector
-[Gg]it[Hh]ub
+GitHub|github
 GraphiQL
-GraphQL
+GraphQL|graphql
 gRPC
 hardcoding
 HTTP|http
@@ -52,4 +52,5 @@ timeEnd
 triaging
 upsert
 URL|url
+urql
 UUID
