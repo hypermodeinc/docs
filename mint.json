@@ -50,7 +50,13 @@
     },
     {
       "group": "Develop",
-      "pages": ["work-locally", "deploy", "configure-environment", "integrate-api", "observe-functions"]
+      "pages": [
+        "work-locally",
+        "deploy",
+        "configure-environment",
+        "integrate-api",
+        "observe-functions"
+      ]
     },
     {
       "group": "Manage",
@@ -105,7 +111,13 @@
     },
     {
       "group": "Resources",
-      "pages": ["modus/architecture", "modus/troubleshooting", "modus/roadmap", "modus/contributing", "modus/changelog"]
+      "pages": [
+        "modus/architecture",
+        "modus/troubleshooting",
+        "modus/roadmap",
+        "modus/contributing",
+        "modus/changelog"
+      ]
     }
   ],
   "footerSocials": {

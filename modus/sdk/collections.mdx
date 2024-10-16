@@ -29,8 +29,8 @@ The APIs in the `collections` namespace are below, organized by category.
 
 <Tip>
   We're constantly introducing new APIs through ongoing development with early users. [Open an
-  issue](https://github.com/hypermodeinc/modus/issues) if you have ideas on what would make Modus even more powerful for
-  your next app!
+  issue](https://github.com/hypermodeinc/modus/issues) if you have ideas on what would make Modus
+  even more powerful for your next app!
 </Tip>
 
 ### Mutation Functions
@@ -39,7 +39,10 @@ The APIs in the `collections` namespace are below, organized by category.
 
 Inserts or updates an item in a collection.
 
-<Note>If the item already exists, the function overwrites the previous value. If not, it creates a new one.</Note>
+<Note>
+  If the item already exists, the function overwrites the previous value. If not, it creates a new
+  one.
+</Note>
 
 ```go
 collections.upsert(
@@ -56,7 +59,8 @@ collections.upsert(
 </ResponseField>
 
 <ResponseField name="key" type="string">
-  The unique identifier for the item in the namespace. If null, the function generates a unique identifier.
+  The unique identifier for the item in the namespace. If null, the function generates a unique
+  identifier.
 </ResponseField>
 
 <ResponseField name="text" type="string" required>
@@ -75,7 +79,9 @@ collections.upsert(
 
 Inserts or updates a batch of items into a collection.
 
-<Note>If an item with the same key already exists, the original text is overwritten with the new text.</Note>
+<Note>
+  If an item with the same key already exists, the original text is overwritten with the new text.
+</Note>
 
 ```go
 collections.upsertBatch(
@@ -92,8 +98,8 @@ collections.upsertBatch(
 </ResponseField>
 
 <ResponseField name="keys" type="string[]">
-  Array of keys for the item to add to the collection. If you pass `null` for any key, Hypermode assigns a new UUID as
-  the key for the item.
+  Array of keys for the item to add to the collection. If you pass `null` for any key, Hypermode
+  assigns a new UUID as the key for the item.
 </ResponseField>
 
 <ResponseField name="texts" type="string[]" required>
@@ -136,12 +142,12 @@ collections.remove(
 
 #### search
 
-Perform a natural language search on items within a collection. This method is useful for finding items that match a
-search query based on semantic meaning.
+Perform a natural language search on items within a collection. This method is useful for finding
+items that match a search query based on semantic meaning.
 
 <Note>
-  Modus uses the same embedder for both inserting text into the collection, and for the text used when searching the
-  collection.
+  Modus uses the same embedder for both inserting text into the collection, and for the text used
+  when searching the collection.
 </Note>
 
 ```go
@@ -181,12 +187,12 @@ collections.search(
 
 #### searchByVector
 
-Perform a vector-based search on a collection, which is helpful for scenarios requiring precise similarity calculations
-between pre-computed embeddings.
+Perform a vector-based search on a collection, which is helpful for scenarios requiring precise
+similarity calculations between pre-computed embeddings.
 
 <Note>
-  Modus uses the same embedder for both inserting text into the collection, and for the vector used when searching the
-  collection.
+  Modus uses the same embedder for both inserting text into the collection, and for the vector used
+  when searching the collection.
 </Note>
 
 ```go
@@ -397,9 +403,9 @@ collections.getLabels(
 
 #### recomputeSearchMethod
 
-Recalculates the embeddings for all items in a collection. It can be resource-intensive, use it when necessary, for
-example after you have updated the method for embedding calculation and want to re-compute the embeddings for existing
-data in the collection.
+Recalculates the embeddings for all items in a collection. It can be resource-intensive, use it when
+necessary, for example after you have updated the method for embedding calculation and want to
+re-compute the embeddings for existing data in the collection.
 
 ```go
 collections.recomputeSearchMethod(
@@ -451,8 +457,8 @@ Represents the result of a mutation operation on a collection.
 </ResponseField>
 
 <ResponseField name="isSuccessful" type="bool">
-  A boolean indicating whether the operation completed successfully. Use this to confirm success before handling the
-  result.
+  A boolean indicating whether the operation completed successfully. Use this to confirm success
+  before handling the result.
 </ResponseField>
 
 <ResponseField name="operation" type="string">
@@ -491,8 +497,8 @@ Represents the result of a search operation on a collection.
 </ResponseField>
 
 <ResponseField name="isSuccessful" type="bool">
-  A boolean indicating whether the operation completed successfully. Use this to confirm success before handling the
-  result.
+  A boolean indicating whether the operation completed successfully. Use this to confirm success
+  before handling the result.
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string">
@@ -567,8 +573,8 @@ Represents the result of a classification operation on a collection.
 </ResponseField>
 
 <ResponseField name="isSuccessful" type="bool">
-  A boolean indicating whether the operation completed successfully. Use this to confirm success before handling the
-  result.
+  A boolean indicating whether the operation completed successfully. Use this to confirm success
+  before handling the result.
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string">
@@ -678,8 +684,8 @@ Represents the result of a mutation operation on a search method.
 </ResponseField>
 
 <ResponseField name="isSuccessful" type="bool">
-  A boolean indicating whether the operation completed successfully. Use this to confirm success before handling the
-  result.
+  A boolean indicating whether the operation completed successfully. Use this to confirm success
+  before handling the result.
 </ResponseField>
 
 <ResponseField name="operation" type="string">

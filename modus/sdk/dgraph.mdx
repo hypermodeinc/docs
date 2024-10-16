@@ -29,8 +29,8 @@ The APIs in the `dgraph` namespace are below, organized by category.
 
 <Tip>
   We're constantly introducing new APIs through ongoing development with early users. [Open an
-  issue](https://github.com/hypermodeinc/modus/issues) if you have ideas on what would make Modus even more powerful for
-  your next app!
+  issue](https://github.com/hypermodeinc/modus/issues) if you have ideas on what would make Modus
+  even more powerful for your next app!
 </Tip>
 
 ### Functions
@@ -137,8 +137,8 @@ class Query {
 ```
 
 <ResponseField name="new dgraph.Query(query, variables)">
-  Creates a new `Query` object with the given `query` and `variables`. `query` is a Dgraph Query Language (DQL) query
-  string, and `variables` is a [`Variables`](#variables) object.
+  Creates a new `Query` object with the given `query` and `variables`. `query` is a Dgraph Query
+  Language (DQL) query string, and `variables` is a [`Variables`](#variables) object.
 </ResponseField>
 
 <ResponseField name="query" type="string">
@@ -161,7 +161,8 @@ class Variables {
 ```
 
 <ResponseField name="Variables.set(name, value)">
-  Sets a query variable with the given `name` and `value`. `name` is of type `string`, and `value` can be of any type.
+  Sets a query variable with the given `name` and `value`. `name` is of type `string`, and `value`
+  can be of any type.
 </ResponseField>
 
 <ResponseField name="Variables.toMap()">
@@ -185,7 +186,8 @@ class Mutation {
 ```
 
 <ResponseField name="new dgraph.Mutation(setJson, delJson, setNquads, delNquads, condition)">
-  Creates a new `Mutation` object with the given `setJson`, `delJson`, `setNquads`, `delNquads`, and `condition` fields.
+  Creates a new `Mutation` object with the given `setJson`, `delJson`, `setNquads`, `delNquads`, and
+  `condition` fields.
 </ResponseField>
 
 <ResponseField name="setJson" type="string">

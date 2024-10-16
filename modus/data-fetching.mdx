@@ -3,15 +3,15 @@ title: Data Fetching
 description: "Pull data into your app"
 ---
 
-Modus makes it simple to fetch data from external sources. The specific data source you're retrieving from determines
-the method you use to interact with it.
+Modus makes it simple to fetch data from external sources. The specific data source you're
+retrieving from determines the method you use to interact with it.
 
 ## Fetching from databases
 
 ### PostgreSQL
 
-PostgreSQL is a powerful, open source relational database system. Modus provides a simple way to interact with
-PostgreSQL databases.
+PostgreSQL is a powerful, open source relational database system. Modus provides a simple way to
+interact with PostgreSQL databases with the `postgresql` APIs.
 
 Here is an example of fetching a person from a PostgreSQL database using the Modus SDK:
 
@@ -20,7 +20,7 @@ Here is an example of fetching a person from a PostgreSQL database using the Mod
 ```go Go
 import github.com/hypermodeinc/modus/sdk/go/pkg/postgresql
 
-// The name of the PostgreSQL host, as specified in the modus.json manifest
+// the name of the PostgreSQL connection, as specified in the modus.json manifest
 const host = "my-database"
 
 type Person struct {
@@ -48,7 +48,7 @@ func GetPerson(id int) (*Person, error) {
 ```ts AssemblyScript
 import { postgresql } from "@hypermode/modus-sdk-as"
 
-// The name of the PostgreSQL host, as specified in the modus.json manifest
+// the name of the PostgreSQL connection, as specified in the modus.json manifest
 const host = "my-database"
 
 @json
@@ -74,7 +74,8 @@ export function getPerson(id: i32): Person | null {
 
 ### Dgraph
 
-Dgraph is a distributed, transactional graph database. Modus offers an easy way to query and mutate data in Dgraph.
+Dgraph is a distributed, transactional graph database. Modus offers an easy way to query and mutate
+data in Dgraph with the `dgraph` APIs.
 
 Here is an example of fetching a person from a Dgraph database using the Modus SDK:
 
@@ -83,7 +84,15 @@ Here is an example of fetching a person from a Dgraph database using the Modus S
 ```go Go
 import github.com/hypermodeinc/modus/sdk/go/pkg/dgraph
 
+// the name of the Dgraph connection, as specified in the modus.json manifest
 const hostName = "my-database"
+
+type Person struct {
+  Uid       string   `json:"uid,omitempty"`
+  FirstName string   `json:"firstName,omitempty"`
+  LastName  string   `json:"lastName,omitempty"`
+  DType     []string `json:"dgraph.type,omitempty"`
+}
 
 func QuerySpecificPerson(firstName, lastName string) (*Person, error) {
   statement := `query queryPerson($firstName: string, $lastName: string) {
@@ -128,12 +137,17 @@ func QuerySpecificPerson(firstName, lastName string) (*Person, error) {
 import { dgraph } from "@hypermode/modus-sdk-as"
 import { JSON } from "json-as"
 
-// This host name should match one defined in the modus.json manifest file.
+// the name of the Dgraph connection, as specified in the modus.json manifest
 const hostName: string = "my-database"
 
 @json
-export class Person {
-  constructor(uid: string = "", firstName: string = "", lastName: string = "", dType: string[] = []) {
+class Person {
+  constructor(
+    uid: string = "",
+    firstName: string = "",
+    lastName: string = "",
+    dType: string[] = [],
+  ) {
     this.uid = uid
     this.firstName = firstName
     this.lastName = lastName
@@ -175,6 +189,11 @@ export function querySpecificPerson(firstName: string, lastName: string): Person
 
 ### HTTP
 
+HTTP protocols underpin RESTful APIs with OpenAPI schemas. Modus provides a convenient way to
+interact with any external HTTP API using the `http` APIs in the Modus SDK.
+
+Here is an example of fetching a person from an HTTP API using the Modus SDK:
+
 <CodeGroup>
 
 ```go Go
@@ -189,18 +208,92 @@ export function querySpecificPerson(firstName: string, lastName: string): Person
 
 ### GraphQL
 
+GraphQL is a data-centric query language for APIs that allows you to fetch only the data you need.
+With the `graphql` APIs in the Modus SDK, you can easily fetch data from any GraphQL endpoint.
+
+Here is an example of fetching a person from a GraphQL API using the Modus SDK:
+
 <CodeGroup>
 
 ```go Go
+import github.com/hypermodeinc/modus/sdk/go/pkg/graphql
 
+// the name of the GraphQL connection, as specified in the modus.json manifest
+const hostName = "my-graphql-api"
+
+type Person struct {
+  FirstName string `json:"firstName,omitempty"`
+  LastName  string `json:"lastName,omitempty"`
+}
+
+func QuerySpecificPerson(firstName, lastName string) (*Person, error) {
+  statement := `query queryPeople($firstName: String!, $lastName: String!) {
+    people: queryPerson(
+      first: 1,
+      filter: { firstName: { eq: $firstName }, lastName: { eq: $lastName } }
+    ) {
+      id
+      firstName
+      lastName
+    }
+  }`
+
+  vars := map[string]any{
+    "firstName": firstName,
+    "lastName":  lastName,
+  }
+
+  response, err := graphql.Execute[PeopleData](hostName, statement, vars)
+  if err != nil {
+    return nil, err
+  }
+
+  if len(response.Data.People) == 0 {
+    return nil, nil // Person not found
+  }
+
+  return response.Data.People[0], nil
+}
 ```
 
 ```ts AssemblyScript
-const vars = new graphql.Variables()
-vars.set("firstName", firstName)
-vars.set("lastName", lastName)
+import { graphql } from "@hypermode/modus-sdk-as"
 
-const response = graphql.execute<PeopleData>(hostName, statement, vars)
+// the name of the GraphQL connection, as specified in the modus.json manifest
+const hostName: string = "my-graphql-api"
+
+@json
+class Person {
+  id: string | null = null
+  firstName: string = ""
+  lastName: string = ""
+}
+
+export function querySpecificPerson(firstName: string, lastName: string): Person | null {
+  const statement = `query queryPeople($firstName: String!, $lastName: String!) {
+    people: queryPerson(
+        first: 1,
+        filter: { firstName: { eq: $firstName }, lastName: { eq: $lastName } }
+    ) {
+        id
+        firstName
+        lastName
+    }
+  }`
+
+  const vars = new graphql.Variables()
+  vars.set("firstName", firstName)
+  vars.set("lastName", lastName)
+
+  const response = graphql.execute<PeopleData>(hostName, statement, vars)
+
+  if (!response.data) return null
+
+  const people = response.data!.people
+
+  if (people.length === 0) return null
+  return people[0]
+}
 ```
 
 </CodeGroup>

@@ -9,12 +9,12 @@ Modus automatically creates an external API from the functions you export from y
 
 Modus uses the default conventions for each language.
 
-Functions written in **AssemblyScript** use ES module-style `import` and `export` statements. With the default package
-configuration, Modus creates an external API for functions exported form the `index.ts` file located in the
-`functions/assembly` folder of your project.
+Functions written in **AssemblyScript** use ES module-style `import` and `export` statements. With
+the default package configuration, Modus creates an external API for functions exported form the
+`index.ts` file located in the `functions/assembly` folder of your project.
 
-Functions written in **Go** using starting capital letters to expose functions as public. Modus creates an external API
-for public functions from any file that belongs to the `main` package.
+Functions written in **Go** using starting capital letters to expose functions as public. Modus
+creates an external API for public functions from any file that belongs to the `main` package.
 
 The functions below generate an API endpoint with the signature
 
@@ -25,14 +25,18 @@ type Query {
 ```
 
 <Info>
-  Since the function `classify` isn't exported from the module, Modus doesn't include it in the generated GraphQL API.
+  Since the function `classify` isn't exported from the module, Modus doesn't include it in the
+  generated GraphQL API.
 </Info>
 
 <CodeGroup>
 
 ```ts AssemblyScript
 import { models } from "@hypermode/functions-as"
-import { ClassificationModel, ClassifierResult } from "@hypermode/models-as/models/experimental/classification"
+import {
+  ClassificationModel,
+  ClassifierResult,
+} from "@hypermode/models-as/models/experimental/classification"
 
 // This model name should match one defined in the hypermode.json manifest file.
 const modelName: string = "my-classifier"
@@ -60,8 +64,8 @@ function classify(text: string, threshold: f32): ClassifierResult[] {
 }
 ```
 
-Functions written in **Go** using starting capital letters to expose functions as public. Modus creates an external API
-for public functions from any file that belongs to the `main` package.
+Functions written in **Go** using starting capital letters to expose functions as public. Modus
+creates an external API for public functions from any file that belongs to the `main` package.
 
 ```go
 package main
