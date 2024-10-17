@@ -87,50 +87,23 @@ import github.com/hypermodeinc/modus/sdk/go/pkg/dgraph
 // the name of the Dgraph connection, as specified in the modus.json manifest
 const hostName = "my-database"
 
+// Declare struct used to parse the JSON document returned by Dgraph query.
 type Person struct {
-  Uid       string   `json:"uid,omitempty"`
-  FirstName string   `json:"firstName,omitempty"`
-  LastName  string   `json:"lastName,omitempty"`
-  DType     []string `json:"dgraph.type,omitempty"`
+	Name string    `json:"name,omitempty"`
+	Age  int32     `json:"age,omitempty"`
+	Home *Location `json:"home,omitempty"`
 }
 
-func QuerySpecificPerson(firstName, lastName string) (*Person, error) {
-  statement := `query queryPerson($firstName: string, $lastName: string) {
-    people(func: eq(firstName, $firstName)) @filter(eq(lastName, $lastName)) {
-      uid
-      firstName
-      lastName
-      dgraph.type
-    }
-  }`
-
-  variables := map[string]string{
-    "$firstName": firstName,
-    "$lastName":  lastName,
-  }
-
-  response, err := dgraph.Execute(hostName, &dgraph.Request{
-    Query: &dgraph.Query{
-      Query:     statement,
-      Variables: variables,
-    },
-  })
-
-  if err != nil {
-    return nil, err
-  }
-
-  var peopleData PeopleData
-  if err := json.Unmarshal([]byte(response.Json), &peopleData); err != nil {
-    return nil, err
-  }
-
-  if len(peopleData.People) == 0 {
-    return nil, nil // Person not found
-  }
-
-  return peopleData.People[0], nil
+// Dgraph location predicates follow GeoJSON format
+type Location struct {
+	Type        string    `json:"type,omitempty"`
+	Coordinates []float32 `json:"coordinates,omitempty"`
 }
+
+type GetPersonResponse struct {
+	Persons []*Person `json:"persons"`
+}
+
 ```
 
 ```ts AssemblyScript
@@ -161,31 +134,40 @@ class Location {
 
 // Exposing getPerson in the generated GraphQL API
 
-export function getPerson(name: string): Person | null {
-  const statement = `  
-  query getPerson($name: string) {
-    persons(func: eq(name, $name))  {
-        name
-        age
-        home
-    }
-  }`
+func GetPerson(name string) (*Person, error) {
+	statement := `
+	 query getPerson($name: string) {
+		persons(func: eq(name, $name))  {
+			name
+			age
+			home
+		}
+	}
+	`
+	variables := map[string]string{
+		"$name": name,
+	}
 
-  const vars = new dgraph.Variables()
-  vars.set("$name", name)
+	response, err := dgraph.Execute(hostName, &dgraph.Request{
+		Query: &dgraph.Query{
+			Query:     statement,
+			Variables: variables,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
 
-  // Build the query from statement and variables
-  // Execute the query
+	var data GetPersonResponse
+	if err := json.Unmarshal([]byte(response.Json), &data); err != nil {
+		return nil, err
+	}
 
-  const resp = dgraph.execute(hostName, new dgraph.Request(new dgraph.Query(statement, vars)))
+	if len(data.Persons) == 0 {
+		return nil, nil // Person not found
+	}
 
-  // Parse JSON response
-
-  const persons = JSON.parse<GetPersonResponse>(resp.Json).persons
-  if (persons.length == 0) {
-    return null
-  }
-  return persons[0]
+	return data.Persons[0], nil
 }
 ```
 
