@@ -104,36 +104,6 @@ type GetPersonResponse struct {
 	Persons []*Person `json:"persons"`
 }
 
-```
-
-```ts AssemblyScript
-import { dgraph } from "@hypermode/modus-sdk-as"
-import { JSON } from "json-as"
-
-// the name of the Dgraph connection, as specified in the modus.json manifest
-const hostName: string = "my-dgraph"
-
-// Declare  classes used to parse the JSON document returned by Dgraph query.
-@json
-class GetPersonResponse {
-  persons: Person[] = []
-}
-
-@json
-class Person {
-  name: string = ""
-  age: i32 = 0
-  home: Location
-}
-// Dgraph location predicates follow GeoJSON format
-@json
-class Location {
-  type: string = "Point"
-  coordinates: f64[] = []
-}
-
-// Exposing getPerson in the generated GraphQL API
-
 func GetPerson(name string) (*Person, error) {
 	statement := `
 	 query getPerson($name: string) {
@@ -168,6 +138,63 @@ func GetPerson(name string) (*Person, error) {
 	}
 
 	return data.Persons[0], nil
+}
+
+```
+
+```ts AssemblyScript
+import { dgraph } from "@hypermode/modus-sdk-as"
+import { JSON } from "json-as"
+
+// the name of the Dgraph connection, as specified in the modus.json manifest
+const hostName: string = "my-dgraph"
+
+// Declare  classes used to parse the JSON document returned by Dgraph query.
+@json
+class GetPersonResponse {
+  persons: Person[] = []
+}
+
+@json
+class Person {
+  name: string = ""
+  age: i32 = 0
+  home: Location
+}
+// Dgraph location predicates follow GeoJSON format
+@json
+class Location {
+  type: string = "Point"
+  coordinates: f64[] = []
+}
+
+// Exposing getPerson in the generated GraphQL API
+
+export function getPerson(name: string): Person | null {
+  const statement = `  
+  query getPerson($name: string) {
+    persons(func: eq(name, $name))  {
+        name
+        age
+        home
+    }
+  }`
+
+  const vars = new dgraph.Variables()
+  vars.set("$name", name)
+
+  // Build the query from statement and variables
+  // Execute the query
+
+  const resp = dgraph.execute(hostName, new dgraph.Request(new dgraph.Query(statement, vars)))
+
+  // Parse JSON response
+
+  const persons = JSON.parse<GetPersonResponse>(resp.Json).persons
+  if (persons.length == 0) {
+    return null
+  }
+  return persons[0]
 }
 ```
 
