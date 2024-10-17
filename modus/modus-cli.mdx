@@ -3,46 +3,45 @@ title: Modus CLI
 description: "Comprehensive reference for the Modus CLI commands and usage"
 ---
 
-## Modus CLI reference
+The Modus CLI is a command-line tool for interacting with your Modus app and running it locally.
 
-### Overview
+## Install
 
-- Brief introduction to the Modus CLI
-- Installation instructions
-- Basic usage and setup
+Install Modus CLI via a cURL command or npm.
 
-### Commands
+<CodeGroup>
 
-#### `new`
+```bash cURL
+curl -sSL http://install.hypermode.com/modus.sh | bash
+```
 
-- **Description**: Brief description of what the `new` command does.
-- **Usage**: Example usage of the `new` command.
-- **Options**: List of options available for the `new` command.
-- **Examples**: Example scenarios of using the `new` command.
+```js npm
+npm install -g @hypermode/modus-cli
+```
 
-#### `dev`
+</CodeGroup>
 
-- **Description**: Brief description of what the `dev` command does.
-- **Usage**: Example usage of the `dev` command.
-- **Options**: List of options available for the `dev` command.
-- **Examples**: Example scenarios of using the `dev` command.
+## Commands
 
-### Additional commands
+### `new`
 
-- List and describe any other commands available in the Modus CLI.
-- Provide usage, options, and examples for each additional command.
+Initialize a new Modus app. The Modus CLI prompts you to enter the app name and language of choice.
 
-### Best practices
+### `dev`
 
-- Tips for using the Modus CLI effectively.
-- Common pitfalls and how to avoid them.
+Run your Modus app locally. The Modus CLI starts a local server and provides a URL to access the
+app.
 
-### Troubleshooting
+<Tip>
+  When using [Hyp CLI](/hyp-cli) alongside the Modus CLI, users get access to [Hypermode-hosted
+  models](/hosted-models) for local development.
+</Tip>
 
-- Common issues and their resolutions.
-- How to get help and support.
+### `build`
 
-### Resources
+Build your Modus app. The Modus CLI compiles your app and generates a `.build` folder for the
+artifacts.
 
-- Links to official documentation.
-- Community forums and support channels.
+### `uninstall`
+
+Uninstall the Modus CLI from your system.

@@ -87,10 +87,7 @@
         "modus/search",
         "modus/api-generation",
         "modus/authentication",
-        "modus/error-handling",
-        "modus/testing",
-        "modus/deploying",
-        "modus/upgrading"
+        "modus/error-handling"
       ]
     },
     {
@@ -111,13 +108,7 @@
     },
     {
       "group": "Resources",
-      "pages": [
-        "modus/architecture",
-        "modus/troubleshooting",
-        "modus/roadmap",
-        "modus/contributing",
-        "modus/changelog"
-      ]
+      "pages": ["modus/changelog"]
     }
   ],
   "footerSocials": {

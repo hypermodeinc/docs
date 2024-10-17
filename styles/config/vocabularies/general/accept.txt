@@ -4,7 +4,7 @@ Anthropic
 APIs
 AWS
 boolean
-CLI
+CLI|cli
 [Cc]onsole
 computeSimilarity
 CRUD

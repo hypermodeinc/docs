@@ -14,9 +14,11 @@ runtimes:
   enabled:
     - python@3.10.8
     - node@18.12.1
+    - go@1.23.2
 
 lint:
   enabled:
+    - golangci-lint@1.61.0
     - vale@3.7.1
     - actionlint@1.7.3
     - checkov@3.2.267
