@@ -79,78 +79,78 @@ Modus app and how to run it locally.
 
     <Tabs>
       <Tab title="Go">
-      To add a function, create a new file in the `src` directory with the following code:
+        To add a function, create a new file in the `src` directory with the following code:
 
-      ```go quotes.go
-      package main
+        ```go quotes.go
+        package main
 
-      import (
-        "errors"
-        "fmt"
+        import (
+          "errors"
+          "fmt"
 
-        "github.com/hypermodeinc/modus/sdk/go/pkg/http"
-      )
+          "github.com/hypermodeinc/modus/sdk/go/pkg/http"
+        )
 
-      // this function makes a request to an API that returns data in JSON format, and
-      // returns an object representing the data
-      func GetRandomQuote() (*Quote, error) {
-        request := http.NewRequest("https://zenquotes.io/api/random")
+        // this function makes a request to an API that returns data in JSON format, and
+        // returns an object representing the data
+        func GetRandomQuote() (*Quote, error) {
+          request := http.NewRequest("https://zenquotes.io/api/random")
 
-        response, err := http.Fetch(request)
-        if err != nil {
-          return nil, err
+          response, err := http.Fetch(request)
+          if err != nil {
+            return nil, err
+          }
+          if !response.Ok() {
+            return nil, fmt.Errorf("Failed to fetch quote. Received: %d %s", response.Status, response.StatusText)
+          }
+
+          // the API returns an array of quotes, but we only want the first one
+          var quotes []Quote
+          response.JSON(&quotes)
+          if len(quotes) == 0 {
+            return nil, errors.New("expected at least one quote in the response, but none were found")
+          }
+          return &quotes[0], nil
         }
-        if !response.Ok() {
-          return nil, fmt.Errorf("Failed to fetch quote. Received: %d %s", response.Status, response.StatusText)
-        }
-
-        // the API returns an array of quotes, but we only want the first one
-        var quotes []Quote
-        response.JSON(&quotes)
-        if len(quotes) == 0 {
-          return nil, errors.New("expected at least one quote in the response, but none were found")
-        }
-        return &quotes[0], nil
-      }
-      ```
+        ```
       </Tab>
 
       <Tab title="AssemblyScript">
         To add a function, create a new file in the `assembly` directory with the following code:
 
         ```ts quotes.ts
-          import { http } from "@hypermode/modus-sdk-as";
+        import { http } from "@hypermode/modus-sdk-as";
 
-          @json
-          class Quote {
-            @alias("q")
-            quote!: string;
+        @json
+        class Quote {
+          @alias("q")
+          quote!: string;
 
-            @alias("a")
-            author!: string;
+          @alias("a")
+          author!: string;
+        }
+
+        // this function makes a request to an API that returns data in JSON format, and
+        // returns an object representing the data
+        export function getRandomQuote(): Quote {
+          const request = new http.Request("https://zenquotes.io/api/random");
+
+          const response = http.fetch(request);
+          if (!response.ok) {
+            throw new Error(
+              `Failed to fetch quote. Received: ${response.status} ${response.statusText}`,
+            );
           }
 
-          // this function makes a request to an API that returns data in JSON format, and
-          // returns an object representing the data
-          export function getRandomQuote(): Quote {
-            const request = new http.Request("https://zenquotes.io/api/random");
-
-            const response = http.fetch(request);
-            if (!response.ok) {
-              throw new Error(
-                `Failed to fetch quote. Received: ${response.status} ${response.statusText}`,
-              );
-            }
-
-            // the API returns an array of quotes, but we only want the first one
-            return response.json<Quote[]>()[0];
-          }
+          // the API returns an array of quotes, but we only want the first one
+          return response.json<Quote[]>()[0];
+        }
         ```
 
         Then add the following to `index.ts`. This includes the `getRandomQuote` function on your generated API.
 
         ```ts index.ts
-          export { getRandomQuote } from "./quotes";
+        export { getRandomQuote } from "./quotes";
         ```
 
       </Tab>
