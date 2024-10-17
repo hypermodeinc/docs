@@ -18,7 +18,12 @@ Here is an example of fetching a person from a PostgreSQL database using the Mod
 <CodeGroup>
 
 ```go Go
-import github.com/hypermodeinc/modus/sdk/go/pkg/postgresql
+package main
+
+import (
+  "encoding/json"
+  "github.com/hypermodeinc/modus/sdk/go/pkg/postgresql"
+)
 
 // the name of the PostgreSQL connection, as specified in the modus.json manifest
 const host = "my-database"
@@ -82,7 +87,12 @@ Here is an example of fetching a person from a Dgraph database using the Modus S
 <CodeGroup>
 
 ```go Go
-import github.com/hypermodeinc/modus/sdk/go/pkg/dgraph
+package main
+
+import (
+  "encoding/json"
+  "github.com/hypermodeinc/modus/sdk/go/pkg/dgraph"
+)
 
 // the name of the Dgraph connection, as specified in the modus.json manifest
 const hostName = "my-database"
@@ -216,7 +226,12 @@ Here is an example of fetching a person from an HTTP API using the Modus SDK:
 ```go Go
 package main
 
-import "github.com/hypermodeinc/modus/sdk/go/pkg/http"
+import (
+  "encoding/json"
+  "fmt"
+  "github.com/hypermodeinc/modus/sdk/go/pkg/http"
+)
+
 
 // Declare structures used to parse the JSON document returned by Dgraph query.
 type Person struct {
@@ -291,7 +306,10 @@ Here is an example of fetching a person from a GraphQL API using the Modus SDK:
 <CodeGroup>
 
 ```go Go
-import github.com/hypermodeinc/modus/sdk/go/pkg/graphql
+import (
+  "encoding/json"
+  "github.com/hypermodeinc/modus/sdk/go/pkg/graphql"
+)
 
 // the name of the GraphQL connection, as specified in the modus.json manifest
 const hostName = "my-graphql-api"
