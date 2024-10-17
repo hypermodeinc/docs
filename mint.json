@@ -75,10 +75,6 @@
       "pages": ["modus/overview", "modus/project-structure", "modus/quickstart"]
     },
     {
-      "group": "Examples",
-      "pages": ["modus/basic-functions", "modus/ai-enabled-apps"]
-    },
-    {
       "group": "Building Your App",
       "pages": [
         "modus/app-manifest",
