@@ -89,55 +89,55 @@ const hostName = "my-database"
 
 // Declare struct used to parse the JSON document returned by Dgraph query.
 type Person struct {
-	Name string    `json:"name,omitempty"`
-	Age  int32     `json:"age,omitempty"`
-	Home *Location `json:"home,omitempty"`
+  Name string    `json:"name,omitempty"`
+  Age  int32     `json:"age,omitempty"`
+  Home *Location `json:"home,omitempty"`
 }
 
 // Dgraph location predicates follow GeoJSON format
 type Location struct {
-	Type        string    `json:"type,omitempty"`
-	Coordinates []float32 `json:"coordinates,omitempty"`
+  Type        string    `json:"type,omitempty"`
+  Coordinates []float32 `json:"coordinates,omitempty"`
 }
 
 type GetPersonResponse struct {
-	Persons []*Person `json:"persons"`
+  Persons []*Person `json:"persons"`
 }
 
 func GetPerson(name string) (*Person, error) {
-	statement := `
-	 query getPerson($name: string) {
-		persons(func: eq(name, $name))  {
-			name
-			age
-			home
-		}
-	}
-	`
-	variables := map[string]string{
-		"$name": name,
-	}
+  statement := `
+   query getPerson($name: string) {
+    persons(func: eq(name, $name))  {
+      name
+      age
+      home
+    }
+  }
+  `
+  variables := map[string]string{
+    "$name": name,
+  }
 
-	response, err := dgraph.Execute(hostName, &dgraph.Request{
-		Query: &dgraph.Query{
-			Query:     statement,
-			Variables: variables,
-		},
-	})
-	if err != nil {
-		return nil, err
-	}
+  response, err := dgraph.Execute(hostName, &dgraph.Request{
+    Query: &dgraph.Query{
+      Query:     statement,
+      Variables: variables,
+    },
+  })
+  if err != nil {
+    return nil, err
+  }
 
-	var data GetPersonResponse
-	if err := json.Unmarshal([]byte(response.Json), &data); err != nil {
-		return nil, err
-	}
+  var data GetPersonResponse
+  if err := json.Unmarshal([]byte(response.Json), &data); err != nil {
+    return nil, err
+  }
 
-	if len(data.Persons) == 0 {
-		return nil, nil // Person not found
-	}
+  if len(data.Persons) == 0 {
+    return nil, nil // Person not found
+  }
 
-	return data.Persons[0], nil
+  return data.Persons[0], nil
 }
 
 ```
