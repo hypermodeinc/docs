@@ -21,31 +21,21 @@ Here is an example of fetching a person from a PostgreSQL database using the Mod
 package main
 
 import (
-  "encoding/json"
-  "github.com/hypermodeinc/modus/sdk/go/pkg/postgresql"
+	"github.com/hypermodeinc/modus/sdk/go/pkg/postgresql"
 )
 
 // the name of the PostgreSQL connection, as specified in the modus.json manifest
 const host = "my-database"
 
 type Person struct {
-  Name string               `json:"name"`
-  Age  int                  `json:"age"`
-  Home *postgresql.Location `json:"home"`
+	Name string `json:"name"`
+	Age  int    `json:"age"`
 }
 
 func GetPerson(name string) (*Person, error) {
-  const query = "select * from persons where name = $1"
-  rows, _, err := postgresql.Query[Person](host, query, id)
-  if err != nil {
-    return nil, err
-  }
-
-  if len(rows) == 0 {
-    return nil, nil // person not found
-  }
-
-  return &rows[0], nil
+	const query = "select * from persons where name = $1"
+	rows, _, _ := postgresql.Query[Person](host, query, name)
+	return &rows[0], nil
 }
 ```
 
@@ -59,17 +49,16 @@ const host = "my-database"
 class Person {
   name!: string
   age!: i32
-  home!: postgresql.Location | null
 }
 
-export function getPerson(name: string): Person | null {
+export function getPerson(name: string): Person {
   const query = "select * from persons where name = $1"
 
   const params = new postgresql.Params()
-  params.push(id)
+  params.push(name)
 
   const response = postgresql.query<Person>(host, query, params)
-  return response.rows.length > 0 ? response.rows[0] : null
+  return response.rows[0]
 }
 ```
 
