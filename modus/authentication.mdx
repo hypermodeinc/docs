@@ -1,38 +1,70 @@
 ---
 title: Authentication
-description: ""
+description: "Protect your API"
 ---
+
+It's easy to secure your Modus app with authentication. Modus currently supports bearer token
+authentication, with additional authentication methods coming soon.
+
+## Bearer tokens
 
 Modus supports authentication via the `Authorization` header in HTTP requests. You can use the
 `Authorization` header to pass a bearer JSON Web Token (JWT) to your Modus app. The token
 authenticates the user and authorize access to resources.
 
-## Setting verification keys
+To use bearer token authentication for your Modus app, be sure to set the `auth` property on your
+endpoint to `"bearer-token"` in your [app manifest](/modus/app-manifest#endpoints).
 
-To verify the token, you must pass the public keys via environment variables to modus, using the
-`MODUS_PEMS` environment variable. The value of the `MODUS_PEMS` environment variable should be a
-JSON object with the public keys as key-value pairs. This way, Modus can deserialize this into a map
-of public keys, and use them to verify the token.
+### Setting verification keys
 
-This is an example of how to set the `MODUS_PEMS` environment variable:
+Once set, Modus verifies tokens passed in the `Authorization` header of incoming requests against
+the public keys you provide. To enable this verification, you must pass the public keys using the
+`MODUS_PEMS` environment variable.
+
+The value of the `MODUS_PEMS` environment variable should be a JSON object with the public keys as
+key-value pairs. This is an example of how to set the `MODUS_PEMS` environment variable:
 
 ```bash
 export MODUS_PEMS='{\"key1\":\"-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwJ9z1z1z1z1z1z\\n-----END PUBLIC KEY-----\"}'
 ```
 
-## Verifying tokens
+<Tip>
+  When deploying your Modus app on Hypermode, the bearer token authentication is automatically
+  setup.
+</Tip>
+
+### Verifying tokens
 
 To verify the token, Modus uses the public keys passed via the `MODUS_PEMS` environment variable. If
 the token is verifiable with any of the verification keys provided, Modus decodes the JWT token and
-pass the decoded claims as an environment variable, allowing access through host functions.
+passes the decoded claims as an environment variable.
 
-## Accessing claims
+### Accessing claims
 
-To access the decoded claims, you can use the `getJWTClaims()` function, available in both Golang
-and AssemblyScript. The function allows the user to pass in a class to deserialize the claims into,
-and returns an instance of the class with the claims.
+The decoded claims are available through the `auth` API in the Modus SDK.
 
-This is an example of how to use the `getJWTClaims()` function in AssemblyScript:
+To access the decoded claims, use the `getJWTClaims()` function. The function allows the user to
+pass in a class to deserialize the claims into, and returns an instance of the class with the
+claims.
+
+This allows users to access the claims in the token and use them to authenticate and authorize users
+in their Modus app.
+
+<CodeGroup>
+
+```go Go
+import github.com/hypermodeinc/modus/sdk/go/pkg/auth
+
+type ExampleClaims struct {
+    Sub string `json:"sub"`
+    Exp int64  `json:"exp"`
+    Iat int64  `json:"iat"`
+}
+
+func GetClaims() (*ExampleClaims, error) {
+    return auth.GetJWTClaims[*ExampleClaims]()
+}
+```
 
 ```ts AssemblyScript
 import { auth } from "@hypermode/modus-sdk-as"
@@ -49,26 +81,4 @@ export function getClaims(): ExampleClaims {
 }
 ```
 
-This is an example of how to use the `getJWTClaims()` function in Golang:
-
-```go
-package main
-
-import (
-    "github.com/hypermodeinc/modus/sdk/go/pkg/auth"
-)
-
-type ExampleClaims struct {
-    Sub string `json:"sub"`
-    Exp int64  `json:"exp"`
-    Iat int64  `json:"iat"`
-}
-
-func GetClaims() (*ExampleClaims, error) {
-    return auth.GetJWTClaims[*ExampleClaims]()
-}
-
-```
-
-This allows users to access the claims in the token and use them to authenticate and authorize users
-in their Modus app.
+</CodeGroup>
