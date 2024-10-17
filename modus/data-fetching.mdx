@@ -34,8 +34,6 @@ type Person struct {
   Home *postgresql.Location `json:"home"`
 }
 
-// Exposing getPerson in the generated GraphQL API
-
 func GetPerson(name string) (*Person, error) {
   const query = "select * from persons where name = $1"
   rows, _, err := postgresql.Query[Person](host, query, id)
@@ -44,7 +42,7 @@ func GetPerson(name string) (*Person, error) {
   }
 
   if len(rows) == 0 {
-    return nil, nil // Person not found
+    return nil, nil // person not found
   }
 
   return &rows[0], nil
@@ -97,7 +95,7 @@ import (
 // the name of the Dgraph connection, as specified in the modus.json manifest
 const hostName = "my-database"
 
-// Declare structures used to parse the JSON document returned by Dgraph query.
+// declare structures used to parse the JSON document returned by Dgraph query.
 type Person struct {
   Name string    `json:"name,omitempty"`
   Age  int32     `json:"age,omitempty"`
@@ -113,8 +111,6 @@ type Location struct {
 type GetPersonResponse struct {
   Persons []*Person `json:"persons"`
 }
-
-// Exposing getPerson in the generated GraphQL API
 
 func GetPerson(name string) (*Person, error) {
   statement := `
@@ -146,7 +142,7 @@ func GetPerson(name string) (*Person, error) {
   }
 
   if len(data.Persons) == 0 {
-    return nil, nil // Person not found
+    return nil, nil // person not found
   }
 
   return data.Persons[0], nil
@@ -161,7 +157,7 @@ import { JSON } from "json-as"
 // the name of the Dgraph connection, as specified in the modus.json manifest
 const hostName: string = "my-dgraph"
 
-// Declare classes used to parse the JSON document returned by Dgraph query.
+// declare classes used to parse the JSON document returned by Dgraph query.
 @json
 class GetPersonResponse {
   persons: Person[] = []
@@ -180,8 +176,6 @@ class Location {
   coordinates: f64[] = []
 }
 
-// Exposing getPerson in the generated GraphQL API
-
 export function getPerson(name: string): Person | null {
   const statement = `  
   query getPerson($name: string) {
@@ -195,12 +189,7 @@ export function getPerson(name: string): Person | null {
   const vars = new dgraph.Variables()
   vars.set("$name", name)
 
-  // Build the query from statement and variables
-  // Execute the query
-
   const resp = dgraph.execute(hostName, new dgraph.Request(new dgraph.Query(statement, vars)))
-
-  // Parse JSON response
 
   const persons = JSON.parse<GetPersonResponse>(resp.Json).persons
   if (persons.length == 0) {
@@ -249,16 +238,16 @@ type Location struct {
 // Exposing getPerson in the generated GraphQL API
 
 func GetPerson(name string) (*Person, error) {
-	url := fmt.Sprintf("https://example.com/api/person?name=%s", name)
-	response, err := http.Fetch(url)
-	if err != nil {
-		return nil, err
-	}
+  url := fmt.Sprintf("https://example.com/api/person?name=%s", name)
+  response, err := http.Fetch(url)
+  if err != nil {
+    return nil, err
+  }
   // The API returns Person object as JSON
   var person Person
-	response.JSON(&person)
+  response.JSON(&person)
 
-	return person, nil
+  return person, nil
 }
 
 ```
