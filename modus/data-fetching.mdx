@@ -24,14 +24,15 @@ import github.com/hypermodeinc/modus/sdk/go/pkg/postgresql
 const host = "my-database"
 
 type Person struct {
-  Id   int                  `json:"id"`
   Name string               `json:"name"`
   Age  int                  `json:"age"`
   Home *postgresql.Location `json:"home"`
 }
 
-func GetPerson(id int) (*Person, error) {
-  const query = "select * from people where id = $1"
+// Exposing getPerson in the generated GraphQL API
+
+func GetPerson(name string) (*Person, error) {
+  const query = "select * from persons where name = $1"
   rows, _, err := postgresql.Query[Person](host, query, id)
   if err != nil {
     return nil, err
@@ -53,14 +54,13 @@ const host = "my-database"
 
 @json
 class Person {
-  id: i32 = 0
   name!: string
   age!: i32
   home!: postgresql.Location | null
 }
 
-export function getPerson(id: i32): Person | null {
-  const query = "select * from people where id = $1"
+export function getPerson(name: string): Person | null {
+  const query = "select * from persons where name = $1"
 
   const params = new postgresql.Params()
   params.push(id)
@@ -87,7 +87,7 @@ import github.com/hypermodeinc/modus/sdk/go/pkg/dgraph
 // the name of the Dgraph connection, as specified in the modus.json manifest
 const hostName = "my-database"
 
-// Declare struct used to parse the JSON document returned by Dgraph query.
+// Declare structures used to parse the JSON document returned by Dgraph query.
 type Person struct {
   Name string    `json:"name,omitempty"`
   Age  int32     `json:"age,omitempty"`
@@ -103,6 +103,8 @@ type Location struct {
 type GetPersonResponse struct {
   Persons []*Person `json:"persons"`
 }
+
+// Exposing getPerson in the generated GraphQL API
 
 func GetPerson(name string) (*Person, error) {
   statement := `
@@ -212,11 +214,69 @@ Here is an example of fetching a person from an HTTP API using the Modus SDK:
 <CodeGroup>
 
 ```go Go
+package main
+
+import "github.com/hypermodeinc/modus/sdk/go/pkg/http"
+
+// Declare structures used to parse the JSON document returned by Dgraph query.
+type Person struct {
+  Name string    `json:"name,omitempty"`
+  Age  int32     `json:"age,omitempty"`
+  Home *Location `json:"home,omitempty"`
+}
+
+// Dgraph location predicates follow GeoJSON format
+type Location struct {
+  Type        string    `json:"type,omitempty"`
+  Coordinates []float32 `json:"coordinates,omitempty"`
+}
+
+// Exposing getPerson in the generated GraphQL API
+
+func GetPerson(name string) (*Person, error) {
+	url := fmt.Sprintf("https://example.com/api/person?name=%s", name)
+	response, err := http.Fetch(url)
+	if err != nil {
+		return nil, err
+	}
+  // The API returns Person object as JSON
+  var person Person
+	response.JSON(&person)
+
+	return person, nil
+}
 
 ```
 
 ```ts AssemblyScript
+import { http } from "@hypermode/modus-sdk-as"
 
+@json
+class Person {
+  name: string = ""
+  age: i32 = 0
+  home: Location
+}
+// Assuming location follows GeoJSON format
+@json
+class Location {
+  type: string = "Point"
+  coordinates: f64[] = []
+}
+
+// Exposing getPerson in the generated GraphQL API
+
+export function getPerson(name: string): Person {
+  const url = `https://example.com/api/people?name=${name}`
+
+  const response = http.fetch(url)
+  if (!response.ok) {
+    throw new Error(`Failed to fetch quote. Received: ${response.status} ${response.statusText}`)
+  }
+
+  // The API returns Person object as JSON
+  return response.json<Person>()
+}
 ```
 
 </CodeGroup>
