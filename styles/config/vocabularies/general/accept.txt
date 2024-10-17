@@ -45,7 +45,7 @@ queryScalar
 repo
 REST
 Scattergories
-SDK
+SDK|sdk
 serializable
 [Ss]erverless
 timeEnd
