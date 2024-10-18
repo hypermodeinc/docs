@@ -21,21 +21,21 @@ Here is an example of fetching a person from a PostgreSQL database using the Mod
 package main
 
 import (
-	"github.com/hypermodeinc/modus/sdk/go/pkg/postgresql"
+  "github.com/hypermodeinc/modus/sdk/go/pkg/postgresql"
 )
 
 // the name of the PostgreSQL connection, as specified in the modus.json manifest
 const host = "my-database"
 
 type Person struct {
-	Name string `json:"name"`
-	Age  int    `json:"age"`
+  Name string `json:"name"`
+  Age  int    `json:"age"`
 }
 
 func GetPerson(name string) (*Person, error) {
-	const query = "select * from persons where name = $1"
-	rows, _, _ := postgresql.Query[Person](host, query, name)
-	return &rows[0], nil
+  const query = "select * from persons where name = $1"
+  rows, _, _ := postgresql.Query[Person](host, query, name)
+  return &rows[0], nil
 }
 ```
 
@@ -77,8 +77,8 @@ Here is an example of fetching a person from a Dgraph database using the Modus S
 package main
 
 import (
-	"encoding/json"
-	"github.com/hypermodeinc/modus/sdk/go/pkg/dgraph"
+  "encoding/json"
+  "github.com/hypermodeinc/modus/sdk/go/pkg/dgraph"
 )
 
 // the name of the Dgraph connection, as specified in the modus.json manifest
@@ -86,38 +86,38 @@ const hostName = "my-dgraph"
 
 // declare structures used to parse the JSON document returned by Dgraph query.
 type Person struct {
-	Name string `json:"name,omitempty"`
-	Age  int32  `json:"age,omitempty"`
+  Name string `json:"name,omitempty"`
+  Age  int32  `json:"age,omitempty"`
 }
 
 // Dgraph returns an array of Persons
 type GetPersonResponse struct {
-	Persons []*Person `json:"persons"`
+  Persons []*Person `json:"persons"`
 }
 
 func GetPerson(name string) (*Person, error) {
-	statement := `query getPerson($name: string!) {
+  statement := `query getPerson($name: string!) {
     persons(func: eq(name, $name))  {
       name
       age
     }
   }
   `
-	variables := map[string]string{
-		"$name": name,
-	}
+  variables := map[string]string{
+    "$name": name,
+  }
 
-	response, _ := dgraph.Execute(hostName, &dgraph.Request{
-		Query: &dgraph.Query{
-			Query:     statement,
-			Variables: variables,
-		},
-	})
+  response, _ := dgraph.Execute(hostName, &dgraph.Request{
+    Query: &dgraph.Query{
+      Query:     statement,
+      Variables: variables,
+    },
+  })
 
-	var data GetPersonResponse
-	json.Unmarshal([]byte(response.Json), &data)
+  var data GetPersonResponse
+  json.Unmarshal([]byte(response.Json), &data)
 
-	return data.Persons[0], nil
+  return data.Persons[0], nil
 }
 
 ```
@@ -135,6 +135,7 @@ class Person {
   name: string = ""
   age: i32 = 0
 }
+
 // Dgraph returns an array of objects
 @json
 class GetPersonResponse {
@@ -181,15 +182,11 @@ import (
   "github.com/hypermodeinc/modus/sdk/go/pkg/http"
 )
 
-
-// Declare structures used to parse the JSON document returned by the REST API
+// declare structures used to parse the JSON document returned by the REST API
 type Person struct {
   Name string    `json:"name,omitempty"`
   Age  int32     `json:"age,omitempty"`
 }
-
-
-// Exposing getPerson in the generated GraphQL API
 
 func GetPerson(name string) (*Person, error) {
   url := fmt.Sprintf("https://example.com/api/person?name=%s", name)
@@ -213,14 +210,12 @@ class Person {
   age: i32 = 0
 }
 
-// Exposing getPerson in the generated GraphQL API
-
 export function getPerson(name: string): Person {
   const url = `https://example.com/api/people?name=${name}`
 
   const response = http.fetch(url)
 
-  // The API returns Person object as JSON
+  // the API returns Person object as JSON
   return response.json<Person>()
 }
 ```
@@ -245,7 +240,7 @@ import (
 // the name of the GraphQL connection, as specified in the modus.json manifest
 const hostName = "my-graphql-api"
 
-// Declare structures used to parse the JSON document returned
+// declare structures used to parse the JSON document returned
 type Person struct {
   Name string    `json:"name,omitempty"`
   Age  int32     `json:"age,omitempty"`
@@ -279,7 +274,7 @@ import { graphql } from "@hypermode/modus-sdk-as"
 // the name of the GraphQL connection, as specified in the modus.json manifest
 const hostName: string = "my-graphql-api"
 
-// Declare classes used to parse the JSON document returned
+// declare classes used to parse the JSON document returned
 @json
 class Person {
   name: string = ""
