@@ -3,9 +3,9 @@ title: App Manifest
 description: "Define the resources for your app"
 ---
 
-The manifest for your Modus app allows you to configure the exposure and resources for your
-functions at runtime. You define the manifest in the `modus.json` file within the root of directory
-of your app.
+The manifest for your Modus app allows you to configure the exposure and
+resources for your functions at runtime. You define the manifest in the
+`modus.json` file within the root of directory of your app.
 
 ## Structure
 
@@ -26,8 +26,8 @@ of your app.
 
 ### Base manifest
 
-A simple manifest, which exposes a single GraphQL endpoint with a bearer token for authentication,
-looks like this:
+A simple manifest, which exposes a single GraphQL endpoint with a bearer token
+for authentication, looks like this:
 
 ```json modus.json
 {
@@ -44,11 +44,12 @@ looks like this:
 
 ## Endpoints
 
-Endpoints make your functions available outside of your Modus app. The `endpoints` object in the app
-manifest allows you to define these endpoints for integration into your frontend or federated API.
+Endpoints make your functions available outside of your Modus app. The
+`endpoints` object in the app manifest allows you to define these endpoints for
+integration into your frontend or federated API.
 
-Each endpoint requires a unique name, specified as a key containing only alphanumeric characters and
-hyphens.
+Each endpoint requires a unique name, specified as a key containing only
+alphanumeric characters and hyphens.
 
 <Note>
   Only a GraphQL endpoint is available currently, but the modular design of
@@ -57,9 +58,11 @@ hyphens.
 
 ### GraphQL endpoint
 
-This endpoint type supports the GraphQL protocol to communicate with external clients. You can use a
-GraphQL client, such as [urql](https://github.com/urql-graphql/urql) or
-[Apollo Client](https://github.com/apollographql/apollo-client), to interact with the endpoint.
+This endpoint type supports the GraphQL protocol to communicate with external
+clients. You can use a GraphQL client, such as
+[urql](https://github.com/urql-graphql/urql) or
+[Apollo Client](https://github.com/apollographql/apollo-client), to interact
+with the endpoint.
 
 **Example:**
 
@@ -90,15 +93,17 @@ GraphQL client, such as [urql](https://github.com/urql-graphql/urql) or
 
 ## Connections
 
-Connections establish connectivity and access to external services. They're used for HTTP and
-GraphQL APIs, database connections, and externally hosted AI models. The `connections` object in the
-app manifest allows you to define these hosts, for secure access from within a function.
+Connections establish connectivity and access to external services. They're used
+for HTTP and GraphQL APIs, database connections, and externally hosted AI
+models. The `connections` object in the app manifest allows you to define these
+hosts, for secure access from within a function.
 
-Each connection requires a unique name, specified as a key containing only alphanumeric characters
-and hyphens.
+Each connection requires a unique name, specified as a key containing only
+alphanumeric characters and hyphens.
 
-Each connection has a `type` property, which controls how it's used and which additional properties
-are available. The following table lists the available host types:
+Each connection has a `type` property, which controls how it's used and which
+additional properties are available. The following table lists the available
+host types:
 
 | Type         | Purpose                          | Functions Namespaces        |
 | :----------- | :------------------------------- | :-------------------------- |
@@ -109,19 +114,21 @@ are available. The following table lists the available host types:
 <Warning>
 **Don't include secrets directly in the manifest!**
 
-If your connection requires authentication, you can include _placeholders_ in connection properties
-which resolve to their respective secrets at runtime. Set the actual secrets via the Hypermode
-Console, where they're securely stored until needed.
+If your connection requires authentication, you can include _placeholders_ in
+connection properties which resolve to their respective secrets at runtime. Set
+the actual secrets via the Hypermode Console, where they're securely stored
+until needed.
 
 </Warning>
 
 ### HTTP connection
 
-This connection type supports the HTTP and HTTPS protocols to communicate with external hosts. You
-can use the [HTTP APIs](/modus/sdk/http) in the Modus SDK to interact with the host.
+This connection type supports the HTTP and HTTPS protocols to communicate with
+external hosts. You can use the [HTTP APIs](/modus/sdk/http) in the Modus SDK to
+interact with the host.
 
-This connection type is also used for [GraphQL APIs](/modus/sdk/graphql) and to invoke externally
-hosted AI [models](/modus/sdk/models).
+This connection type is also used for [GraphQL APIs](/modus/sdk/graphql) and to
+invoke externally hosted AI [models](/modus/sdk/models).
 
 **Example:**
 
@@ -144,8 +151,8 @@ hosted AI [models](/modus/sdk/models).
 
 <ResponseField name="baseUrl" type="string" required>
 
-Base URL for connections to the host. Must end with a trailing slash and may contain path segments
-if necessary.
+Base URL for connections to the host. Must end with a trailing slash and may
+contain path segments if necessary.
 
 Example: `"https://api.example.com/v1/"`
 
@@ -163,21 +170,22 @@ Example: `"https://models.example.com/v1/classifier"`
   - Use `baseUrl` for connections to a host with a common base URL.
   - Use `endpoint` for connections to a specific URL.
 
-Typically, you'll use the `baseUrl` field. However, some APIs, such as `graphql.execute`, require
-the full URL in the `endpoint` field.
+Typically, you'll use the `baseUrl` field. However, some APIs, such as
+`graphql.execute`, require the full URL in the `endpoint` field.
 
 </Note>
 
 <ResponseField name="headers" type="object">
 If provided, requests on the connection include these headers. Each key-value pair is a header name and value.
 
-Values may include variables using the `{{VARIABLE}}` template syntax, which resolve at runtime to
-secrets provided for each connection, via the Hypermode Console.
+Values may include variables using the `{{VARIABLE}}` template syntax, which
+resolve at runtime to secrets provided for each connection, via the Hypermode
+Console.
 
   <Accordion title="Examples">
 
-This example specifies a header named `Authorization` that uses the `Bearer` scheme. A secret named
-`AUTH_TOKEN` provides the token:
+This example specifies a header named `Authorization` that uses the `Bearer`
+scheme. A secret named `AUTH_TOKEN` provides the token:
 
 ```json
 "headers": {
@@ -185,7 +193,8 @@ This example specifies a header named `Authorization` that uses the `Bearer` sch
 }
 ```
 
-This example specifies a header named `X-API-Key` provided by a secret named `API_KEY`:
+This example specifies a header named `X-API-Key` provided by a secret named
+`API_KEY`:
 
 ```json
 "headers": {
@@ -194,9 +203,9 @@ This example specifies a header named `X-API-Key` provided by a secret named `AP
 ```
 
 You can use a special syntax for hosts that require
-[HTTP basic authentication](https://en.wikipedia.org/wiki/Basic_access_authentication). In this
-example, secrets named `USERNAME` and `PASSWORD` combined and then are base64-encoded to form a
-compliant `Authorization` header value:
+[HTTP basic authentication](https://en.wikipedia.org/wiki/Basic_access_authentication).
+In this example, secrets named `USERNAME` and `PASSWORD` combined and then are
+base64-encoded to form a compliant `Authorization` header value:
 
 ```json
 "headers": {
@@ -209,15 +218,17 @@ compliant `Authorization` header value:
 
 <ResponseField name="queryParameters" type="object">
 
-If provided, requests on the connection include these query parameters, appended to the URL. Each
-key-value pair is a parameter name and value.
+If provided, requests on the connection include these query parameters, appended
+to the URL. Each key-value pair is a parameter name and value.
 
-Values may include variables using the `{{VARIABLE}}` template syntax, which resolve at runtime to
-secrets provided for each connection, via the Hypermode Console.
+Values may include variables using the `{{VARIABLE}}` template syntax, which
+resolve at runtime to secrets provided for each connection, via the Hypermode
+Console.
 
   <Accordion title="Example">
 
-This example specifies a query parameter named `key` provided by a secret named `API_KEY`:
+This example specifies a query parameter named `key` provided by a secret named
+`API_KEY`:
 
 ```json
 "queryParameters": {
@@ -230,8 +241,9 @@ This example specifies a query parameter named `key` provided by a secret named 
 
 ### PostgreSQL connection
 
-This connection type supports connecting to PostgreSQL databases. You can use the
-[PostgreSQL APIs](/modus/sdk/postgresql) in the Modus SDK to interact with the database.
+This connection type supports connecting to PostgreSQL databases. You can use
+the [PostgreSQL APIs](/modus/sdk/postgresql) in the Modus SDK to interact with
+the database.
 
 **Example:**
 
@@ -253,8 +265,9 @@ This connection type supports connecting to PostgreSQL databases. You can use th
 <ResponseField name="connString" type="string" required>
   The connection string for the PostgreSQL database.
 
-Values may include variables using the `{{VARIABLE}}` template syntax, which resolve at runtime to
-secrets provided for each connection, via the Hypermode Console.
+Values may include variables using the `{{VARIABLE}}` template syntax, which
+resolve at runtime to secrets provided for each connection, via the Hypermode
+Console.
 
 The connection string in the preceding example includes:
 
@@ -269,8 +282,8 @@ for more details on connection strings.
 
 <Tip>
 
-Managed PostgreSQL providers often provide a pre-made connection string for you to copy. Check your
-provider's documentation for details.
+Managed PostgreSQL providers often provide a pre-made connection string for you
+to copy. Check your provider's documentation for details.
 
 For example, if using Neon, refer to the
 [Neon documentation](https://neon.tech/docs/connect/connect-from-any-app).
@@ -312,11 +325,12 @@ This connection type supports connecting to Dgraph databases. You can use the
 
 ## Models
 
-AI models are a core resource for inferencing. The `models` object in the app manifest allows you to
-easily define models, whether hosted by Hypermode or another host.
+AI models are a core resource for inferencing. The `models` object in the app
+manifest allows you to easily define models, whether hosted by Hypermode or
+another host.
 
-Each model requires a unique name, specified as a key, containing only alphanumeric characters and
-hyphens.
+Each model requires a unique name, specified as a key, containing only
+alphanumeric characters and hyphens.
 
 ```json modus.json
 {
@@ -343,28 +357,30 @@ hyphens.
   Connection for the model instance.
 
 - Specify `"hypermode"` for models that [Hypermode hosts](/hosted-models).
-- Otherwise, specify a name that matches a host defined in the [`connections`](#connections) section
-  of the manifest.
+- Otherwise, specify a name that matches a host defined in the
+  [`connections`](#connections) section of the manifest.
 
 </ResponseField>
 
 <Tip>
 
-When using `hugging-face` as the `provider` and `hypermode` as the `connection`, Hypermode
-automatically facilitates the connection to an instance of a shared or dedicated instance of the
-model. Your project's functions securely access the hosted model, with no further configuration
-required. For more details, see [hosted models](/hosted-models).
+When using `hugging-face` as the `provider` and `hypermode` as the `connection`,
+Hypermode automatically facilitates the connection to an instance of a shared or
+dedicated instance of the model. Your project's functions securely access the
+hosted model, with no further configuration required. For more details, see
+[hosted models](/hosted-models).
 
 </Tip>
 
 ## Collections
 
-Collections simplify the usage of vector embeddings to build natural language search features. The
-`collections` object allows you to define indexed data types that are automatically embedded and
-searchable based on the search method you define.
+Collections simplify the usage of vector embeddings to build natural language
+search features. The `collections` object allows you to define indexed data
+types that are automatically embedded and searchable based on the search method
+you define.
 
-Each collection requires a unique name, specified as a key, containing only alphanumeric characters
-and hyphens.
+Each collection requires a unique name, specified as a key, containing only
+alphanumeric characters and hyphens.
 
 For more detail on implementing collections, see [Search](/modus/search).
 

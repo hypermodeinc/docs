@@ -149,8 +149,8 @@ collections.remove(
 
 #### search
 
-Perform a natural language search on items within a collection. This method is useful for finding
-items that match a search query based on semantic meaning.
+Perform a natural language search on items within a collection. This method is
+useful for finding items that match a search query based on semantic meaning.
 
 <Note>
   Modus uses the same embedder for both inserting text into the collection, and
@@ -196,8 +196,8 @@ collections.search(
 
 #### searchByVector
 
-Perform a vector-based search on a collection, which is helpful for scenarios requiring precise
-similarity calculations between pre-computed embeddings.
+Perform a vector-based search on a collection, which is helpful for scenarios
+requiring precise similarity calculations between pre-computed embeddings.
 
 <Note>
   Modus uses the same embedder for both inserting text into the collection, and
@@ -273,7 +273,8 @@ Classify an item in the collection using previous vectors' labels.
 
 #### computeDistance
 
-Computes distance between two keys in a collection using a search method's embedder.
+Computes distance between two keys in a collection using a search method's
+embedder.
 
 ```go
 collections.computeDistance(
@@ -331,7 +332,8 @@ collections.getText(
 
 #### getTexts
 
-Get all items from a collection. The result is a map of key to text for all items in the collection.
+Get all items from a collection. The result is a map of key to text for all
+items in the collection.
 
 ```go
 collections.getTexts(
@@ -426,9 +428,10 @@ collections.getLabels(
 
 #### recomputeSearchMethod
 
-Recalculates the embeddings for all items in a collection. It can be resource-intensive, use it when
-necessary, for example after you have updated the method for embedding calculation and want to
-re-compute the embeddings for existing data in the collection.
+Recalculates the embeddings for all items in a collection. It can be
+resource-intensive, use it when necessary, for example after you have updated
+the method for embedding calculation and want to re-compute the embeddings for
+existing data in the collection.
 
 ```go
 collections.recomputeSearchMethod(

@@ -3,13 +3,14 @@ title: Error Handling
 description: "Easily debug and handle errors"
 ---
 
-Error handling in Modus makes it simple to have both a clear debugging process for developers and
-informative responses for end-users.
+Error handling in Modus makes it simple to have both a clear debugging process
+for developers and informative responses for end-users.
 
 ### Logging errors
 
-The Console API in the Modus SDK is globally available in all functions. It allows developers to
-capture log messages and errors, which are automatically included in Modus runtime execution logs.
+The Console API in the Modus SDK is globally available in all functions. It
+allows developers to capture log messages and errors, which are automatically
+included in Modus runtime execution logs.
 
 <Tip>
   When deployed to Hypermode, function logs are available in the Hypermode
@@ -28,9 +29,10 @@ console.error("This is an error message.")
 
 ### Error reporting in GraphQL
 
-GraphQL responses have a standard structure that includes both `data` and `errors` sections. Modus
-allows for the inclusion of error codes or messages within the `errors` section to allow for
-downstream processing in addition to debugging.
+GraphQL responses have a standard structure that includes both `data` and
+`errors` sections. Modus allows for the inclusion of error codes or messages
+within the `errors` section to allow for downstream processing in addition to
+debugging.
 
 <CodeGroup>
 
@@ -71,11 +73,12 @@ export function TestError(input: string): string {
 
 ### Best practices for error handling
 
-- **Handle non-fatal errors** using `console.error`, allowing the function to continue. The GraphQL
-  response may have both a `data` section and an `errors` section.
+- **Handle non-fatal errors** using `console.error`, allowing the function to
+  continue. The GraphQL response may have both a `data` section and an `errors`
+  section.
 
-- **Handle critical errors** using AssemblyScript `throw` keyword or the Go idiomatic error object
-  to stop the function's execution.
+- **Handle critical errors** using AssemblyScript `throw` keyword or the Go
+  idiomatic error object to stop the function's execution.
 
-- **Return clear error messages**: When returning errors, include concise and informative error
-  messages that help diagnose the issue.
+- **Return clear error messages**: When returning errors, include concise and
+  informative error messages that help diagnose the issue.

@@ -3,7 +3,8 @@ title: GraphQL
 description: "Access external GraphQL data sources from your functions"
 ---
 
-The Modus GraphQL API allows you to securely call and fetch data from any GraphQL endpoint.
+The Modus GraphQL API allows you to securely call and fetch data from any
+GraphQL endpoint.
 
 ## Import
 
@@ -37,7 +38,8 @@ The APIs in the `graphql` namespace are below, organized by category.
 
 #### execute
 
-Execute a GraphQL statement to call a query or apply mutation against a GraphQL API endpoint.
+Execute a GraphQL statement to call a query or apply mutation against a GraphQL
+API endpoint.
 
 ```go
 graphql.execute<T> (
@@ -49,14 +51,16 @@ graphql.execute<T> (
 
 <ResponseField name="T" type="Type" required>
 
-Type of object to use for the data returned from the query. This can be any type, including a custom type
-defined in your project. It should match the shape of the data returned from the GraphQL query.
+Type of object to use for the data returned from the query. This can be any
+type, including a custom type defined in your project. It should match the shape
+of the data returned from the GraphQL query.
 
   <Tip>
   Define custom types in the project's source code. In AssemblyScript, create classes decorated with `@json`.
 
-All types, including classes, base classes, and field types must be JSON serializable. You can also
-use built-in types such as strings, numbers, arrays, and maps.
+All types, including classes, base classes, and field types must be JSON
+serializable. You can also use built-in types such as strings, numbers, arrays,
+and maps.
 
   </Tip>
 </ResponseField>
@@ -97,8 +101,9 @@ class Variables {
 
 A container for variables to include with a GraphQL operation.
 
-To use this feature, create a new `Variables` object and call the `set` method for each variable you
-want to include. Then pass the object to the `execute` function.
+To use this feature, create a new `Variables` object and call the `set` method
+for each variable you want to include. Then pass the object to the `execute`
+function.
 
 <ResponseField name="set(name, value)">
   Set a variable with a name and value to include with the GraphQL operation.
@@ -112,8 +117,9 @@ want to include. Then pass the object to the `execute` function.
 <ResponseField name="value" type="any" required>
   The value of the variable to include in the GraphQL operation.
 
-The value can be of any type that's JSON serializable, including strings, numbers, boolean values,
-arrays, maps, and custom objects decorated with `@json`.
+The value can be of any type that's JSON serializable, including strings,
+numbers, boolean values, arrays, maps, and custom objects decorated with
+`@json`.
 
 </ResponseField>
 </ResponseField>
@@ -140,16 +146,16 @@ Either `errors` or `data` is present, depending on the result of the query.
 <ResponseField name="errors" type="ErrorResult[]">
   An array of errors incurred as part of your GraphQL request, if any.
 
-Each error in the array is an [`ErrorResult`](#errorresult) object. If there are no errors, this
-field is `null`.
+Each error in the array is an [`ErrorResult`](#errorresult) object. If there are
+no errors, this field is `null`.
 
 </ResponseField>
 
 <ResponseField name="data" type="T">
   The resulting data selected by the GraphQL operation.
 
-The data has the type specified in the call to the `execute` function. If data is absent due to
-errors, this field is `null`.
+The data has the type specified in the call to the `execute` function. If data
+is absent due to errors, this field is `null`.
 
 </ResponseField>
 

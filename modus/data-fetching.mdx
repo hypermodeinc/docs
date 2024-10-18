@@ -3,17 +3,18 @@ title: Data Fetching
 description: "Pull data into your app"
 ---
 
-Modus makes it simple to fetch data from external sources. The specific data source you're
-retrieving from determines the method you use to interact with it.
+Modus makes it simple to fetch data from external sources. The specific data
+source you're retrieving from determines the method you use to interact with it.
 
 ## Fetching from databases
 
 ### PostgreSQL
 
-PostgreSQL is a powerful, open source relational database system. Modus provides a simple way to
-interact with PostgreSQL databases with the `postgresql` APIs.
+PostgreSQL is a powerful, open source relational database system. Modus provides
+a simple way to interact with PostgreSQL databases with the `postgresql` APIs.
 
-Here is an example of fetching a person from a PostgreSQL database using the Modus SDK:
+Here is an example of fetching a person from a PostgreSQL database using the
+Modus SDK:
 
 <CodeGroup>
 
@@ -66,10 +67,11 @@ export function getPerson(name: string): Person {
 
 ### Dgraph
 
-Dgraph is a distributed, transactional graph database. Modus offers an easy way to query and mutate
-data in Dgraph with the `dgraph` APIs.
+Dgraph is a distributed, transactional graph database. Modus offers an easy way
+to query and mutate data in Dgraph with the `dgraph` APIs.
 
-Here is an example of fetching a person from a Dgraph database using the Modus SDK:
+Here is an example of fetching a person from a Dgraph database using the Modus
+SDK:
 
 <CodeGroup>
 
@@ -169,8 +171,9 @@ export function getPerson(name: string): Person {
 
 ### HTTP
 
-HTTP protocols underpin RESTful APIs with OpenAPI schemas. Modus provides a convenient way to
-interact with any external HTTP API using the `http` APIs in the Modus SDK.
+HTTP protocols underpin RESTful APIs with OpenAPI schemas. Modus provides a
+convenient way to interact with any external HTTP API using the `http` APIs in
+the Modus SDK.
 
 Here is an example of fetching a person from an HTTP API using the Modus SDK:
 
@@ -227,8 +230,9 @@ export function getPerson(name: string): Person {
 
 ### GraphQL
 
-GraphQL is a data-centric query language for APIs that allows you to fetch only the data you need.
-With the `graphql` APIs in the Modus SDK, you can easily fetch data from any GraphQL endpoint.
+GraphQL is a data-centric query language for APIs that allows you to fetch only
+the data you need. With the `graphql` APIs in the Modus SDK, you can easily
+fetch data from any GraphQL endpoint.
 
 Here is an example of fetching a person from a GraphQL API using the Modus SDK:
 

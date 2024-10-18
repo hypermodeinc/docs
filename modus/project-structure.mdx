@@ -5,15 +5,16 @@ description: "Understand the structure of a Modus app"
 
 {/* <!-- vale Google.Passive = NO --> */}
 
-A Modus app is organized into a set of files and directories that define the structure of your app.
-This structure is important for maintaining and scaling your app as it grows.
+A Modus app is organized into a set of files and directories that define the
+structure of your app. This structure is important for maintaining and scaling
+your app as it grows.
 
 {/* <!-- vale Google.Passive = YES --> */}
 
 ## Structure
 
-Modus fits within the natural language structure of your app code, with configuration separated from
-your source code.
+Modus fits within the natural language structure of your app code, with
+configuration separated from your source code.
 
 <CodeGroup>
 
@@ -42,12 +43,13 @@ your source code.
 
 ## App manifest
 
-The `modus.json` [app manifest](/modus/app-manifest) is the central configuration file for your
-Modus app. It defines the endpoints, connections, models, and collections that your code has
-available to it during runtime. Because Modus is a secure-by-default framework, only the resources
-defined in this file are accessible to your app.
+The `modus.json` [app manifest](/modus/app-manifest) is the central
+configuration file for your Modus app. It defines the endpoints, connections,
+models, and collections that your code has available to it during runtime.
+Because Modus is a secure-by-default framework, only the resources defined in
+this file are accessible to your app.
 
 ## Initializing your app
 
-When you initialize your app with the `modus new` command, the Modus CLI scaffolds your app with the
-necessary files and directories.
+When you initialize your app with the `modus new` command, the Modus CLI
+scaffolds your app with the necessary files and directories.

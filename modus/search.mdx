@@ -3,27 +3,30 @@ title: Search
 description: "Add natural language search to your app using AI embeddings"
 ---
 
-The Modus Collections API provides a robust way to store, retrieve, and search through data using
-both natural language and vector-based search methods. By leveraging embeddings, developers can
-enable semantic and similarity-based searches, improving the relevance of search results within
-their applications.
+The Modus Collections API provides a robust way to store, retrieve, and search
+through data using both natural language and vector-based search methods. By
+leveraging embeddings, developers can enable semantic and similarity-based
+searches, improving the relevance of search results within their applications.
 
-For example, with natural language similarity, if you search for a product description like 'sleek
-red sports car', the search method returns similar product descriptions such as "luxury sports car
-in red" or 'high-speed car with sleek design'.
+For example, with natural language similarity, if you search for a product
+description like 'sleek red sports car', the search method returns similar
+product descriptions such as "luxury sports car in red" or 'high-speed car with
+sleek design'.
 
 ## Understanding key components
 
-**Collections**: a collection is a structured storage that organizes and stores textual data and
-associated metadata. Collections enable sophisticated search, retrieval, and classification tasks
-using vector embeddings.
+**Collections**: a collection is a structured storage that organizes and stores
+textual data and associated metadata. Collections enable sophisticated search,
+retrieval, and classification tasks using vector embeddings.
 
-**Search Methods**: a search method associated with a collection, defines how to convert collection
-items into a vector representation and provides indexing parameters.
+**Search Methods**: a search method associated with a collection, defines how to
+convert collection items into a vector representation and provides indexing
+parameters.
 
-**Vector embeddings**: for vector-based search and comparison, Modus converts each item in the
-collection into a vector representation called **embedding**. By embedding data, you enable powerful
-natural language and similarity-based searches.
+**Vector embeddings**: for vector-based search and comparison, Modus converts
+each item in the collection into a vector representation called **embedding**.
+By embedding data, you enable powerful natural language and similarity-based
+searches.
 
 <Note>
   Modus runtime automatically compute the embeddings, according to your
@@ -33,14 +36,15 @@ natural language and similarity-based searches.
 ## Initializing your collection
 
 Before implementing search, ensure you have
-[defined a collection in the app manifest](./app-manifest#collections). In this example,
-`myProducts` is the collection used to store product descriptions.
+[defined a collection in the app manifest](./app-manifest#collections). In this
+example, `myProducts` is the collection used to store product descriptions.
 
-First, we need to populate the collection with items (for example, product descriptions). You can
-insert individual or multiple items using the `upsert` and `upsertBatch` methods, respectively.
+First, we need to populate the collection with items (for example, product
+descriptions). You can insert individual or multiple items using the `upsert`
+and `upsertBatch` methods, respectively.
 
-Use `upsert` to insert a product description into the collection. If you don't specify a key, Modus
-generates a unique key for you.
+Use `upsert` to insert a product description into the collection. If you don't
+specify a key, Modus generates a unique key for you.
 
 <CodeGroup>
 
@@ -76,13 +80,13 @@ export function addProduct(description: string): string {
 
 ## Configure your search method
 
-The search capability relies on a search method and embedding function. To configure your search
-method.
+The search capability relies on a search method and embedding function. To
+configure your search method.
 
 ### Create an embedding function
 
-An embedding function is any API function that transforms text into vectors that represent their
-meaning in a high-dimensional space.
+An embedding function is any API function that transforms text into vectors that
+represent their meaning in a high-dimensional space.
 
 Embeddings functions must have the following signature:
 
@@ -268,9 +272,10 @@ With an embedding function in place, declare a search method in the
 
 ## Implement semantic similarity search
 
-With the products stored, you can now search the collection by semantic similarity. The search] API
-computes an embedding for the provided text, compares it with the embeddings of the items in the
-collection, and returns the most similar items.
+With the products stored, you can now search the collection by semantic
+similarity. The search] API computes an embedding for the provided text,
+compares it with the embeddings of the items in the collection, and returns the
+most similar items.
 
 <CodeGroup>
 
@@ -305,9 +310,10 @@ The search response is a CollectionSearchResult containing the following fields:
 
 - `collection`: the name of the collection.
 - `status`: the status of the operation.
-- `objects`: the search result items with their text, distance, and score values.
-  - `distance`: a lower value indicates a closer match between the search query and the item in the
-    collection
+- `objects`: the search result items with their text, distance, and score
+  values.
+  - `distance`: a lower value indicates a closer match between the search query
+    and the item in the collection
   - `score`: a higher value (closer to 1) represents a better match
 
 ```json
@@ -327,8 +333,9 @@ The search response is a CollectionSearchResult containing the following fields:
 
 ## Search for similar Items
 
-When you need to search similar items to a given item, use the `searchByVector` API. Retrieve the
-vector associated with the given item by its key, then perform a search using that vector.
+When you need to search similar items to a given item, use the `searchByVector`
+API. Retrieve the vector associated with the given item by its key, then perform
+a search using that vector.
 
 <CodeGroup>
 

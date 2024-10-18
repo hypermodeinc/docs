@@ -3,21 +3,22 @@ title: Model Invoking
 description: "Invoke your models with the Modus Models API"
 ---
 
-Modus enables you to easily integrate AI models into your app. In just a few steps, you can generate
-text, classify items, compute embeddings, and use models in your app for many other use cases using
-the `models` API in the Modus SDK.
+Modus enables you to easily integrate AI models into your app. In just a few
+steps, you can generate text, classify items, compute embeddings, and use models
+in your app for many other use cases using the `models` API in the Modus SDK.
 
 ## Understanding key components
 
-**Models**: your app can invoke models hosted on Hypermode, OpenAI, Anthropic, and many more. You
-define models in your app manifest.
+**Models**: your app can invoke models hosted on Hypermode, OpenAI, Anthropic,
+and many more. You define models in your app manifest.
 
-**Models API**: the `models` API in the Modus SDK provides a set of functions that you can import
-and call from your app.
+**Models API**: the `models` API in the Modus SDK provides a set of functions
+that you can import and call from your app.
 
 ## Define your models
 
-You define models in your [app manifest](./app-manifest#models). Here are some examples:
+You define models in your [app manifest](./app-manifest#models). Here are some
+examples:
 
 <CodeGroup>
 
@@ -89,19 +90,19 @@ You define models in your [app manifest](./app-manifest#models). Here are some e
 
 ## Invoking a model for inference
 
-To invoke a model within your app, import the `models` packages from the SDK. Import the core
-`models` package and the package for the interface your model uses. For example, to use the OpenAI
-interface for a text-generation model, you would import the `openai` package in addition to the core
-`models` package.
+To invoke a model within your app, import the `models` packages from the SDK.
+Import the core `models` package and the package for the interface your model
+uses. For example, to use the OpenAI interface for a text-generation model, you
+would import the `openai` package in addition to the core `models` package.
 
 ### Generation models
 
-Generation models are models that generate text, images, or other data based on input. Currently,
-the Models API supports the OpenAI, Anthropic, and Gemini interfaces. Let's see how to invoke a
-model using the OpenAI interface.
+Generation models are models that generate text, images, or other data based on
+input. Currently, the Models API supports the OpenAI, Anthropic, and Gemini
+interfaces. Let's see how to invoke a model using the OpenAI interface.
 
-When using a model interface, you automatically get type-ahead guidance in your code editor based on
-the available options for that interface.
+When using a model interface, you automatically get type-ahead guidance in your
+code editor based on the available options for that interface.
 
 <Note>
   Hypermode-hosted generation models implement the OpenAI API standard. To
@@ -182,8 +183,9 @@ export function generateText(instruction: string, prompt: string): string {
 
 ### Classification models
 
-Classification models provide a label for input data. You can use these models to sort data into
-categories or classes. Let's see how to invoke a classification model.
+Classification models provide a label for input data. You can use these models
+to sort data into categories or classes. Let's see how to invoke a
+classification model.
 
 <CodeGroup>
 
@@ -249,6 +251,7 @@ export function classifyText(text: string, threshold: f32): string {
 
 ### Embedding models
 
-Modus supports invoking embedding models for text, images, and other data types. You use the outputs
-of these models for implementing search, recommendation, and similarity functions in your app. Refer
-to [Search](/modus/search) for more information on how to use embeddings in your app.
+Modus supports invoking embedding models for text, images, and other data types.
+You use the outputs of these models for implementing search, recommendation, and
+similarity functions in your app. Refer to [Search](/modus/search) for more
+information on how to use embeddings in your app.

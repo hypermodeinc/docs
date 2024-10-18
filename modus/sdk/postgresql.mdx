@@ -3,8 +3,8 @@ title: PostgreSQL
 description: "Execute queries against a PostgreSQL database"
 ---
 
-The Modus PostgreSQL API allows you to run queries against PostgreSQL or any PostgreSQL-compatible
-database platform.
+The Modus PostgreSQL API allows you to run queries against PostgreSQL or any
+PostgreSQL-compatible database platform.
 
 ## Import
 
@@ -38,8 +38,9 @@ The APIs in the `postgresql` namespace are below, organized by category.
 
 #### execute
 
-Execute a SQL statement against a PostgreSQL database, without any data returned. Use this for
-insert, update, or delete operations, or for other SQL statements that don't return data.
+Execute a SQL statement against a PostgreSQL database, without any data
+returned. Use this for insert, update, or delete operations, or for other SQL
+statements that don't return data.
 
 <Note>
   The `execute` function is for operations that don't return data. However, some
@@ -80,8 +81,9 @@ See the details of the [`Params`](#params) object for more information.
 
 #### query
 
-Execute a SQL statement against a PostgreSQL database, returning a set of rows. In the results, each
-row converts to an object of type `T`, with fields matching the column names.
+Execute a SQL statement against a PostgreSQL database, returning a set of rows.
+In the results, each row converts to an object of type `T`, with fields matching
+the column names.
 
 ```go
 function postgresql.query<T>(
@@ -98,11 +100,12 @@ function postgresql.query<T>(
   <Tip>
   Define custom types in the app's source code. In AssemblyScript, create classes decorated with `@json`.
 
-All types, including classes, base classes, and field types must be JSON serializable. You can also
-use built-in types such as strings, numbers, arrays, and maps.
+All types, including classes, base classes, and field types must be JSON
+serializable. You can also use built-in types such as strings, numbers, arrays,
+and maps.
 
-If working with PostgreSQL's `point` data type, you can use a [`Point`](#point) or
-[`Location`](#location) object to represent the data.
+If working with PostgreSQL's `point` data type, you can use a [`Point`](#point)
+or [`Location`](#location) object to represent the data.
 
   </Tip>
 </ResponseField>
@@ -130,8 +133,9 @@ See the details of the [`Params`](#params) object for more information.
 
 #### queryScalar
 
-Execute a SQL statement against a PostgreSQL database, returning a single scalar value. For example,
-the result could be a count, sum, or average, or it could be an identifier.
+Execute a SQL statement against a PostgreSQL database, returning a single scalar
+value. For example, the result could be a count, sum, or average, or it could be
+an identifier.
 
 ```go
 function postgresql.queryScalar<T> (
@@ -181,9 +185,9 @@ class Params {
 
 A container for parameters to include with a SQL operation.
 
-To use this feature, create a new `Params` object and call the `push` method for each parameter you
-want to include. Then pass the object to the `execute`, `query`, or `queryScalar` function along
-with your SQL statement.
+To use this feature, create a new `Params` object and call the `push` method for
+each parameter you want to include. Then pass the object to the `execute`,
+`query`, or `queryScalar` function along with your SQL statement.
 
 <ResponseField name="push(value)">
   Push a parameter value into the list included with the SQL operation. The sequence of calls to
@@ -193,8 +197,9 @@ with your SQL statement.
 <ResponseField name="value" type="any" required>
   The value of the parameter to include in the SQL operation.
 
-The value can be of any type that's JSON serializable, including strings, numbers, boolean values,
-arrays, maps, and custom objects decorated with `@json`, as long as the database supports it.
+The value can be of any type that's JSON serializable, including strings,
+numbers, boolean values, arrays, maps, and custom objects decorated with
+`@json`, as long as the database supports it.
 
 {" "}
 
@@ -223,8 +228,8 @@ class Response {
 }
 ```
 
-Represents the response from an [`execute`](#execute) operation. Also serves as the base class for
-`QueryResponse<T>` and `ScalarResponse<T>`.
+Represents the response from an [`execute`](#execute) operation. Also serves as
+the base class for `QueryResponse<T>` and `ScalarResponse<T>`.
 
 <ResponseField name="error" type="string | null">
   An error message, if an error occurred during the operation. Otherwise, this
@@ -295,8 +300,8 @@ class Point {
 }
 ```
 
-Represents a point in 2D space, having `x` and `y` coordinates. Correctly serializes to and from
-PostgreSQL's point type, in (x, y) order.
+Represents a point in 2D space, having `x` and `y` coordinates. Correctly
+serializes to and from PostgreSQL's point type, in (x, y) order.
 
 <Info>
   This class is identical to the [Location](#location) class, but uses different
@@ -322,7 +327,8 @@ class Location {
 
 Represents a location on Earth, having `longitude` and `latitude` coordinates.
 
-Correctly serializes to and from PostgreSQL's point type, in (longitude, latitude) order.
+Correctly serializes to and from PostgreSQL's point type, in (longitude,
+latitude) order.
 
 <Info>
   This class is identical to the [Point](#point) class, but uses different field

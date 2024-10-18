@@ -3,8 +3,8 @@ title: Console
 description: "Capture errors and debugging information in your functions"
 ---
 
-The Modus Console API allows you to capture information from your functions, such as errors and
-other information that can help you debug your functions.
+The Modus Console API allows you to capture information from your functions,
+such as errors and other information that can help you debug your functions.
 
 <Info>
   Unlike other APIs, the Console API is globally available by default in all
@@ -12,11 +12,12 @@ other information that can help you debug your functions.
 </Info>
 
 The Console API mimics the behavior of the AssemblyScript
-[`console`](https://www.assemblyscript.org/stdlib/console.html) object, but directs the output to
-Hypermode as follows:
+[`console`](https://www.assemblyscript.org/stdlib/console.html) object, but
+directs the output to Hypermode as follows:
 
-- All console output is available in the runtime logs. When hosting on Hypermode, the logs are
-  available in the "Function Runs" section of the Console UI.
+- All console output is available in the runtime logs. When hosting on
+  Hypermode, the logs are available in the "Function Runs" section of the
+  Console UI.
 - Output from `console.error` is also sent to the GraphQL response.
 - Errors thrown with the `throw` keyword are also sent to the GraphQL response.
 
@@ -141,7 +142,8 @@ console.timeLog(label?: string): void
 
 #### timeEnd
 
-Logs the current value of a timer previously started with `console.time`, and discards the timer.
+Logs the current value of a timer previously started with `console.time`, and
+discards the timer.
 
 ```go
 console.timeEnd(label?: string): void

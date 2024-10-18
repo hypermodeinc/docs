@@ -3,16 +3,18 @@ title: Hosted Models
 description: "Iterate quickly with seamless access to the most popular models"
 ---
 
-Hypermode includes a set of shared models available for integration into your app on a pay-per-token
-basis.
+Hypermode includes a set of shared models available for integration into your
+app on a pay-per-token basis.
 
-Need a bespoke model? You can include a model from [Hugging Face](https://huggingface.co/) in your
+Need a bespoke model? You can include a model from
+[Hugging Face](https://huggingface.co/) in your
 [app manifest](/modus/app-manifest) and Hypermode runs and manages it for you.
 
 ## Setup
 
-To use a Hypermode-hosted model, set `host: "hypermode"`, `provider: "hugging-face"`, and set
-`sourceModel` to be the model name as specified on Hugging Face.
+To use a Hypermode-hosted model, set `host: "hypermode"`,
+`provider: "hugging-face"`, and set `sourceModel` to be the model name as
+specified on Hugging Face.
 
 ```json modus.json
 {
@@ -30,14 +32,16 @@ To use a Hypermode-hosted model, set `host: "hypermode"`, `provider: "hugging-fa
 
 ## Deployment mode
 
-We run our most popular models as multi-tenant, shared instances across projects and customers.
+We run our most popular models as multi-tenant, shared instances across projects
+and customers.
 
-By default, if the model you use is available as a shared model, your app uses these shared models
-at runtime. You can override this default behavior by setting `dedicated: true` on your model in the
+By default, if the model you use is available as a shared model, your app uses
+these shared models at runtime. You can override this default behavior by
+setting `dedicated: true` on your model in the
 [app manifest](/modus/app-manifest).
 
-If the model you use isn't available as a shared model, Hypermode automatically spins up a dedicated
-instance of the model for your project.
+If the model you use isn't available as a shared model, Hypermode automatically
+spins up a dedicated instance of the model for your project.
 
 ## Shared models
 
