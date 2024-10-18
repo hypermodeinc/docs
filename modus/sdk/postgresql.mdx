@@ -65,9 +65,9 @@ function postgresql.execute (
   SQL statement containing the query or mutation operation to execute.
 
   <Warning>
-    While it's possible to directly include parameter values into your SQL statement, it's highly recommended to pass a
-    [`Params`](#params) object instead. This can help to prevent against injection attacks and other security
-    vulnerabilities.
+    While it's possible to directly include parameter values into your SQL statement, it's
+    highly recommended to pass a [`Params`](#params) object instead. This can help to prevent
+    against injection attacks and other security vulnerabilities.
   </Warning>
 </ResponseField>
 
@@ -92,7 +92,8 @@ function postgresql.query<T>(
 ```
 
 <ResponseField name="T" type="Type" required>
-  Type of object to use for the data returned from the query. This can be any type, including a custom type defined in your project. It should match the shape of the row returned from the SQL query.
+  Type of object to use for the data returned from the query. This can be any type, including a custom
+  type defined in your project. It should match the shape of the row returned from the SQL query.
 
   <Tip>
   Define custom types in the app's source code. In AssemblyScript, create classes decorated with `@json`.
@@ -114,9 +115,9 @@ If working with PostgreSQL's `point` data type, you can use a [`Point`](#point) 
   SQL statement containing the query or mutation operation to execute.
 
   <Warning>
-    While it's possible to directly include parameter values into your SQL statement, it's highly recommended to pass a
-    [`Params`](#params) object instead. This can help to prevent against injection attacks and other security
-    vulnerabilities.
+    While it's possible to directly include parameter values into your SQL statement, it's highly
+    recommended to pass a [`Params`](#params) object instead. This can help to prevent against
+    injection attacks and other security vulnerabilities.
   </Warning>
 </ResponseField>
 
@@ -154,9 +155,9 @@ function postgresql.queryScalar<T> (
   SQL statement containing the query or mutation operation to execute.
 
   <Warning>
-    While it's possible to directly include parameter values into your SQL statement, it's highly recommended to pass a
-    [`Params`](#params) object instead. This can help to prevent against injection attacks and other security
-    vulnerabilities.
+    While it's possible to directly include parameter values into your SQL statement, it's highly
+    recommended to pass a [`Params`](#params) object instead. This can help to prevent against
+    injection attacks and other security vulnerabilities.
   </Warning>
 </ResponseField>
 
@@ -185,8 +186,9 @@ want to include. Then pass the object to the `execute`, `query`, or `queryScalar
 with your SQL statement.
 
 <ResponseField name="push(value)">
-  Push a parameter value into the list included with the SQL operation. The sequence of calls to `push` determines the
-  order of the parameters in the SQL statement. This corresponds to the order of the `?` placeholders or `$1`, `$2`, etc.
+  Push a parameter value into the list included with the SQL operation. The sequence of calls to
+  `push` determines the order of the parameters in the SQL statement. This corresponds to the order
+  of the `?` placeholders or `$1`, `$2`, etc.
 
 <ResponseField name="value" type="any" required>
   The value of the parameter to include in the SQL operation.

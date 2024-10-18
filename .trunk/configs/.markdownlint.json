@@ -1,5 +1,5 @@
 {
-  "line-length": { "line_length": 100 },
+  "line-length": { "line_length": 150, "tables": false },
   "no-inline-html": false,
   "no-bare-urls": false,
   "no-space-in-emphasis": false

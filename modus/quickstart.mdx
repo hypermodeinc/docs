@@ -18,8 +18,8 @@ Modus app and how to run it locally.
 
 <Steps>
   <Step title="Install the Modus CLI">
-    The Modus CLI provides a set of commands to help you create, build, and run your Modus apps. You can
-    install the CLI using cURL or npm.
+    The Modus CLI provides a set of commands to help you create, build, and run your Modus apps.
+    You can install the CLI using cURL or npm.
 
     <CodeGroup>
 
@@ -58,7 +58,8 @@ Modus app and how to run it locally.
 
   </Step>
   <Step title="Add a connection">
-    Modus is a secure-by-default framework. To connect to external services, you need to add a connection in your app manifest.
+    Modus is a secure-by-default framework. To connect to external services, you need to add a connection
+    in your app manifest.
 
     Add the following code into your `modus.json` manifest file:
 
@@ -75,7 +76,8 @@ Modus app and how to run it locally.
 
   </Step>
   <Step title="Add a function">
-    Functions are the building blocks of your app. Let's add a function that fetches a random quote from the ZenQuotes connection you just created.
+    Functions are the building blocks of your app. Let's add a function that fetches a random quote from
+    the ZenQuotes connection you just created.
 
     <Tabs>
       <Tab title="Go">
@@ -147,7 +149,8 @@ Modus app and how to run it locally.
         }
         ```
 
-        Then add the following to `index.ts`. This includes the `getRandomQuote` function on your generated API.
+        Then add the following to `index.ts`. This includes the `getRandomQuote` function on
+        your generated API.
 
         ```ts index.ts
         export { getRandomQuote } from "./quotes";

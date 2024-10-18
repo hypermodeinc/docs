@@ -23,7 +23,8 @@ to deploy it to Hypermode.
     intelligent functions and APIs, powered by WebAssembly. With Hypermode, you can deploy,
     secure, and observe your Modus apps.
 
-    To get started, [create your first Modus app](/modus/quickstart). You can import this app into Hypermode in the next step.
+    To get started, [create your first Modus app](/modus/quickstart). You can import this app into
+    Hypermode in the next step.
 
   </Step>
   <Step title="Import Modus app">
@@ -45,7 +46,8 @@ to deploy it to Hypermode.
           npm install -g @hypermode/hyp
           ```
         </CodeGroup>
-        From the terminal, run the following command to import your Modus app into Hypermode. This command will create your Hypermode project and deploy your app.
+        From the terminal, run the following command to import your Modus app into Hypermode. This command
+        will create your Hypermode project and deploy your app.
 
         ```bash
         hyp init
@@ -53,12 +55,13 @@ to deploy it to Hypermode.
       </Tab>
     </Tabs>
 
-    When Hypermode creates your project, a runtime is initiated for your app as well as connections to any [Hypermode-hosted models](/hosted-models).
+    When Hypermode creates your project, a runtime is initiated for your app as well as connections to
+    any [Hypermode-hosted models](/hosted-models).
 
   </Step>
   <Step title="Explore API endpoint">
-    After deploying your app, Hypermode lands you in your project home. You can see the status of your project
-    and the API endpoint generated for your app.
+    After deploying your app, Hypermode lands you in your project home. You can see the status of your
+    project and the API endpoint generated for your app.
 
     From the **Query** page, you can run a sample query to verify it's working as expected. In the following
     query, we're going to use the `generateText` function to generate text from the shared Meta Llama
@@ -79,9 +82,9 @@ to deploy it to Hypermode.
   </Step>
   <Step title="Observe function execution">
     Let's dig deeper into the behavior of our AI service when we ran the query by looking at the
-    **Inferences** page. You can see the step-by-step inference process and the inputs and outputs of the
-    model at each step of your function. We can see in this case, it took Llama 4.4 seconds to reply to the prompt. We
-    can also see the parameters on both the inputs and outputs.
+    **Inferences** page. You can see the step-by-step inference process and the inputs and outputs of
+    the model at each step of your function. We can see in this case, it took Llama 4.4 seconds to
+    reply to the prompt. We can also see the parameters on both the inputs and outputs.
 
     ```json
     {
