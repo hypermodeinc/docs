@@ -112,6 +112,11 @@
       "pages": ["modus/changelog"]
     }
   ],
+  "feedback": {
+    "thumbsRating": true,
+    "suggestEdit": true,
+    "raiseIssue": true
+  },
   "footerSocials": {
     "discord": "https://discord.hypermode.com",
     "github": "https://github.com/hypermodeinc",
