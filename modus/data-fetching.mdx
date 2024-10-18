@@ -279,19 +279,18 @@ import { graphql } from "@hypermode/modus-sdk-as"
 // the name of the GraphQL connection, as specified in the modus.json manifest
 const hostName: string = "my-graphql-api"
 
-// Declare  classes used to parse the JSON document returned
-@json
-class GetPersonResponse {
-  getPerson: Person
-}
-
+// Declare classes used to parse the JSON document returned
 @json
 class Person {
   name: string = ""
   age: i32 = 0
 }
+@json
+class GetPersonResponse {
+  getPerson: Person | null
+}
 
-export function getPerson(name: string): Person {
+export function getPerson(name: string): Person | null {
   const statement = `
     query getPerson($name: String!) {
       getPerson(name: $name) {
