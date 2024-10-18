@@ -17,12 +17,19 @@ documentation for the open source projects that Hypermode leads:
 - [Ristretto](https://github.com/dgraph-io/ristretto) - embeddable memory-bound
   cache in Go
 
-## Suggesting a Change
+## Found an issue?
 
 If you notice something in our documentation that is wrong, misleading, or could
 use additional context, the easiest way to make an impact is to create a GitHub
-issue or pull request. We do our best to triage and address docs issues as soon
-as possible.
+issue. We do our best to triage and address docs issues as soon as possible.
+
+For small changes, such as a misspelled word, go ahead and create a pull request
+for the fix. No issue required!
+
+## Connect
+
+You can ask questions and meet others from the Hypermode community in our
+[Discord](https://discord.hypermode.com).
 
 ## Contributing
 
