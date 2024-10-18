@@ -28,9 +28,9 @@ import { collections } from "@hypermode/functions-as"
 The APIs in the `collections` namespace are below, organized by category.
 
 <Tip>
-  We're constantly introducing new APIs through ongoing development with early users. [Open an
-  issue](https://github.com/hypermodeinc/modus/issues) if you have ideas on what would make Modus
-  even more powerful for your next app!
+  We're constantly introducing new APIs through ongoing development with early
+  users. [Open an issue](https://github.com/hypermodeinc/modus/issues) if you
+  have ideas on what would make Modus even more powerful for your next app!
 </Tip>
 
 ### Mutation Functions
@@ -40,8 +40,8 @@ The APIs in the `collections` namespace are below, organized by category.
 Inserts or updates an item in a collection.
 
 <Note>
-  If the item already exists, the function overwrites the previous value. If not, it creates a new
-  one.
+  If the item already exists, the function overwrites the previous value. If
+  not, it creates a new one.
 </Note>
 
 ```go
@@ -55,12 +55,13 @@ collections.upsert(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../app-manifest#collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="key" type="string">
-  The unique identifier for the item in the namespace. If null, the function generates a unique
-  identifier.
+  The unique identifier for the item in the namespace. If null, the function
+  generates a unique identifier.
 </ResponseField>
 
 <ResponseField name="text" type="string" required>
@@ -72,7 +73,8 @@ collections.upsert(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  Associates the item with a specific namespace. Defaults to an empty namespace if not provided.
+  Associates the item with a specific namespace. Defaults to an empty namespace
+  if not provided.
 </ResponseField>
 
 #### upsertBatch
@@ -80,7 +82,8 @@ collections.upsert(
 Inserts or updates a batch of items into a collection.
 
 <Note>
-  If an item with the same key already exists, the original text is overwritten with the new text.
+  If an item with the same key already exists, the original text is overwritten
+  with the new text.
 </Note>
 
 ```go
@@ -94,12 +97,13 @@ collections.upsertBatch(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../app-manifest#collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="keys" type="string[]">
-  Array of keys for the item to add to the collection. If you pass `null` for any key, Hypermode
-  assigns a new UUID as the key for the item.
+  Array of keys for the item to add to the collection. If you pass `null` for
+  any key, Hypermode assigns a new UUID as the key for the item.
 </ResponseField>
 
 <ResponseField name="texts" type="string[]" required>
@@ -111,7 +115,8 @@ collections.upsertBatch(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  Associates the item with a specific namespace. Defaults to an empty namespace if not provided.
+  Associates the item with a specific namespace. Defaults to an empty namespace
+  if not provided.
 </ResponseField>
 
 #### remove
@@ -127,7 +132,8 @@ collections.remove(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../app-manifest#collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="key" type="string" required>
@@ -135,7 +141,8 @@ collections.remove(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  The namespace to remove the item from. Defaults to the default namespace if not provided.
+  The namespace to remove the item from. Defaults to the default namespace if
+  not provided.
 </ResponseField>
 
 ### Search and Retrieval Functions
@@ -146,8 +153,8 @@ Perform a natural language search on items within a collection. This method is u
 items that match a search query based on semantic meaning.
 
 <Note>
-  Modus uses the same embedder for both inserting text into the collection, and for the text used
-  when searching the collection.
+  Modus uses the same embedder for both inserting text into the collection, and
+  for the text used when searching the collection.
 </Note>
 
 ```go
@@ -162,7 +169,8 @@ collections.search(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../app-manifest#collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string" required>
@@ -182,7 +190,8 @@ collections.search(
 </ResponseField>
 
 <ResponseField name="namespaces" type="string[]">
-  A list of namespaces to search the item from. Defaults to the default namespace if not provided.
+  A list of namespaces to search the item from. Defaults to the default
+  namespace if not provided.
 </ResponseField>
 
 #### searchByVector
@@ -191,8 +200,8 @@ Perform a vector-based search on a collection, which is helpful for scenarios re
 similarity calculations between pre-computed embeddings.
 
 <Note>
-  Modus uses the same embedder for both inserting text into the collection, and for the vector used
-  when searching the collection.
+  Modus uses the same embedder for both inserting text into the collection, and
+  for the vector used when searching the collection.
 </Note>
 
 ```go
@@ -207,7 +216,8 @@ collections.searchByVector(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../app-manifest#collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string" required>
@@ -244,7 +254,8 @@ Classify an item in the collection using previous vectors' labels.
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../app-manifest#collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string" required>
@@ -256,7 +267,8 @@ Classify an item in the collection using previous vectors' labels.
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  The namespace to search the items from. Defaults to the default namespace if not provided.
+  The namespace to search the items from. Defaults to the default namespace if
+  not provided.
 </ResponseField>
 
 #### computeDistance
@@ -274,7 +286,8 @@ collections.computeDistance(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../app-manifest#collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string" required>
@@ -286,7 +299,8 @@ collections.computeDistance(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  The namespace to search the items from. Defaults to the default namespace if not provided.
+  The namespace to search the items from. Defaults to the default namespace if
+  not provided.
 </ResponseField>
 
 #### getText
@@ -302,7 +316,8 @@ collections.getText(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../app-manifest#collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="key" type="string" required>
@@ -310,7 +325,8 @@ collections.getText(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  The namespace to get the item from. Defaults to the default namespace if not provided.
+  The namespace to get the item from. Defaults to the default namespace if not
+  provided.
 </ResponseField>
 
 #### getTexts
@@ -325,11 +341,13 @@ collections.getTexts(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../app-manifest#collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  The namespace to get the items from. Defaults to the default namespace if not provided.
+  The namespace to get the items from. Defaults to the default namespace if not
+  provided.
 </ResponseField>
 
 #### getNamespaces
@@ -343,7 +361,8 @@ collections.getNamespaces(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../app-manifest#collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 #### getVector
@@ -360,7 +379,8 @@ collections.getVector(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../app-manifest#collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string" required>
@@ -372,7 +392,8 @@ collections.getVector(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  The namespace to get the item from. Defaults to the default namespace if not provided.
+  The namespace to get the item from. Defaults to the default namespace if not
+  provided.
 </ResponseField>
 
 #### getLabels
@@ -388,7 +409,8 @@ collections.getLabels(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../app-manifest#collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="key" type="string" required>
@@ -396,7 +418,8 @@ collections.getLabels(
 </ResponseField>
 
 <ResponseField name="namespace" type="string">
-  The namespace to get the item from. Defaults to the default namespace if not provided.
+  The namespace to get the item from. Defaults to the default namespace if not
+  provided.
 </ResponseField>
 
 ### Maintenance Functions
@@ -416,7 +439,8 @@ collections.recomputeSearchMethod(
 ```
 
 <ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the manifest](../app-manifest#collections).
+  Name of the collection, as [defined in the
+  manifest](../app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string" required>
@@ -457,8 +481,8 @@ Represents the result of a mutation operation on a collection.
 </ResponseField>
 
 <ResponseField name="isSuccessful" type="bool">
-  A boolean indicating whether the operation completed successfully. Use this to confirm success
-  before handling the result.
+  A boolean indicating whether the operation completed successfully. Use this to
+  confirm success before handling the result.
 </ResponseField>
 
 <ResponseField name="operation" type="string">
@@ -497,8 +521,8 @@ Represents the result of a search operation on a collection.
 </ResponseField>
 
 <ResponseField name="isSuccessful" type="bool">
-  A boolean indicating whether the operation completed successfully. Use this to confirm success
-  before handling the result.
+  A boolean indicating whether the operation completed successfully. Use this to
+  confirm success before handling the result.
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string">
@@ -573,8 +597,8 @@ Represents the result of a classification operation on a collection.
 </ResponseField>
 
 <ResponseField name="isSuccessful" type="bool">
-  A boolean indicating whether the operation completed successfully. Use this to confirm success
-  before handling the result.
+  A boolean indicating whether the operation completed successfully. Use this to
+  confirm success before handling the result.
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string">
@@ -684,8 +708,8 @@ Represents the result of a mutation operation on a search method.
 </ResponseField>
 
 <ResponseField name="isSuccessful" type="bool">
-  A boolean indicating whether the operation completed successfully. Use this to confirm success
-  before handling the result.
+  A boolean indicating whether the operation completed successfully. Use this to
+  confirm success before handling the result.
 </ResponseField>
 
 <ResponseField name="operation" type="string">

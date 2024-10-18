@@ -67,9 +67,9 @@ you'd like to contribute a new model yourself.
 The APIs in the `models` namespace are below, organized by category.
 
 <Tip>
-  We're constantly introducing new APIs through ongoing development with early users. [Open an
-  issue](https://github.com/hypermodeinc/modus/issues) if you have ideas on what would make Modus
-  even more powerful for your next app!
+  We're constantly introducing new APIs through ongoing development with early
+  users. [Open an issue](https://github.com/hypermodeinc/modus/issues) if you
+  have ideas on what would make Modus even more powerful for your next app!
 </Tip>
 
 ### Functions
@@ -83,12 +83,13 @@ Get a model instance by name and type.
     ```
 
 <ResponseField name="T" type="Type" required>
-  The type of model to return. This can be any class that extends the `Model` base class.
+  The type of model to return. This can be any class that extends the `Model`
+  base class.
 </ResponseField>
 
 <ResponseField name="modelName" type="string" required>
-  The name of the model to retrieve. This must match the name of a model defined in your project's
-  manifest file.
+  The name of the model to retrieve. This must match the name of a model defined
+  in your project's manifest file.
 </ResponseField>
 
 ### Objects
@@ -106,31 +107,34 @@ Get a model instance by name and type.
 The base class for all models that Hypermode functions can invoke.
 
 <Tip>
-  If you are implementing a custom model, you should extend this class. You'll also need classes to
-  represent the input and output types for your model. See the implementations of the pre-defined
-  models in the `models-as` repository for examples.
+  If you are implementing a custom model, you should extend this class. You'll
+  also need classes to represent the input and output types for your model. See
+  the implementations of the pre-defined models in the `models-as` repository
+  for examples.
 </Tip>
 
 <ResponseField name="TInput" type="Type" required>
-  The type of the input data for the model. This can be any type, including a custom type defined in
-  your project. It should match the shape of the data expected by the model. It's usually a class.
+  The type of the input data for the model. This can be any type, including a
+  custom type defined in your project. It should match the shape of the data
+  expected by the model. It's usually a class.
 </ResponseField>
 
 <ResponseField name="TOutput" type="Type" required>
-  The type of the output data from the model. This can be any type, including a custom type defined
-  in your project. It should match the shape of the data returned by the model. It's usually a
-  class.
+  The type of the output data from the model. This can be any type, including a
+  custom type defined in your project. It should match the shape of the data
+  returned by the model. It's usually a class.
 </ResponseField>
 
 <ResponseField name="debug" type="boolean">
-  A flag to enable debug mode for the model. When enabled, Hypermode automatically logs the full
-  request and response data to the console. implementations can also use this flag to enable
-  additional debug logging. Defaults to `false`.
+  A flag to enable debug mode for the model. When enabled, Hypermode
+  automatically logs the full request and response data to the console.
+  implementations can also use this flag to enable additional debug logging.
+  Defaults to `false`.
 </ResponseField>
 
 <ResponseField name="info" type="ModelInfo">
-  Information about the model set by the Hypermode Runtime when creating the instance. See the
-  [`ModelInfo`](#modelinfo) object for more information.
+  Information about the model set by the Hypermode Runtime when creating the
+  instance. See the [`ModelInfo`](#modelinfo) object for more information.
 </ResponseField>
 
 <ResponseField name="invoke(input)" type="function">

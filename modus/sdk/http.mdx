@@ -42,9 +42,9 @@ import { http } from "@hypermode/modus-sdk-as"
 The APIs in the `http` namespace are below, organized by category.
 
 <Tip>
-  We're constantly introducing new APIs through ongoing development with early users. [Open an
-  issue](https://github.com/hypermodeinc/modus/issues) if you have ideas on what would make Modus
-  even more powerful for your next app!
+  We're constantly introducing new APIs through ongoing development with early
+  users. [Open an issue](https://github.com/hypermodeinc/modus/issues) if you
+  have ideas on what would make Modus even more powerful for your next app!
 </Tip>
 
 ### Functions
@@ -75,8 +75,8 @@ the manifest entry of the host.
 </ResponseField>
 
 <ResponseField name="options" type="RequestOptions">
-  A [`RequestOptions`](#requestoptions) object with additional options for the request, such as the
-  HTTP method, headers, and body.
+  A [`RequestOptions`](#requestoptions) object with additional options for the
+  request, such as the HTTP method, headers, and body.
 </ResponseField>
 
 ### Objects
@@ -103,12 +103,13 @@ Represents content used in the body of an HTTP request or response.
 </ResponseField>
 
 <ResponseField name="text()">
-  Interprets the content as a UTF-8 encoded string, and returns it as a `string` value.
+  Interprets the content as a UTF-8 encoded string, and returns it as a `string`
+  value.
 </ResponseField>
 
 <ResponseField name="json<T>()">
-  Interprets the content as a UTF-8 encoded string containing JSON in the shape of type `T`, and
-  returns it as a value of type `T`.
+  Interprets the content as a UTF-8 encoded string containing JSON in the shape
+  of type `T`, and returns it as a value of type `T`.
 </ResponseField>
 
 #### Header
@@ -127,8 +128,8 @@ Represents an HTTP request or response header.
 </ResponseField>
 
 <ResponseField name="values" type="string[]">
-  An array of values for the header. Typically a header has a single value, but some headers can
-  have multiple values.
+  An array of values for the header. Typically a header has a single value, but
+  some headers can have multiple values.
 </ResponseField>
 
 #### Headers
@@ -163,13 +164,14 @@ The `value` object must be one of the following types:
 </ResponseField>
 
 <ResponseField name="entries()">
-  Returns a `string[][]`, where each inner array contains a header name and value.
+  Returns a `string[][]`, where each inner array contains a header name and
+  value.
 </ResponseField>
 
 <ResponseField name="get(name)">
-  Returns the value of the header with the given `name`, or `null` if the header doesn't exist. If
-  there are multiple values for the header, this function concatenates them with a comma to form a
-  single string.
+  Returns the value of the header with the given `name`, or `null` if the header
+  doesn't exist. If there are multiple values for the header, this function
+  concatenates them with a comma to form a single string.
 </ResponseField>
 
 #### Request
@@ -201,7 +203,8 @@ the HTTP method, headers, and body if needed.
 </ResponseField>
 
 <ResponseField name="Request.clone(request, options)">
-  Creates a new `Request` object by cloning the given `request` and applying the `options` to it.
+  Creates a new `Request` object by cloning the given `request` and applying the
+  `options` to it.
 </ResponseField>
 
 <ResponseField name="url" type="string">
@@ -210,7 +213,8 @@ the HTTP method, headers, and body if needed.
 </ResponseField>
 
 <ResponseField name="method" type="string">
-  The HTTP method of the request. For example, `"GET"`, `"POST"`, `"PUT"`, or `"DELETE"`.
+  The HTTP method of the request. For example, `"GET"`, `"POST"`, `"PUT"`, or
+  `"DELETE"`.
 </ResponseField>
 
 <ResponseField name="headers" type="Headers">
@@ -222,12 +226,13 @@ the HTTP method, headers, and body if needed.
 </ResponseField>
 
 <ResponseField name="text()">
-  Interprets the request body as a UTF-8 encoded string, and returns it as a `string` value.
+  Interprets the request body as a UTF-8 encoded string, and returns it as a
+  `string` value.
 </ResponseField>
 
 <ResponseField name="json<T>()">
-  Interprets the request body as a UTF-8 encoded string containing JSON in the shape of type `T`,
-  and returns it as a value of type `T`.
+  Interprets the request body as a UTF-8 encoded string containing JSON in the
+  shape of type `T`, and returns it as a value of type `T`.
 </ResponseField>
 
 #### RequestOptions
@@ -243,8 +248,8 @@ class RequestOptions {
 Options for the HTTP request.
 
 <ResponseField name="method" type="string | null">
-  The HTTP method of the request. For example, `"GET"`, `"POST"`, `"PUT"`, or `"DELETE"`. If `null`
-  (the default), the request uses the `GET` method.
+  The HTTP method of the request. For example, `"GET"`, `"POST"`, `"PUT"`, or
+  `"DELETE"`. If `null` (the default), the request uses the `GET` method.
 </ResponseField>
 
 <ResponseField name="headers" type="Headers">
@@ -284,11 +289,13 @@ Represents the response received from the HTTP server.
 </ResponseField>
 
 <ResponseField name="statusText" type="string">
-  The HTTP response status text associated with the status code, such as `"OK"` for success.
+  The HTTP response status text associated with the status code, such as `"OK"`
+  for success.
 </ResponseField>
 
 <ResponseField name="headers" type="Headers">
-  The HTTP headers received with the response, as a [`Headers`](#headers) object.
+  The HTTP headers received with the response, as a [`Headers`](#headers)
+  object.
 </ResponseField>
 
 <ResponseField name="body" type="ArrayBuffer">
@@ -301,11 +308,11 @@ Represents the response received from the HTTP server.
 </ResponseField>
 
 <ResponseField name="text()">
-  Interprets the response body content as a UTF-8 encoded string, and returns it as a `string`
-  value.
+  Interprets the response body content as a UTF-8 encoded string, and returns it
+  as a `string` value.
 </ResponseField>
 
 <ResponseField name="json<T>()">
-  Interprets the response body content as a UTF-8 encoded string containing JSON in the shape of
-  type `T`, and returns it as a value of type `T`.
+  Interprets the response body content as a UTF-8 encoded string containing JSON
+  in the shape of type `T`, and returns it as a value of type `T`.
 </ResponseField>

@@ -1,3 +1,2 @@
+plugins: ["@mintlify/prettier-config/config.js"]
 semi: false
-proseWrap: always
-printWidth: 100

@@ -104,8 +104,8 @@ When using a model interface, you automatically get type-ahead guidance in your 
 the available options for that interface.
 
 <Note>
-  Hypermode-hosted generation models implement the OpenAI API standard. To interact with these
-  models, use the `openai` interface.
+  Hypermode-hosted generation models implement the OpenAI API standard. To
+  interact with these models, use the `openai` interface.
 </Note>
 
 <CodeGroup>
@@ -165,7 +165,10 @@ const modelName: string = "text-generator"
 
 export function generateText(instruction: string, prompt: string): string {
   const model = models.getModel<OpenAIChatModel>(modelName)
-  const input = model.createInput([new SystemMessage(instruction), new UserMessage(prompt)])
+  const input = model.createInput([
+    new SystemMessage(instruction),
+    new UserMessage(prompt),
+  ])
 
   // this is one of many optional parameters available for the OpenAI chat interface
   input.temperature = 0.7

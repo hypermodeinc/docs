@@ -60,7 +60,12 @@
     },
     {
       "group": "Manage",
-      "pages": ["create-project", "modify-project", "modify-organization", "user-management"]
+      "pages": [
+        "create-project",
+        "modify-project",
+        "modify-organization",
+        "user-management"
+      ]
     },
     {
       "group": "Tools",

@@ -273,7 +273,10 @@ function reRankAndFilterSearchResultObjects(
   thresholdStars: f32,
 ): collections.CollectionSearchResultObject[] {
   for (let i = 0; i < objs.length; i++) {
-    const starRes = collections.getText(consts.productStarCollection, objs[i].key)
+    const starRes = collections.getText(
+      consts.productStarCollection,
+      objs[i].key,
+    )
     const stars = parseFloat(starRes)
 
     objs[i].score *= stars * 0.1
@@ -283,7 +286,10 @@ function reRankAndFilterSearchResultObjects(
 
   const filteredResults: collections.CollectionSearchResultObject[] = []
   for (let i = 0; i < objs.length; i++) {
-    const starRes = collections.getText(consts.productStarCollection, objs[i].key)
+    const starRes = collections.getText(
+      consts.productStarCollection,
+      objs[i].key,
+    )
     const stars = parseFloat(starRes)
     if (stars >= thresholdStars) {
       filteredResults.push(objs[i])

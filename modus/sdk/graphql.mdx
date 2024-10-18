@@ -28,9 +28,9 @@ import { http } from "@hypermode/modus-sdk-as"
 The APIs in the `graphql` namespace are below, organized by category.
 
 <Tip>
-  We're constantly introducing new APIs through ongoing development with early users. [Open an
-  issue](https://github.com/hypermodeinc/modus/issues) if you have ideas on what would make Modus
-  even more powerful for your next app!
+  We're constantly introducing new APIs through ongoing development with early
+  users. [Open an issue](https://github.com/hypermodeinc/modus/issues) if you
+  have ideas on what would make Modus even more powerful for your next app!
 </Tip>
 
 ### Functions
@@ -67,9 +67,10 @@ use built-in types such as strings, numbers, arrays, and maps.
   GraphQL statement containing the query or mutation operation to execute.
 
 <Warning>
-  While it's possible to directly include parameter values into your GraphQL statement, it's highly
-  recommended to pass a [`Variables`](#variables) object instead. This can help to prevent against
-  injection attacks and other security vulnerabilities.
+  While it's possible to directly include parameter values into your GraphQL
+  statement, it's highly recommended to pass a [`Variables`](#variables) object
+  instead. This can help to prevent against injection attacks and other security
+  vulnerabilities.
 </Warning>
 
 </ResponseField>
@@ -116,9 +117,9 @@ arrays, maps, and custom objects decorated with `@json`.
 </ResponseField>
 
 <ResponseField name="toJSON()" type="string">
-  Serializes the variables to a JSON string for inclusion in the GraphQL operation. The `execute`
-  function calls this automatically when you pass a `Variables` object. You typically don't need to
-  call it directly.
+  Serializes the variables to a JSON string for inclusion in the GraphQL
+  operation. The `execute` function calls this automatically when you pass a
+  `Variables` object. You typically don't need to call it directly.
 </ResponseField>
 
 #### Response
@@ -174,8 +175,8 @@ Each item in the array represents a segment of the path.
 </ResponseField>
 
 <ResponseField name="locations" type="CodeLocation[]">
-  An array of [`CodeLocation`](#codelocation) objects that point to the specific location of the
-  error in the GraphQL statement.
+  An array of [`CodeLocation`](#codelocation) objects that point to the specific
+  location of the error in the GraphQL statement.
 </ResponseField>
 
 #### CodeLocation

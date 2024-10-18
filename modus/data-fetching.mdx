@@ -154,7 +154,10 @@ export function getPerson(name: string): Person {
   const vars = new dgraph.Variables()
   vars.set("$name", name)
 
-  const resp = dgraph.execute(hostName, new dgraph.Request(new dgraph.Query(statement, vars)))
+  const resp = dgraph.execute(
+    hostName,
+    new dgraph.Request(new dgraph.Query(statement, vars)),
+  )
   const persons = JSON.parse<GetPersonResponse>(resp.Json).persons
   return persons[0]
 }
