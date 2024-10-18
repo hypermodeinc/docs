@@ -2,12 +2,16 @@
 
 This repo contains all of the docs and supporting assets for
 [Hypermode Docs](https://docs.hypermode.com). It includes (or soon will)
-documentation for:
+documentation for the open source projects that Hypermode leads:
 
-- [Modus](https://github.com/hypermodeinc/modus)
-- [Dgraph](https://github.com/dgraph-io/dgraph)
-- [Badger](https://github.com/dgraph-io/badger)
-- [Ristretto](https://github.com/dgraph-io/ristretto)
+- [Modus](https://github.com/hypermodeinc/modus) - serverless framework for
+  building functions and APIs, powered by WebAssembly
+- [Dgraph](https://github.com/dgraph-io/dgraph) - distributed, transactional
+  graph database for real-time use cases
+- [Badger](https://github.com/dgraph-io/badger) - embeddable key-value store in
+  Go
+- [Ristretto](https://github.com/dgraph-io/ristretto) - embeddable memory-bound
+  cache in Go
 
 ## Suggesting a Change
 
