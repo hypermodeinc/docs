@@ -114,8 +114,7 @@
   ],
   "feedback": {
     "thumbsRating": true,
-    "suggestEdit": true,
-    "raiseIssue": true
+    "suggestEdit": true
   },
   "footerSocials": {
     "discord": "https://discord.hypermode.com",
