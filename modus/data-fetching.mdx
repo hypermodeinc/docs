@@ -77,64 +77,47 @@ Here is an example of fetching a person from a Dgraph database using the Modus S
 package main
 
 import (
-  "encoding/json"
-  "github.com/hypermodeinc/modus/sdk/go/pkg/dgraph"
+	"encoding/json"
+	"github.com/hypermodeinc/modus/sdk/go/pkg/dgraph"
 )
 
 // the name of the Dgraph connection, as specified in the modus.json manifest
-const hostName = "my-database"
+const hostName = "my-dgraph"
 
 // declare structures used to parse the JSON document returned by Dgraph query.
 type Person struct {
-  Name string    `json:"name,omitempty"`
-  Age  int32     `json:"age,omitempty"`
-  Home *Location `json:"home,omitempty"`
+	Name string `json:"name,omitempty"`
+	Age  int32  `json:"age,omitempty"`
 }
 
-// Dgraph location predicates follow GeoJSON format
-type Location struct {
-  Type        string    `json:"type,omitempty"`
-  Coordinates []float32 `json:"coordinates,omitempty"`
-}
-
+// Dgraph returns an array of Persons
 type GetPersonResponse struct {
-  Persons []*Person `json:"persons"`
+	Persons []*Person `json:"persons"`
 }
 
 func GetPerson(name string) (*Person, error) {
-  statement := `
-   query getPerson($name: string) {
+	statement := `query getPerson($name: string!) {
     persons(func: eq(name, $name))  {
       name
       age
-      home
     }
   }
   `
-  variables := map[string]string{
-    "$name": name,
-  }
+	variables := map[string]string{
+		"$name": name,
+	}
 
-  response, err := dgraph.Execute(hostName, &dgraph.Request{
-    Query: &dgraph.Query{
-      Query:     statement,
-      Variables: variables,
-    },
-  })
-  if err != nil {
-    return nil, err
-  }
+	response, _ := dgraph.Execute(hostName, &dgraph.Request{
+		Query: &dgraph.Query{
+			Query:     statement,
+			Variables: variables,
+		},
+	})
 
-  var data GetPersonResponse
-  if err := json.Unmarshal([]byte(response.Json), &data); err != nil {
-    return nil, err
-  }
+	var data GetPersonResponse
+	json.Unmarshal([]byte(response.Json), &data)
 
-  if len(data.Persons) == 0 {
-    return nil, nil // person not found
-  }
-
-  return data.Persons[0], nil
+	return data.Persons[0], nil
 }
 
 ```
@@ -148,30 +131,22 @@ const hostName: string = "my-dgraph"
 
 // declare classes used to parse the JSON document returned by Dgraph query.
 @json
+class Person {
+  name: string = ""
+  age: i32 = 0
+}
+// Dgraph returns an array of objects
+@json
 class GetPersonResponse {
   persons: Person[] = []
 }
 
-@json
-class Person {
-  name: string = ""
-  age: i32 = 0
-  home: Location
-}
-// Dgraph location predicates follow GeoJSON format
-@json
-class Location {
-  type: string = "Point"
-  coordinates: f64[] = []
-}
-
-export function getPerson(name: string): Person | null {
+export function getPerson(name: string): Person {
   const statement = `  
   query getPerson($name: string) {
     persons(func: eq(name, $name))  {
         name
         age
-        home
     }
   }`
 
@@ -179,11 +154,7 @@ export function getPerson(name: string): Person | null {
   vars.set("$name", name)
 
   const resp = dgraph.execute(hostName, new dgraph.Request(new dgraph.Query(statement, vars)))
-
   const persons = JSON.parse<GetPersonResponse>(resp.Json).persons
-  if (persons.length == 0) {
-    return null
-  }
   return persons[0]
 }
 ```
@@ -211,27 +182,19 @@ import (
 )
 
 
-// Declare structures used to parse the JSON document returned by Dgraph query.
+// Declare structures used to parse the JSON document returned by the REST API
 type Person struct {
   Name string    `json:"name,omitempty"`
   Age  int32     `json:"age,omitempty"`
-  Home *Location `json:"home,omitempty"`
 }
 
-// Dgraph location predicates follow GeoJSON format
-type Location struct {
-  Type        string    `json:"type,omitempty"`
-  Coordinates []float32 `json:"coordinates,omitempty"`
-}
 
 // Exposing getPerson in the generated GraphQL API
 
 func GetPerson(name string) (*Person, error) {
   url := fmt.Sprintf("https://example.com/api/person?name=%s", name)
-  response, err := http.Fetch(url)
-  if err != nil {
-    return nil, err
-  }
+  response, _ := http.Fetch(url)
+
   // The API returns Person object as JSON
   var person Person
   response.JSON(&person)
@@ -248,13 +211,6 @@ import { http } from "@hypermode/modus-sdk-as"
 class Person {
   name: string = ""
   age: i32 = 0
-  home: Location
-}
-// Assuming location follows GeoJSON format
-@json
-class Location {
-  type: string = "Point"
-  coordinates: f64[] = []
 }
 
 // Exposing getPerson in the generated GraphQL API
@@ -263,9 +219,6 @@ export function getPerson(name: string): Person {
   const url = `https://example.com/api/people?name=${name}`
 
   const response = http.fetch(url)
-  if (!response.ok) {
-    throw new Error(`Failed to fetch quote. Received: ${response.status} ${response.statusText}`)
-  }
 
   // The API returns Person object as JSON
   return response.json<Person>()
@@ -292,17 +245,10 @@ import (
 // the name of the GraphQL connection, as specified in the modus.json manifest
 const hostName = "my-graphql-api"
 
-// Declare structures used to parse the JSON document returned by Dgraph query.
+// Declare structures used to parse the JSON document returned
 type Person struct {
   Name string    `json:"name,omitempty"`
   Age  int32     `json:"age,omitempty"`
-  Home *Location `json:"home,omitempty"`
-}
-
-// Dgraph location predicates follow GeoJSON format
-type Location struct {
-  Latitude    float32   `json:"latitude,omitempty"`
-  Longitude   float32   `json:"longitude,omitempty"`
 }
 
 type GetPersonResponse struct {
@@ -314,10 +260,6 @@ func GetPerson(name string) (*Person, error) {
       getPerson(name: $name) {
         age
         name
-        home {
-          latitude
-          longitude
-        }
       }
     }`
 
@@ -325,10 +267,7 @@ func GetPerson(name string) (*Person, error) {
      "name": name,
   }
 
-  response, err := graphql.Execute[GetPersonResponse](hostName, statement, vars)
-  if err != nil {
-    return nil, err
-  }
+  response, _ := graphql.Execute[GetPersonResponse](hostName, statement, vars)
 
   return response.Data.Person, nil
 }
@@ -340,7 +279,7 @@ import { graphql } from "@hypermode/modus-sdk-as"
 // the name of the GraphQL connection, as specified in the modus.json manifest
 const hostName: string = "my-graphql-api"
 
-// Declare  classes used to parse the JSON document returned by Dgraph query.
+// Declare  classes used to parse the JSON document returned
 @json
 class GetPersonResponse {
   getPerson: Person
@@ -350,25 +289,14 @@ class GetPersonResponse {
 class Person {
   name: string = ""
   age: i32 = 0
-  home: Location
-}
-// Dgraph location predicates follow GeoJSON format
-@json
-class Location {
-  latitude: f64
-  longitude: f64
 }
 
-export function getPerson(name: string): Person | null {
+export function getPerson(name: string): Person {
   const statement = `
     query getPerson($name: String!) {
       getPerson(name: $name) {
         age
         name
-        home {
-          latitude
-          longitude
-        }
       }
     }`
 
@@ -376,8 +304,6 @@ export function getPerson(name: string): Person | null {
   vars.set("name", name)
 
   const response = graphql.execute<GetPersonResponse>(hostName, statement, vars)
-
-  if (!response.data) return null
 
   return response.data!.getPerson
 }
