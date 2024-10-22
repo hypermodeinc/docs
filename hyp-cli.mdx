@@ -1,0 +1,41 @@
+---
+title: Hyp CLI
+description: "Comprehensive reference for the Hyp CLI commands and usage"
+---
+
+Hyp CLI is a command-line tool for managing your Hypermode account and projects.
+When using Hyp CLI alongside the Modus CLI, users get access to
+[Hypermode-hosted models](/hosted-models).
+
+## Install
+
+Install Hyp CLI via a cURL command or npm.
+
+<CodeGroup>
+
+```bash cURL
+curl -sSL http://install.hypermode.com/hyp.sh | bash
+```
+
+```js npm
+npm install -g @hypermode/hyp
+```
+
+</CodeGroup>
+
+## Commands
+
+### `login`
+
+Log in to your Hypermode account. When executed, this command redirects to the
+Hypermode website to authenticate. It stores an authentication token locally and
+prompts you to select your organization context.
+
+### `logout`
+
+Log out of your Hypermode account. This command clears your local authentication
+token.
+
+### `org switch`
+
+Switch to a different org context within the CLI session.

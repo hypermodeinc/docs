@@ -1,0 +1,54 @@
+---
+title: Overview
+description: "Welcome to the Modus docs!"
+mode: "wide"
+---
+
+---
+
+## What is Modus? {/* <!-- vale Google.Contractions = NO --> */}
+
+Modus is an open source, serverless framework for building functions and APIs,
+powered by WebAssembly.
+
+You write your app logic in Go or AssemblyScript, and Modus provides additional
+features to easily integrate models, data, and external services.
+
+To **build apps that are thoughtful, fun, and effective**, we often need to
+integrate models in different forms, whether generative large language models or
+classical machine/deep learning models.
+
+Your app might be a simple create, read, update, and delete (CRUD) function that
+has a single model to identify similar entries. Or, it could be a complex
+agentic reasoning system that chains dozens of models and data sources together.
+**Modus creates a way of working with models that scales with your needs.**
+
+Modus exists to make it easier for you to build the apps of your dreams.
+
+<Note>
+  Modus is a multi-language framework. It currently includes support for Go and
+  AssemblyScript, a WebAssembly compatible TypeScript-like language. Additional
+  language support is in development.
+</Note>
+
+## What is Modus good for? {/* <!-- vale Google.Contractions = NO --> */}
+
+We designed Modus primarily as a general-purpose app framework, it just happens
+to treat models as a first-class component. With Modus you can use models, as
+appropriate, without additional complexity.
+
+However, Modus is best for applications that require sub-second response times.
+We've made trade-offs to optimize for speed and simplicity.
+
+## Main features
+
+A few of the core Modus features include:
+
+| Feature                                     | Description                                                                                  |
+| ------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| [Multi-Language](/modus/project-structure)  | Write functions in Go and AssemblyScript, with additional language support in development    |
+| [Auto-Generated API](/modus/api-generation) | A secure API is automatically generated from your function signatures                        |
+| [Model Integration](/modus/model-invoking)  | Connect and invoke AI models from different providers, without learning a new SDK            |
+| [Search](/modus/search)                     | Add natural language search and recommendations with integrated vector embeddings            |
+| [Authentication](/modus/authentication)     | Secure your API endpoints with minimal configuration                                         |
+| **WebAssembly Runtime**                     | Small and portable execution engine for deployment across server, edge, and desktop computes |

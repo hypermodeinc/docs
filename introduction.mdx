@@ -1,22 +1,46 @@
 ---
 title: Introduction
-description: "Welcome to Hypermode"
+description: "Build Intelligent APIs."
 mode: "wide"
 ---
 
-Hypermode is a framework for building AI features and assistants for your applications. The easy-to-use [Functions SDK](/sdk/functions-sdk) combines with a powerful runtime to allow you to put your first features into production within hours, no data required.
+---
 
-Don't stop there. Launch your project quickly with a large language model, while automatically building a training dataset to fine-tune a small, open source model. Hypermode addresses the AI orchestration needs of app developers for day one and beyond.
+## What is Hypermode? {/* <!-- vale Google.Contractions = NO --> */}
 
-<Frame>
-  <img
-    className="block dark:hidden"
-    src="/images/architecture-light.png"
-    alt="Hypermode's architecture, comprising three layers Functions, Functions SDK, and Runtime Services comprising the three layers."
-  />
-  <img
-    className="hidden dark:block"
-    src="/images/architecture-dark.png"
-    alt="Hypermode's architecture, comprising three layers Functions, Functions SDK, and Runtime Services comprising the three layers."
-  />
-</Frame>
+Hypermode is a managed service that provides the workbench and infrastructure to
+create **powerful, engaging, and secure AI assistants, APIs, and backend
+services**.
+
+With every push to git, Hypermode automatically builds and deploys your
+functions. It creates a live, scalable API for you to preview, test, and promote
+to production.
+
+## What's included with Hypermode?
+
+Hypermode provides a suite of tools and services to help you build and manage
+your intelligent APIs. Use one component or all of them together as the complete
+backend for your app.
+
+<CardGroup cols={2}>
+  <Card title="Functions" icon="rectangle-code" href="/modus">
+    Modus is an open source, serverless framework for building functions and
+    APIs, powered by WebAssembly
+  </Card>
+  <Card title="Model Hosting" icon="cube" href="/hosted-models">
+    Experiment rapidly with access to the most popular and newest models.
+  </Card>
+  <Card title="Graph Data Store" icon="chart-network" href="https://dgraph.io">
+    Dgraph is a distributed, transactional graph database optimized for
+    knowledge graph creation and management
+  </Card>
+  <Card title="Integrated Console" icon="display" href="/observe-functions">
+    End-to-end observability and control for your functions, models, and data.
+  </Card>
+</CardGroup>
+
+<img
+  className="block"
+  src="/images/console-screenshot.png"
+  alt="Hypermode's console showing project, model, and API management."
+/>

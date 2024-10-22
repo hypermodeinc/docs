@@ -1,56 +1,54 @@
 ---
 title: PostgreSQL
-description: "Execute queries against a PostgreSQL database."
+description: "Execute queries against a PostgreSQL database"
 ---
 
-{/* <!-- vale Google.Headings = NO --> */}
+The Modus PostgreSQL API allows you to run queries against PostgreSQL or any
+PostgreSQL-compatible database platform.
 
-Hypermode's PostgreSQL API allows you to run queries against PostgreSQL or any PostgreSQL compatible database
-platform, such as [Neon](https://neon.tech/).
-After [defining a host](../define-hosts) for the PostgreSQL endpoint in your project's manifest,
-you can use the following APIs to interact with the data.
-
-## Example project
-
-For your reference, A complete example for using the GraphQL APIs is available on GitHub in the
-`hypermodeinc/functions-as` repository, at [/examples/postgresql](https://github.com/hypermodeinc/functions-as/tree/main/examples/postgresql).
-
-## Import from the SDK
+## Import
 
 To begin, import the `postgresql` namespace from the SDK:
 
 <CodeGroup>
 
+```go Go
+import github.com/hypermodeinc/modus/sdk/go/pkg/postgresql
+```
+
 ```ts AssemblyScript
-import { postgresql } from "@hypermode/functions-as";
+import { postgresql } from "@hypermode/modus-sdk-as"
 ```
 
 </CodeGroup>
 
 ## PostgreSQL APIs
 
+{/* <!-- vale Google.Headings = NO --> */}
+
 The APIs in the `postgresql` namespace are below, organized by category.
 
 <Tip>
-  We're constantly introducing new APIs through ongoing development with build
-  partners. [Let's chat](mailto:help@hypermode.com) about what would make the
-  Functions SDK even more powerful for your next use case!
+  We're constantly introducing new APIs through ongoing development with early
+  users. [Open an issue](https://github.com/hypermodeinc/modus/issues) if you
+  have ideas on what would make Modus even more powerful for your next app!
 </Tip>
 
 ### Functions
 
 #### execute
 
-Execute a SQL statement against a PostgreSQL database, without any data returned.
-Use this for insert, update, or delete operations, or for other SQL statements that don't return data.
+Execute a SQL statement against a PostgreSQL database, without any data
+returned. Use this for insert, update, or delete operations, or for other SQL
+statements that don't return data.
 
-<Tip>
+<Note>
   The `execute` function is for operations that don't return data. However, some
   insert/update/delete operations may still return data, such as an identifier
   for a newly inserted row. In these cases, you can use the `queryScalar`
   function instead (for a single row's identifier), or the `query` function (for
   multiple rows).
-</Tip>
+</Note>
 
 ```go
 function postgresql.execute (
@@ -61,24 +59,21 @@ function postgresql.execute (
 ```
 
 <ResponseField name="hostName" type="string" required>
-  Name of the host, as [defined in the manifest](../define-hosts).
+  Name of the host, as [defined in the manifest](../app-manifest#hosts).
 </ResponseField>
 
 <ResponseField name="statement" type="string" required>
   SQL statement containing the query or mutation operation to execute.
 
-<Warning>
-  While it's possible to directly include parameter values into your SQL
-  statement, it's highly recommended to pass a [`Params`](#params) object
-  instead. This can help to prevent against injection attacks and other security
-  vulnerabilities.
-</Warning>
-
+  <Warning>
+    While it's possible to directly include parameter values into your SQL statement, it's
+    highly recommended to pass a [`Params`](#params) object instead. This can help to prevent
+    against injection attacks and other security vulnerabilities.
+  </Warning>
 </ResponseField>
 
 <ResponseField name="params" type="Params">
-
-Optional parameters to include with the query.
+  Optional parameters to include with the query.
 
 See the details of the [`Params`](#params) object for more information.
 
@@ -87,7 +82,8 @@ See the details of the [`Params`](#params) object for more information.
 #### query
 
 Execute a SQL statement against a PostgreSQL database, returning a set of rows.
-In the results, each row converts to an object of type `T`, with fields matching the column names.
+In the results, each row converts to an object of type `T`, with fields matching
+the column names.
 
 ```go
 function postgresql.query<T>(
@@ -98,44 +94,38 @@ function postgresql.query<T>(
 ```
 
 <ResponseField name="T" type="Type" required>
-  Type of object to use for the data returned from the query.
-  This can be any type, including a custom type defined in your project.
-  It should match the shape of the row returned from the SQL query.
+  Type of object to use for the data returned from the query. This can be any type, including a custom
+  type defined in your project. It should match the shape of the row returned from the SQL query.
 
-<Tip>
+  <Tip>
+  Define custom types in the app's source code. In AssemblyScript, create classes decorated with `@json`.
 
-Define custom types in the project's source code.
-In AssemblyScript, create classes decorated with `@json`.
+All types, including classes, base classes, and field types must be JSON
+serializable. You can also use built-in types such as strings, numbers, arrays,
+and maps.
 
-All types, including classes, base classes, and field types must be JSON serializable.
-You can also use built-in types such as strings, numbers, arrays, and maps.
+If working with PostgreSQL's `point` data type, you can use a [`Point`](#point)
+or [`Location`](#location) object to represent the data.
 
-If working with PostgreSQL's `point` data type, you can use a [`Point`](#point) or
-[`Location`](#location) object to represent the data.
-
-</Tip>
-
+  </Tip>
 </ResponseField>
 
 <ResponseField name="hostName" type="string" required>
-  Name of the host, as [defined in the manifest](../define-hosts).
+  Name of the host, as [defined in the manifest](../app-manifest#hosts).
 </ResponseField>
 
 <ResponseField name="statement" type="string" required>
   SQL statement containing the query or mutation operation to execute.
 
-<Warning>
-  While it's possible to directly include parameter values into your SQL
-  statement, it's highly recommended to pass a [`Params`](#params) object
-  instead. This can help to prevent against injection attacks and other security
-  vulnerabilities.
-</Warning>
-
+  <Warning>
+    While it's possible to directly include parameter values into your SQL statement, it's highly
+    recommended to pass a [`Params`](#params) object instead. This can help to prevent against
+    injection attacks and other security vulnerabilities.
+  </Warning>
 </ResponseField>
 
 <ResponseField name="params" type="Params">
-
-Optional parameters to include with the query.
+  Optional parameters to include with the query.
 
 See the details of the [`Params`](#params) object for more information.
 
@@ -143,8 +133,9 @@ See the details of the [`Params`](#params) object for more information.
 
 #### queryScalar
 
-Execute a SQL statement against a PostgreSQL database, returning a single scalar value.
-For example, the result could be a count, sum, or average, or it could be an identifier.
+Execute a SQL statement against a PostgreSQL database, returning a single scalar
+value. For example, the result could be a count, sum, or average, or it could be
+an identifier.
 
 ```go
 function postgresql.queryScalar<T> (
@@ -161,24 +152,21 @@ function postgresql.queryScalar<T> (
 </ResponseField>
 
 <ResponseField name="hostName" type="string" required>
-  Name of the host, as [defined in the manifest](../define-hosts).
+  Name of the host, as [defined in the manifest](../app-manifest#hosts).
 </ResponseField>
 
 <ResponseField name="statement" type="string" required>
   SQL statement containing the query or mutation operation to execute.
 
-<Warning>
-  While it's possible to directly include parameter values into your SQL
-  statement, it's highly recommended to pass a [`Params`](#params) object
-  instead. This can help to prevent against injection attacks and other security
-  vulnerabilities.
-</Warning>
-
+  <Warning>
+    While it's possible to directly include parameter values into your SQL statement, it's highly
+    recommended to pass a [`Params`](#params) object instead. This can help to prevent against
+    injection attacks and other security vulnerabilities.
+  </Warning>
 </ResponseField>
 
 <ResponseField name="params" type="Params">
-
-Optional parameters to include with the query.
+  Optional parameters to include with the query.
 
 See the details of the [`Params`](#params) object for more information.
 
@@ -197,25 +185,23 @@ class Params {
 
 A container for parameters to include with a SQL operation.
 
-To use this feature, create a new `Params` object and call the `push` method
-for each parameter you want to include. Then pass the object to the `execute`,
+To use this feature, create a new `Params` object and call the `push` method for
+each parameter you want to include. Then pass the object to the `execute`,
 `query`, or `queryScalar` function along with your SQL statement.
 
 <ResponseField name="push(value)">
-
-Push a parameter value into the list included with the SQL operation.
-The sequence of calls to `push` determines the order of the parameters in the
-SQL statement. This corresponds to the order of the `?` placeholders or `$1`, `$2`, etc.
-
-<Accordion title="Parameters">
+  Push a parameter value into the list included with the SQL operation. The sequence of calls to
+  `push` determines the order of the parameters in the SQL statement. This corresponds to the order
+  of the `?` placeholders or `$1`, `$2`, etc.
 
 <ResponseField name="value" type="any" required>
+  The value of the parameter to include in the SQL operation.
 
-The value of the parameter to include in the SQL operation.
+The value can be of any type that's JSON serializable, including strings,
+numbers, boolean values, arrays, maps, and custom objects decorated with
+`@json`, as long as the database supports it.
 
-The value can be of any type that's JSON serializable, including strings, numbers,
-boolean values, arrays, maps, and custom objects decorated with `@json`, as long
-as the database supports it.
+{" "}
 
 <Tip>
   If working with PostgreSQL's `Point` data type, you can either pass separate
@@ -225,33 +211,12 @@ as the database supports it.
 </Tip>
 
 </ResponseField>
-
-</Accordion>
-
-<Accordion title="Example">
-
-<CodeGroup>
-
-```ts AssemblyScript
-const params = new postgresql.Params();
-params.push(firstName);
-params.push(lastName);
-
-const response = postgresql.query<Person>(host, query, params);
-```
-
-</CodeGroup>
-
-</Accordion>
-
 </ResponseField>
 
 <ResponseField name="toJSON()" type="string">
-
-Serializes the parameters to a JSON string for inclusion in the SQL
-operation. The SDK functions call this automatically when you pass a
-`Params` object. You typically don't need to call it directly.
-
+  Serializes the parameters to a JSON string for inclusion in the SQL operation.
+  The SDK functions call this automatically when you pass a `Params` object. You
+  typically don't need to call it directly.
 </ResponseField>
 
 #### Response
@@ -263,8 +228,8 @@ class Response {
 }
 ```
 
-Represents the response from an [`execute`](#execute) operation.
-Also serves as the base class for `QueryResponse<T>` and `ScalarResponse<T>`.
+Represents the response from an [`execute`](#execute) operation. Also serves as
+the base class for `QueryResponse<T>` and `ScalarResponse<T>`.
 
 <ResponseField name="error" type="string | null">
   An error message, if an error occurred during the operation. Otherwise, this
@@ -335,8 +300,8 @@ class Point {
 }
 ```
 
-Represents a point in 2D space, having `x` and `y` coordinates.
-Correctly serializes to and from PostgreSQL's point type, in (x, y) order.
+Represents a point in 2D space, having `x` and `y` coordinates. Correctly
+serializes to and from PostgreSQL's point type, in (x, y) order.
 
 <Info>
   This class is identical to the [Location](#location) class, but uses different
@@ -362,7 +327,8 @@ class Location {
 
 Represents a location on Earth, having `longitude` and `latitude` coordinates.
 
-Correctly serializes to and from PostgreSQL's point type, in (longitude, latitude) order.
+Correctly serializes to and from PostgreSQL's point type, in (longitude,
+latitude) order.
 
 <Info>
   This class is identical to the [Point](#point) class, but uses different field

@@ -1,15 +1,5 @@
 {
   "editor.formatOnSave": true,
-  "files.insertFinalNewline": true,
-  "files.trimFinalNewlines": true,
-  "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[mdx]": {
-    "editor.defaultFormatter": "unifiedjs.vscode-mdx"
-  },
-  "cSpell.enableFiletypes": ["mdx"]
+  "editor.defaultFormatter": "trunk.io",
+  "editor.trimAutoWhitespace": true
 }

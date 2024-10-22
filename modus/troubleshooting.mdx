@@ -1,0 +1,32 @@
+---
+title: Troubleshooting
+description:
+  "Common issues, resolutions, and best practices for triaging issues in Modus."
+---
+
+<Warning>common issues, resolutions, and best practices</Warning>
+
+## Troubleshooting
+
+Welcome to the Modus troubleshooting guide! This page covers common issues you
+might encounter, their resolutions, and best practices for triaging issues
+effectively.
+
+### Common issues and resolutions
+
+#### Issue: CLI hangs during project initialization
+
+**Symptoms**: the Modus CLI hangs indefinitely when running `modus init`.
+
+**Resolution**:
+
+1. Ensure you have the latest version of the Modus CLI installed.
+2. Check your internet connection.
+3. Run the command with the `--verbose` flag to get more detailed output:
+
+   ```sh
+   modus init --verbose
+   If the issue persists, try deleting the .modus directory in your home folder and re-running the command.
+   Issue: Environment Variables Not Loading
+   Symptoms: Environment variables defined in .env are not being recognized by your Modus functions.
+   ```

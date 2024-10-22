@@ -1,0 +1,139 @@
+---
+title: API Generation
+description: "Create the signature for your API"
+---
+
+Modus automatically creates an external API based on the endpoints defined in
+your [app manifest](/modus/app-manifest#endpoints). Modus generates the API
+signature based on the functions you export from your app.
+
+## Exporting functions
+
+Modus uses the default conventions for each language.
+
+<Tabs>
+  <Tab title="Go">
+    Functions written in Go use starting capital letters to expose functions as public. Modus
+    creates an external API for public functions from any file that belongs to the `main` package.
+
+The functions below generate an API endpoint with the signature
+
+```graphql
+type Query {
+  classifyText(text: String!, threshold: Float!): String!
+}
+```
+
+Since the `classify` function isn't capitalized, Modus doesn't include it in the
+generated GraphQL API.
+
+```go
+package main
+
+import (
+  "errors"
+  "fmt"
+  "github.com/hypermodeAI/functions-go/pkg/models"
+  "github.com/hypermodeAI/functions-go/pkg/models/experimental"
+)
+
+const modelName = "my-classifier"
+
+// this function takes input text and a probability threshold, and returns the
+// classification label determined by the model, if the confidence is above the
+// threshold; otherwise, it returns an empty string
+
+func ClassifyText(text string, threshold float32) (string, error) {
+  predictions, err:= classify(text)
+  if err != nil {
+    return "", err
+  }
+
+  prediction := predictions[0]
+  if prediction.Confidence < threshold {
+    return "", nil
+  }
+
+  return prediction.Label, nil
+}
+
+func classify(texts ...string) ([]experimental.ClassifierResult, error) {
+  model, err := models.GetModel[experimental.ClassificationModel](modelName)
+  if err != nil {
+    return nil, err
+  }
+
+  input, err := model.CreateInput(texts...)
+  if err != nil {
+    return nil, err
+  }
+
+  output, err := model.Invoke(input)
+  if err != nil {
+    return nil, err
+  }
+
+  if len(output.Predictions) != len(texts) {
+    word := "prediction"
+    if len(texts) > 1 {
+      word += "s"
+    }
+
+    return nil, fmt.Errorf("expected %d %s, got %d", len(texts), word, len(output.Predictions))
+  }
+
+  return output.Predictions, nil
+}
+```
+
+  </Tab>
+  <Tab title="AssemblyScript">
+    Functions written in AssemblyScript use ES module-style `import` and `export` statements. With
+    the default package configuration, Modus creates an external API for functions exported form the
+    `index.ts` file located in the `functions/assembly` folder of your project.
+
+The functions below generate an API endpoint with the signature
+
+```graphql
+type Query {
+  classifyText(text: String!, threshold: Float!): String!
+}
+```
+
+Since the `classify` function isn't exported from the module, Modus doesn't
+include it in the generated GraphQL API.
+
+```ts
+import { models } from "@hypermode/functions-as"
+import {
+  ClassificationModel,
+  ClassifierResult,
+} from "@hypermode/models-as/models/experimental/classification"
+
+const modelName: string = "my-classifier"
+
+// this function takes input text and a probability threshold, and returns the
+// classification label determined by the model, if the confidence is above the
+// threshold; otherwise, it returns an empty string
+export function classifyText(text: string, threshold: f32): string {
+  const predictions = classify(text, threshold)
+
+  const prediction = predictions[0]
+  if (prediction.confidence < threshold) {
+    return ""
+  }
+
+  return prediction.label
+}
+
+function classify(text: string, threshold: f32): ClassifierResult[] {
+  const model = models.getModel<ClassificationModel>(modelName)
+  const input = model.createInput([text])
+  const output = model.invoke(input)
+
+  return output.predictions
+}
+```
+
+  </Tab>
+</Tabs>

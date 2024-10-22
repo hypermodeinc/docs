@@ -1,0 +1,416 @@
+---
+title: App Manifest
+description: "Define the resources for your app"
+---
+
+The manifest for your Modus app allows you to configure the exposure and
+resources for your functions at runtime. You define the manifest in the
+`modus.json` file within the root of directory of your app.
+
+## Structure
+
+<CardGroup cols={2}>
+  <Card title="Endpoints" icon="rectangle-code" href="#endpoints">
+    Expose your functions for integration into your frontend or federated API
+  </Card>
+  <Card title="Connections" icon="router" href="#connections">
+    Establish connectivity for external endpoints and model hosts
+  </Card>
+  <Card title="Models" icon="cube" href="#models">
+    Define inference services for use in your functions
+  </Card>
+  <Card title="Collections" icon="table" href="#collections">
+    Define sets of text data to enable natural language search
+  </Card>
+</CardGroup>
+
+### Base manifest
+
+A simple manifest, which exposes a single GraphQL endpoint with a bearer token
+for authentication, looks like this:
+
+```json modus.json
+{
+  "$schema": "https://schema.hypermode.com/modus.json",
+  "endpoints": {
+    "default": {
+      "type": "graphql",
+      "path": "/graphql",
+      "auth": "bearer-token"
+    }
+  }
+}
+```
+
+## Endpoints
+
+Endpoints make your functions available outside of your Modus app. The
+`endpoints` object in the app manifest allows you to define these endpoints for
+integration into your frontend or federated API.
+
+Each endpoint requires a unique name, specified as a key containing only
+alphanumeric characters and hyphens.
+
+<Note>
+  Only a GraphQL endpoint is available currently, but the modular design of
+  Modus allows for the introduction of additional endpoint types in the future.
+</Note>
+
+### GraphQL endpoint
+
+This endpoint type supports the GraphQL protocol to communicate with external
+clients. You can use a GraphQL client, such as
+[urql](https://github.com/urql-graphql/urql) or
+[Apollo Client](https://github.com/apollographql/apollo-client), to interact
+with the endpoint.
+
+**Example:**
+
+```json modus.json
+{
+  "endpoints": {
+    "default": {
+      "type": "graphql",
+      "path": "/graphql",
+      "auth": "bearer-token"
+    }
+  }
+}
+```
+
+<ResponseField name="type" type="string" required>
+  Always set to `"graphql"` for this endpoint type.
+</ResponseField>
+
+<ResponseField name="path" type="string" required>
+  The path for the endpoint. Must start with a forward slash `/`.
+</ResponseField>
+
+<ResponseField name="auth" type="string" required>
+  The authentication method for the endpoint. Options are `"bearer-token"` or
+  `"none"`. See [Authentication](/modus/authentication) for additional details.
+</ResponseField>
+
+## Connections
+
+Connections establish connectivity and access to external services. They're used
+for HTTP and GraphQL APIs, database connections, and externally hosted AI
+models. The `connections` object in the app manifest allows you to define these
+hosts, for secure access from within a function.
+
+Each connection requires a unique name, specified as a key containing only
+alphanumeric characters and hyphens.
+
+Each connection has a `type` property, which controls how it's used and which
+additional properties are available. The following table lists the available
+host types:
+
+| Type         | Purpose                          | Functions Namespaces        |
+| :----------- | :------------------------------- | :-------------------------- |
+| `http`       | Connect to an HTTP(S) web server | `http`, `graphql`, `models` |
+| `postgresql` | Connect to a PostgreSQL database | `postgresql`                |
+| `dgraph`     | Connect to a Dgraph database     | `dgraph`                    |
+
+<Warning>
+**Don't include secrets directly in the manifest!**
+
+If your connection requires authentication, you can include _placeholders_ in
+connection properties which resolve to their respective secrets at runtime. Set
+the actual secrets via the Hypermode Console, where they're securely stored
+until needed.
+
+</Warning>
+
+### HTTP connection
+
+This connection type supports the HTTP and HTTPS protocols to communicate with
+external hosts. You can use the [HTTP APIs](/modus/sdk/http) in the Modus SDK to
+interact with the host.
+
+This connection type is also used for [GraphQL APIs](/modus/sdk/graphql) and to
+invoke externally hosted AI [models](/modus/sdk/models).
+
+**Example:**
+
+```json modus.json
+{
+  "connections": {
+    "openai": {
+      "baseUrl": "https://api.openai.com/",
+      "headers": {
+        "Authorization": "Bearer {{API_KEY}}"
+      }
+    }
+  }
+}
+```
+
+<ResponseField name="type" type="string" required>
+  Always set to `"http"` for this connection type.
+</ResponseField>
+
+<ResponseField name="baseUrl" type="string" required>
+
+Base URL for connections to the host. Must end with a trailing slash and may
+contain path segments if necessary.
+
+Example: `"https://api.example.com/v1/"`
+
+</ResponseField>
+
+<ResponseField name="endpoint" type="string" required>
+  Full URL endpoint for connections to the host.
+
+Example: `"https://models.example.com/v1/classifier"`
+
+</ResponseField>
+
+<Note>
+  You must include either a `baseUrl` or an `endpoint`, but not both.
+  - Use `baseUrl` for connections to a host with a common base URL.
+  - Use `endpoint` for connections to a specific URL.
+
+Typically, you'll use the `baseUrl` field. However, some APIs, such as
+`graphql.execute`, require the full URL in the `endpoint` field.
+
+</Note>
+
+<ResponseField name="headers" type="object">
+If provided, requests on the connection include these headers. Each key-value pair is a header name and value.
+
+Values may include variables using the `{{VARIABLE}}` template syntax, which
+resolve at runtime to secrets provided for each connection, via the Hypermode
+Console.
+
+  <Accordion title="Examples">
+
+This example specifies a header named `Authorization` that uses the `Bearer`
+scheme. A secret named `AUTH_TOKEN` provides the token:
+
+```json
+"headers": {
+  "Authorization": "Bearer {{AUTH_TOKEN}}"
+}
+```
+
+This example specifies a header named `X-API-Key` provided by a secret named
+`API_KEY`:
+
+```json
+"headers": {
+  "X-API-Key": "{{API_KEY}}"
+}
+```
+
+You can use a special syntax for hosts that require
+[HTTP basic authentication](https://en.wikipedia.org/wiki/Basic_access_authentication).
+In this example, secrets named `USERNAME` and `PASSWORD` combined and then are
+base64-encoded to form a compliant `Authorization` header value:
+
+```json
+"headers": {
+  "Authorization": "Basic {{base64(USERNAME:PASSWORD)}}"
+}
+```
+
+  </Accordion>
+</ResponseField>
+
+<ResponseField name="queryParameters" type="object">
+
+If provided, requests on the connection include these query parameters, appended
+to the URL. Each key-value pair is a parameter name and value.
+
+Values may include variables using the `{{VARIABLE}}` template syntax, which
+resolve at runtime to secrets provided for each connection, via the Hypermode
+Console.
+
+  <Accordion title="Example">
+
+This example specifies a query parameter named `key` provided by a secret named
+`API_KEY`:
+
+```json
+"queryParameters": {
+  "key": "{{API_KEY}}"
+}
+```
+
+  </Accordion>
+</ResponseField>
+
+### PostgreSQL connection
+
+This connection type supports connecting to PostgreSQL databases. You can use
+the [PostgreSQL APIs](/modus/sdk/postgresql) in the Modus SDK to interact with
+the database.
+
+**Example:**
+
+```json modus.json
+{
+  "connections": {
+    "my-database": {
+      "type": "postgresql",
+      "connString": "postgresql://{{PG_USER}}:{{PG_PASSWORD}}@db.example.com:5432/data?sslmode=require"
+    }
+  }
+}
+```
+
+<ResponseField name="type" type="string" required>
+  Always set to `"postgresql"` for this connection type.
+</ResponseField>
+
+<ResponseField name="connString" type="string" required>
+  The connection string for the PostgreSQL database.
+
+Values may include variables using the `{{VARIABLE}}` template syntax, which
+resolve at runtime to secrets provided for each connection, via the Hypermode
+Console.
+
+The connection string in the preceding example includes:
+
+- A username and password provided by secrets named `PG_USER` & `PG_PASSWORD`
+- A host named `db.example.com` on port `5432`
+- A database named `data`
+- SSL mode set to `require` - which is highly recommended for secure connections
+
+Refer to
+[the PostgreSQL documentation](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING)
+for more details on connection strings.
+
+<Tip>
+
+Managed PostgreSQL providers often provide a pre-made connection string for you
+to copy. Check your provider's documentation for details.
+
+For example, if using Neon, refer to the
+[Neon documentation](https://neon.tech/docs/connect/connect-from-any-app).
+
+</Tip>
+
+</ResponseField>
+
+### Dgraph connection
+
+This connection type supports connecting to Dgraph databases. You can use the
+[Dgraph APIs](/modus/sdk/dgraph) in the Modus SDK to interact with the database.
+
+**Example:**
+
+```json modus.json
+{
+  "connections": {
+    "my-dgraph": {
+      "type": "dgraph",
+      "grpcTarget": "frozen-mango.grpc.eu-central-1.aws.cloud.dgraph.io:443",
+      "key": "{{DGRAPH_API_KEY}}"
+    }
+  }
+}
+```
+
+<ResponseField name="type" type="string" required>
+  Always set to `"dgraph"` for this connection type.
+</ResponseField>
+
+<ResponseField name="grpcTarget" type="string" required>
+  The gRPC target for the Dgraph database.
+</ResponseField>
+
+<ResponseField name="key" type="string" required>
+  The API key for the Dgraph database.
+</ResponseField>
+
+## Models
+
+AI models are a core resource for inferencing. The `models` object in the app
+manifest allows you to easily define models, whether hosted by Hypermode or
+another host.
+
+Each model requires a unique name, specified as a key, containing only
+alphanumeric characters and hyphens.
+
+```json modus.json
+{
+  "models": {
+    "text-generator": {
+      "sourceModel": "meta-llama/Llama-3.1-8B-Instruct",
+      "provider": "hugging-face",
+      "connection": "hypermode"
+    }
+  }
+}
+```
+
+<ResponseField name="sourceModel" type="string" required>
+  Original relative path of the model within the provider's repository.
+</ResponseField>
+
+<ResponseField name="provider" type="string">
+  Source provider of the model. `hugging-face` is currently the only supported
+  option.
+</ResponseField>
+
+<ResponseField name="connection" type="string" required>
+  Connection for the model instance.
+
+- Specify `"hypermode"` for models that [Hypermode hosts](/hosted-models).
+- Otherwise, specify a name that matches a host defined in the
+  [`connections`](#connections) section of the manifest.
+
+</ResponseField>
+
+<Tip>
+
+When using `hugging-face` as the `provider` and `hypermode` as the `connection`,
+Hypermode automatically facilitates the connection to an instance of a shared or
+dedicated instance of the model. Your project's functions securely access the
+hosted model, with no further configuration required. For more details, see
+[hosted models](/hosted-models).
+
+</Tip>
+
+## Collections
+
+Collections simplify the usage of vector embeddings to build natural language
+search features. The `collections` object allows you to define indexed data
+types that are automatically embedded and searchable based on the search method
+you define.
+
+Each collection requires a unique name, specified as a key, containing only
+alphanumeric characters and hyphens.
+
+For more detail on implementing collections, see [Search](/modus/search).
+
+```json modus.json
+{
+  "collections": {
+    "myProducts": {
+      "searchMethods": {
+        "searchMethod": {
+          "embedder": "myEmbedder",
+          "index": {
+            "type": "sequential"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+<ResponseField name="searchMethods" type="object" required>
+  Search methods define a pair of an embedder and index to make available for
+  searching the data in your collection.
+</ResponseField>
+
+<ResponseField name="embedder" type="string" required>
+  The function name to embed text added to the collection.
+</ResponseField>
+
+<ResponseField name="index" type="string">
+  If provided, describes the index mechanism used by the search method. `type`:
+  specifies the type of the index. For example, `sequential` (default).
+</ResponseField>

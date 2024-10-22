@@ -1,0 +1,257 @@
+---
+title: Model Invoking
+description: "Invoke your models with the Modus Models API"
+---
+
+Modus enables you to easily integrate AI models into your app. In just a few
+steps, you can generate text, classify items, compute embeddings, and use models
+in your app for many other use cases using the `models` API in the Modus SDK.
+
+## Understanding key components
+
+**Models**: your app can invoke models hosted on Hypermode, OpenAI, Anthropic,
+and many more. You define models in your app manifest.
+
+**Models API**: the `models` API in the Modus SDK provides a set of functions
+that you can import and call from your app.
+
+## Define your models
+
+You define models in your [app manifest](./app-manifest#models). Here are some
+examples:
+
+<CodeGroup>
+
+```json Llama-3.1-8B-Instruct
+{
+  ...
+  "models": {
+    // model card: https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct
+    "text-generator": {
+      "sourceModel": "meta-llama/Llama-3.1-8B-Instruct", // model name on the provider
+      "provider": "hugging-face", // provider for this model
+      "connection": "hypermode" // host where the model is running
+    }
+  }
+  ...
+}
+```
+
+```json GPT-4o
+{
+  ...
+  "models": {
+    // model docs: https://platform.openai.com/docs/models/gpt-4o
+    "text-generator": {
+      "sourceModel": "gpt-4o",
+      "connection": "openai",
+      "path": "v1/chat/completions"
+    }
+  },
+  // for externally hosted models, explicitly define the connection
+  "connections": {
+    "openai": {
+      "baseUrl": "https://api.openai.com/",
+      "headers": {
+        "Authorization": "Bearer {{API_KEY}}"
+      }
+    }
+  }
+  ...
+}
+```
+
+```json Claude 3.5 Sonnet
+{
+  ...
+  "models": {
+    // model docs: https://docs.anthropic.com/en/docs/about-claude/models#model-comparison-table
+    "text-generator": {
+      "sourceModel": "claude-3-5-sonnet-20240620",
+      "connection": "anthropic",
+      "path": "v1/messages"
+    }
+  },
+  // for externally hosted models, explicitly define the connection
+  "connections": {
+    "anthropic": {
+      "baseUrl": "https://api.anthropic.com/",
+      "headers": {
+        "x-api-key": "{{API_KEY}}",
+        "anthropic-version": "2023-06-01"
+      }
+    },
+  }
+  ...
+}
+```
+
+</CodeGroup>
+
+## Invoking a model for inference
+
+To invoke a model within your app, import the `models` packages from the SDK.
+Import the core `models` package and the package for the interface your model
+uses. For example, to use the OpenAI interface for a text-generation model, you
+would import the `openai` package in addition to the core `models` package.
+
+### Generation models
+
+Generation models are models that generate text, images, or other data based on
+input. Currently, the Models API supports the OpenAI, Anthropic, and Gemini
+interfaces. Let's see how to invoke a model using the OpenAI interface.
+
+When using a model interface, you automatically get type-ahead guidance in your
+code editor based on the available options for that interface.
+
+<Note>
+  Hypermode-hosted generation models implement the OpenAI API standard. To
+  interact with these models, use the `openai` interface.
+</Note>
+
+<CodeGroup>
+
+```go Go
+package main
+
+import (
+    "encoding/json"
+    "fmt"
+    "strings"
+
+    "github.com/hypermodeinc/modus/sdk/go/pkg/models"
+    "github.com/hypermodeinc/modus/sdk/go/pkg/models/openai"
+)
+
+// this model name should match the one defined in the modus.json manifest file
+const modelName = "text-generator"
+
+func GenerateText(instruction, prompt string) (string, error) {
+    model, err := models.GetModel[openai.ChatModel](modelName)
+    if err != nil {
+        return "", err
+    }
+
+    input, err := model.CreateInput(
+        openai.NewSystemMessage(instruction),
+        openai.NewUserMessage(prompt),
+    )
+    if err != nil {
+        return "", err
+    }
+
+    // this is one of many optional parameters available for the OpenAI chat interface
+    input.Temperature = 0.7
+
+    output, err := model.Invoke(input)
+    if err != nil {
+        return "", err
+    }
+
+    return strings.TrimSpace(output.Choices[0].Message.Content), nil
+}
+```
+
+```ts AssemblyScript
+import { models } from "@hypermode/modus-sdk-as"
+import {
+  OpenAIChatModel,
+  ResponseFormat,
+  SystemMessage,
+  UserMessage,
+} from "@hypermode/modus-sdk-as/models/openai/chat"
+
+// this model name should match the one defined in the modus.json manifest file
+const modelName: string = "text-generator"
+
+export function generateText(instruction: string, prompt: string): string {
+  const model = models.getModel<OpenAIChatModel>(modelName)
+  const input = model.createInput([
+    new SystemMessage(instruction),
+    new UserMessage(prompt),
+  ])
+
+  // this is one of many optional parameters available for the OpenAI chat interface
+  input.temperature = 0.7
+
+  const output = model.invoke(input)
+  return output.choices[0].message.content.trim()
+}
+```
+
+</CodeGroup>
+
+### Classification models
+
+Classification models provide a label for input data. You can use these models
+to sort data into categories or classes. Let's see how to invoke a
+classification model.
+
+<CodeGroup>
+
+```go Go
+
+import (
+  "errors"
+  "fmt"
+
+  "github.com/hypermodeinc/modus/sdk/go/pkg/models"
+  "github.com/hypermodeinc/modus/sdk/go/pkg/models/experimental"
+)
+
+// this model name should match the one defined in the modus.json manifest file
+const modelName = "my-classifier"
+
+// this function takes input text and a probability threshold, and returns the
+// classification label determined by the model, if the confidence is above the
+// threshold; otherwise, it returns an empty string
+func ClassifyText(text string, threshold float32) (string, error) {
+  predictions, err := classify(text)
+  if err != nil {
+    return "", err
+  }
+
+  prediction := predictions[0]
+  if prediction.Confidence < threshold {
+    return "", nil
+  }
+
+  return prediction.Label, nil
+}
+```
+
+```ts AssemblyScript
+import { models } from "@hypermode/modus-sdk-as"
+import {
+  ClassificationModel,
+  ClassifierResult,
+} from "@hypermode/modus-sdk-as/models/experimental/classification"
+
+// this model name should match the one defined in the modus.json manifest file
+const modelName: string = "my-classifier"
+
+// this function takes input text and a probability threshold, and returns the
+// classification label determined by the model, if the confidence is above the
+// threshold; otherwise, it returns an empty string
+export function classifyText(text: string, threshold: f32): string {
+  const model = models.getModel<ClassificationModel>(modelName)
+  const input = model.createInput([text])
+  const output = model.invoke(input)
+
+  const prediction = output.predictions[0]
+  if (prediction.confidence >= threshold) {
+    return prediction.label
+  }
+
+  return ""
+}
+```
+
+</CodeGroup>
+
+### Embedding models
+
+Modus supports invoking embedding models for text, images, and other data types.
+You use the outputs of these models for implementing search, recommendation, and
+similarity functions in your app. Refer to [Search](/modus/search) for more
+information on how to use embeddings in your app.

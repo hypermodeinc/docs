@@ -1,6 +1,6 @@
 {
-  "MD013": false,
-  "MD033": false,
-  "MD034": false,
-  "MD037": false
+  "line-length": { "line_length": 150, "tables": false },
+  "no-inline-html": false,
+  "no-bare-urls": false,
+  "no-space-in-emphasis": false
 }

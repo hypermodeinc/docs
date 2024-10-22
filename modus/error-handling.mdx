@@ -1,0 +1,84 @@
+---
+title: Error Handling
+description: "Easily debug and handle errors"
+---
+
+Error handling in Modus makes it simple to have both a clear debugging process
+for developers and informative responses for end-users.
+
+### Logging errors
+
+The Console API in the Modus SDK is globally available in all functions. It
+allows developers to capture log messages and errors, which are automatically
+included in Modus runtime execution logs.
+
+<Tip>
+  When deployed to Hypermode, function logs are available in the Hypermode
+  Console on the [Function Runs](../observe-functions#function-runs) page.
+</Tip>
+
+The Console API provides five logging functions:
+
+```go
+console.log("This is a simple log message.")
+console.debug("This is a debug message.")
+console.info("This is an info message.")
+console.warn("This is a warning message.")
+console.error("This is an error message.")
+```
+
+### Error reporting in GraphQL
+
+GraphQL responses have a standard structure that includes both `data` and
+`errors` sections. Modus allows for the inclusion of error codes or messages
+within the `errors` section to allow for downstream processing in addition to
+debugging.
+
+<CodeGroup>
+
+```ts Go
+// in Go, error handling is typically done by returning an `error` object as the
+// last result of a function; Modus transforms this into logging and error handling
+// automatically, ensuring all errors are logged before being sent to the response
+func TestError(input string) (string, error) {
+    if input == "" {
+        return "", errors.New("input is empty")
+    }
+    return "You said: " + input, nil
+}
+```
+
+```ts AssemblyScript
+export function TestError(input: string): string {
+  if (input == "") {
+    console.error("input is empty")
+    // this is a non-fatal error reported in GraphQL response.
+    // the function continues
+    return "Can't process your input"
+  }
+
+  if (input == "error") {
+    throw new Error(`This is a fatal error.`)
+    // a fatal error appears in the log
+    // the errors section in GraphQL responses contains only one entry with
+    // "message": "error calling function" and the data section is empty
+    // the function does not continue
+  }
+
+  return "You said: " + input
+}
+```
+
+</CodeGroup>
+
+### Best practices for error handling
+
+- **Handle non-fatal errors** using `console.error`, allowing the function to
+  continue. The GraphQL response may have both a `data` section and an `errors`
+  section.
+
+- **Handle critical errors** using AssemblyScript `throw` keyword or the Go
+  idiomatic error object to stop the function's execution.
+
+- **Return clear error messages**: When returning errors, include concise and
+  informative error messages that help diagnose the issue.

@@ -1,40 +1,37 @@
 ---
 title: Dgraph
-description: "Execute queries and mutations against a Dgraph database."
+description: "Execute queries and mutations against a Dgraph database"
 ---
 
-{/* <!-- vale Google.Headings = NO --> */}
+The Modus Dgraph API allows you to run queries and mutations against a Dgraph
+database.
 
-Hypermode's Dgraph APIs allow you to run queries and mutations against a Dgraph database, as well as alter
-the schema if necessary.
-After [defining a host](../define-hosts) for your Dgraph gRPC endpoint in your project's manifest,
-you can use the following APIs to interact with the database.
-
-## Example project
-
-For your reference, a complete example using the Dgraph APIs is available on GitHub in the
-`hypermodeinc/functions-as` repository, at [/examples/dgraph](https://github.com/hypermodeinc/functions-as/tree/main/examples/dgraph).
-
-## Import from the SDK
+## Import
 
 To begin, import the `dgraph` namespace from the SDK:
 
 <CodeGroup>
 
+```go Go
+import github.com/hypermodeinc/modus/sdk/go/pkg/dgraph
+```
+
 ```ts AssemblyScript
-import { dgraph } from "@hypermode/functions-as";
+import { dgraph } from "@hypermode/modus-sdk-as"
 ```
 
 </CodeGroup>
 
 ## Dgraph APIs
 
-The APIs in the `dgraph` namespace are below.
+{/* <!-- vale Google.Headings = NO --> */}
+
+The APIs in the `dgraph` namespace are below, organized by category.
 
 <Tip>
-  We're constantly introducing new APIs through ongoing development with build
-  partners. [Let's chat](mailto:help@hypermode.com) about what would make the
-  Functions SDK even more powerful for your next use case!
+  We're constantly introducing new APIs through ongoing development with early
+  users. [Open an issue](https://github.com/hypermodeinc/modus/issues) if you
+  have ideas on what would make Modus even more powerful for your next app!
 </Tip>
 
 ### Functions
@@ -48,7 +45,7 @@ function execute(hostName: string, request: Request): Response;
 ```
 
 <ResponseField name="hostName" type="string" required>
-  Name of the host, as [defined in the manifest](../define-hosts).
+  Name of the host, as [defined in the manifest](../app-manifest#hosts).
 </ResponseField>
 
 <ResponseField name="request" type="Request" required>
@@ -65,7 +62,7 @@ function alterSchema(hostName: string, schema: string): string;
 ```
 
 <ResponseField name="hostName" type="string" required>
-  Name of the host, as [defined in the manifest](../define-hosts).
+  Name of the host, as [defined in the manifest](../app-manifest#hosts).
 </ResponseField>
 
 <ResponseField name="schema" type="string" required>
@@ -81,7 +78,7 @@ function dropAttr(hostName: string, attr: string): string;
 ```
 
 <ResponseField name="hostName" type="string" required>
-  Name of the host, as [defined in the manifest](../define-hosts).
+  Name of the host, as [defined in the manifest](../app-manifest#hosts).
 </ResponseField>
 
 <ResponseField name="attr" type="string" required>
@@ -97,7 +94,7 @@ function dropAll(hostName: string): string;
 ```
 
 <ResponseField name="hostName" type="string" required>
-  Name of the host, as [defined in the manifest](../define-hosts).
+  Name of the host, as [defined in the manifest](../app-manifest#hosts).
 </ResponseField>
 
 ### Objects
@@ -115,10 +112,10 @@ class Request {
 ```
 
 <ResponseField name="new dgraph.Request(query, mutations)">
+  Creates a new `Request` object with the given `query` and `mutations`.
 
-Creates a new `Request` object with the given `query` and `mutations`.
-
-The [`query`](#query) and [`mutations`](#mutation) fields are optional and default to `null`.
+The [`query`](#query) and [`mutations`](#mutation) fields are optional and
+default to `null`.
 
 </ResponseField>
 
