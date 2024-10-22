@@ -51,6 +51,7 @@ examples:
   // for externally hosted models, explicitly define the connection
   "connections": {
     "openai": {
+      "type": "http",
       "baseUrl": "https://api.openai.com/",
       "headers": {
         "Authorization": "Bearer {{API_KEY}}"
@@ -75,6 +76,7 @@ examples:
   // for externally hosted models, explicitly define the connection
   "connections": {
     "anthropic": {
+      "type": "http",
       "baseUrl": "https://api.anthropic.com/",
       "headers": {
         "x-api-key": "{{API_KEY}}",
