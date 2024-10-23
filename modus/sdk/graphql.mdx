@@ -43,7 +43,7 @@ API endpoint.
 
 ```go
 graphql.execute<T> (
-  hostName: string,
+  connection: string,
   statement: string,
   variables?: Variables
 ): Response<T>
@@ -65,8 +65,9 @@ and maps.
   </Tip>
 </ResponseField>
 
-<ResponseField name="hostName" type="string" required>
-  Name of the host, as [defined in the manifest](../app-manifest#hosts).
+<ResponseField name="connection" type="string" required>
+  Name of the connection, as [defined in the
+  manifest](../app-manifest#connection).
 </ResponseField>
 
 <ResponseField name="statement" type="string" required>

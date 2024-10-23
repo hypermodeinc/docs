@@ -52,14 +52,15 @@ statements that don't return data.
 
 ```go
 function postgresql.execute (
-  hostName: string,
+  connectionName: string,
   statement: string,
   params?: Params
 ): Response
 ```
 
-<ResponseField name="hostName" type="string" required>
-  Name of the host, as [defined in the manifest](../app-manifest#hosts).
+<ResponseField name="connectionName" type="string" required>
+  Name of the connection, as [defined in the
+  manifest](../app-manifest#connections).
 </ResponseField>
 
 <ResponseField name="statement" type="string" required>
@@ -87,7 +88,7 @@ the column names.
 
 ```go
 function postgresql.query<T>(
-  hostName: string,
+  connectionName: string,
   statement: string,
   params?: Params,
 ): QueryResponse<T>
@@ -110,8 +111,9 @@ or [`Location`](#location) object to represent the data.
   </Tip>
 </ResponseField>
 
-<ResponseField name="hostName" type="string" required>
-  Name of the host, as [defined in the manifest](../app-manifest#hosts).
+<ResponseField name="connectionName" type="string" required>
+  Name of the connection, as [defined in the
+  manifest](../app-manifest#connections).
 </ResponseField>
 
 <ResponseField name="statement" type="string" required>
@@ -139,7 +141,7 @@ an identifier.
 
 ```go
 function postgresql.queryScalar<T> (
-  hostName: string,
+  connectionName: string,
   statement: string,
   params?: Params
 ): ScalarResponse<T>
@@ -151,8 +153,9 @@ function postgresql.queryScalar<T> (
   the type of the data returned from the SQL query.
 </ResponseField>
 
-<ResponseField name="hostName" type="string" required>
-  Name of the host, as [defined in the manifest](../app-manifest#hosts).
+<ResponseField name="connectionName" type="string" required>
+  Name of the connection, as [defined in the
+  manifest](../app-manifest#connections).
 </ResponseField>
 
 <ResponseField name="statement" type="string" required>
