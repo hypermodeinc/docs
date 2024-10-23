@@ -26,7 +26,7 @@ import (
 )
 
 // the name of the PostgreSQL connection, as specified in the modus.json manifest
-const host = "my-database"
+const connection = "my-database"
 
 type Person struct {
   Name string `json:"name"`
@@ -35,7 +35,7 @@ type Person struct {
 
 func GetPerson(name string) (*Person, error) {
   const query = "select * from persons where name = $1"
-  rows, _, _ := postgresql.Query[Person](host, query, name)
+  rows, _, _ := postgresql.Query[Person](connection, query, name)
   return &rows[0], nil
 }
 ```
@@ -44,7 +44,7 @@ func GetPerson(name string) (*Person, error) {
 import { postgresql } from "@hypermode/modus-sdk-as"
 
 // the name of the PostgreSQL connection, as specified in the modus.json manifest
-const host = "my-database"
+const connection = "my-database"
 
 @json
 class Person {
@@ -58,7 +58,7 @@ export function getPerson(name: string): Person {
   const params = new postgresql.Params()
   params.push(name)
 
-  const response = postgresql.query<Person>(host, query, params)
+  const response = postgresql.query<Person>(connection, query, params)
   return response.rows[0]
 }
 ```
@@ -84,7 +84,7 @@ import (
 )
 
 // the name of the Dgraph connection, as specified in the modus.json manifest
-const hostName = "my-dgraph"
+const connection = "my-dgraph"
 
 // declare structures used to parse the JSON document returned by Dgraph query.
 type Person struct {
@@ -109,7 +109,7 @@ func GetPerson(name string) (*Person, error) {
     "$name": name,
   }
 
-  response, _ := dgraph.Execute(hostName, &dgraph.Request{
+  response, _ := dgraph.Execute(connection, &dgraph.Request{
     Query: &dgraph.Query{
       Query:     statement,
       Variables: variables,
@@ -129,7 +129,7 @@ import { dgraph } from "@hypermode/modus-sdk-as"
 import { JSON } from "json-as"
 
 // the name of the Dgraph connection, as specified in the modus.json manifest
-const hostName: string = "my-dgraph"
+const connection: string = "my-dgraph"
 
 // declare classes used to parse the JSON document returned by Dgraph query.
 @json
@@ -157,7 +157,7 @@ export function getPerson(name: string): Person {
   vars.set("$name", name)
 
   const resp = dgraph.execute(
-    hostName,
+    connection,
     new dgraph.Request(new dgraph.Query(statement, vars)),
   )
   const persons = JSON.parse<GetPersonResponse>(resp.Json).persons
@@ -245,7 +245,7 @@ import (
 )
 
 // the name of the GraphQL connection, as specified in the modus.json manifest
-const hostName = "my-graphql-api"
+const connection = "my-graphql-api"
 
 // declare structures used to parse the JSON document returned
 type Person struct {
@@ -269,7 +269,7 @@ func GetPerson(name string) (*Person, error) {
      "name": name,
   }
 
-  response, _ := graphql.Execute[GetPersonResponse](hostName, statement, vars)
+  response, _ := graphql.Execute[GetPersonResponse](connection, statement, vars)
 
   return response.Data.Person, nil
 }
@@ -279,7 +279,7 @@ func GetPerson(name string) (*Person, error) {
 import { graphql } from "@hypermode/modus-sdk-as"
 
 // the name of the GraphQL connection, as specified in the modus.json manifest
-const hostName: string = "my-graphql-api"
+const connection: string = "my-graphql-api"
 
 // declare classes used to parse the JSON document returned
 @json
@@ -304,7 +304,11 @@ export function getPerson(name: string): Person | null {
   const vars = new graphql.Variables()
   vars.set("name", name)
 
-  const response = graphql.execute<GetPersonResponse>(hostName, statement, vars)
+  const response = graphql.execute<GetPersonResponse>(
+    connection,
+    statement,
+    vars,
+  )
 
   return response.data!.getPerson
 }

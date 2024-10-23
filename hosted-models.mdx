@@ -12,7 +12,7 @@ Need a bespoke model? You can include a model from
 
 ## Setup
 
-To use a Hypermode-hosted model, set `host: "hypermode"`,
+To use a Hypermode-hosted model, set `connection: "hypermode"`,
 `provider: "hugging-face"`, and set `sourceModel` to be the model name as
 specified on Hugging Face.
 
@@ -23,7 +23,7 @@ specified on Hugging Face.
     "text-generator": {
       "sourceModel": "meta-llama/Llama-3.1-8B-Instruct",
       "provider": "hugging-face",
-      "host": "hypermode"
+      "connection": "hypermode"
     }
   }
   ...
@@ -36,12 +36,9 @@ We run our most popular models as multi-tenant, shared instances across projects
 and customers.
 
 By default, if the model you use is available as a shared model, your app uses
-these shared models at runtime. You can override this default behavior by
-setting `dedicated: true` on your model in the
-[app manifest](/modus/app-manifest).
-
-If the model you use isn't available as a shared model, Hypermode automatically
-spins up a dedicated instance of the model for your project.
+these shared models at runtime. If the model you use isn't available as a shared
+model, Hypermode automatically spins up a dedicated instance of the model for
+your project.
 
 ## Shared models
 

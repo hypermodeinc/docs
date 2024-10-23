@@ -10,14 +10,14 @@ JavaScript, but with some modifications to work with Hypermode Functions.
 
 <Note>
   As a security measure, you can only call HTTP endpoints that you
-  [defined in your app's manifest](../app-manifest#hosts). Any attempt to access an arbitrary URL, for a host not
+  [defined in your app's manifest](../app-manifest#connections). Any attempt to access an arbitrary URL, for a connection not
   defined in your app's manifest, results in an error.
 
-Additionally, you should use placeholders for host secrets in the manifest,
-rather than hardcoding them in your functions. Enter the values for each hosts'
-secrets via the Hypermode UI. This ensures that your secrets are securely
-stored, aren't committed to your repository, and aren't visible or accessible
-from your functions code.
+Additionally, you should use placeholders for connection secrets in the
+manifest, rather than hardcoding them in your functions. Enter the values for
+each connections' secrets via environment variables or the Hypermode UI. This
+ensures that your secrets are securely stored, aren't committed to your
+repository, and aren't visible or accessible from your functions code.
 
 </Note>
 
@@ -68,10 +68,10 @@ http.fetch(
   Either a URL `string` or a [`Request`](#request) object, describing the HTTP request to make.
 
 If a `string`, the operation uses the `GET` HTTP method with no headers other
-than those defined in the manifest entry of the host.
+than those defined in the manifest entry of the connection.
 
   <Note>
-    Each request must match to a host entry in the manifest, using the `baseUrl` field. The request URL passed to the
+    Each request must match to a connection entry in the manifest, using the `baseUrl` field. The request URL passed to the
     `fetch` function (or via a `Request` object) must start with the manifest entry's `baseUrl` value to match.
   </Note>
 </ResponseField>

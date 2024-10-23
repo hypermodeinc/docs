@@ -103,7 +103,7 @@ alphanumeric characters and hyphens.
 
 Each connection has a `type` property, which controls how it's used and which
 additional properties are available. The following table lists the available
-host types:
+connection types:
 
 | Type         | Purpose                          | Functions Namespaces        |
 | :----------- | :------------------------------- | :-------------------------- |
@@ -203,7 +203,7 @@ This example specifies a header named `X-API-Key` provided by a secret named
 }
 ```
 
-You can use a special syntax for hosts that require
+You can use a special syntax for connections that require
 [HTTP basic authentication](https://en.wikipedia.org/wiki/Basic_access_authentication).
 In this example, secrets named `USERNAME` and `PASSWORD` combined and then are
 base64-encoded to form a compliant `Authorization` header value:
@@ -358,7 +358,7 @@ alphanumeric characters and hyphens.
   Connection for the model instance.
 
 - Specify `"hypermode"` for models that [Hypermode hosts](/hosted-models).
-- Otherwise, specify a name that matches a host defined in the
+- Otherwise, specify a name that matches a connection defined in the
   [`connections`](#connections) section of the manifest.
 
 </ResponseField>

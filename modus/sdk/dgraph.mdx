@@ -41,11 +41,12 @@ The APIs in the `dgraph` namespace are below, organized by category.
 Execute a Dgraph query or mutation using a Dgraph Request object.
 
 ```go
-function execute(hostName: string, request: Request): Response;
+function execute(connectionName: string, request: Request): Response;
 ```
 
-<ResponseField name="hostName" type="string" required>
-  Name of the host, as [defined in the manifest](../app-manifest#hosts).
+<ResponseField name="connectionName" type="string" required>
+  Name of the connection, as [defined in the
+  manifest](../app-manifest#connections).
 </ResponseField>
 
 <ResponseField name="request" type="Request" required>
@@ -58,11 +59,12 @@ function execute(hostName: string, request: Request): Response;
 Alter the schema of a Dgraph database.
 
 ```go
-function alterSchema(hostName: string, schema: string): string;
+function alterSchema(connectionName: string, schema: string): string;
 ```
 
-<ResponseField name="hostName" type="string" required>
-  Name of the host, as [defined in the manifest](../app-manifest#hosts).
+<ResponseField name="connectionName" type="string" required>
+  Name of the connection, as [defined in the
+  manifest](../app-manifest#connections).
 </ResponseField>
 
 <ResponseField name="schema" type="string" required>
@@ -74,11 +76,12 @@ function alterSchema(hostName: string, schema: string): string;
 Drop an attribute from a Dgraph schema.
 
 ```go
-function dropAttr(hostName: string, attr: string): string;
+function dropAttr(connectionName: string, attr: string): string;
 ```
 
-<ResponseField name="hostName" type="string" required>
-  Name of the host, as [defined in the manifest](../app-manifest#hosts).
+<ResponseField name="connectionName" type="string" required>
+  Name of the connection, as [defined in the
+  manifest](../app-manifest#connections).
 </ResponseField>
 
 <ResponseField name="attr" type="string" required>
@@ -90,11 +93,12 @@ function dropAttr(hostName: string, attr: string): string;
 Drop all data from a Dgraph database.
 
 ```go
-function dropAll(hostName: string): string;
+function dropAll(connectionName: string): string;
 ```
 
-<ResponseField name="hostName" type="string" required>
-  Name of the host, as [defined in the manifest](../app-manifest#hosts).
+<ResponseField name="connectionName" type="string" required>
+  Name of the connection, as [defined in the
+  manifest](../app-manifest#connections).
 </ResponseField>
 
 ### Objects
