@@ -92,6 +92,11 @@ learn how to use the basic components of a Modus app and how to run it locally.
           "github.com/hypermodeinc/modus/sdk/go/pkg/http"
         )
 
+        type Quote struct {
+          Quote  string `json:"q"`
+          Author string `json:"a"`
+        }
+
         // this function makes a request to an API that returns data in JSON format, and
         // returns an object representing the data
         func GetRandomQuote() (*Quote, error) {
@@ -152,7 +157,7 @@ learn how to use the basic components of a Modus app and how to run it locally.
         your generated API.
 
         ```ts index.ts
-        export { getRandomQuote } from "./quotes";
+        export * from "./quotes";
         ```
 
       </Tab>
