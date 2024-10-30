@@ -1,6 +1,6 @@
 ---
 title: Work Locally
-description: "Seamless local-to-cloud experience for rapid experimentation"
+description: "Run your Modus app locally on your machine using the Hyp CLI"
 ---
 
 Building Modus apps is even easier when you add Hypermode. The Hyp CLI extends
@@ -10,21 +10,20 @@ experimentation with new AI models.
 
 ## Hyp CLI setup
 
-For access to hosted models, install the Hyp CLI to augment Modus.
+1. First, install the Hyp CLI to augment Modus:
 
-<CodeGroup>
+   <CodeGroup>
 
-```bash MacOS + Linux
-curl -sSL http://install.hypermode.com/hyp.sh | bash
-```
+   ```bash MacOS + Linux
+   curl -sSL http://install.hypermode.com/hyp.sh | bash
+   ```
 
-```js Windows
-npm install -g @hypermode/hyp-cli
-```
+   ```js Windows
+   npm install -g @hypermode/hyp-cli
+   ```
 
-</CodeGroup>
+   </CodeGroup>
 
-## Log into Hyp
+2. Ensure you're logged in to the Hyp CLI with the `hyp login` command.
 
-Before running `modus dev` to run your Modus app locally, ensure you're logged
-into the Hyp CLI with the `hyp login` command.
+3. Run `modus dev` to run your Modus app locally.
