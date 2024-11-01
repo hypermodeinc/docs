@@ -387,7 +387,9 @@ export function searchSimilarProducts(
 
 ## Local Development With Collections
 
-Data stored in Collections is persisted to a Postgres database. When using Collections in a Modus app deployed to the Hypermode platform this Postgres database is managed by Hypermode and no additional setup is required by the user. However, when developing with Modus locally or outside of the Hypermode platform a Postgres instance will need to be configured for the persistance layer.
+Data stored in Collections are persisted to a Postgres database. When using Collections in a Modus app deployed to the Hypermode platform this Postgres database is managed by Hypermode and no additional setup is required by the user. However, when developing with Modus locally or outside of the Hypermode platform a Postgres instance will need to be configured for the Collections persistence layer.
+
+No specific method for hosting this Postgres database is required as long as the appropirate database migration is applied (Step 3 below) and the `MODUS_DB` environment variable containing the connection string to your Postgres database is set (Step 4 below). The steps below describe using [Docker](https://www.docker.com/products/docker-desktop/) to start and configure a Postgres instance for local development with Collections.
 
 To start and configure a local Postgres instance for working with Collections locally using [Docker Compose](https://docs.docker.com/compose/) follow these steps:
 
