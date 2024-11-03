@@ -385,28 +385,53 @@ export function searchSimilarProducts(
 
 </CodeGroup>
 
-## Local Development With Collections
+## Develop locally with Collections
 
-Data stored in Collections are persisted to a Postgres database. When using Collections in a Modus app deployed to the Hypermode platform this Postgres database is managed by Hypermode and no additional setup is required by the user. However, when developing with Modus locally or outside of the Hypermode platform a Postgres instance will need to be configured for the Collections persistence layer.
+Data stored in Collections are persisted to a PostgreSQL database. When using
+Collections in a Modus app deployed to the Hypermode platform this PostgreSQL
+database is managed by Hypermode and no additional setup is required by the
+user. However, when developing with Modus locally or outside of the Hypermode
+platform a PostgreSQL instance is needed for the Collections persistence layer.
 
-No specific method for hosting this Postgres database is required as long as the appropirate database migration is applied (Step 3 below) and the `MODUS_DB` environment variable containing the connection string to your Postgres database is set (Step 4 below). The steps below describe using [Docker](https://www.docker.com/products/docker-desktop/) to start and configure a Postgres instance for local development with Collections.
+Any hosting method for this PostgreSQL database is sufficient, so feel free to
+use your favorite method of installing and running PostgreSQL locally or in the
+cloud. A database migration must be applied once the PostgreSQL database is
+running (Step 3 below) and the `MODUS_DB` environment variable containing the
+connection string to your PostgreSQL database is set (Step 4 below). The steps
+below describe using [Docker](https://www.docker.com/products/docker-desktop/)
+to start and configure a PostgreSQL instance for local development with
+Collections.
 
-To start and configure a local Postgres instance for working with Collections locally using [Docker Compose](https://docs.docker.com/compose/) follow these steps:
+To start and configure a local PostgreSQL instance for working with Collections
+locally using [Docker Compose](https://docs.docker.com/compose/) follow these
+steps:
 
-1. Clone the [Modus GitHub repository](https://github.com/hypermodeinc/modus):
+<Steps>
+
+  <Step title="Clone Modus locally">
+  Clone the [Modus GitHub repository](https://github.com/hypermodeinc/modus):
 
 ```sh
 git clone https://github.com/hypermodeinc/modus.git
 ```
 
-2. Start the Collections Postgres database using the local Docker Compose script:
+  </Step>
+
+  <Step title="Start a PostgreSQL instance">
+
+Start the Collections PostgreSQL database using the local Docker Compose script:
 
 ```sh
 cd modus/runtime/tools/local
 docker-compose up
 ```
 
-3. Next, you will need to apply the database schema using the [golang-migrate](https://github.com/golang-migrate/migrate) utility.
+  </Step>
+
+  <Step title="Apply database migration">
+
+Next, apply the database schema using the
+[golang-migrate](https://github.com/golang-migrate/migrate) utility.
 
 On MacOS, you can install this utility with the following:
 
@@ -421,10 +446,16 @@ export POSTGRESQL_URL='postgresql://postgres:postgres@localhost:5433/my-runtime-
 migrate -database ${POSTGRESQL_URL} -path ../../db/migrations up
 ```
 
-4. Set the `MODUS_DB` environmet variable:
+  </Step>
+
+  <Step title="Set environment variable">
+  Set the `MODUS_DB` environment variable:
 
 ```sh
 export MODUS_DB=postgresql://postgres:postgres@localhost:5433/my-runtime-db?sslmode=disable
 ```
+
+  </Step>
+</Steps>
 
 You can now use Collections locally in your Modus app.
