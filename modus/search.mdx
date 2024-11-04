@@ -384,3 +384,83 @@ export function searchSimilarProducts(
 ```
 
 </CodeGroup>
+
+## Develop locally with Collections
+
+While Collections expose a key-value interface for working with data, a
+PostgreSQL database instance persists the data. When using Collections in a
+Modus app deployed to the Hypermode platform, Hypermode manages this PostgreSQL
+database and users don't need to perform any additional setup. However, when
+developing with Modus locally or outside of the Hypermode platform, you need a
+PostgreSQL instance for the Collections persistence layer.
+
+<Note>
+  The dependency on PostgreSQL is temporary and we're working to replace it with
+  ModusDB, an embedded multi-model database, in an upcoming release.
+</Note>
+
+Any hosting method for this PostgreSQL database is sufficient, so feel free to
+use your favorite method of installing and running PostgreSQL locally or in the
+cloud. You must apply a database migration after you start the PostgreSQL
+database (Step 3 below) and set the `MODUS_DB` environment variable with your
+PostgreSQL database connection string (Step 4 below). The steps below describe
+using [Docker](https://www.docker.com/products/docker-desktop/) to start and
+configure a PostgreSQL instance for local development with Collections.
+
+To start and configure a local PostgreSQL instance for working with Collections
+locally using [Docker Compose](https://docs.docker.com/compose/) follow these
+steps:
+
+<Steps>
+
+  <Step title="Clone Modus locally">
+  Clone the [Modus GitHub repository](https://github.com/hypermodeinc/modus):
+
+```sh
+git clone https://github.com/hypermodeinc/modus.git
+```
+
+  </Step>
+
+  <Step title="Start a PostgreSQL instance">
+
+Start the Collections PostgreSQL database using the local Docker Compose script:
+
+```sh
+cd modus/runtime/tools/local
+docker-compose up
+```
+
+  </Step>
+
+  <Step title="Apply database migration">
+
+Next, apply the database schema using the
+[golang-migrate](https://github.com/golang-migrate/migrate) utility.
+
+On MacOS, you can install this utility with the following:
+
+```sh
+brew install golang-migrate
+```
+
+Then, you can apply the migration as follows:
+
+```sh
+export POSTGRESQL_URL='postgresql://postgres:postgres@localhost:5433/my-runtime-db?sslmode=disable'
+migrate -database ${POSTGRESQL_URL} -path ../../db/migrations up
+```
+
+  </Step>
+
+  <Step title="Set environment variable">
+  Set the `MODUS_DB` environment variable:
+
+```sh
+export MODUS_DB=postgresql://postgres:postgres@localhost:5433/my-runtime-db?sslmode=disable
+```
+
+  </Step>
+</Steps>
+
+You can now use Collections locally in your Modus app.
