@@ -394,6 +394,11 @@ database and users don't need to perform any additional setup. However, when
 developing with Modus locally or outside of the Hypermode platform, you need a
 PostgreSQL instance for the Collections persistence layer.
 
+<Note>
+  The dependency on PostgreSQL is temporary and we're working to replace it with
+  ModusDB, an embedded multi-model database, in an upcoming release.
+</Note>
+
 Any hosting method for this PostgreSQL database is sufficient, so feel free to
 use your favorite method of installing and running PostgreSQL locally or in the
 cloud. You must apply a database migration after you start the PostgreSQL
