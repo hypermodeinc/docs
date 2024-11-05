@@ -115,9 +115,13 @@ connection types:
 **Don't include secrets directly in the manifest!**
 
 If your connection requires authentication, you can include _placeholders_ in
-connection properties which resolve to their respective secrets at runtime. Set
-the actual secrets via the Hypermode Console, where they're securely stored
-until needed.
+connection properties which resolve to their respective secrets at runtime.
+
+When deployed on Hypermode, set the actual secrets via the Hypermode Console,
+where they're securely stored until needed.
+
+When developing locally,
+[set secrets using environment variables](#working-locally-with-secrets).
 
 </Warning>
 
@@ -323,6 +327,49 @@ This connection type supports connecting to Dgraph databases. You can use the
 <ResponseField name="key" type="string" required>
   The API key for the Dgraph database.
 </ResponseField>
+
+### Working locally with secrets
+
+When you run the app locally using `modus dev`, the runtime replaces all the
+placeholders of the manifest with values from environment variables defined in
+your operating system or in `.env` files.
+
+The environment variables keys must be upper case and follow the naming
+convention:
+
+`MODUS_<CONNECTION NAME>_<PLACEHOLDER>`
+
+For example, with the following manifest:
+
+```json modus.json
+{
+  "connections": {
+    "openai": {
+      "type": "http",
+      "baseUrl": "https://api.openai.com/",
+      "headers": {
+        "Authorization": "Bearer {{API_KEY}}"
+      }
+    }
+  }
+}
+```
+
+Modus runtime substitutes `{{API_KEY}}` with the value of the environment
+variable `MODUS_OPENAI_API_KEY`
+
+An easy way to define the environment variables when running `modus dev` is to
+use the file `.env.dev.local` located in your app folder.
+
+For the previous manifest, we can set the key in the .env.dev.local file as
+follow:
+
+```text .env.dev.local
+MODUS_OPENAI_API_KEY="your actual openai key"
+```
+
+You must exclude `.env` files from your source control. `modus new` does that
+automatically for you when creating the project.
 
 ## Models
 
