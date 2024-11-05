@@ -6,7 +6,7 @@ AWS
 boolean
 CLI|cli
 [Cc]onsole
-Collections
+[Cc]ollections
 computeSimilarity
 CRUD
 [Dd]graph
