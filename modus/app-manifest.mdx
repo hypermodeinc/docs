@@ -117,11 +117,11 @@ connection types:
 If your connection requires authentication, you can include _placeholders_ in
 connection properties which resolve to their respective secrets at runtime.
 
-When deployed on Hypermode, set the actual secrets via the Hypermode Console,
-where they're securely stored until needed.
-
 When developing locally,
 [set secrets using environment variables](#working-locally-with-secrets).
+
+When deployed on Hypermode, set the actual secrets via the Hypermode Console,
+where they're securely stored until needed.
 
 </Warning>
 
@@ -358,8 +358,8 @@ For example, with the following manifest:
 The Modus runtime substitutes `{{API_KEY}}` with the value of the environment
 variable `MODUS_OPENAI_API_KEY`
 
-An easy way to define the environment variables when working locally is to
-use the file `.env.dev.local` located in your app folder.
+An easy way to define the environment variables when working locally is to use
+the file `.env.dev.local` located in your app folder.
 
 For the previous manifest, we can set the key in the .env.dev.local file as
 follow:
@@ -368,8 +368,8 @@ follow:
 MODUS_OPENAI_API_KEY="your openai key"
 ```
 
-You should exclude `.env` files from source control. Projects created with `modus new` exclude these files
-automatically when creating your project.
+You should exclude `.env` files from source control. Projects created with
+`modus new` exclude these files automatically when creating your project.
 
 ## Models
 
