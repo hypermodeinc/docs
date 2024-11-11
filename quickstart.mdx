@@ -38,25 +38,21 @@ the basic components of a Modus app and how to deploy it to Hypermode.
       <Tab title="Hyp CLI">
         Install the Hyp CLI via cURL (macOS + Linux) or npm (all platforms):
 
-        <CodeGroup>
+        ```bash
+        curl install.hypermode.com/hyp.sh -sSfL | bash
+        ```
 
-          ```bash
-          curl install.hypermode.com/hyp.sh -sSfL | bash
-          ```
+        or
 
-          or
-
-          ```bash
-          npm install -g @hypermode/hyp-cli
-          ```
-
-        </CodeGroup>
+        ```bash
+        npm install -g @hypermode/hyp-cli
+        ```
 
         From the terminal, run the following command to import your Modus app into Hypermode. This command
         will create your Hypermode project and deploy your app.
 
         ```bash
-        hyp init
+        hyp link
         ```
       </Tab>
     </Tabs>
