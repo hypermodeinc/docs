@@ -1,7 +1,7 @@
 ---
 title: App Manifest
 description: "Define the resources for your app"
-"og:title": "App Manifest - Modus"
+"og:title": "App  - Modus"
 ---
 
 The manifest for your Modus app allows you to configure the exposure and
@@ -398,8 +398,8 @@ alphanumeric characters and hyphens.
 </ResponseField>
 
 <ResponseField name="provider" type="string">
-  Source provider of the model. `hugging-face` is currently the only supported
-  option.
+  Source provider of the model. If the `connection` value is `hypermode`, this
+  field is mandatory. `hugging-face` is currently the only supported option.
 </ResponseField>
 
 <ResponseField name="connection" type="string" required>
