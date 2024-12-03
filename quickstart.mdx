@@ -146,7 +146,7 @@ the basic components of a Modus app and how to deploy it to Hypermode.
       <Tab title="AssemblyScript">
       Go to the `index.ts` file and locate the `generateText` function. Modify the function to only respond like a surfer, like this:
 
-      ```ts AssemblyScript
+      ```ts index.ts
       export function generateText(text: string): string {
         const model = models.getModel<OpenAIChatModel>("text-generator")
 
