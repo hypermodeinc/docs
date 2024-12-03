@@ -115,56 +115,55 @@ the basic components of a Modus app and how to deploy it to Hypermode.
     Our API is responding using language that is more formal than we want. Let's update our
     `generateText` function to respond using exclusively surfing analogies.
 
-    Open the file that has your `generateText` function. If you are using AssemblyScript, open the `index.ts` file.
-    If you are using Go, open the `main.go` file.
+    <Tabs>
+      <Tab title="Go">
+      Go to the `main.go` file and locate the `generateText` function. Modify the function to only respond like a surfer, like this:
 
-    After opening the file, locate the `generateText` function. Modify the function
-    to only respond like a surfer, like this:
+      ```ts Go
+      func GenerateText(text string) (string, error) {
+        model, err := models.GetModel[openai.ChatModel]("text-generator")
+        if err != nil {
+            return "", err
+        }
 
-    <CodeGroup>
+        input, err := model.CreateInput(
+            openai.NewSystemMessage("You are a helpful assistant. Only respond using surfing analogies and metaphors."),
+            openai.NewUserMessage(text),
+        )
+        if err != nil {
+            return "", err
+        }
 
-    ```ts AssemblyScript
-    export function generateText(text: string): string {
-      const model = models.getModel<OpenAIChatModel>("text-generator")
+        output, err := model.Invoke(input)
+        if err != nil {
+            return "", err
+        }
 
-      const input = model.createInput([
-        new SystemMessage(
-          "You are a helpful assistant. Only respond using surfing analogies and metaphors.",
-        ),
-        new UserMessage(text),
-      ])
-
-      const output = model.invoke(input)
-
-      return output.choices[0].message.content.trim()
-    }
-    ```
-
-    ```ts Go
-    func GenerateText(text string) (string, error) {
-      model, err := models.GetModel[openai.ChatModel]("text-generator")
-      if err != nil {
-          return "", err
+        return strings.TrimSpace(output.Choices[0].Message.Content), nil
       }
+      ```
+      </Tab>
+      <Tab title="AssemblyScript">
+      Go to the `index.ts` file and locate the `generateText` function. Modify the function to only respond like a surfer, like this:
 
-      input, err := model.CreateInput(
-          openai.NewSystemMessage("You are a helpful assistant. Only respond using surfing analogies and metaphors."),
-          openai.NewUserMessage(text),
-      )
-      if err != nil {
-          return "", err
+      ```ts AssemblyScript
+      export function generateText(text: string): string {
+        const model = models.getModel<OpenAIChatModel>("text-generator")
+
+        const input = model.createInput([
+          new SystemMessage(
+            "You are a helpful assistant. Only respond using surfing analogies and metaphors.",
+          ),
+          new UserMessage(text),
+        ])
+
+        const output = model.invoke(input)
+
+        return output.choices[0].message.content.trim()
       }
-
-      output, err := model.Invoke(input)
-      if err != nil {
-          return "", err
-      }
-
-      return strings.TrimSpace(output.Choices[0].Message.Content), nil
-    }
-    ```
-
-    </CodeGroup>
+      ```
+      </Tab>
+    </Tabs>
 
     Save the file and push an update to your Git repo. Hypermode automatically redeploys
     whenever you push an update to the target branch in your Git repo. Go back to the Hypermode Console
