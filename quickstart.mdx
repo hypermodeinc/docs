@@ -119,7 +119,7 @@ the basic components of a Modus app and how to deploy it to Hypermode.
       <Tab title="Go">
       Go to the `main.go` file and locate the `generateText` function. Modify the function to only respond like a surfer, like this:
 
-      ```ts Go
+      ```ts main.go
       func GenerateText(text string) (string, error) {
         model, err := models.GetModel[openai.ChatModel]("text-generator")
         if err != nil {
