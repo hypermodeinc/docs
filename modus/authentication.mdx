@@ -22,14 +22,15 @@ property on your endpoint to `"bearer-token"` in your
 
 Once set, Modus verifies tokens passed in the `Authorization` header of incoming
 requests against the public keys you provide. To enable this verification, you
-must pass the public keys using the `MODUS_PEMS` environment variable.
+must pass the public keys using the `MODUS_PEMS` or `MODUS_JWKS_ENDPOINTS` environment variable.
 
-The value of the `MODUS_PEMS` environment variable should be a JSON object with
+The value of the `MODUS_PEMS` or `MODUS_JWKS_ENDPOINTS` environment variable should be a JSON object with
 the public keys as key-value pairs. This is an example of how to set the
-`MODUS_PEMS` environment variable:
+`MODUS_PEMS` and `MODUS_JWKS_ENDPOINTS` environment variable:
 
 ```bash
 export MODUS_PEMS='{\"key1\":\"-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwJ9z1z1z1z1z1z\\n-----END PUBLIC KEY-----\"}'
+export MODUS_JWKS_ENDPOINTS='{"my-auth-provider":"https://myauthprovider.com/application/o/myappname/jwks/"}'
 ```
 
 <Tip>
