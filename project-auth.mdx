@@ -6,22 +6,22 @@ description: "Manage auth for your project"
 By default, Hypermode protects your project's endpoint with an API key, but you
 can also bring your own auth too.
 
-## Retrieve API Key
+## Retrieve API key
 
 To use the Hypermode API key, navigate to **Settings** → **API Keys** in your
-project dashboard. From there, you can copy your API key to a secure location to
-be consumed by your app that is calling Hypermode.
+project dashboard. From there, you can copy your API key to a secure location
+for your app to consume.
 
-## Rotate API Key
+## Rotate API key
 
 There might be times when you need to rotate your API key. This could be due to
 a security breach, accidentally leaking your API key, and so on.
 
 Before rotating your API key, navigate to **Settings** → **Auth** in your
-project dasboard. Take note of the name of the `PEM key` with `hypermode-` as
+project dashboard. Take note of the name of the `PEM key` with `hypermode-` as
 the prefix. You will need to delete this as the final step of this process.
 
-Next, navigate to **Settings** → **API Keys**, and click on the `Rotate` button.
+Next, navigate to **Settings** → **API Keys**, and click the `Rotate` button.
 This will generate a new API key, and you can copy it to a secure location.
 
 At this point, both the old and new API keys are valid. This is so that you can
@@ -29,10 +29,11 @@ update your app to use the new API key without incurring any downtime.
 
 Once you have updated your app to use the new API key, navigate back to
 **Settings** → **Auth**. You will notice that there are now two `PEM keys`, the
-one you noted earlier, and the new one, also prefixed with `hypermode-`. You can
-now safely delete the old one. This will invalidate the old API key.
+one you saw earlier, and the new one, also prefixed with `hypermode-` but with
+different random characters. You can now safely delete the old one. This will
+invalidate the old API key.
 
-## Bring Your Own Auth
+## Bring your own auth
 
 As you may have known, Modus has its own [authentication](/modus/authentication)
 features. So you can choose to implement your own auth, instead of using the
@@ -40,7 +41,8 @@ Hypermode API key.
 
 To do this, navigate to **Settings** → **Auth** in your project dashboard. From
 there, you can upload your own verification key either as a JWKS endpoint or in
-PEM encoded format. This will be used to verify the JWTs sent to your Modus app.
+PEM encoded format. The Modus runtime will use this to verify the JWTs sent to
+your app.
 
-At this point, you can safely delete the default Hypermode `PEM key` to disable
-the Hypermode API key.
+At this point, you can safely delete the default Hypermode `PEM key` to
+invalidate the Hypermode API key.
