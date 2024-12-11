@@ -15,6 +15,31 @@ Install Modus CLI via npm.
 npm install -g @hypermode/modus-cli
 ```
 
+<Info>
+
+The Modus CLI automatically downloads various files and dependencies to the
+following directory:
+
+- Linux/macOS: `$HOME/.modus`
+- Windows: `%USERPROFILE%/.modus`
+
+If you would like to override the location of this directory, you can set the
+`MODUS_HOME` environment variable to the desired path.
+
+For example, if your local permissions on Windows don't allow creating a
+directory in the root of your user profile, you can try a different location.
+You can use the `AppData` directory, or any other directory where you have write
+permissions.
+
+```cmd
+setx MODUS_HOME %APPDATA%\Modus
+```
+
+_Note, the Windows `setx` command makes the environment variable setting
+permanent._
+
+</Info>
+
 ## Commands
 
 ### `new`
