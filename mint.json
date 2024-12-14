@@ -99,6 +99,7 @@
         "modus/sdk/dgraph",
         "modus/sdk/graphql",
         "modus/sdk/http",
+        "modus/sdk/neo4j",
         "modus/sdk/models",
         "modus/sdk/postgresql"
       ]
