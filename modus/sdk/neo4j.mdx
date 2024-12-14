@@ -135,8 +135,8 @@ The result of a Neo4j query or mutation.
 
 ```go
 type EagerResult struct {
-	Keys    []string
-	Records []*Record
+  Keys    []string
+  Records []*Record
 }
 ```
 
@@ -154,8 +154,8 @@ A record in a Neo4j query result.
 
 ```go
 type Record struct {
-	Values []string
-	Keys   []string
+  Values []string
+  Keys   []string
 }
 ```
 
@@ -173,10 +173,10 @@ A value of a record in a Neo4j query result.
 
 ```go
 type RecordValue interface {
-	bool | int64 | float64 | string |
-		time.Time |
-		[]byte | []any | map[string]any |
-		Node | Relationship | Path | Point2D | Point3D
+  bool | int64 | float64 | string |
+    time.Time |
+    []byte | []any | map[string]any |
+    Node | Relationship | Path | Point2D | Point3D
 }
 ```
 
@@ -187,8 +187,8 @@ An interface representing possible entities in a Neo4j query result. `Node`,
 
 ```go
 type Entity interface {
-	GetElementId() string
-	GetProperties() map[string]any
+  GetElementId() string
+  GetProperties() map[string]any
 }
 ```
 
@@ -198,9 +198,9 @@ A node in a Neo4j query result.
 
 ```go
 type Node struct {
-	ElementId string         `json:"ElementId"`
-	Labels    []string       `json:"Labels"`
-	Props     map[string]any `json:"Props"`
+  ElementId string         `json:"ElementId"`
+  Labels    []string       `json:"Labels"`
+  Props     map[string]any `json:"Props"`
 }
 ```
 
@@ -222,11 +222,11 @@ A relationship in a Neo4j query result.
 
 ```go
 type Relationship struct {
-	ElementId      string         `json:"ElementId"`
-	StartElementId string         `json:"StartElementId"`
-	EndElementId   string         `json:"EndElementId"`
-	Type           string         `json:"Type"`
-	Props          map[string]any `json:"Props"`
+  ElementId      string         `json:"ElementId"`
+  StartElementId string         `json:"StartElementId"`
+  EndElementId   string         `json:"EndElementId"`
+  Type           string         `json:"Type"`
+  Props          map[string]any `json:"Props"`
 }
 ```
 
@@ -256,8 +256,8 @@ A path in a Neo4j query result.
 
 ```go
 type Path struct {
-	Nodes         []Node         `json:"Nodes"`
-	Relationships []Relationship `json:"Relationships"`
+  Nodes         []Node         `json:"Nodes"`
+  Relationships []Relationship `json:"Relationships"`
 }
 ```
 
@@ -275,8 +275,8 @@ A value of a property in a Neo4j query result.
 
 ```go
 type PropertyValue interface {
-	bool | int64 | float64 | string |
-		time.Time | []byte | []any | Point2D | Point3D
+  bool | int64 | float64 | string |
+    time.Time | []byte | []any | Point2D | Point3D
 }
 ```
 
@@ -286,9 +286,9 @@ A 2D point in a Neo4j query result.
 
 ```go
 type Point2D struct {
-	X            float64
-	Y            float64
-	SpatialRefId uint32
+  X            float64
+  Y            float64
+  SpatialRefId uint32
 }
 ```
 
