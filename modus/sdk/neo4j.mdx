@@ -62,8 +62,8 @@ func ExecuteQuery(connectionName, query string, parameters map[string]any, opts 
 </ResponseField>
 
 <ResponseField name="opts" type="Neo4jOption" required>
-  Optional arguments to pass to the query. It is used to specify the database
-  name using the `WithDbName` option.
+  Optional arguments to pass to the query. Specify the database name using the
+  `WithDbName` option.
 </ResponseField>
 
 #### GetRecordValue
@@ -86,9 +86,9 @@ func GetRecordValue[T RecordValue](record *Record, key string) (T, error)
   The type to cast the value as.
 </ResponseField>
 
-#### Record.Get
+#### Get
 
-Get the value of a record at a given key as a string.
+Get the value of a record object at a given key as a string.
 
 ```go
 func (r *Record) Get(key string) (string, error)
@@ -98,9 +98,9 @@ func (r *Record) Get(key string) (string, error)
   The key of the value to get.
 </ResponseField>
 
-#### Record.AsMap
+#### AsMap
 
-Convert a record to a map.
+Convert a record object to a map.
 
 ```go
 func (r *Record) AsMap() map[string]string
@@ -182,8 +182,8 @@ type RecordValue interface {
 
 #### Entity
 
-An interface representing possible entities in a Neo4j query result. This
-interface is implemented by `Node`, `Relationship`, and `Path`.
+An interface representing possible entities in a Neo4j query result. `Node`,
+`Relationship`, and `Path` implement this interface.
 
 ```go
 type Entity interface {
