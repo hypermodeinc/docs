@@ -168,6 +168,180 @@ export function getPerson(name: string): Person {
 
 </CodeGroup>
 
+### Neo4j
+
+Neo4j is a graph database management system. Modus provides a simple way to
+query and mutate data in Neo4j with the `neo4j` APIs.
+
+Here is an example of mutating & fetching a person from a Neo4j database using
+the Modus SDK:
+
+```go Go
+package main
+
+import (
+  "github.com/hypermodeinc/modus/sdk/go/pkg/neo4j"
+)
+
+
+const host = "my-database"
+
+func CreatePeopleAndRelationships() (string, error) {
+  people := []map[string]any{
+    {"name": "Alice", "age": 42, "friends": []string{"Bob", "Peter", "Anna"}},
+    {"name": "Bob", "age": 19},
+    {"name": "Peter", "age": 50},
+    {"name": "Anna", "age": 30},
+  }
+
+  for _, person := range people {
+    _, err := neo4j.ExecuteQuery(host,
+      "MERGE (p:Person {name: $person.name, age: $person.age})",
+      map[string]any{"person": person})
+    if err != nil {
+      return "", err
+    }
+  }
+
+  for _, person := range people {
+    if person["friends"] != "" {
+      _, err := neo4j.ExecuteQuery(host, `
+        MATCH (p:Person {name: $person.name})
+                UNWIND $person.friends AS friend_name
+                MATCH (friend:Person {name: friend_name})
+                MERGE (p)-[:KNOWS]->(friend)
+      `, map[string]any{
+        "person": person,
+      })
+      if err != nil {
+        return "", err
+      }
+    }
+  }
+
+  return "People and relationships created successfully", nil
+}
+
+type Person struct {
+  Name string `json:"name"`
+  Age  int64  `json:"age"`
+}
+
+func GetAliceFriendsUnder40() ([]Person, error) {
+  response, err := neo4j.ExecuteQuery(host, `
+        MATCH (p:Person {name: $name})-[:KNOWS]-(friend:Person)
+        WHERE friend.age < $age
+        RETURN friend
+        `,
+    map[string]any{
+      "name": "Alice",
+      "age":  40,
+    },
+    neo4j.WithDbName("neo4j"),
+  )
+  if err != nil {
+    return nil, err
+  }
+
+  nodeRecords := make([]Person, len(response.Records))
+
+  for i, record := range response.Records {
+    node, _ := neo4j.GetRecordValue[neo4j.Node](record, "friend")
+    name, err := neo4j.GetProperty[string](&node, "name")
+    if err != nil {
+      return nil, err
+    }
+    age, err := neo4j.GetProperty[int64](&node, "age")
+    if err != nil {
+      return nil, err
+    }
+    nodeRecords[i] = Person{
+      Name: name,
+      Age:  age,
+    }
+  }
+
+  return nodeRecords, nil
+}
+```
+
+```ts AssemblyScript
+import { neo4j } from "@hypermode/modus-sdk-as"
+
+// This host name should match one defined in the modus.json manifest file.
+const hostName: string = "my-database"
+
+@json
+class Person {
+  name: string
+  age: i32
+  friends: string[] | null
+
+  constructor(name: string, age: i32, friends: string[] | null = null) {
+    this.name = name
+    this.age = age
+    this.friends = friends
+  }
+}
+
+export function CreatePeopleAndRelationships(): string {
+  const people: Person[] = [
+    new Person("Alice", 42, ["Bob", "Peter", "Anna"]),
+    new Person("Bob", 19),
+    new Person("Peter", 50),
+    new Person("Anna", 30),
+  ]
+
+  for (let i = 0; i < people.length; i++) {
+    const createPersonQuery = `
+      MATCH (p:Person {name: $person.name})
+      UNWIND $person.friends AS friend_name
+      MATCH (friend:Person {name: friend_name})
+      MERGE (p)-[:KNOWS]->(friend)
+    `
+    const peopleVars = new neo4j.Variables()
+    peopleVars.set("person", people[i])
+    const result = neo4j.executeQuery(hostName, createPersonQuery, peopleVars)
+    if (!result) {
+      throw new Error("Error creating person.")
+    }
+  }
+
+  return "People and relationships created successfully"
+}
+
+export function GetAliceFriendsUnder40(): Person[] {
+  const vars = new neo4j.Variables()
+  vars.set("name", "Alice")
+  vars.set("age", 40)
+
+  const query = `
+    MATCH (p:Person {name: $name})-[:KNOWS]-(friend:Person)
+        WHERE friend.age < $age
+        RETURN friend
+  `
+
+  const result = neo4j.executeQuery(hostName, query, vars)
+  if (!result) {
+    throw new Error("Error getting friends.")
+  }
+
+  const personNodes: Person[] = []
+
+  for (let i = 0; i < result.Records.length; i++) {
+    const record = result.Records[i]
+    const node = record.getValue<neo4j.Node>("friend")
+    const person = new Person(
+      node.getProperty<string>("name"),
+      node.getProperty<i32>("age"),
+    )
+    personNodes.push(person)
+  }
+
+  return personNodes
+}
+```
+
 ## Fetching from APIs
 
 ### HTTP
