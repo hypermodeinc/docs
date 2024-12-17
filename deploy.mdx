@@ -11,6 +11,37 @@ in the [app manifest](/modus/app-manifest).
   Preview environments for live validation of pull requests are in development.
 </Note>
 
+## Link your app to GitHub
+
+After you [create a Modus app](/modus/quickstart#building-your-first-modus-app),
+you can link the app to GitHub using the Hypermode Console or through the
+terminal with the Hyp CLI.
+
+<Tabs>
+  <Tab title="Hypermode Console">
+    Navigate to the [**Hypermode Console**](https://hypermode.com/go) and click **New Project**.
+    Connect your GitHub account when prompted and select the repository you want to import.
+    Click "Import" to deploy your app.
+
+    After project creation, Hypermode initiates a runtime for your app and establishes connections to any [**Hypermode-hosted models**](https://docs.hypermode.com/hosted-models).
+
+  </Tab>
+  <Tab title="Hyp CLI">
+    Install the Hyp CLI via npm.
+
+    ```bash
+    npm install -g @hypermode/hyp-cli
+    ```
+
+    Run the following command in your terminal to import and deploy your Modus app to Hypermode. This creates your Hypermode project automatically.
+
+    ```bash
+    hyp link
+    ```
+
+  </Tab>
+</Tabs>
+
 ## Build
 
 When you initialize your project with Hypermode, the Hyp CLI adds a GitHub
