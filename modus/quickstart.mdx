@@ -57,7 +57,7 @@ learn how to use the basic components of a Modus app and how to run it locally.
     View endpoint: http://localhost:8686/explorer
     ```
 
-    This interface allows you to interact with your app's API and test your functions.
+    The API Explorer interface allows you to interact with your app's API and test your functions.
 
      <img
        className="block"
@@ -172,6 +172,32 @@ learn how to use the basic components of a Modus app and how to run it locally.
 
       </Tab>
     </Tabs>
+    After adding your function, you can use the API Explorer interface to test the `GetRandomQuote` function.
+
+  </Step>
+  <Step title="Add a model">
+    Modus also supports AI models. You can define new models in your `modus.json` file. Let's add a new meta-llama model:
+
+      ```json
+        "models": {
+          "text-generator": {
+            "sourceModel": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+            "provider": "hugging-face",
+            "connection": "hypermode"
+          }
+        },
+      ```
+
+  </Step>
+  <Step title="Install the Hyp CLI and log in">
+    Next, install the Hyp CLI. This allows you to access hosted models on the Hypermode platform.
+
+    ```bash
+      npm install -g @hypermode/hyp-cli
+    ```
+
+    You can now use the `hyp login` command to log in to the Hyp CLI.
+    This links your project to the Hypermode platform, allowing you to leverage the model in your modus app.
 
   </Step>
 </Steps>
