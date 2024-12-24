@@ -11,10 +11,19 @@ in the [app manifest](/modus/app-manifest).
   Preview environments for live validation of pull requests are in development.
 </Note>
 
+## Link your project to GitHub
+
+After you push your Modus app to GitHub, you can link your Hypermode project to
+the repo through the Hyp CLI.
+
+```bash
+hyp link
+```
+
 ## Build
 
-When you initialize your project with Hypermode, the Hyp CLI adds a GitHub
-Actions workflow to your repo that builds your Modus app to Hypermode on commit.
+When you link your project with Hypermode, the Hyp CLI adds a GitHub Actions
+workflow to your repo that builds your Modus app to Hypermode on commit.
 
 ## Deploy
 
@@ -22,5 +31,5 @@ On successful build of your project, Hypermode automatically deploys your
 project changes. For [hosted models](/hosted-models), Hypermode creates a
 connection for your app to a shared or dedicated model instance.
 
-You can view the deployment status from the Deployment tab within the Hypermode
+You can view the deployment status from the Deployments tab within the Hypermode
 Console.
