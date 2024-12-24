@@ -11,16 +11,18 @@ in the [app manifest](/modus/app-manifest).
   Preview environments for live validation of pull requests are in development.
 </Note>
 
-## Link your app to GitHub
+## Link your project to GitHub
 
-After you
-[build your Modus app](/modus/quickstart#building-your-first-modus-app), you can
-[create a new project](/create-project) and link it to GitHub using the
-Hypermode Console or through the terminal with the Hyp CLI.
+After you push your Modus app to GitHub, you can link your Hypermode project
+to the repo through the Hyp CLI.
+
+```
+hyp link
+```
 
 ## Build
 
-When you initialize your project with Hypermode, the Hyp CLI adds a GitHub
+When you link your project with Hypermode, the Hyp CLI adds a GitHub
 Actions workflow to your repo that builds your Modus app to Hypermode on commit.
 
 ## Deploy
