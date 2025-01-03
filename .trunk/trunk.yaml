@@ -7,31 +7,31 @@ cli:
 plugins:
   sources:
     - id: trunk
-      ref: v1.6.5
+      ref: v1.6.6
       uri: https://github.com/trunk-io/plugins
 
 runtimes:
   enabled:
     - python@3.10.8
-    - node@18.12.1
+    - node@18.20.5
     - go@1.23.2
 
 lint:
   enabled:
-    - renovate@39.38.0
+    - renovate@39.90.2
     - golangci-lint@1.62.2
-    - vale@3.9.1
-    - actionlint@1.7.4
-    - checkov@3.2.327
+    - vale@3.9.3
+    - actionlint@1.7.5
+    - checkov@3.2.346
     - git-diff-check
     - markdownlint@0.43.0
     - oxipng@9.1.3
-    - prettier@3.4.1:
+    - prettier@3.4.2:
         packages:
           - "@mintlify/prettier-config@1.0.6"
     - svgo@3.3.2
-    - trivy@0.56.2
-    - trufflehog@3.84.2
+    - trivy@0.58.1
+    - trufflehog@3.88.0
     - yamllint@1.35.1
   ignore:
     - linters: [ALL]
