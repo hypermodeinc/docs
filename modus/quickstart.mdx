@@ -200,4 +200,166 @@ learn how to use the basic components of a Modus app and how to run it locally.
     This links your project to the Hypermode platform, allowing you to leverage the model in your modus app.
 
   </Step>
+  <Step title="Write a function to invoke the model">
+  Now we're ready to write a function to invoke the LLaMa model, hosted on Hypermode.
+
+First, we'll import some helpers for working with model from the Modus SDK. The
+LLaMa model conforms to the OpenAI model specification so we use the OpenAI chat
+interface.
+
+  <Tabs>
+      <Tab title="Go">
+
+      ```go quotes.go
+        import (
+          "strings"
+
+            "github.com/hypermodeinc/modus/sdk/go/pkg/models"
+            "github.com/hypermodeinc/modus/sdk/go/pkg/models/openai"
+
+        )
+        ```
+      </Tab>
+      <Tab title="AssemblyScript">
+
+      ```ts index.js
+      import { models } from "@hypermode/modus-sdk-as";
+
+      import {
+        OpenAIChatModel,
+        SystemMessage,
+        UserMessage,
+      } from "@hypermode/modus-sdk-as/models/openai/chat";
+      ```
+      </Tab>
+    </Tabs>
+
+Now we'll write a function that takes as input an instruction and a prompt.
+
+<Tabs>
+<Tab title="Go">
+
+```go quotes.go
+  // This function generates some text based on the instruction and prompt provided.
+  func GenerateText(instruction, prompt string) (string, error) {
+
+      // The imported ChatModel type follows the OpenAI Chat completion model input format.
+      model, err := models.GetModel[openai.ChatModel]("text-generator")
+      if err != nil {
+        return "", err
+      }
+
+      // We'll start by creating an input object using the instruction and prompt provided.
+      input, err := model.CreateInput(
+        openai.NewSystemMessage(instruction),
+        openai.NewUserMessage(prompt),
+        // ... if we wanted to add more messages, we could do so here.
+      )
+      if err != nil {
+        return "", err
+      }
+
+      // This is one of many optional parameters available for the OpenAI chat model.
+      input.Temperature = 0.7
+
+      // Here we invoke the model with the input we created.
+      output, err := model.Invoke(input)
+      if err != nil {
+        return "", err
+      }
+
+      // The output is also specific to the ChatModel interface.
+      // Here we return the trimmed content of the first choice.
+      return strings.TrimSpace(output.Choices[0].Message.Content), nil
+
+  }
+```
+
+</Tab>
+
+<Tab title="AssemblyScript">
+
+```ts index.ts
+/**
+ * This function generates some text based on the instruction and prompt provided.
+ */
+export function generateText(instruction: string, prompt: string): string {
+  // The imported OpenAIChatModel interface follows the OpenAI chat completion model input format.
+  const model = models.getModel<OpenAIChatModel>("text-generator")
+
+  // We'll start by creating an input object using the instruction and prompt provided.
+  const input = model.createInput([
+    new SystemMessage(instruction),
+    new UserMessage(prompt),
+    // ... if we wanted to add more messages, we could do so here.
+  ])
+
+  // This is one of many optional parameters available for the OpenAI chat model.
+  input.temperature = 0.7
+
+  // Here we invoke the model with the input we created.
+  const output = model.invoke(input)
+
+  // The output is also specific to the OpenAIChatModel interface.
+  // Here we return the trimmed content of the first choice.
+  return output.choices[0].message.content.trim()
+}
+```
+
+</Tab>
+</Tabs>
+
+  </Step>
+
+<Step title="Query model in API explorer">
+  <img
+    className="block"
+    src="../images/api-explorer.png"
+    alt="API Graphical Interface."
+  />
+</Step>
+
+  <Step title="Chain together data and LLM call">
+
+  <Tabs>
+  <Tab title="Go">
+
+    ```go quotes.go
+    // Use an AI model to generate quote author information
+    func FetchQuoteAndAuthorInfo() (quote *Quote, info *string, err error) {
+      quote, err = GetRandomQuote()
+      if err != nil {
+        return nil, nil, err
+      }
+
+      info, err = GenerateText(fmt.Sprintf("Give me a information about %s, limit it to 1 sentence.", quote.Author))
+      if err != nil {
+        return nil, nil, err
+      }
+
+      return quote, info, nil
+    }
+    ```
+
+  </Tab>
+
+  <Tab title="AssemblyScript">
+
+```ts index.ts
+// TODO: write func
+```
+
+  </Tab>
+  </Tabs>
+  </Step>
+
+  <Step title="Query in API explorer">
+  TODO: query in API explorer
+
+  <img
+       className="block"
+       src="../images/api-explorer.png"
+       alt="API Graphical Interface."
+     />
+  </Step>
 </Steps>
