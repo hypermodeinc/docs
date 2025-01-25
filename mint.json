@@ -92,6 +92,10 @@
       ]
     },
     {
+      "group": "How-To Guides",
+      "pages": ["modus/deepseek-model"]
+    },
+    {
       "group": "API Reference",
       "pages": [
         "modus/sdk/collections",
