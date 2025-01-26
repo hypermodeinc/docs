@@ -36,6 +36,7 @@ inferencing
 LLM
 [Mm]odus
 namespace
+namespaces
 nnClassify
 npm
 NQuads
@@ -57,3 +58,7 @@ URL|url
 urql
 UUID
 [Dd]eserialize
+upsertBatch
+computeDistance
+getNamespaces
+timeLog
