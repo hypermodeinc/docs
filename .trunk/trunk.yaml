@@ -18,11 +18,11 @@ runtimes:
 
 lint:
   enabled:
-    - renovate@39.109.0
+    - renovate@39.128.0
     - golangci-lint@1.63.4
-    - vale@3.9.3
-    - actionlint@1.7.6
-    - checkov@3.2.353
+    - vale@3.9.4
+    - actionlint@1.7.7
+    - checkov@3.2.357
     - git-diff-check
     - markdownlint@0.43.0
     - oxipng@9.1.3

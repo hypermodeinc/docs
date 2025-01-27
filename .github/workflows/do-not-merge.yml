@@ -6,7 +6,9 @@ on:
       - main
     types:
       - opened
+      - reopened
       - ready_for_review
+      - review_requested
       - labeled
       - unlabeled
 
