@@ -43,6 +43,12 @@
       "url": "modus"
     }
   ],
+  "redirects": [
+    {
+      "source": "/modus/sdk/:slug*",
+      "destination": "/modus/sdk/assemblyscript/:slug*"
+    }
+  ],
   "navigation": [
     {
       "group": "Getting Started",
@@ -98,14 +104,64 @@
     {
       "group": "API Reference",
       "pages": [
-        "modus/sdk/collections",
-        "modus/sdk/console",
-        "modus/sdk/dgraph",
-        "modus/sdk/graphql",
-        "modus/sdk/http",
-        "modus/sdk/neo4j",
-        "modus/sdk/models",
-        "modus/sdk/postgresql"
+        {
+          "group": "AssemblyScript",
+          "pages": [
+            {
+              "group": "Client APIs",
+              "pages": [
+                "modus/sdk/assemblyscript/graphql",
+                "modus/sdk/assemblyscript/http",
+                "modus/sdk/assemblyscript/models"
+              ]
+            },
+            {
+              "group": "Database APIs",
+              "pages": [
+                "modus/sdk/assemblyscript/dgraph",
+                "modus/sdk/assemblyscript/neo4j",
+                "modus/sdk/assemblyscript/postgresql"
+              ]
+            },
+            {
+              "group": "System APIs",
+              "pages": ["modus/sdk/assemblyscript/console"]
+            },
+            {
+              "group": "Storage APIs",
+              "pages": ["modus/sdk/assemblyscript/collections"]
+            }
+          ]
+        },
+        {
+          "group": "Go",
+          "pages": [
+            {
+              "group": "Client APIs",
+              "pages": [
+                "modus/sdk/go/graphql",
+                "modus/sdk/go/http",
+                "modus/sdk/go/models"
+              ]
+            },
+            {
+              "group": "Database APIs",
+              "pages": [
+                "modus/sdk/go/dgraph",
+                "modus/sdk/go/neo4j",
+                "modus/sdk/go/postgresql"
+              ]
+            },
+            {
+              "group": "System APIs",
+              "pages": ["modus/sdk/go/console"]
+            },
+            {
+              "group": "Storage APIs",
+              "pages": ["modus/sdk/go/collections"]
+            }
+          ]
+        }
       ]
     },
     {
