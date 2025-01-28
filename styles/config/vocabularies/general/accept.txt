@@ -2,6 +2,7 @@ agentic
 alterSchema
 Anthropic
 APIs
+AssemblyScript
 AWS
 boolean
 CLI|cli

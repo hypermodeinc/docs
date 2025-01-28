@@ -1,0 +1,34 @@
+export const SdkHeader = ({language, feature}) => (
+<Note>
+  <p>While each Modus SDK offers similar functionality, the APIs and usage may vary between languages.</p>
+  <p>Modus {feature} APIs are documented on the following pages:</p>
+  <ul>
+  {(() =>{
+    const languages = ["AssemblyScript", "Go"];
+    return languages.map((lang) => {
+      if (lang === language) {
+        return (
+          <li><b>{lang} {feature} APIs</b> (this page)</li>
+        )
+      } else {
+        return (
+          <li><a href={`../${lang.toLowerCase()}/${feature.toLowerCase()}`}>{lang} {feature} APIs</a></li>
+        )
+      }
+    })
+  })()}
+  </ul>
+</Note>
+)
+
+export const SdkTip = () => (
+<Tip>
+  <p>
+    We're constantly introducing new APIs through ongoing development with early users.
+    {" "}
+    <a href="https://github.com/hypermodeinc/modus/issues" target="_blank">Open an issue</a>
+    {" "}
+    if you have ideas on what would make Modus even more powerful for your next app!
+  </p>
+</Tip>
+)
