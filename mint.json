@@ -111,8 +111,7 @@
               "group": "Client APIs",
               "pages": [
                 "modus/sdk/assemblyscript/graphql",
-                "modus/sdk/assemblyscript/http",
-                "modus/sdk/assemblyscript/models"
+                "modus/sdk/assemblyscript/http"
               ]
             },
             {
@@ -124,12 +123,16 @@
               ]
             },
             {
-              "group": "System APIs",
-              "pages": ["modus/sdk/assemblyscript/console"]
+              "group": "Inference APIs",
+              "pages": ["modus/sdk/assemblyscript/models"]
             },
             {
               "group": "Storage APIs",
               "pages": ["modus/sdk/assemblyscript/collections"]
+            },
+            {
+              "group": "System APIs",
+              "pages": ["modus/sdk/assemblyscript/console"]
             }
           ]
         },
@@ -138,11 +141,7 @@
           "pages": [
             {
               "group": "Client APIs",
-              "pages": [
-                "modus/sdk/go/graphql",
-                "modus/sdk/go/http",
-                "modus/sdk/go/models"
-              ]
+              "pages": ["modus/sdk/go/graphql", "modus/sdk/go/http"]
             },
             {
               "group": "Database APIs",
@@ -153,12 +152,16 @@
               ]
             },
             {
-              "group": "System APIs",
-              "pages": ["modus/sdk/go/console"]
+              "group": "Inference APIs",
+              "pages": ["modus/sdk/go/models"]
             },
             {
               "group": "Storage APIs",
               "pages": ["modus/sdk/go/collections"]
+            },
+            {
+              "group": "System APIs",
+              "pages": ["modus/sdk/go/console"]
             }
           ]
         }
