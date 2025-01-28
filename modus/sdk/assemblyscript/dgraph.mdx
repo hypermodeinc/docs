@@ -14,17 +14,9 @@ database.
 
 To begin, import the `dgraph` namespace from the SDK:
 
-<CodeGroup>
-
-```go Go
-import github.com/hypermodeinc/modus/sdk/go/pkg/dgraph
-```
-
-```ts AssemblyScript
+```ts
 import { dgraph } from "@hypermode/modus-sdk-as"
 ```
-
-</CodeGroup>
 
 ## Dgraph APIs
 
@@ -40,8 +32,8 @@ The APIs in the `dgraph` namespace are below, organized by category.
 
 Execute a Dgraph query or mutation using a Dgraph Request object.
 
-```go
-function execute(connectionName: string, request: Request): Response;
+```ts
+function execute(connectionName: string, request: Request): Response
 ```
 
 <ResponseField name="connectionName" type="string" required>
@@ -58,8 +50,8 @@ function execute(connectionName: string, request: Request): Response;
 
 Alter the schema of a Dgraph database.
 
-```go
-function alterSchema(connectionName: string, schema: string): string;
+```ts
+function alterSchema(connectionName: string, schema: string): string
 ```
 
 <ResponseField name="connectionName" type="string" required>
@@ -75,8 +67,8 @@ function alterSchema(connectionName: string, schema: string): string;
 
 Drop an attribute from a Dgraph schema.
 
-```go
-function dropAttr(connectionName: string, attr: string): string;
+```ts
+function dropAttr(connectionName: string, attr: string): string
 ```
 
 <ResponseField name="connectionName" type="string" required>
@@ -92,8 +84,8 @@ function dropAttr(connectionName: string, attr: string): string;
 
 Drop all data from a Dgraph database.
 
-```go
-function dropAll(connectionName: string): string;
+```ts
+function dropAll(connectionName: string): string
 ```
 
 <ResponseField name="connectionName" type="string" required>
@@ -107,11 +99,11 @@ function dropAll(connectionName: string): string;
 
 A Dgraph request object, used to execute queries and mutations.
 
-```go
+```ts
 class Request {
-  constructor(Query: Query | null = null, Mutations: Mutation[] | null = null);
-  query: Query = new Query();
-  mutations: Mutation[] = [];
+  constructor(Query: Query | null = null, Mutations: Mutation[] | null = null)
+  query: Query = new Query()
+  mutations: Mutation[] = []
 }
 ```
 
@@ -135,11 +127,11 @@ default to `null`.
 
 A Dgraph query object, used to execute queries.
 
-```go
+```ts
 class Query {
-  constructor(query: string = "", variables: Variables = new Variables());
-  query: string = "";
-  variables: Map<string, string> = new Map<string, string>();
+  constructor(query: string = "", variables: Variables = new Variables())
+  query: string = ""
+  variables: Map<string, string> = new Map<string, string>()
 }
 ```
 
@@ -161,10 +153,10 @@ class Query {
 
 A Variables object used to set query variables in a Dgraph query.
 
-```go
+```ts
 class Variables {
-  public set<T>(name: string, value: T): void;
-  public toMap(): Map<string, string>;
+  public set<T>(name: string, value: T): void
+  public toMap(): Map<string, string>
 }
 ```
 
@@ -181,7 +173,7 @@ class Variables {
 
 A Dgraph mutation object, used to execute mutations.
 
-```go
+```ts
 class Mutation {
   constructor(
     public setJson: string = "",

@@ -13,17 +13,9 @@ The Modus Collection APIs allow you to add vector search within your functions.
 
 To begin, import the `collections` namespace from the SDK:
 
-<CodeGroup>
-
-```go Go
-import github.com/hypermodeinc/modus/sdk/go/pkg/collections
-```
-
-```ts AssemblyScript
+```ts
 import { collections } from "@hypermode/modus-sdk-as"
 ```
-
-</CodeGroup>
 
 ## Collections APIs
 
@@ -44,7 +36,7 @@ Inserts or updates an item in a collection.
   not, it creates a new one.
 </Note>
 
-```go
+```ts
 collections.upsert(
   collection: string,
   key: string | null,
@@ -86,7 +78,7 @@ Inserts or updates a batch of items into a collection.
   with the new text.
 </Note>
 
-```go
+```ts
 collections.upsertBatch(
   collection: string,
   keys: string[] | null,
@@ -123,7 +115,7 @@ collections.upsertBatch(
 
 Removes an item from the collection.
 
-```go
+```ts
 collections.remove(
   collection: string,
   key: string,
@@ -157,7 +149,7 @@ useful for finding items that match a search query based on semantic meaning.
   for the text used when searching the collection.
 </Note>
 
-```go
+```ts
 collections.search(
   collection: string,
   searchMethod: string,
@@ -204,7 +196,7 @@ requiring precise similarity calculations between pre-computed embeddings.
   for the vector used when searching the collection.
 </Note>
 
-```go
+```ts
 collections.searchByVector(
   collection: string,
   searchMethod: string,
@@ -244,7 +236,7 @@ collections.searchByVector(
 
 Classify an item in the collection using previous vectors' labels.
 
-```go
+```ts
   collections.nnClassify(
   collection: string,
   searchMethod: string,
@@ -276,7 +268,7 @@ Classify an item in the collection using previous vectors' labels.
 Computes distance between two keys in a collection using a search method's
 embedder.
 
-```go
+```ts
 collections.computeDistance(
   collection: string,
   searchMethod: string,
@@ -308,7 +300,7 @@ collections.computeDistance(
 
 Gets an item's text from a collection, give the item's key.
 
-```go
+```ts
 collections.getText(
   collection: string,
   key: string,
@@ -335,7 +327,7 @@ collections.getText(
 Get all items from a collection. The result is a map of key to text for all
 items in the collection.
 
-```go
+```ts
 collections.getTexts(
   collection: string,
   namespace: string = "",
@@ -356,7 +348,7 @@ collections.getTexts(
 
 Get all namespaces in a collection.
 
-```go
+```ts
 collections.getNamespaces(
   collection: string,
 ): string[]
@@ -371,7 +363,7 @@ collections.getNamespaces(
 
 Get the vector for an item in a collection.
 
-```go
+```ts
 collections.getVector(
   collection: string,
   searchMethod: string,
@@ -402,7 +394,7 @@ collections.getVector(
 
 Get the labels for an item in a collection.
 
-```go
+```ts
 collections.getLabels(
   collection: string,
   key: string,
@@ -433,7 +425,7 @@ resource-intensive, use it when necessary, for example after you have updated
 the method for embedding calculation and want to re-compute the embeddings for
 existing data in the collection.
 
-```go
+```ts
 collections.recomputeSearchMethod(
   collection: string,
   searchMethod: string,
@@ -458,14 +450,14 @@ collections.recomputeSearchMethod(
 
 #### CollectionMutationResult
 
-```go
+```ts
 class CollectionMutationResult {
-  collection: string;
-  status: CollectionStatus;
-  error: string;
-  isSuccessful: bool;
-  operation: string;
-  keys: string[];
+  collection: string
+  status: CollectionStatus
+  error: string
+  isSuccessful: bool
+  operation: string
+  keys: string[]
 }
 ```
 
@@ -498,14 +490,14 @@ Represents the result of a mutation operation on a collection.
 
 #### CollectionSearchResult
 
-```go
+```ts
 class CollectionSearchResult {
-  collection: string;
-  status: CollectionStatus;
-  error: string;
-  isSuccessful: bool;
-  searchMethod: string;
-  objects: CollectionSearchResultObject[];
+  collection: string
+  status: CollectionStatus
+  error: string
+  isSuccessful: bool
+  searchMethod: string
+  objects: CollectionSearchResultObject[]
 }
 ```
 
@@ -538,14 +530,14 @@ Represents the result of a search operation on a collection.
 
 #### CollectionSearchResultObject
 
-```go
+```ts
 class CollectionSearchResultObject {
-  namespace: string;
-  key: string;
-  text: string;
-  labels: string[];
-  distance: f64;
-  score: f64;
+  namespace: string
+  key: string
+  text: string
+  labels: string[]
+  distance: f64
+  score: f64
 }
 ```
 
@@ -573,15 +565,15 @@ Represents an object in the search results.
 
 #### CollectionClassificationResult
 
-```go
+```ts
 class CollectionClassificationResult {
-  collection: string;
-  status: CollectionStatus;
-  error: string;
-  isSuccessful: bool;
-  searchMethod: string;
-  labelsResult: CollectionClassificationLabelObject[];
-  cluster: CollectionClassificationResultObject[];
+  collection: string
+  status: CollectionStatus
+  error: string
+  isSuccessful: bool
+  searchMethod: string
+  labelsResult: CollectionClassificationLabelObject[]
+  cluster: CollectionClassificationResultObject[]
 }
 ```
 
@@ -618,10 +610,10 @@ Represents the result of a classification operation on a collection.
 
 #### CollectionClassificationLabelObject
 
-```go
+```ts
 class CollectionClassificationLabelObject {
-  label: string;
-  confidence: f64;
+  label: string
+  confidence: f64
 }
 ```
 
@@ -637,12 +629,12 @@ Represents a classification label.
 
 #### CollectionClassificationResultObject
 
-```go
+```ts
 class CollectionClassificationResultObject {
-  key: string;
-  labels: string[];
-  distance: f64;
-  score: f64;
+  key: string
+  labels: string[]
+  distance: f64
+  score: f64
 }
 ```
 
@@ -666,7 +658,7 @@ Represents an object in the classification results.
 
 #### CollectionStatus
 
-```go
+```ts
 enum CollectionStatus {
   Success = "success";
   Error = "error";
@@ -685,14 +677,14 @@ The status of a collection operation.
 
 #### SearchMethodMutationResult
 
-```go
+```ts
 class SearchMethodMutationResult {
-  collection: string;
-  status: CollectionStatus;
-  error: string;
-  isSuccessful: bool;
-  operation: string;
-  searchMethod: string;
+  collection: string
+  status: CollectionStatus
+  error: string
+  isSuccessful: bool
+  operation: string
+  searchMethod: string
 }
 ```
 

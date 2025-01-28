@@ -14,17 +14,9 @@ database.
 
 To begin, import the `neo4j` namespace from the SDK:
 
-<CodeGroup>
-
-```ts AssemblyScript
+```ts
 import { neo4j } from "@hypermode/modus-sdk-as"
 ```
-
-```go Go
-import github.com/hypermodeinc/modus/sdk/go/pkg/neo4j
-```
-
-</CodeGroup>
 
 ## Neo4j APIs
 
@@ -40,7 +32,7 @@ The APIs in the `neo4j` namespace are below, organized by category.
 
 Execute a Neo4j query or mutation using a Neo4j query and parameters.
 
-```go
+```ts
 func ExecuteQuery(connectionName, query string, parameters map[string]any, opts ...Neo4jOption) (*EagerResult, error)
 ```
 
@@ -66,7 +58,7 @@ func ExecuteQuery(connectionName, query string, parameters map[string]any, opts 
 
 Get the value of a record at a given key, and cast as a type.
 
-```go
+```ts
 func GetRecordValue[T RecordValue](record *Record, key string) (T, error)
 ```
 
@@ -86,7 +78,7 @@ func GetRecordValue[T RecordValue](record *Record, key string) (T, error)
 
 Get the value of a record object at a given key as a string.
 
-```go
+```ts
 func (r *Record) Get(key string) (string, error)
 ```
 
@@ -98,7 +90,7 @@ func (r *Record) Get(key string) (string, error)
 
 Convert a record object to a map.
 
-```go
+```ts
 func (r *Record) AsMap() map[string]string
 ```
 
@@ -107,7 +99,7 @@ func (r *Record) AsMap() map[string]string
 Get the value of an `Entity` (`Node`, `Path`, or `Relationship`) property, and
 cast as a type.
 
-```go
+```ts
 func GetProperty[T PropertyValue](e Entity, key string) (T, error)
 ```
 
@@ -129,7 +121,7 @@ func GetProperty[T PropertyValue](e Entity, key string) (T, error)
 
 The result of a Neo4j query or mutation.
 
-```go
+```ts
 type EagerResult struct {
   Keys    []string
   Records []*Record
@@ -148,7 +140,7 @@ type EagerResult struct {
 
 A record in a Neo4j query result.
 
-```go
+```ts
 type Record struct {
   Values []string
   Keys   []string
@@ -167,7 +159,7 @@ type Record struct {
 
 A value of a record in a Neo4j query result.
 
-```go
+```ts
 type RecordValue interface {
   bool | int64 | float64 | string |
     time.Time |
@@ -181,7 +173,7 @@ type RecordValue interface {
 An interface representing possible entities in a Neo4j query result. `Node`,
 `Relationship`, and `Path` implement this interface.
 
-```go
+```ts
 type Entity interface {
   GetElementId() string
   GetProperties() map[string]any
@@ -192,7 +184,7 @@ type Entity interface {
 
 A node in a Neo4j query result.
 
-```go
+```ts
 type Node struct {
   ElementId string         `json:"ElementId"`
   Labels    []string       `json:"Labels"`
@@ -216,7 +208,7 @@ type Node struct {
 
 A relationship in a Neo4j query result.
 
-```go
+```ts
 type Relationship struct {
   ElementId      string         `json:"ElementId"`
   StartElementId string         `json:"StartElementId"`
@@ -250,7 +242,7 @@ type Relationship struct {
 
 A path in a Neo4j query result.
 
-```go
+```ts
 type Path struct {
   Nodes         []Node         `json:"Nodes"`
   Relationships []Relationship `json:"Relationships"`
@@ -269,7 +261,7 @@ type Path struct {
 
 A value of a property in a Neo4j query result.
 
-```go
+```ts
 type PropertyValue interface {
   bool | int64 | float64 | string |
     time.Time | []byte | []any | Point2D | Point3D
@@ -280,7 +272,7 @@ type PropertyValue interface {
 
 A 2D point in a Neo4j query result.
 
-```go
+```ts
 type Point2D struct {
   X            float64
   Y            float64
@@ -304,7 +296,7 @@ type Point2D struct {
 
 A 3D point in a Neo4j query result.
 
-```go
+```ts
 type Point3D struct {
   X            float64
   Y            float64

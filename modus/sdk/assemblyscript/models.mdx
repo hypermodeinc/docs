@@ -35,13 +35,13 @@ To begin, import the `models` namespace from the SDK:
 
 <Tabs>
   <Tab title="Go">
-    ```go
+    ```ts
     import github.com/hypermodeinc/modus/sdk/go/pkg/models
     ```
 
     You'll also need to import one or more classes for the model you are working with. For example:
 
-    ```go
+    ```ts
     import github.com/hypermodeinc/modus/sdk/go/pkg/models/experimental
     ```
 
@@ -79,7 +79,7 @@ The APIs in the `models` namespace are below, organized by category.
 
 Get a model instance by name and type.
 
-    ```go
+    ```ts
     models.getModel<T>(modelName: string): T
     ```
 
@@ -97,7 +97,7 @@ Get a model instance by name and type.
 
 #### Model
 
-    ```go
+    ```ts
     abstract class Model<TInput, TOutput> {
       debug: boolean;
       info: ModelInfo;
@@ -144,7 +144,7 @@ The base class for all models that Hypermode functions can invoke.
 
 #### ModelInfo
 
-    ```go
+    ```ts
     class ModelInfo {
       readonly name: string;
       readonly fullName: string;

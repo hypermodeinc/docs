@@ -14,17 +14,9 @@ GraphQL endpoint.
 
 To begin, import the `graphql` namespace from the SDK:
 
-<CodeGroup>
-
-```go Go
-import github.com/hypermodeinc/modus/sdk/go/pkg/graphql
-```
-
-```ts AssemblyScript
+```ts
 import { http } from "@hypermode/modus-sdk-as"
 ```
-
-</CodeGroup>
 
 ## GraphQL APIs
 
@@ -39,9 +31,9 @@ The APIs in the `graphql` namespace are below, organized by category.
 #### execute
 
 Execute a GraphQL statement to call a query or apply mutation against a GraphQL
-API endpoint.
+endpoint.
 
-```go
+```ts
 graphql.execute<T> (
   connection: string,
   statement: string,
@@ -93,10 +85,10 @@ See the details of the [`Variables`](#variables) object for more information.
 
 #### Variables
 
-```go
+```ts
 class Variables {
-  public set(name: string, value: any): void;
-  public toJSON(): string;
+  public set(name: string, value: any): void
+  public toJSON(): string
 }
 ```
 
@@ -133,10 +125,10 @@ numbers, boolean values, arrays, maps, and custom objects decorated with
 
 #### Response
 
-```go
+```ts
 class Response<T> {
-  errors: ErrorResult[] | null;
-  data: T | null;
+  errors: ErrorResult[] | null
+  data: T | null
 }
 ```
 
@@ -162,11 +154,11 @@ is absent due to errors, this field is `null`.
 
 #### ErrorResult
 
-```go
+```ts
 class ErrorResult {
-  message: string;
-  locations: CodeLocation[] | null;
-  path: string[] | null;
+  message: string
+  locations: CodeLocation[] | null
+  path: string[] | null
 }
 ```
 
@@ -190,10 +182,10 @@ Each item in the array represents a segment of the path.
 
 #### CodeLocation
 
-```go
+```ts
 class CodeLocation {
-  line: u32;
-  column: u32;
+  line: u32
+  column: u32
 }
 ```
 

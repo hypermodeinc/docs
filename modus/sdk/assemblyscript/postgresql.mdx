@@ -13,17 +13,9 @@ PostgreSQL-compatible database platform.
 
 To begin, import the `postgresql` namespace from the SDK:
 
-<CodeGroup>
-
-```go Go
-import github.com/hypermodeinc/modus/sdk/go/pkg/postgresql
-```
-
-```ts AssemblyScript
+```ts
 import { postgresql } from "@hypermode/modus-sdk-as"
 ```
-
-</CodeGroup>
 
 ## PostgreSQL APIs
 
@@ -49,7 +41,7 @@ statements that don't return data.
   multiple rows).
 </Note>
 
-```go
+```ts
 function postgresql.execute (
   connectionName: string,
   statement: string,
@@ -85,7 +77,7 @@ Execute a SQL statement against a PostgreSQL database, returning a set of rows.
 In the results, each row converts to an object of type `T`, with fields matching
 the column names.
 
-```go
+```ts
 function postgresql.query<T>(
   connectionName: string,
   statement: string,
@@ -138,7 +130,7 @@ Execute a SQL statement against a PostgreSQL database, returning a single scalar
 value. For example, the result could be a count, sum, or average, or it could be
 an identifier.
 
-```go
+```ts
 function postgresql.queryScalar<T> (
   connectionName: string,
   statement: string,
@@ -178,10 +170,10 @@ See the details of the [`Params`](#params) object for more information.
 
 #### Params
 
-```go
+```ts
 class Params {
-  public push(value: any): void;
-  public toJSON(): string;
+  public push(value: any): void
+  public toJSON(): string
 }
 ```
 
@@ -223,10 +215,10 @@ numbers, boolean values, arrays, maps, and custom objects decorated with
 
 #### Response
 
-```go
+```ts
 class Response {
-  error: string | null;
-  rowsAffected: u32;
+  error: string | null
+  rowsAffected: u32
 }
 ```
 
@@ -244,11 +236,11 @@ the base class for `QueryResponse<T>` and `ScalarResponse<T>`.
 
 #### QueryResponse
 
-```go
+```ts
 class QueryResponse<T> {
-  error: string | null;
-  rowsAffected: u32;
-  rows: T[];
+  error: string | null
+  rowsAffected: u32
+  rows: T[]
 }
 ```
 
@@ -270,11 +262,11 @@ Represents the response from a [`query`](#query) operation.
 
 #### ScalarResponse
 
-```go
+```ts
 class ScalarResponse<T> {
-  error: string | null;
-  rowsAffected: u32;
-  value: T;
+  error: string | null
+  rowsAffected: u32
+  value: T
 }
 ```
 
@@ -295,7 +287,7 @@ Represents the response from a [`queryScalar`](#queryscalar) operation.
 
 #### Point
 
-```go
+```ts
 class Point {
  x: f64,
  y: f64,
@@ -320,7 +312,7 @@ serializes to and from PostgreSQL's point type, in (x, y) order.
 
 #### Location
 
-```go
+```ts
 class Location {
  longitude: f64,
  latitude: f64,

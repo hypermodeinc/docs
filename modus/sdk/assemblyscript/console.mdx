@@ -39,7 +39,7 @@ The APIs in the `console` namespace are below, organized by category.
 
 Asserts that a condition is true, and logs an error if it's not.
 
-```go
+```ts
 console.assert(assertion: any, message?: string): void
 ```
 
@@ -58,7 +58,7 @@ console.assert(assertion: any, message?: string): void
 
 Generate a log message, with no particular logging level.
 
-```go
+```ts
 console.log(message?: string): void
 ```
 
@@ -70,7 +70,7 @@ console.log(message?: string): void
 
 Generate a log message with the "debug" logging level.
 
-```go
+```ts
 console.debug(message?: string): void
 ```
 
@@ -82,7 +82,7 @@ console.debug(message?: string): void
 
 Generate a log message with the "info" logging level.
 
-```go
+```ts
 console.info(message?: string): void
 ```
 
@@ -94,7 +94,7 @@ console.info(message?: string): void
 
 Generate a log message with the "warning" logging level.
 
-```go
+```ts
 console.warn(message?: string): void
 ```
 
@@ -106,7 +106,7 @@ console.warn(message?: string): void
 
 Generate a log message with the "error" logging level.
 
-```go
+```ts
 console.error(message?: string): void
 ```
 
@@ -120,7 +120,7 @@ console.error(message?: string): void
 
 Starts a new timer using the specified label.
 
-```go
+```ts
 console.time(label?: string): void
 ```
 
@@ -132,7 +132,7 @@ console.time(label?: string): void
 
 Logs the current value of a timer previously started with `console.time`.
 
-```go
+```ts
 console.timeLog(label?: string): void
 ```
 
@@ -145,7 +145,7 @@ console.timeLog(label?: string): void
 Logs the current value of a timer previously started with `console.time`, and
 discards the timer.
 
-```go
+```ts
 console.timeEnd(label?: string): void
 ```
 

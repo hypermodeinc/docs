@@ -29,17 +29,9 @@ repository, and aren't visible or accessible from your functions code.
 
 To begin, import the `http` namespace from the SDK:
 
-<CodeGroup>
-
-```go Go
-import github.com/hypermodeinc/modus/sdk/go/pkg/http
-```
-
-```ts AssemblyScript
+```ts
 import { http } from "@hypermode/modus-sdk-as"
 ```
-
-</CodeGroup>
 
 ## HTTP APIs
 
@@ -57,7 +49,7 @@ Invoke an HTTP endpoint to retrieve data or trigger external action.
 
 Returns a [`Response`](#response) object with the HTTP response data.
 
-```go
+```ts
 http.fetch(
   requestOrUrl: string | Request,
   options: RequestOptions = new RequestOptions(),
@@ -85,12 +77,12 @@ than those defined in the manifest entry of the connection.
 
 #### Content
 
-```go
+```ts
 class Content {
-  static from(value: any): Content;
-  readonly data: ArrayBuffer;
-  text(): string;
-  json<T>(): T;
+  static from(value: any): Content
+  readonly data: ArrayBuffer
+  text(): string
+  json<T>(): T
 }
 ```
 
@@ -116,10 +108,10 @@ Represents content used in the body of an HTTP request or response.
 
 #### Header
 
-```go
+```ts
 class Header {
-  name: string;
-  values: string[];
+  name: string
+  values: string[]
 }
 ```
 
@@ -136,14 +128,14 @@ Represents an HTTP request or response header.
 
 #### Headers
 
-```go
+```ts
 class Headers {
   static from(
     value: string[][] | Map<string, string> | Map<string, string[]>,
-  ): Headers;
-  append(name: string, value: string): void;
-  entries(): string[][];
-  get(name: string): string | null;
+  ): Headers
+  append(name: string, value: string): void
+  entries(): string[][]
+  get(name: string): string | null
 }
 ```
 
@@ -179,16 +171,16 @@ The `value` object must be one of the following types:
 
 #### Request
 
-```go
+```ts
 class Request {
-  constructor(url: string, options?: RequestOptions);
-  static clone(request: Request, options: RequestOptions): Request;
-  readonly url: string;
-  readonly method: string;
-  readonly headers: Headers;
-  readonly body: ArrayBuffer;
-  text(): string;
-  json<T>(): T;
+  constructor(url: string, options?: RequestOptions)
+  static clone(request: Request, options: RequestOptions): Request
+  readonly url: string
+  readonly method: string
+  readonly headers: Headers
+  readonly body: ArrayBuffer
+  text(): string
+  json<T>(): T
 }
 ```
 
@@ -240,11 +232,11 @@ that's used to set the HTTP method, headers, and body if needed.
 
 #### RequestOptions
 
-```go
+```ts
 class RequestOptions {
-  method: string | null;
-  headers: Headers;
-  body: Content | null;
+  method: string | null
+  headers: Headers
+  body: Content | null
 }
 ```
 
@@ -273,15 +265,15 @@ Options for the HTTP request.
 
 #### Response
 
-```go
+```ts
 class Response {
-  readonly status: u16;
-  readonly statusText: string;
-  readonly headers: Headers;
-  readonly body: ArrayBuffer;
-  readonly ok: bool;
-  text(): string;
-  json<T>(): T;
+  readonly status: u16
+  readonly statusText: string
+  readonly headers: Headers
+  readonly body: ArrayBuffer
+  readonly ok: bool
+  text(): string
+  json<T>(): T
 }
 ```
 
