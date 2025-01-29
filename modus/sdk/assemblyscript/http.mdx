@@ -12,10 +12,12 @@ endpoint. It's similar to the HTTP
 [`fetch`](https://developer.mozilla.org/docs/Web/API/Fetch_API) API used in
 JavaScript, but with some modifications to work with Hypermode Functions.
 
-<Note>
-  As a security measure, you can only call HTTP endpoints that you
-  [defined in your app's manifest](../../app-manifest#connections). Any attempt to access an arbitrary URL, for a connection not
-  defined in your app's manifest, results in an error.
+<Warning>
+
+As a security measure, you can only call HTTP endpoints that you
+[defined in your app's manifest](/modus/app-manifest#connections). Any attempt
+to access an arbitrary URL, for a connection not defined in your app's manifest,
+results in an error.
 
 Additionally, you should use placeholders for connection secrets in the
 manifest, rather than hardcoding them in your functions. Enter the values for
@@ -23,7 +25,7 @@ each connections' secrets via environment variables or the Hypermode UI. This
 ensures that your secrets are securely stored, aren't committed to your
 repository, and aren't visible or accessible from your functions code.
 
-</Note>
+</Warning>
 
 ## Import
 
@@ -50,22 +52,27 @@ Invoke an HTTP endpoint to retrieve data or trigger external action.
 Returns a [`Response`](#response) object with the HTTP response data.
 
 ```ts
-http.fetch(
+function fetch(
   requestOrUrl: string | Request,
   options: RequestOptions = new RequestOptions(),
 ): Response
 ```
 
 <ResponseField name="requestOrUrl" type="string | Request" required>
-  Either a URL `string` or a [`Request`](#request) object, describing the HTTP request to make.
+
+Either a URL `string` or a [`Request`](#request) object, describing the HTTP
+request to make.
 
 If a `string`, the operation uses the `GET` HTTP method with no headers other
 than those defined in the manifest entry of the connection.
 
-  <Note>
-    Each request must match to a connection entry in the manifest, using the `baseUrl` field. The request URL passed to the
-    `fetch` function (or via a `Request` object) must start with the manifest entry's `baseUrl` value to match.
-  </Note>
+<Note>
+  Each request must match to a connection entry in the manifest, using the
+  `baseUrl` field. The request URL passed to the `fetch` function (or via a
+  `Request` object) must start with the manifest entry's `baseUrl` value to
+  match.
+</Note>
+
 </ResponseField>
 
 <ResponseField name="options" type="RequestOptions">
@@ -73,27 +80,41 @@ than those defined in the manifest entry of the connection.
   request, such as the HTTP method, headers, and body.
 </ResponseField>
 
-### Objects
+### Types
 
 #### Content
 
+Represents content used in the body of an HTTP request or response.
+
 ```ts
 class Content {
-  static from(value: any): Content
+  static from<T>(value: T): Content
   readonly data: ArrayBuffer
+  bytes(): Uint8Array
   text(): string
   json<T>(): T
 }
 ```
 
-Represents content used in the body of an HTTP request or response.
-
 <ResponseField name="Content.from(value)">
-  Creates a new `Content` object from the given value.
+
+Creates a new `Content` object from the given value.
+
+The value can be of any type that's JSON serializable, including strings,
+numbers, boolean values, arrays, maps, and custom objects decorated with
+`@json`.
+
+If the value is a `string` or an `ArrayBuffer` it's sent as-is, without JSON
+serialization.
+
 </ResponseField>
 
 <ResponseField name="data" type="ArrayBuffer">
-  The raw binary content data.
+  The raw binary content data buffer.
+</ResponseField>
+
+<ResponseField name="bytes()">
+  Returns the binary content data as a `Uint8Array`.
 </ResponseField>
 
 <ResponseField name="text()">
@@ -108,14 +129,14 @@ Represents content used in the body of an HTTP request or response.
 
 #### Header
 
+Represents an HTTP request or response header.
+
 ```ts
 class Header {
   name: string
   values: string[]
 }
 ```
-
-Represents an HTTP request or response header.
 
 <ResponseField name="name" type="string">
   The name of the header.
@@ -128,6 +149,8 @@ Represents an HTTP request or response header.
 
 #### Headers
 
+Represents a collection of HTTP headers.
+
 ```ts
 class Headers {
   static from(
@@ -139,12 +162,11 @@ class Headers {
 }
 ```
 
-Represents a collection of HTTP headers.
-
 <ResponseField name="Headers.from(value)">
-  Creates a new `Headers` object from the given `value` object.
 
-The `value` object must be one of the following types:
+Creates a new `Headers` object from the given `value`.
+
+The `value` must be one of the following types:
 
 - A `string[][]`, where each inner array contains a header name and value.
 - A `Map<string, string>`, where the keys are header names and the values are
@@ -171,6 +193,8 @@ The `value` object must be one of the following types:
 
 #### Request
 
+Represents an HTTP request to make.
+
 ```ts
 class Request {
   constructor(url: string, options?: RequestOptions)
@@ -179,15 +203,15 @@ class Request {
   readonly method: string
   readonly headers: Headers
   readonly body: ArrayBuffer
+  bytes(): Uint8Array
   text(): string
   json<T>(): T
 }
 ```
 
-Represents an HTTP request to make.
-
 <ResponseField name="new http.Request(url, options?)">
-  Creates a new `Request` object with the given `url` and `options`.
+
+Creates a new `Request` object with the given `url` and `options`.
 
 The required `url` parameter must be a fully qualified URL of the request,
 including the protocol. For example, `"https://example.com"`.
@@ -217,7 +241,18 @@ that's used to set the HTTP method, headers, and body if needed.
 </ResponseField>
 
 <ResponseField name="body" type="ArrayBuffer">
-  The raw binary content data of the request body.
+
+The raw binary content data buffer of the request body.
+
+<Tip>
+  The request body isn't normally read directly. Instead, use the `bytes`,
+  `text` or `json` functions.
+</Tip>
+
+</ResponseField>
+
+<ResponseField name="bytes()">
+  Returns the binary content data of the request body as a `Uint8Array`.
 </ResponseField>
 
 <ResponseField name="text()">
@@ -232,6 +267,8 @@ that's used to set the HTTP method, headers, and body if needed.
 
 #### RequestOptions
 
+Options for the HTTP request.
+
 ```ts
 class RequestOptions {
   method: string | null
@@ -240,30 +277,37 @@ class RequestOptions {
 }
 ```
 
-Options for the HTTP request.
-
 <ResponseField name="method" type="string | null">
   The HTTP method of the request. For example, `"GET"`, `"POST"`, `"PUT"`, or
   `"DELETE"`. If `null` (the default), the request uses the `GET` method.
 </ResponseField>
 
 <ResponseField name="headers" type="Headers">
-  The HTTP headers of the request, as a [`Headers`](#headers) object.
 
-  <Tip>
-    By default, the `RequestOptions` contains an empty `Headers` object which you can add headers to using the `append`
-    method.
-  </Tip>
+The HTTP headers of the request, as a [`Headers`](#headers) object.
+
+<Tip>
+  By default, the `RequestOptions` contains an empty `Headers` object which you
+  can add headers to using the `append` method.
+</Tip>
+
 </ResponseField>
 
 <ResponseField name="body" type="Content | null">
-  Content to pass in the request body, as a [`Content`](#content) object, or `null` (the default) if there is no body to
-  pass.
 
-  <Tip>It's generally recommended to supply a `Content-Type` header for any requests that have a body.</Tip>
+Content to pass in the request body, as a [`Content`](#content) object, or
+`null` (the default) if there is no body to pass.
+
+<Tip>
+  It's generally recommended to supply a `Content-Type` header for any requests
+  that have a body.
+</Tip>
+
 </ResponseField>
 
 #### Response
+
+Represents the response received from the HTTP server.
 
 ```ts
 class Response {
@@ -272,12 +316,11 @@ class Response {
   readonly headers: Headers
   readonly body: ArrayBuffer
   readonly ok: bool
+  bytes(): Uint8Array
   text(): string
   json<T>(): T
 }
 ```
-
-Represents the response received from the HTTP server.
 
 <ResponseField name="status" type="u16">
   The HTTP response status code, such as `200` for success.
@@ -294,12 +337,23 @@ Represents the response received from the HTTP server.
 </ResponseField>
 
 <ResponseField name="body" type="ArrayBuffer">
-  The raw binary content data of the response body.
 
-  <Tip>
-    The response body isn't normally read directly. Instead, use the `text` or `json` functions. You should only read the
-    `body` directly if you expect to receive binary data in the response.
-  </Tip>
+The raw binary content data buffer of the response body.
+
+<Tip>
+  The response body isn't normally read directly. Instead, use the `bytes`,
+  `text` or `json` functions.
+</Tip>
+
+</ResponseField>
+
+<ResponseField name="ok" type="bool">
+  A boolean value indicating whether the response was successful. It's `true` if
+  the status code is in the range `200-299`, and `false` otherwise.
+</ResponseField>
+
+<ResponseField name="bytes()">
+  Returns the binary content data of the response body as a `Uint8Array`.
 </ResponseField>
 
 <ResponseField name="text()">

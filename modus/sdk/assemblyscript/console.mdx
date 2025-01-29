@@ -11,8 +11,8 @@ The Modus Console APIs allow you to capture information from your functions,
 such as errors and other information that can help you debug your functions.
 
 <Info>
-  Unlike other APIs, the Console namespace is globally available by default in
-  all functions, you don't need to import it.
+  Unlike other APIs, the `console` namespace is globally available by default in
+  all AssemblyScript functions, you don't need to import it.
 </Info>
 
 The Console APIs mimic the behavior of the AssemblyScript
@@ -40,10 +40,10 @@ The APIs in the `console` namespace are below, organized by category.
 Asserts that a condition is true, and logs an error if it's not.
 
 ```ts
-console.assert(assertion: any, message?: string): void
+function assert<T>(assertion: T, message?: string): void
 ```
 
-<ResponseField name="assertion" type="any" required>
+<ResponseField name="assertion" required>
   The condition to assert. Typically a boolean value. In the case of an object,
   asserts that the object isn't `null`.
 </ResponseField>
@@ -59,7 +59,7 @@ console.assert(assertion: any, message?: string): void
 Generate a log message, with no particular logging level.
 
 ```ts
-console.log(message?: string): void
+function log(message?: string): void
 ```
 
 <ResponseField name="message" type="string">
@@ -71,7 +71,7 @@ console.log(message?: string): void
 Generate a log message with the "debug" logging level.
 
 ```ts
-console.debug(message?: string): void
+function debug(message?: string): void
 ```
 
 <ResponseField name="message" type="string">
@@ -83,7 +83,7 @@ console.debug(message?: string): void
 Generate a log message with the "info" logging level.
 
 ```ts
-console.info(message?: string): void
+function info(message?: string): void
 ```
 
 <ResponseField name="message" type="string">
@@ -95,7 +95,7 @@ console.info(message?: string): void
 Generate a log message with the "warning" logging level.
 
 ```ts
-console.warn(message?: string): void
+function warn(message?: string): void
 ```
 
 <ResponseField name="message" type="string">
@@ -107,7 +107,7 @@ console.warn(message?: string): void
 Generate a log message with the "error" logging level.
 
 ```ts
-console.error(message?: string): void
+function error(message?: string): void
 ```
 
 <ResponseField name="message" type="string">
@@ -121,7 +121,7 @@ console.error(message?: string): void
 Starts a new timer using the specified label.
 
 ```ts
-console.time(label?: string): void
+function time(label?: string): void
 ```
 
 <ResponseField name="label" type="string">
@@ -133,7 +133,7 @@ console.time(label?: string): void
 Logs the current value of a timer previously started with `console.time`.
 
 ```ts
-console.timeLog(label?: string): void
+function timeLog(label?: string): void
 ```
 
 <ResponseField name="label" type="string">
@@ -146,7 +146,7 @@ Logs the current value of a timer previously started with `console.time`, and
 discards the timer.
 
 ```ts
-console.timeEnd(label?: string): void
+function timeEnd(label?: string): void
 ```
 
 <ResponseField name="label" type="string">

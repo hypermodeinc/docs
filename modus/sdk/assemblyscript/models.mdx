@@ -14,10 +14,10 @@ Since many models have unique interfaces, the design of the Models APIs are
 extremely flexible. A common base class forms the core of the APIs, which
 extends to conform to any model's required schema.
 
-The SDK contains both the base classes and pre-defined implementations for many
-commonly used models. You can either use one of the pre-defined classes, or can
-create custom classes for any model you like, by extending from the base `Model`
-class.
+The SDK contains both the base types and pre-defined implementations for many
+commonly used models. You can either use one of the pre-defined model types, or
+can create custom types for any model you like, by following the same pattern as
+implemented in the pre-defined models.
 
 <Tip>
 For your reference, several complete examples for using the Models APIs are available in
@@ -33,33 +33,16 @@ use it for any task that an AI model can perform.
 
 To begin, import the `models` namespace from the SDK:
 
-<Tabs>
-  <Tab title="Go">
-    ```ts
-    import github.com/hypermodeinc/modus/sdk/go/pkg/models
-    ```
+```ts
+import { models } from "@hypermode/modus-sdk-as"
+```
 
-    You'll also need to import one or more classes for the model you are working with. For example:
+You'll also need to import one or more classes for the model you are working
+with. For example:
 
-    ```ts
-    import github.com/hypermodeinc/modus/sdk/go/pkg/models/experimental
-    ```
-
-  </Tab>
-
-  <Tab title="AssemblyScript">
-    ```ts
-    import { models } from "@hypermode/modus-sdk-as"
-    ```
-
-    You'll also need to import one or more classes for the model you are working with. For example:
-
-    ```ts
-    import { ClassificationModel } from "@hypermode/modus-sdk-as/models/experimental/classification"
-    ```
-
-  </Tab>
-</Tabs>
+```ts
+import { OpenAIChatModel } from "@hypermode/modus-sdk-as/models/openai"
+```
 
 If you would like to request a new model, please
 [open an issue](https://github.com/hypermodeinc/modus/issues). You can also send
@@ -79,11 +62,11 @@ The APIs in the `models` namespace are below, organized by category.
 
 Get a model instance by name and type.
 
-    ```ts
-    models.getModel<T>(modelName: string): T
-    ```
+```ts
+function getModel<T>(modelName: string): T
+```
 
-<ResponseField name="T" type="Type" required>
+<ResponseField name="T" required>
   The type of model to return. This can be any class that extends the `Model`
   base class.
 </ResponseField>
@@ -93,19 +76,11 @@ Get a model instance by name and type.
   in your project's manifest file.
 </ResponseField>
 
-### Objects
+### Types
 
 #### Model
 
-    ```ts
-    abstract class Model<TInput, TOutput> {
-      debug: boolean;
-      info: ModelInfo;
-      invoke(input: TInput): TOutput;
-    }
-    ```
-
-The base class for all models that Hypermode functions can invoke.
+The base class for all models that Modus functions can invoke.
 
 <Tip>
   If you are implementing a custom model, you should extend this class. You'll
@@ -114,42 +89,42 @@ The base class for all models that Hypermode functions can invoke.
   for examples.
 </Tip>
 
-<ResponseField name="TInput" type="Type" required>
+```ts
+abstract class Model<TInput, TOutput> {
+  debug: bool
+  info: ModelInfo
+  invoke(input: TInput): TOutput
+}
+```
+
+<ResponseField name="TInput" required>
   The type of the input data for the model. This can be any type, including a
   custom type defined in your project. It should match the shape of the data
   expected by the model. It's usually a class.
 </ResponseField>
 
-<ResponseField name="TOutput" type="Type" required>
+<ResponseField name="TOutput" required>
   The type of the output data from the model. This can be any type, including a
   custom type defined in your project. It should match the shape of the data
   returned by the model. It's usually a class.
 </ResponseField>
 
-<ResponseField name="debug" type="boolean">
-  A flag to enable debug mode for the model. When enabled, Hypermode
-  automatically logs the full request and response data to the console.
-  implementations can also use this flag to enable additional debug logging.
-  Defaults to `false`.
+<ResponseField name="debug" type="bool">
+  A flag to enable debug mode for the model. When enabled, Modus automatically
+  logs the full request and response data to the console. Implementations can
+  also use this flag to enable additional debug logging. Defaults to `false`.
 </ResponseField>
 
 <ResponseField name="info" type="ModelInfo">
-  Information about the model set by the Hypermode Runtime when creating the
+  Information about the model set by the Modus Runtime when creating the
   instance. See the [`ModelInfo`](#modelinfo) object for more information.
 </ResponseField>
 
-<ResponseField name="invoke(input)" type="function">
+<ResponseField name="invoke(input)" type="method">
   Invokes the model with input data and returns the output data.
 </ResponseField>
 
 #### ModelInfo
-
-    ```ts
-    class ModelInfo {
-      readonly name: string;
-      readonly fullName: string;
-    }
-    ```
 
 Information about a model that's used to construct a `Model` instance. It's also
 available as a property on the `Model` class.
@@ -161,12 +136,17 @@ implementation. Generally, you don't need to create `ModelInfo` instances
 directly.
 
 However, if you are implementing a custom model, you may wish to use a property
-from this class, such as the `fullName`, for model providers that require the
-model name in the input request body.
-
-We may add additional properties to this class in the future, as needed.
+from this class, such as `fullName`, for model providers that require the model
+name in the input request body.
 
 </Info>
+
+```ts
+class ModelInfo {
+  readonly name: string
+  readonly fullName: string
+}
+```
 
 <ResponseField name="name" type="string">
   The name of the model from the app manifest.

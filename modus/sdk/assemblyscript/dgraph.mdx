@@ -28,56 +28,21 @@ The APIs in the `dgraph` namespace are below, organized by category.
 
 ### Functions
 
-#### execute
-
-Execute a Dgraph query or mutation using a Dgraph Request object.
-
-```ts
-function execute(connectionName: string, request: Request): Response
-```
-
-<ResponseField name="connectionName" type="string" required>
-  Name of the connection, as [defined in the
-  manifest](../../app-manifest#connections).
-</ResponseField>
-
-<ResponseField name="request" type="Request" required>
-  A Dgraph [`Request`](#request) object, describing the query or mutation to
-  execute.
-</ResponseField>
-
 #### alterSchema
 
 Alter the schema of a Dgraph database.
 
 ```ts
-function alterSchema(connectionName: string, schema: string): string
+function alterSchema(connection: string, schema: string): string
 ```
 
-<ResponseField name="connectionName" type="string" required>
+<ResponseField name="connection" type="string" required>
   Name of the connection, as [defined in the
-  manifest](../../app-manifest#connections).
+  manifest](/modus/app-manifest#connections).
 </ResponseField>
 
 <ResponseField name="schema" type="string" required>
   The schema to apply to the Dgraph database.
-</ResponseField>
-
-#### dropAttr
-
-Drop an attribute from a Dgraph schema.
-
-```ts
-function dropAttr(connectionName: string, attr: string): string
-```
-
-<ResponseField name="connectionName" type="string" required>
-  Name of the connection, as [defined in the
-  manifest](../../app-manifest#connections).
-</ResponseField>
-
-<ResponseField name="attr" type="string" required>
-  The attribute to drop from the Dgraph schema.
 </ResponseField>
 
 #### dropAll
@@ -85,89 +50,50 @@ function dropAttr(connectionName: string, attr: string): string
 Drop all data from a Dgraph database.
 
 ```ts
-function dropAll(connectionName: string): string
+function dropAll(connection: string): string
 ```
 
-<ResponseField name="connectionName" type="string" required>
+<ResponseField name="connection" type="string" required>
   Name of the connection, as [defined in the
-  manifest](../../app-manifest#connections).
+  manifest](/modus/app-manifest#connections).
 </ResponseField>
 
-### Objects
+#### dropAttr
 
-#### Request
-
-A Dgraph request object, used to execute queries and mutations.
+Drop an attribute from a Dgraph schema.
 
 ```ts
-class Request {
-  constructor(Query: Query | null = null, Mutations: Mutation[] | null = null)
-  query: Query = new Query()
-  mutations: Mutation[] = []
-}
+function dropAttr(connection: string, attr: string): string
 ```
 
-<ResponseField name="new dgraph.Request(query, mutations)">
-  Creates a new `Request` object with the given `query` and `mutations`.
-
-The [`query`](#query) and [`mutations`](#mutation) fields are optional and
-default to `null`.
-
+<ResponseField name="connection" type="string" required>
+  Name of the connection, as [defined in the
+  manifest](/modus/app-manifest#connections).
 </ResponseField>
 
-<ResponseField name="query" type="Query">
-  A Dgraph [`query`](#query) object.
+<ResponseField name="attr" type="string" required>
+  The attribute to drop from the Dgraph schema.
 </ResponseField>
 
-<ResponseField name="mutations" type="Mutation[]">
-  An array of Dgraph [`mutation`](#mutation) objects.
-</ResponseField>
+#### execute
 
-#### Query
-
-A Dgraph query object, used to execute queries.
+Execute a Dgraph query or mutation using a Dgraph Request object.
 
 ```ts
-class Query {
-  constructor(query: string = "", variables: Variables = new Variables())
-  query: string = ""
-  variables: Map<string, string> = new Map<string, string>()
-}
+function execute(connection: string, request: Request): Response
 ```
 
-<ResponseField name="new dgraph.Query(query, variables)">
-  Creates a new `Query` object with the given `query` and `variables`. `query`
-  is a Dgraph Query Language (DQL) query string, and `variables` is a
-  [`Variables`](#variables) object.
+<ResponseField name="connection" type="string" required>
+  Name of the connection, as [defined in the
+  manifest](/modus/app-manifest#connections).
 </ResponseField>
 
-<ResponseField name="query" type="string">
-  The DQL query to execute.
+<ResponseField name="request" type="Request" required>
+  A Dgraph [`Request`](#request) object, describing the query or mutation to
+  execute.
 </ResponseField>
 
-<ResponseField name="variables" type="Map<string, string>">
-  A map of query variables.
-</ResponseField>
-
-#### Variables
-
-A Variables object used to set query variables in a Dgraph query.
-
-```ts
-class Variables {
-  public set<T>(name: string, value: T): void
-  public toMap(): Map<string, string>
-}
-```
-
-<ResponseField name="Variables.set(name, value)">
-  Sets a query variable with the given `name` and `value`. `name` is of type
-  `string`, and `value` can be of any type.
-</ResponseField>
-
-<ResponseField name="Variables.toMap()">
-  Returns a map of all query variables set in the `Variables` object.
-</ResponseField>
+### Types
 
 #### Mutation
 
@@ -175,13 +101,11 @@ A Dgraph mutation object, used to execute mutations.
 
 ```ts
 class Mutation {
-  constructor(
-    public setJson: string = "",
-    public delJson: string = "",
-    public setNquads: string = "",
-    public delNquads: string = "",
-    public condition: string = "",
-  )
+  setJson: string,
+  delJson: string,
+  setNquads: string,
+  delNquads: string,
+  condition: string,
 }
 ```
 
@@ -208,4 +132,77 @@ class Mutation {
 
 <ResponseField name="condition" type="string">
   A string representing the condition query for the mutation.
+</ResponseField>
+
+#### Query
+
+A Dgraph query object, used to execute queries.
+
+```ts
+class Query {
+  query: string = ""
+  variables: Map<string, string> = new Map<string, string>()
+}
+```
+
+<ResponseField name="new dgraph.Query(query, variables)">
+  Creates a new `Query` object with the given `query` and `variables`. `query`
+  is a Dgraph Query Language (DQL) query string, and `variables` is a
+  [`Variables`](#variables) object.
+</ResponseField>
+
+<ResponseField name="query" type="string">
+  The DQL query to execute.
+</ResponseField>
+
+<ResponseField name="variables" type="Map<string, string>">
+  A map of query variables.
+</ResponseField>
+
+#### Request
+
+A Dgraph request object, used to execute queries and mutations.
+
+```ts
+class Request {
+  query: Query = new Query()
+  mutations: Mutation[] = []
+}
+```
+
+<ResponseField name="new dgraph.Request(query, mutations)">
+
+Creates a new `Request` object with the given `query` and `mutations`.
+
+The [`query`](#query) and [`mutations`](#mutation) fields are optional and
+default to `null`.
+
+</ResponseField>
+
+<ResponseField name="query" type="Query">
+  A Dgraph [`query`](#query) object.
+</ResponseField>
+
+<ResponseField name="mutations" type="Mutation[]">
+  An array of Dgraph [`mutation`](#mutation) objects.
+</ResponseField>
+
+#### Variables
+
+A Variables object used to set query variables in a Dgraph query.
+
+```ts
+class Variables {
+  set<T>(name: string, value: T): void
+  toMap(): Map<string, string>
+}
+```
+
+<ResponseField name="Variables.set(name, value)">
+  Sets a query variable with the given `name` and `value`. `name` is of type
+  `string`, and `value` can be of any type.
+</ResponseField>
+
+<ResponseField name="Variables.toMap()">
+  Returns a map of all query variables set in the `Variables` object.
 </ResponseField>

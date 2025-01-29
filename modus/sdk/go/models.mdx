@@ -11,13 +11,13 @@ The Modus Models APIs allow you to invoke AI models directly from your
 functions, irrespective of the model's host.
 
 Since many models have unique interfaces, the design of the Models APIs are
-extremely flexible. A common base class forms the core of the APIs, which
-extends to conform to any model's required schema.
+extremely flexible. An interface and common base type forms the core of the
+APIs, which extends to conform to any model's required schema.
 
-The SDK contains both the base classes and pre-defined implementations for many
-commonly used models. You can either use one of the pre-defined classes, or can
-create custom classes for any model you like, by extending from the base `Model`
-class.
+The SDK contains both the base types and pre-defined implementations for many
+commonly used models. You can either use one of the pre-defined model types, or
+can create custom types for any model you like, by following the same pattern as
+implemented in the pre-defined models.
 
 <Tip>
 For your reference, several complete examples for using the Models APIs are available in
@@ -31,35 +31,18 @@ use it for any task that an AI model can perform.
 
 ## Import
 
-To begin, import the `models` namespace from the SDK:
+To begin, import the `models` package from the SDK:
 
-<Tabs>
-  <Tab title="Go">
-    ```go
-    import github.com/hypermodeinc/modus/sdk/go/pkg/models
-    ```
+```go
+import github.com/hypermodeinc/modus/sdk/go/pkg/models
+```
 
-    You'll also need to import one or more classes for the model you are working with. For example:
+You'll also need to import one or more packages for the model you are working
+with. For example:
 
-    ```go
-    import github.com/hypermodeinc/modus/sdk/go/pkg/models/experimental
-    ```
-
-  </Tab>
-
-  <Tab title="AssemblyScript">
-    ```ts
-    import { models } from "@hypermode/modus-sdk-as"
-    ```
-
-    You'll also need to import one or more classes for the model you are working with. For example:
-
-    ```ts
-    import { ClassificationModel } from "@hypermode/modus-sdk-as/models/experimental/classification"
-    ```
-
-  </Tab>
-</Tabs>
+```go
+import github.com/hypermodeinc/modus/sdk/go/pkg/models/openai
+```
 
 If you would like to request a new model, please
 [open an issue](https://github.com/hypermodeinc/modus/issues). You can also send
@@ -69,23 +52,23 @@ a pull request, if you'd like to contribute a new model yourself.
 
 {/* <!-- vale Google.Headings = NO --> */}
 
-The APIs in the `models` namespace are below, organized by category.
+The APIs in the `models` package are below, organized by category.
 
 <SdkTip />
 
 ### Functions
 
-#### getModel
+#### GetModel
 
 Get a model instance by name and type.
 
-    ```go
-    models.getModel<T>(modelName: string): T
-    ```
+```go
+func GetModel[TModel](modelName string) (*TModel, error)
+```
 
-<ResponseField name="T" type="Type" required>
-  The type of model to return. This can be any class that extends the `Model`
-  base class.
+<ResponseField name="TModel" required>
+  The type of model to return. This can be any struct that implements the
+  `Model` interface.
 </ResponseField>
 
 <ResponseField name="modelName" type="string" required>
@@ -93,85 +76,116 @@ Get a model instance by name and type.
   in your project's manifest file.
 </ResponseField>
 
-### Objects
+### Types
 
 #### Model
 
-    ```go
-    abstract class Model<TInput, TOutput> {
-      debug: boolean;
-      info: ModelInfo;
-      invoke(input: TInput): TOutput;
-    }
-    ```
+The interface that all Modus models must implement.
 
-The base class for all models that Hypermode functions can invoke.
+```go
+type Model[TIn, TOut any] interface {
+  Info() *ModelInfo
+  Invoke(input *TIn) (*TOut, error)
+}
+```
 
-<Tip>
-  If you are implementing a custom model, you should extend this class. You'll
-  also need classes to represent the input and output types for your model. See
-  the implementations of the pre-defined models in the Modus GitHub repository
-  for examples.
-</Tip>
-
-<ResponseField name="TInput" type="Type" required>
+<ResponseField name="TIn" required>
   The type of the input data for the model. This can be any type, including a
   custom type defined in your project. It should match the shape of the data
-  expected by the model. It's usually a class.
+  expected by the model. It's usually a struct.
 </ResponseField>
 
-<ResponseField name="TOutput" type="Type" required>
+<ResponseField name="TOut" required>
   The type of the output data from the model. This can be any type, including a
   custom type defined in your project. It should match the shape of the data
-  returned by the model. It's usually a class.
+  returned by the model. It's usually a struct.
 </ResponseField>
 
-<ResponseField name="debug" type="boolean">
-  A flag to enable debug mode for the model. When enabled, Hypermode
-  automatically logs the full request and response data to the console.
-  implementations can also use this flag to enable additional debug logging.
-  Defaults to `false`.
-</ResponseField>
-
-<ResponseField name="info" type="ModelInfo">
-  Information about the model set by the Hypermode Runtime when creating the
+<ResponseField name="Info()" type="method">
+  Returns information about the model set by the Modus Runtime when creating the
   instance. See the [`ModelInfo`](#modelinfo) object for more information.
 </ResponseField>
 
-<ResponseField name="invoke(input)" type="function">
+<ResponseField name="Invoke(input)" type="method">
+  Invokes the model with input data and returns the output data.
+</ResponseField>
+
+#### ModelBase
+
+The base type for all models that Modus functions can invoke.
+
+<Tip>
+  If you are implementing a custom model, you'll need to create a type alias
+  based on this struct. You'll also need structs to represent the input and
+  output types for your model. See the implementations of the pre-defined models
+  in the Modus GitHub repository for examples.
+</Tip>
+
+```go
+type ModelBase[TIn, TOut any] struct {
+  Debug bool
+}
+
+// methods
+func (ModelBase[TIn, TOut]) Info() *ModelInfo
+func (ModelBase[TIn, TOut]) Invoke(input *TIn) (*TOut, error)
+```
+
+<ResponseField name="TIn" required>
+  The type of the input data for the model. This can be any type, including a
+  custom type defined in your project. It should match the shape of the data
+  expected by the model. It's usually a struct.
+</ResponseField>
+
+<ResponseField name="TOut" required>
+  The type of the output data from the model. This can be any type, including a
+  custom type defined in your project. It should match the shape of the data
+  returned by the model. It's usually a struct.
+</ResponseField>
+
+<ResponseField name="Debug" type="bool">
+  A flag to enable debug mode for the model. When enabled, Modus automatically
+  logs the full request and response data to the console. Implementations can
+  also use this flag to enable additional debug logging. Defaults to `false`.
+</ResponseField>
+
+<ResponseField name="Info()" type="method">
+  Returns information about the model set by the Modus Runtime when creating the
+  instance. See the [`ModelInfo`](#modelinfo) object for more information.
+</ResponseField>
+
+<ResponseField name="Invoke(input)" type="method">
   Invokes the model with input data and returns the output data.
 </ResponseField>
 
 #### ModelInfo
 
-    ```go
-    class ModelInfo {
-      readonly name: string;
-      readonly fullName: string;
-    }
-    ```
-
 Information about a model that's used to construct a `Model` instance. It's also
-available as a property on the `Model` class.
+available from a method on the `Model` interface.
 
 <Info>
 
-This class relays information from the Modus runtime to the model
+This struct relays information from the Modus runtime to the model
 implementation. Generally, you don't need to create `ModelInfo` instances
 directly.
 
-However, if you are implementing a custom model, you may wish to use a property
-from this class, such as the `fullName`, for model providers that require the
-model name in the input request body.
-
-We may add additional properties to this class in the future, as needed.
+However, if you are implementing a custom model, you may wish to use a field
+from this struct, such as `FullName`, for model providers that require the model
+name in the input request body.
 
 </Info>
 
-<ResponseField name="name" type="string">
+```go
+type ModelInfo struct {
+  Name string
+  FullName string
+}
+```
+
+<ResponseField name="Name" type="string">
   The name of the model from the app manifest.
 </ResponseField>
 
-<ResponseField name="fullName" type="string">
+<ResponseField name="FullName" type="string">
   The full name or identifier of the model, as defined by the model provider.
 </ResponseField>

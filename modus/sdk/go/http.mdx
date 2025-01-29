@@ -12,10 +12,16 @@ endpoint. It's similar to the HTTP
 [`fetch`](https://developer.mozilla.org/docs/Web/API/Fetch_API) API used in
 JavaScript, but with some modifications to work with Hypermode Functions.
 
-<Note>
-  As a security measure, you can only call HTTP endpoints that you
-  [defined in your app's manifest](../../app-manifest#connections). Any attempt to access an arbitrary URL, for a connection not
-  defined in your app's manifest, results in an error.
+In a future version of Modus, we'll support Go's standard `net/http` package for
+making HTTP requests. However, that's currently not supported due to technical
+limitations.
+
+<Warning>
+
+As a security measure, you can only call HTTP endpoints that you
+[defined in your app's manifest](/modus/app-manifest#connections). Any attempt
+to access an arbitrary URL, for a connection not defined in your app's manifest,
+results in an error.
 
 Additionally, you should use placeholders for connection secrets in the
 manifest, rather than hardcoding them in your functions. Enter the values for
@@ -23,11 +29,11 @@ each connections' secrets via environment variables or the Hypermode UI. This
 ensures that your secrets are securely stored, aren't committed to your
 repository, and aren't visible or accessible from your functions code.
 
-</Note>
+</Warning>
 
 ## Import
 
-To begin, import the `http` namespace from the SDK:
+To begin, import the `http` package from the SDK:
 
 ```go
 import github.com/hypermodeinc/modus/sdk/go/pkg/http
@@ -37,277 +43,404 @@ import github.com/hypermodeinc/modus/sdk/go/pkg/http
 
 {/* <!-- vale Google.Headings = NO --> */}
 
-The APIs in the `http` namespace are below, organized by category.
+The APIs in the `http` package are below, organized by category.
 
 <SdkTip />
 
 ### Functions
 
-#### fetch
+#### Fetch
 
 Invoke an HTTP endpoint to retrieve data or trigger external action.
 
 Returns a [`Response`](#response) object with the HTTP response data.
 
 ```go
-http.fetch(
-  requestOrUrl: string | Request,
-  options: RequestOptions = new RequestOptions(),
-): Response
+func Fetch[T *Request | string](
+  requestOrUrl T,
+  options ...*RequestOptions
+) (*Response, error)
 ```
 
-<ResponseField name="requestOrUrl" type="string | Request" required>
-  Either a URL `string` or a [`Request`](#request) object, describing the HTTP request to make.
+<ResponseField name="requestOrUrl" type="*Request | string" required>
+
+Either a URL `string` or a pointer to a [`Request`](#request) object, describing
+the HTTP request to make.
 
 If a `string`, the operation uses the `GET` HTTP method with no headers other
 than those defined in the manifest entry of the connection.
 
-  <Note>
-    Each request must match to a connection entry in the manifest, using the `baseUrl` field. The request URL passed to the
-    `fetch` function (or via a `Request` object) must start with the manifest entry's `baseUrl` value to match.
-  </Note>
+<Note>
+  Each request must match to a connection entry in the manifest, using the
+  `baseUrl` field. The request URL passed to the `Fetch` function (or via a
+  `Request` object) must start with the manifest entry's `baseUrl` value to
+  match.
+</Note>
+
 </ResponseField>
 
-<ResponseField name="options" type="RequestOptions">
-  A [`RequestOptions`](#requestoptions) object with additional options for the
-  request, such as the HTTP method, headers, and body.
+<ResponseField name="options" type="*RequestOptions">
+  An optional pointer to a [`RequestOptions`](#requestoptions) object with
+  additional options for the request, such as the HTTP method, headers, and
+  body.
 </ResponseField>
 
-### Objects
+#### NewContent
+
+Creates a new [`Content`](#content) object from the given `value`, and returns a
+pointer to it.
+
+```go
+func NewContent(value any) *Content
+```
+
+<ResponseField name="value" required>
+
+The value to create the `Content` object from. Must be one of the following
+types:
+
+- A [`Content`](#content) object, or a pointer to one.
+- A `[]byte` of binary content, or a pointer to one.
+- A `string` of text content.
+
+</ResponseField>
+
+#### NewHeaders
+
+Creates a new [`Headers`](#headers) object from the given `value`, and returns a
+pointer to it.
+
+```go
+func NewHeaders[T [][]string | map[string]string | map[string][]string](
+  value T
+) *Headers
+```
+
+<ResponseField name="value" type="[][]string | map[string]string | map[string][]string" required>
+
+The value object to create the [`Headers`](#headers) object from. Must be one of
+the following types:
+
+- A `[][]string`, where each inner slice contains a header name and value.
+- A `map[string]string`, where the keys are header names and the values are
+  header values.
+- A `map[string][]string`, where the keys are header names and the values are
+  slices of header values.
+
+</ResponseField>
+
+#### NewRequest
+
+Creates a new [`Request`](#request) object with the given `url` and `options`,
+and returns a pointer to it.
+
+```go
+func NewRequest(url string, options ...*RequestOptions) *Request
+```
+
+<ResponseField name="url" type="string" required>
+  The fully qualified URL of the request, including the protocol. For example,
+  `"https://example.com"`.
+</ResponseField>
+
+<ResponseField name="options" type="*RequestOptions">
+  An optional pointer to a [`RequestOptions`](#requestoptions) object that's
+  used to set the HTTP method, headers, and body if needed.
+</ResponseField>
+
+### Types
 
 #### Content
 
-```go
-class Content {
-  static from(value: any): Content;
-  readonly data: ArrayBuffer;
-  text(): string;
-  json<T>(): T;
-}
-```
-
 Represents content used in the body of an HTTP request or response.
 
-<ResponseField name="Content.from(value)">
-  Creates a new `Content` object from the given value.
+<Tip>
+  Use the [`NewContent`](#newcontent) function to create a new `Content` object.
+</Tip>
+
+```go
+type Content struct {
+  // no exported fields
+}
+
+// methods
+func (*Content) Bytes() []byte
+func (*Content) Text() string
+func (*Content) JSON(result any) error
+```
+
+<ResponseField name="Bytes()">
+  Returns the binary content as a byte slice.
 </ResponseField>
 
-<ResponseField name="data" type="ArrayBuffer">
-  The raw binary content data.
-</ResponseField>
-
-<ResponseField name="text()">
+<ResponseField name="Text()">
   Interprets the content as a UTF-8 encoded string, and returns it as a `string`
   value.
 </ResponseField>
 
-<ResponseField name="json<T>()">
-  Interprets the content as a UTF-8 encoded string containing JSON in the shape
-  of type `T`, and returns it as a value of type `T`.
+<ResponseField name="JSON(result any) error">
+
+Interprets the content as a UTF-8 encoded string containing JSON, and attempts
+to deserialize it into the `result` provided.
+
+Pass the `result` as a pointer to an object matching the shape of the JSON. For
+example:
+
+```go
+var data MyData
+if err := content.JSON(&data); err != nil {
+  // handle error
+}
+```
+
 </ResponseField>
 
 #### Header
 
+Represents an HTTP request or response header.
+
 ```go
-class Header {
-  name: string;
-  values: string[];
+type Header struct {
+  Name   string
+  Values []string
 }
 ```
 
-Represents an HTTP request or response header.
-
-<ResponseField name="name" type="string">
+<ResponseField name="Name" type="string">
   The name of the header.
 </ResponseField>
 
-<ResponseField name="values" type="string[]">
-  An array of values for the header. Typically a header has a single value, but
+<ResponseField name="Values" type="[]string">
+  An slice of values for the header. Typically a header has a single value, but
   some headers can have multiple values.
 </ResponseField>
 
 #### Headers
 
-```go
-class Headers {
-  static from(
-    value: string[][] | Map<string, string> | Map<string, string[]>,
-  ): Headers;
-  append(name: string, value: string): void;
-  entries(): string[][];
-  get(name: string): string | null;
-}
-```
-
 Represents a collection of HTTP headers.
 
-<ResponseField name="Headers.from(value)">
-  Creates a new `Headers` object from the given `value` object.
+<Tip>
+  Use the [`NewHeaders`](#newheaders) function to create a new `Headers` object.
+</Tip>
 
-The `value` object must be one of the following types:
+```go
+type Headers struct {
+  // no exported fields
+}
 
-- A `string[][]`, where each inner array contains a header name and value.
-- A `Map<string, string>`, where the keys are header names and the values are
-  header values.
-- A `Map<string, string[]>`, where the keys are header names and the values are
-  arrays of header values.
+// methods
+func (*Headers) Append(name, value string)
+func (*Headers) Entries() [][]string
+func (*Headers) Get(name string) *string
+```
 
-</ResponseField>
-
-<ResponseField name="append(name, value)">
+<ResponseField name="Append(name, value)">
   Appends a new header with the given `name` and `value` to the collection.
 </ResponseField>
 
-<ResponseField name="entries()">
-  Returns a `string[][]`, where each inner array contains a header name and
+<ResponseField name="Entries()">
+  Returns a `[][]string`, where each inner slice contains a header name and
   value.
 </ResponseField>
 
-<ResponseField name="get(name)">
-  Returns the value of the header with the given `name`, or `null` if the header
+<ResponseField name="Get(name)">
+  Returns the value of the header with the given `name`, or `nil` if the header
   doesn't exist. If there are multiple values for the header, this function
   concatenates them with a comma to form a single string.
 </ResponseField>
 
 #### Request
 
-```go
-class Request {
-  constructor(url: string, options?: RequestOptions);
-  static clone(request: Request, options: RequestOptions): Request;
-  readonly url: string;
-  readonly method: string;
-  readonly headers: Headers;
-  readonly body: ArrayBuffer;
-  text(): string;
-  json<T>(): T;
-}
-```
-
 Represents an HTTP request to make.
 
-<ResponseField name="new http.Request(url, options?)">
-  Creates a new `Request` object with the given `url` and `options`.
+<Tip>
+  Use the [`NewRequest`](#newrequest) function to create a new `Request` object.
+</Tip>
 
-The required `url` parameter must be a fully qualified URL of the request,
-including the protocol. For example, `"https://example.com"`.
+```go
+type Request struct {
+  Url     string
+  Method  string
+  Headers *Headers
+  Body    []byte
+}
 
-The optional `options` parameter is a [`RequestOptions`](#requestoptions) object
-that's used to set the HTTP method, headers, and body if needed.
+// methods
+func (*Request) Clone(options ...*RequestOptions) *Request
+func (*Request) Bytes() []byte
+func (*Request) Text() string
+func (*Request) JSON(result any) error
+```
 
-</ResponseField>
-
-<ResponseField name="Request.clone(request, options)">
-  Creates a new `Request` object by cloning the given `request` and applying the
-  `options` to it.
-</ResponseField>
-
-<ResponseField name="url" type="string">
+<ResponseField name="Url" type="string">
   The fully qualified URL of the request, including the protocol. For example,
   `"https://example.com"`.
 </ResponseField>
 
-<ResponseField name="method" type="string">
+<ResponseField name="Method" type="string">
   The HTTP method of the request. For example, `"GET"`, `"POST"`, `"PUT"`, or
   `"DELETE"`.
 </ResponseField>
 
-<ResponseField name="headers" type="Headers">
-  The HTTP headers of the request, as a [`Headers`](#headers) object.
+<ResponseField name="Headers" type="Headers">
+  The HTTP headers of the request, as a pointer to a [`Headers`](#headers)
+  object.
 </ResponseField>
 
-<ResponseField name="body" type="ArrayBuffer">
-  The raw binary content data of the request body.
+<ResponseField name="Body" type="[]byte">
+
+The raw binary content data of the request body.
+
+<Tip>
+  The request body isn't normally read directly. Instead, use the `Bytes`,
+  `Text`, or `JSON` methods.
+</Tip>
+
 </ResponseField>
 
-<ResponseField name="text()">
-  Interprets the request body as a UTF-8 encoded string, and returns it as a
-  `string` value.
+<ResponseField name="Clone(options)">
+  Clones the `Request` object, applies the `options` to the new object, and
+  returns it.
 </ResponseField>
 
-<ResponseField name="json<T>()">
-  Interprets the request body as a UTF-8 encoded string containing JSON in the
-  shape of type `T`, and returns it as a value of type `T`.
+<ResponseField name="Bytes()">
+  Returns the binary content of the request body as a byte slice.
+</ResponseField>
+
+<ResponseField name="Text()">
+  Interprets the content of the request body as a UTF-8 encoded string, and
+  returns it as a `string` value.
+</ResponseField>
+
+<ResponseField name="JSON(result any) error">
+
+Interprets the content of the request body as a UTF-8 encoded string containing
+JSON, and attempts to deserialize it into the `result` provided.
+
+Pass the `result` as a pointer to an object matching the shape of the JSON. For
+example:
+
+```go
+var data MyData
+if err := request.JSON(&data); err != nil {
+  // handle error
+}
+```
+
 </ResponseField>
 
 #### RequestOptions
 
+Options for the HTTP request.
+
 ```go
-class RequestOptions {
-  method: string | null;
-  headers: Headers;
-  body: Content | null;
+type RequestOptions struct {
+  Method  string
+  Headers any
+  Body    any
 }
 ```
 
-Options for the HTTP request.
-
-<ResponseField name="method" type="string | null">
+<ResponseField name="Method" type="string">
   The HTTP method of the request. For example, `"GET"`, `"POST"`, `"PUT"`, or
-  `"DELETE"`. If `null` (the default), the request uses the `GET` method.
+  `"DELETE"`. If empty, the request uses the `GET` method.
 </ResponseField>
 
-<ResponseField name="headers" type="Headers">
-  The HTTP headers of the request, as a [`Headers`](#headers) object.
+<ResponseField name="Headers">
 
-  <Tip>
-    By default, the `RequestOptions` contains an empty `Headers` object which you can add headers to using the `append`
-    method.
-  </Tip>
+The HTTP headers of the request, which must be of one of the following types:
+
+- A [`Headers`](#headers) object, or a pointer to one.
+- A `[][]string`, where each inner slice contains a header name and value.
+- A `map[string]string`, where the keys are header names and the values are
+  header values.
+- A `map[string][]string`, where the keys are header names and the values are
+  slices of header values.
+
 </ResponseField>
 
-<ResponseField name="body" type="Content | null">
-  Content to pass in the request body, as a [`Content`](#content) object, or `null` (the default) if there is no body to
-  pass.
+<ResponseField name="Body" type="any">
 
-  <Tip>It's generally recommended to supply a `Content-Type` header for any requests that have a body.</Tip>
+Content to pass in the request body. Must be one of the following types:
+
+- A [`Content`](#content) object, or a pointer to one.
+- A `[]byte` of binary content, or a pointer to one.
+- A `string` of text content.
+- `nil` if there is no body to pass.
+
+<Tip>
+  It's generally recommended to supply a `Content-Type` header for any requests
+  that have a body.
+</Tip>
+
 </ResponseField>
 
 #### Response
 
-```go
-class Response {
-  readonly status: u16;
-  readonly statusText: string;
-  readonly headers: Headers;
-  readonly body: ArrayBuffer;
-  readonly ok: bool;
-  text(): string;
-  json<T>(): T;
-}
-```
-
 Represents the response received from the HTTP server.
 
-<ResponseField name="status" type="u16">
+```go
+type Response struct {
+  Status     uint16
+  StatusText string
+  Headers    *Headers
+  Body       []byte
+}
+
+// methods
+func (*Response) Ok() bool
+func (*Response) Bytes() []byte
+func (*Response) Text() string
+func (*Response) JSON(result any) error
+```
+
+<ResponseField name="Status" type="uint16">
   The HTTP response status code, such as `200` for success.
 </ResponseField>
 
-<ResponseField name="statusText" type="string">
+<ResponseField name="StatusText" type="string">
   The HTTP response status text associated with the status code, such as `"OK"`
   for success.
 </ResponseField>
 
-<ResponseField name="headers" type="Headers">
-  The HTTP headers received with the response, as a [`Headers`](#headers)
-  object.
+<ResponseField name="Headers" type="*Headers">
+  The HTTP headers received with the response, as a pointer to a
+  [`Headers`](#headers) object.
 </ResponseField>
 
-<ResponseField name="body" type="ArrayBuffer">
-  The raw binary content data of the response body.
+<ResponseField name="Body" type="[]byte">
 
-  <Tip>
-    The response body isn't normally read directly. Instead, use the `text` or `json` functions. You should only read the
-    `body` directly if you expect to receive binary data in the response.
-  </Tip>
+The raw binary content data of the response body.
+
+<Tip>
+  The response body isn't normally read directly. Instead, use the `Bytes`,
+  `Text`, or `JSON` methods.
+</Tip>
+
 </ResponseField>
 
-<ResponseField name="text()">
-  Interprets the response body content as a UTF-8 encoded string, and returns it
-  as a `string` value.
+<ResponseField name="Bytes()">
+  Returns the binary content of the response body as a byte slice.
 </ResponseField>
 
-<ResponseField name="json<T>()">
-  Interprets the response body content as a UTF-8 encoded string containing JSON
-  in the shape of type `T`, and returns it as a value of type `T`.
+<ResponseField name="Text()">
+  Interprets the content of the response body as a UTF-8 encoded string, and
+  returns it as a `string` value.
+</ResponseField>
+
+<ResponseField name="JSON(result any) error">
+
+Interprets the content of the response body as a UTF-8 encoded string containing
+JSON, and attempts to deserialize it into the `result` provided.
+
+Pass the `result` as a pointer to an object matching the shape of the JSON. For
+example:
+
+```go
+var data MyData
+if err := response.JSON(&data); err != nil {
+  // handle error
+}
+```
+
 </ResponseField>

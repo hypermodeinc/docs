@@ -11,7 +11,7 @@ The Modus Collection APIs allow you to add vector search within your functions.
 
 ## Import
 
-To begin, import the `collections` namespace from the SDK:
+To begin, import the `collections` package from the SDK:
 
 ```go
 import github.com/hypermodeinc/modus/sdk/go/pkg/collections
@@ -21,13 +21,13 @@ import github.com/hypermodeinc/modus/sdk/go/pkg/collections
 
 {/* <!-- vale Google.Headings = NO --> */}
 
-The APIs in the `collections` namespace are below, organized by category.
+The APIs in the `collections` package are below, organized by category.
 
 <SdkTip />
 
 ### Mutation Functions
 
-#### upsert
+#### Upsert
 
 Inserts or updates an item in a collection.
 
@@ -37,22 +37,22 @@ Inserts or updates an item in a collection.
 </Note>
 
 ```go
-collections.upsert(
-  collection: string,
-  key: string | null,
-  text: string,
-  labels: string[] = [],
-  namespace: string = "",
-): CollectionMutationResult
+func Upsert(
+  collection string,
+  key *string,
+  text string,
+  labels []string,
+  opts ...NamespaceOption
+) (*CollectionMutationResult, error)
 ```
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the
-  manifest](../../app-manifest#collections).
+  manifest](/modus/app-manifest#collections).
 </ResponseField>
 
-<ResponseField name="key" type="string">
-  The unique identifier for the item in the namespace. If null, the function
+<ResponseField name="key" type="*string">
+  The unique identifier for the item in the namespace. If `nil`, the function
   generates a unique identifier.
 </ResponseField>
 
@@ -60,16 +60,19 @@ collections.upsert(
   The text of the item to add to the collection.
 </ResponseField>
 
-<ResponseField name="labels" type="string[]">
-  An optional array of labels to associate with the item.
+<ResponseField name="labels" type="[]string">
+  An optional slice of labels to associate with the item.
 </ResponseField>
 
-<ResponseField name="namespace" type="string">
+<ResponseField name="opts" type="...NamespaceOption">
   Associates the item with a specific namespace. Defaults to an empty namespace
   if not provided.
+
+Pass `collections.WithNamespace("namespace")` to specify a namespace.
+
 </ResponseField>
 
-#### upsertBatch
+#### UpsertBatch
 
 Inserts or updates a batch of items into a collection.
 
@@ -79,208 +82,90 @@ Inserts or updates a batch of items into a collection.
 </Note>
 
 ```go
-collections.upsertBatch(
-  collection: string,
-  keys: string[] | null,
-  texts: string[],
-  labelsArr: string[][] = [],
-  namespace: string = "",
-): CollectionMutationResult
+func UpsertBatch(
+  collection string,
+  keys []string,
+  texts []string,
+  labelsArr [][]string,
+  opts ...NamespaceOption
+) (*CollectionMutationResult, error)
 ```
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the
-  manifest](../../app-manifest#collections).
+  manifest](/modus/app-manifest#collections).
 </ResponseField>
 
-<ResponseField name="keys" type="string[]">
-  Array of keys for the item to add to the collection. If you pass `null` for
-  any key, Hypermode assigns a new UUID as the key for the item.
+<ResponseField name="keys" type="[]string">
+  Slice of keys for the item to add to the collection. If you pass `nil` for any
+  key, Hypermode assigns a new UUID as the key for the item.
 </ResponseField>
 
-<ResponseField name="texts" type="string[]" required>
-  Array of texts for the items to add to the collection.
+<ResponseField name="texts" type="[]string" required>
+  Slice of texts for the items to add to the collection.
 </ResponseField>
 
-<ResponseField name="labelsArr" type="string[][]">
-  An optional array of arrays of labels to associate with the items.
+<ResponseField name="labelsArr" type="[][]string">
+  An optional slice of slices of labels to associate with the items.
 </ResponseField>
 
-<ResponseField name="namespace" type="string">
+<ResponseField name="opts" type="...NamespaceOption">
   Associates the item with a specific namespace. Defaults to an empty namespace
   if not provided.
+
+Pass `collections.WithNamespace("namespace")` to specify a namespace.
+
 </ResponseField>
 
-#### remove
+#### Remove
 
 Removes an item from the collection.
 
 ```go
-collections.remove(
-  collection: string,
-  key: string,
-  namespace: string = "",
-): CollectionMutationResult
+func Remove(
+  collection string,
+  key string,
+  opts ...NamespaceOption
+) (*CollectionMutationResult, error)
 ```
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the
-  manifest](../../app-manifest#collections).
+  manifest](/modus/app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="key" type="string" required>
   The key of the item to delete from the collection.
 </ResponseField>
 
-<ResponseField name="namespace" type="string">
+<ResponseField name="opts" type="...NamespaceOption">
   The namespace to remove the item from. Defaults to the default namespace if
   not provided.
+
+Pass `collections.WithNamespace("namespace")` to specify a namespace.
+
 </ResponseField>
 
 ### Search and Retrieval Functions
 
-#### search
-
-Perform a natural language search on items within a collection. This method is
-useful for finding items that match a search query based on semantic meaning.
-
-<Note>
-  Modus uses the same embedder for both inserting text into the collection, and
-  for the text used when searching the collection.
-</Note>
-
-```go
-collections.search(
-  collection: string,
-  searchMethod: string,
-  text: string,
-  limit: i32,
-  returnText: bool = false,
-  namespaces: string[] = [],
-): CollectionSearchResult
-```
-
-<ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the
-  manifest](../../app-manifest#collections).
-</ResponseField>
-
-<ResponseField name="searchMethod" type="string" required>
-  The search method used to calculate embedding for text & search against.
-</ResponseField>
-
-<ResponseField name="text" type="string" required>
-  The text to compute natural language search on.
-</ResponseField>
-
-<ResponseField name="limit" type="i32" required>
-  The number of result objects to return.
-</ResponseField>
-
-<ResponseField name="returnText" type="bool">
-  A flag to return the texts in the response.
-</ResponseField>
-
-<ResponseField name="namespaces" type="string[]">
-  A list of namespaces to search the item from. Defaults to the default
-  namespace if not provided.
-</ResponseField>
-
-#### searchByVector
-
-Perform a vector-based search on a collection, which is helpful for scenarios
-requiring precise similarity calculations between pre-computed embeddings.
-
-<Note>
-  Modus uses the same embedder for both inserting text into the collection, and
-  for the vector used when searching the collection.
-</Note>
-
-```go
-collections.searchByVector(
-  collection: string,
-  searchMethod: string,
-  vector: f64[],
-  limit: i32,
-  returnText: bool = false,
-  namespaces: string[] = [],
-): CollectionSearchResult
-```
-
-<ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the
-  manifest](../../app-manifest#collections).
-</ResponseField>
-
-<ResponseField name="searchMethod" type="string" required>
-  The search method used to calculate embedding for vector & search against.
-</ResponseField>
-
-<ResponseField name="vector" type="f64[]" required>
-  The vector to compute search on.
-</ResponseField>
-
-<ResponseField name="limit" type="i32" required>
-  The number of result objects to return.
-</ResponseField>
-
-<ResponseField name="returnText" type="bool">
-  A flag to return the texts in the response.
-</ResponseField>
-
-<ResponseField name="namespaces" type="string[]">
-  An optional array of namespaces to search within.
-</ResponseField>
-
-#### nnClassify
-
-Classify an item in the collection using previous vectors' labels.
-
-```go
-  collections.nnClassify(
-  collection: string,
-  searchMethod: string,
-  text: string,
-  namespace: string = "",
-): CollectionClassificationResult
-```
-
-<ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the
-  manifest](../../app-manifest#collections).
-</ResponseField>
-
-<ResponseField name="searchMethod" type="string" required>
-  The search method used to calculate embedding for text & search against.
-</ResponseField>
-
-<ResponseField name="text" type="string" required>
-  The text to compute natural language search on.
-</ResponseField>
-
-<ResponseField name="namespace" type="string">
-  The namespace to search the items from. Defaults to the default namespace if
-  not provided.
-</ResponseField>
-
-#### computeDistance
+#### ComputeDistance
 
 Computes distance between two keys in a collection using a search method's
 embedder.
 
 ```go
-collections.computeDistance(
-  collection: string,
-  searchMethod: string,
-  key1: string,
-  key2: string,
-  namespace: string = "",
-): CollectionSearchResultObject
+func ComputeDistance(
+  collection string,
+  searchMethod string,
+  key1 string,
+  key2 string,
+  opts ...NamespaceOption
+) (*CollectionSearchResultObject, error)
 ```
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the
-  manifest](../app-manifest#collections).
+  manifest](/modus/app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string" required>
@@ -291,90 +176,160 @@ collections.computeDistance(
   Keys to compute similarity on.
 </ResponseField>
 
-<ResponseField name="namespace" type="string">
+<ResponseField name="opts" type="...NamespaceOption">
   The namespace to search the items from. Defaults to the default namespace if
   not provided.
+
+Pass `collections.WithNamespace("namespace")` to specify a namespace.
+
 </ResponseField>
 
-#### getText
+#### NnClassify
 
-Gets an item's text from a collection, give the item's key.
+Classify an item in the collection using previous vectors' labels.
 
 ```go
-collections.getText(
-  collection: string,
-  key: string,
-  namespace: string = "",
-): string
+func NnClassify(
+  collection string,
+  searchMethod string,
+  text string,
+  opts ...NamespaceOption
+) (*CollectionClassificationResult, error)
 ```
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the
-  manifest](../../app-manifest#collections).
+  manifest](/modus/app-manifest#collections).
+</ResponseField>
+
+<ResponseField name="searchMethod" type="string" required>
+  The search method used to calculate embedding for text & search against.
+</ResponseField>
+
+<ResponseField name="text" type="string" required>
+  The text to compute natural language search on.
+</ResponseField>
+
+<ResponseField name="opts" type="...NamespaceOption">
+  The namespace to search the items from. Defaults to the default namespace if
+  not provided.
+
+Pass `collections.WithNamespace("namespace")` to specify a namespace.
+
+</ResponseField>
+
+#### GetLabels
+
+Get the labels for an item in a collection.
+
+```go
+func GetLabels(
+  collection string,
+  key string,
+  opts ...NamespaceOption
+) ([]string, error)
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the
+  manifest](/modus/app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="key" type="string" required>
   The key of the item to retrieve.
 </ResponseField>
 
-<ResponseField name="namespace" type="string">
+<ResponseField name="opts" type="...NamespaceOption">
   The namespace to get the item from. Defaults to the default namespace if not
   provided.
+
+Pass `collections.WithNamespace("namespace")` to specify a namespace.
+
 </ResponseField>
 
-#### getTexts
+#### GetNamespaces
+
+Get all namespaces in a collection.
+
+```go
+func GetNamespaces(collection string) ([]string, error)
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the
+  manifest](/modus/app-manifest#collections).
+</ResponseField>
+
+#### GetText
+
+Gets an item's text from a collection, give the item's key.
+
+```go
+func GetText(
+  collection string,
+  key string,
+  opts ...NamespaceOption
+) (string, error)
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the
+  manifest](/modus/app-manifest#collections).
+</ResponseField>
+
+<ResponseField name="key" type="string" required>
+  The key of the item to retrieve.
+</ResponseField>
+
+<ResponseField name="opts" type="...NamespaceOption">
+  The namespace to get the item from. Defaults to the default namespace if not
+  provided.
+
+Pass `collections.WithNamespace("namespace")` to specify a namespace.
+
+</ResponseField>
+
+#### GetTexts
 
 Get all items from a collection. The result is a map of key to text for all
 items in the collection.
 
 ```go
-collections.getTexts(
-  collection: string,
-  namespace: string = "",
-): Map<string, string>
+func GetTexts(
+  collection string,
+  opts ...NamespaceOption
+) (map[string]string, error)
 ```
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the
-  manifest](../app-manifest#collections).
+  manifest](/modus/app-manifest#collections).
 </ResponseField>
 
-<ResponseField name="namespace" type="string">
+<ResponseField name="opts" type="...NamespaceOption">
   The namespace to get the items from. Defaults to the default namespace if not
   provided.
+
+Pass `collections.WithNamespace("namespace")` to specify a namespace.
+
 </ResponseField>
 
-#### getNamespaces
-
-Get all namespaces in a collection.
-
-```go
-collections.getNamespaces(
-  collection: string,
-): string[]
-```
-
-<ResponseField name="collection" type="string" required>
-  Name of the collection, as [defined in the
-  manifest](../app-manifest#collections).
-</ResponseField>
-
-#### getVector
+#### GetVector
 
 Get the vector for an item in a collection.
 
 ```go
-collections.getVector(
-  collection: string,
-  searchMethod: string,
-  key: string,
-  namespace: string = "",
-): f64[]
+func GetVector(
+  collection string,
+  searchMethod string,
+  key string,
+  opts ...NamespaceOption
+) ([]float32, error)
 ```
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the
-  manifest](../../app-manifest#collections).
+  manifest](/modus/app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string" required>
@@ -385,40 +340,103 @@ collections.getVector(
   The key of the item to retrieve.
 </ResponseField>
 
-<ResponseField name="namespace" type="string">
+<ResponseField name="opts" type="...NamespaceOption">
   The namespace to get the item from. Defaults to the default namespace if not
   provided.
+
+Pass `collections.WithNamespace("namespace")` to specify a namespace.
+
 </ResponseField>
 
-#### getLabels
+#### Search
 
-Get the labels for an item in a collection.
+Perform a natural language search on items within a collection. This method is
+useful for finding items that match a search query based on semantic meaning.
+
+<Note>
+  Modus uses the same embedder for both inserting text into the collection, and
+  for the text used when searching the collection.
+</Note>
 
 ```go
-collections.getLabels(
-  collection: string,
-  key: string,
-  namespace: string = "",
-): string[]
+func Search(
+  collection string,
+  searchMethod string,
+  text string,
+  opts ...SearchOption
+) (*CollectionSearchResult, error)
 ```
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the
-  manifest](../app-manifest#collections).
+  manifest](/modus/app-manifest#collections).
 </ResponseField>
 
-<ResponseField name="key" type="string" required>
-  The key of the item to retrieve.
+<ResponseField name="searchMethod" type="string" required>
+  The search method used to calculate embedding for text & search against.
 </ResponseField>
 
-<ResponseField name="namespace" type="string">
-  The namespace to get the item from. Defaults to the default namespace if not
-  provided.
+<ResponseField name="text" type="string" required>
+  The text to compute natural language search on.
+</ResponseField>
+
+<ResponseField name="opts" type="...SearchOption">
+  Additional options for the search:
+
+- `collections.WithLimit(limit int)`: The number of result objects to return.
+- `collections.WithReturnText(returnText bool)`: A flag to return the texts in
+  the response.
+- `collections.WithNamespaces(namespaces []string)`: A list of namespaces to
+  search the item from. Defaults to the default namespace if not provided.
+
+</ResponseField>
+
+#### SearchByVector
+
+Perform a vector-based search on a collection, which is helpful for scenarios
+requiring precise similarity calculations between pre-computed embeddings.
+
+<Note>
+  Modus uses the same embedder for both inserting text into the collection, and
+  for the vector used when searching the collection.
+</Note>
+
+```go
+func SearchByVector(
+  collection string,
+  searchMethod string,
+  vector []float32,
+  opts ...SearchOption
+) (*CollectionSearchResult, error)
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the
+  manifest](/modus/app-manifest#collections).
+</ResponseField>
+
+<ResponseField name="searchMethod" type="string" required>
+  The search method used to calculate embedding for vector & search against.
+</ResponseField>
+
+<ResponseField name="vector" type="[]float32" required>
+  The vector to compute search on.
+</ResponseField>
+
+<ResponseField name="opts" type="...SearchOption">
+  Additional options for the search:
+
+- `collections.WithLimit(limit int)`: The number of result objects to return.
+- `collections.WithReturnText(returnText bool)`: A flag to return the texts in
+  the response.
+- `collections.WithNamespaces(namespaces []string)`: A list of namespaces to
+  search the item from. Defaults to the default namespace if not provided.
+
 </ResponseField>
 
 ### Maintenance Functions
 
-#### recomputeSearchMethod
+#### RecomputeSearchMethod
 
 Recalculates the embeddings for all items in a collection. It can be
 resource-intensive, use it when necessary, for example after you have updated
@@ -426,291 +444,271 @@ the method for embedding calculation and want to re-compute the embeddings for
 existing data in the collection.
 
 ```go
-collections.recomputeSearchMethod(
-  collection: string,
-  searchMethod: string,
-  namespace: string = "",
-): collections.SearchMethodMutationResult
+func RecomputeSearchMethod(
+  collection string,
+  searchMethod string,
+  opts ...NamespaceOption
+) (*SearchMethodMutationResult, error)
 ```
 
 <ResponseField name="collection" type="string" required>
   Name of the collection, as [defined in the
-  manifest](../../app-manifest#collections).
+  manifest](/modus/app-manifest#collections).
 </ResponseField>
 
 <ResponseField name="searchMethod" type="string" required>
   The search method to recompute embeddings for.
 </ResponseField>
 
-<ResponseField name="namespace" type="string">
+<ResponseField name="opts" type="...NamespaceOption">
   The namespace to use. Defaults to the default namespace if not provided.
+
+Pass `collections.WithNamespace("namespace")` to specify a namespace.
+
 </ResponseField>
 
-### Objects
+### Types
 
-#### CollectionMutationResult
+#### CollectionClassificationLabelObject
+
+Represents a classification label.
 
 ```go
-class CollectionMutationResult {
-  collection: string;
-  status: CollectionStatus;
-  error: string;
-  isSuccessful: bool;
-  operation: string;
-  keys: string[];
+type CollectionClassificationLabelObject struct {
+  Label string
+  Confidence float64
 }
 ```
 
-Represents the result of a mutation operation on a collection.
+<ResponseField name="Label" type="string">
+  The classification label.
+</ResponseField>
 
-<ResponseField name="collection" type="string">
+<ResponseField name="Confidence" type="float64">
+  The confidence score of the classification label.
+</ResponseField>
+
+#### CollectionClassificationResult
+
+Represents the result of a classification operation on a collection.
+
+```go
+type CollectionClassificationResult struct {
+  Collection string
+  Status string
+  Error string
+  SearchMethod string
+  LabelsResult []*CollectionClassificationLabelObject
+  Cluster []*CollectionClassificationResultObject
+}
+```
+
+<ResponseField name="Collection" type="string">
   Name of the collection.
 </ResponseField>
 
-<ResponseField name="status" type="CollectionStatus">
+<ResponseField name="Status" type="string">
   The status of the operation.
 </ResponseField>
 
-<ResponseField name="error" type="string">
+<ResponseField name="Error" type="string">
   Error message, if any.
 </ResponseField>
 
-<ResponseField name="isSuccessful" type="bool">
-  A boolean indicating whether the operation completed successfully. Use this to
-  confirm success before handling the result.
+<ResponseField name="SearchMethod" type="string">
+  The search method used in the operation.
 </ResponseField>
 
-<ResponseField name="operation" type="string">
+<ResponseField
+  name="LabelsResult"
+  type="[]*CollectionClassificationLabelObject"
+>
+  The classification labels.
+</ResponseField>
+
+<ResponseField name="Cluster" type="[]*CollectionClassificationResultObject">
+  The classification results.
+</ResponseField>
+
+#### CollectionClassificationResultObject
+
+Represents an object in the classification results.
+
+```go
+type CollectionClassificationResultObject struct {
+  Key string
+  Labels []string
+  Distance float64
+  Score float64
+}
+```
+
+<ResponseField name="Key" type="string">
+  The key of the item classified.
+</ResponseField>
+
+<ResponseField name="Labels" type="[]string">
+  The classification labels.
+</ResponseField>
+
+<ResponseField name="Distance" type="float64">
+  The distance of the item from the classification labels.
+</ResponseField>
+
+<ResponseField name="Score" type="float64">
+  The similarity score of the item classified.
+</ResponseField>
+
+#### CollectionMutationResult
+
+Represents the result of a mutation operation on a collection.
+
+```go
+type CollectionMutationResult struct {
+  Collection string
+  Status string
+  Error string
+  Operation string
+  Keys []string
+}
+```
+
+<ResponseField name="Collection" type="string">
+  Name of the collection.
+</ResponseField>
+
+<ResponseField name="Status" type="string">
+  The status of the operation.
+</ResponseField>
+
+<ResponseField name="Error" type="string">
+  Error message, if any.
+</ResponseField>
+
+<ResponseField name="Operation" type="string">
   The operation performed.
 </ResponseField>
 
-<ResponseField name="keys" type="string[]">
+<ResponseField name="Keys" type="[]string">
   The keys of the items affected by the operation.
 </ResponseField>
 
 #### CollectionSearchResult
 
+Represents the result of a search operation on a collection.
+
 ```go
-class CollectionSearchResult {
-  collection: string;
-  status: CollectionStatus;
-  error: string;
-  isSuccessful: bool;
-  searchMethod: string;
-  objects: CollectionSearchResultObject[];
+type CollectionSearchResult struct {
+  Collection string
+  Status string
+  Error string
+  SearchMethod string
+  Objects []*CollectionSearchResultObject
 }
 ```
 
-Represents the result of a search operation on a collection.
-
-<ResponseField name="collection" type="string">
+<ResponseField name="Collection" type="string">
   Name of the collection.
 </ResponseField>
 
-<ResponseField name="status" type="CollectionStatus">
+<ResponseField name="Status" type="string">
   The status of the operation.
 </ResponseField>
 
-<ResponseField name="error" type="string">
+<ResponseField name="Error" type="string">
   Error message, if any.
 </ResponseField>
 
-<ResponseField name="isSuccessful" type="bool">
-  A boolean indicating whether the operation completed successfully. Use this to
-  confirm success before handling the result.
-</ResponseField>
-
-<ResponseField name="searchMethod" type="string">
+<ResponseField name="SearchMethod" type="string">
   The search method used in the operation.
 </ResponseField>
 
-<ResponseField name="objects" type="CollectionSearchResultObject[]">
+<ResponseField name="Objects" type="[]*CollectionSearchResultObject">
   The search results.
 </ResponseField>
 
 #### CollectionSearchResultObject
 
+Represents an object in the search results.
+
 ```go
-class CollectionSearchResultObject {
-  namespace: string;
-  key: string;
-  text: string;
-  labels: string[];
-  distance: f64;
-  score: f64;
+type CollectionSearchResultObject struct {
+  Namespace string
+  Key string
+  Text string
+  Labels []string
+  Distance float64
+  Score float64
 }
 ```
 
-Represents an object in the search results.
-
-<ResponseField name="namespace" type="string">
+<ResponseField name="Namespace" type="string">
   The namespace of the item found as part of the search.
 </ResponseField>
 
-<ResponseField name="key" type="string">
+<ResponseField name="Key" type="string">
   The key of the item found as part of the search.
 </ResponseField>
 
-<ResponseField name="text" type="string">
+<ResponseField name="Text" type="string">
   The text of the item found as part of the search.
 </ResponseField>
 
-<ResponseField name="distance" type="f64">
+<ResponseField name="Distance" type="float64">
   The distance of the item from the search text.
 </ResponseField>
 
-<ResponseField name="score" type="f64">
+<ResponseField name="Score" type="float64">
   The similarity score of the item found, as it pertains to the search.
-</ResponseField>
-
-#### CollectionClassificationResult
-
-```go
-class CollectionClassificationResult {
-  collection: string;
-  status: CollectionStatus;
-  error: string;
-  isSuccessful: bool;
-  searchMethod: string;
-  labelsResult: CollectionClassificationLabelObject[];
-  cluster: CollectionClassificationResultObject[];
-}
-```
-
-Represents the result of a classification operation on a collection.
-
-<ResponseField name="collection" type="string">
-  Name of the collection.
-</ResponseField>
-
-<ResponseField name="status" type="CollectionStatus">
-  The status of the operation.
-</ResponseField>
-
-<ResponseField name="error" type="string">
-  Error message, if any.
-</ResponseField>
-
-<ResponseField name="isSuccessful" type="bool">
-  A boolean indicating whether the operation completed successfully. Use this to
-  confirm success before handling the result.
-</ResponseField>
-
-<ResponseField name="searchMethod" type="string">
-  The search method used in the operation.
-</ResponseField>
-
-<ResponseField name="labelsResult" type="CollectionClassificationLabelObject[]">
-  The classification labels.
-</ResponseField>
-
-<ResponseField name="cluster" type="CollectionClassificationResultObject[]">
-  The classification results.
-</ResponseField>
-
-#### CollectionClassificationLabelObject
-
-```go
-class CollectionClassificationLabelObject {
-  label: string;
-  confidence: f64;
-}
-```
-
-Represents a classification label.
-
-<ResponseField name="label" type="string">
-  The classification label.
-</ResponseField>
-
-<ResponseField name="confidence" type="f64">
-  The confidence score of the classification label.
-</ResponseField>
-
-#### CollectionClassificationResultObject
-
-```go
-class CollectionClassificationResultObject {
-  key: string;
-  labels: string[];
-  distance: f64;
-  score: f64;
-}
-```
-
-Represents an object in the classification results.
-
-<ResponseField name="key" type="string">
-  The key of the item classified.
-</ResponseField>
-
-<ResponseField name="labels" type="string[]">
-  The classification labels.
-</ResponseField>
-
-<ResponseField name="distance" type="f64">
-  The distance of the item from the classification labels.
-</ResponseField>
-
-<ResponseField name="score" type="f64">
-  The similarity score of the item classified.
 </ResponseField>
 
 #### CollectionStatus
 
-```go
-enum CollectionStatus {
-  Success = "success";
-  Error = "error";
-}
-```
-
 The status of a collection operation.
 
-<ResponseField name="Success" type="string">
-  The operation was successful.
-</ResponseField>
+```go
+type CollectionStatus = string
 
-<ResponseField name="Error" type="string">
-  The operation encountered an error.
-</ResponseField>
+const (
+  Success CollectionStatus = "success"
+  Error   CollectionStatus = "error"
+)
+```
+
+<ResponseField name="Success">The operation was successful.</ResponseField>
+
+<ResponseField name="Error">The operation encountered an error.</ResponseField>
 
 #### SearchMethodMutationResult
 
+Represents the result of a mutation operation on a search method.
+
 ```go
-class SearchMethodMutationResult {
-  collection: string;
-  status: CollectionStatus;
-  error: string;
-  isSuccessful: bool;
-  operation: string;
-  searchMethod: string;
+type SearchMethodMutationResult struct {
+  Collection string
+  Status string
+  Error string
+  Operation string
+  SearchMethod string
 }
 ```
 
-Represents the result of a mutation operation on a search method.
-
-<ResponseField name="collection" type="string">
+<ResponseField name="Collection" type="string">
   Name of the collection.
 </ResponseField>
 
-<ResponseField name="status" type="CollectionStatus">
+<ResponseField name="Status" type="string">
   The status of the operation.
 </ResponseField>
 
-<ResponseField name="error" type="string">
+<ResponseField name="Error" type="string">
   Error message, if any.
 </ResponseField>
 
-<ResponseField name="isSuccessful" type="bool">
-  A boolean indicating whether the operation completed successfully. Use this to
-  confirm success before handling the result.
-</ResponseField>
-
-<ResponseField name="operation" type="string">
+<ResponseField name="Operation" type="string">
   The operation performed.
 </ResponseField>
 
-<ResponseField name="searchMethod" type="string">
+<ResponseField name="SearchMethod" type="string">
   The search method affected by the operation.
 </ResponseField>

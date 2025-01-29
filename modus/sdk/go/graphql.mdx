@@ -12,7 +12,7 @@ GraphQL endpoint.
 
 ## Import
 
-To begin, import the `graphql` namespace from the SDK:
+To begin, import the `graphql` package from the SDK:
 
 ```go
 import github.com/hypermodeinc/modus/sdk/go/pkg/graphql
@@ -22,44 +22,42 @@ import github.com/hypermodeinc/modus/sdk/go/pkg/graphql
 
 {/* <!-- vale Google.Headings = NO --> */}
 
-The APIs in the `graphql` namespace are below, organized by category.
+The APIs in the `graphql` package are below, organized by category.
 
 <SdkTip />
 
 ### Functions
 
-#### execute
+#### Execute
 
 Execute a GraphQL statement to call a query or apply mutation against a GraphQL
 endpoint.
 
 ```go
-graphql.execute<T> (
-  connection: string,
-  statement: string,
-  variables?: Variables
-): Response<T>
+Execute[T any](
+  connection,
+  statement string,
+  variables map[string]any
+) (*Response[T], error)
 ```
 
-<ResponseField name="T" type="Type" required>
+<ResponseField name="T" required>
 
 Type of object to use for the data returned from the query. This can be any
 type, including a custom type defined in your project. It should match the shape
 of the data returned from the GraphQL query.
 
-  <Tip>
-  Define custom types in the project's source code. In AssemblyScript, create classes decorated with `@json`.
+<Tip>
+  Define custom types in the project's source code. All types must be JSON
+  serializable. You can also use built-in types such as strings, numbers,
+  slices, and maps.
+</Tip>
 
-All types, including classes, base classes, and field types must be JSON
-serializable. You can also use built-in types such as strings, numbers, arrays,
-and maps.
-
-  </Tip>
 </ResponseField>
 
 <ResponseField name="connection" type="string" required>
   Name of the connection, as [defined in the
-  manifest](../../app-manifest#connection).
+  manifest](/modus/app-manifest#connection).
 </ResponseField>
 
 <ResponseField name="statement" type="string" required>
@@ -67,134 +65,99 @@ and maps.
 
 <Warning>
   While it's possible to directly include parameter values into your GraphQL
-  statement, it's highly recommended to pass a [`Variables`](#variables) object
-  instead. This can help to prevent against injection attacks and other security
-  vulnerabilities.
+  statement, it's highly recommended to pass a variables map instead. This can
+  help to prevent against injection attacks and other security vulnerabilities.
 </Warning>
 
 </ResponseField>
 
-<ResponseField name="variables" type="Variables">
-  Optional variables to include with the query.
+<ResponseField name="variables" type="map[string]any">
 
-See the details of the [`Variables`](#variables) object for more information.
+Optional variables to include with the query.
 
-</ResponseField>
-
-### Objects
-
-#### Variables
-
-```go
-class Variables {
-  public set(name: string, value: any): void;
-  public toJSON(): string;
-}
-```
-
-A container for variables to include with a GraphQL operation.
-
-To use this feature, create a new `Variables` object and call the `set` method
-for each variable you want to include. Then pass the object to the `execute`
-function.
-
-<ResponseField name="set(name, value)">
-  Set a variable with a name and value to include with the GraphQL operation.
-
-{" "}
-
-<ResponseField name="name" type="string" required>
-  The name of the variable to include in the GraphQL operation.
-</ResponseField>
-
-<ResponseField name="value" type="any" required>
-  The value of the variable to include in the GraphQL operation.
-
-The value can be of any type that's JSON serializable, including strings,
-numbers, boolean values, arrays, maps, and custom objects decorated with
-`@json`.
+The key should be the name of the GraphQL variable. The value can be of any type
+that's JSON serializable, including strings, numbers, boolean values, slices,
+maps, and custom structs.
 
 </ResponseField>
-</ResponseField>
 
-<ResponseField name="toJSON()" type="string">
-  Serializes the variables to a JSON string for inclusion in the GraphQL
-  operation. The `execute` function calls this automatically when you pass a
-  `Variables` object. You typically don't need to call it directly.
-</ResponseField>
+### Types
 
 #### Response
 
 ```go
-class Response<T> {
-  errors: ErrorResult[] | null;
-  data: T | null;
+type Response[T any] struct {
+  Errors []ErrorResult
+  Data   *T
 }
 ```
 
 A response object from the GraphQL query.
 
-Either `errors` or `data` is present, depending on the result of the query.
+Either `Errors` or `Data` is present, depending on the result of the query.
 
-<ResponseField name="errors" type="ErrorResult[]">
-  An array of errors incurred as part of your GraphQL request, if any.
+<ResponseField name="Errors" type="[]ErrorResult">
 
-Each error in the array is an [`ErrorResult`](#errorresult) object. If there are
-no errors, this field is `null`.
+An slice of errors incurred as part of your GraphQL request, if any.
+
+Each error in the slice is an [`ErrorResult`](#errorresult) object. If there are
+no errors, this field is `nil`.
 
 </ResponseField>
 
-<ResponseField name="data" type="T">
-  The resulting data selected by the GraphQL operation.
+<ResponseField name="Data" type="*T">
 
-The data has the type specified in the call to the `execute` function. If data
-is absent due to errors, this field is `null`.
+The resulting data selected by the GraphQL operation.
+
+The data is a pointer to an object the type specified in the call to the
+`Execute` function. If data is absent due to errors, this field is `nil`.
 
 </ResponseField>
 
 #### ErrorResult
 
 ```go
-class ErrorResult {
-  message: string;
-  locations: CodeLocation[] | null;
-  path: string[] | null;
+type ErrorResult struct {
+  Message   string
+  Locations []CodeLocation
+  Path      []string
 }
 ```
 
 The details of an error incurred as part of a GraphQL operation.
 
-<ResponseField name="message" type="string">
+<ResponseField name="Message" type="string">
   Description of the error incurred.
 </ResponseField>
 
-<ResponseField name="path" type="string[]">
-  Path to the area of the GraphQL statement related to the error.
+<ResponseField name="Path" type="[]string">
 
-Each item in the array represents a segment of the path.
+Path to the area of the GraphQL statement related to the error.
+
+Each item in the slice represents a segment of the path.
 
 </ResponseField>
 
-<ResponseField name="locations" type="CodeLocation[]">
-  An array of [`CodeLocation`](#codelocation) objects that point to the specific
+<ResponseField name="Locations" type="[]CodeLocation">
+  An slice of [`CodeLocation`](#codelocation) objects that point to the specific
   location of the error in the GraphQL statement.
 </ResponseField>
 
 #### CodeLocation
 
 ```go
-class CodeLocation {
-  line: u32;
-  column: u32;
+type CodeLocation struct {
+  Line   uint32
+  Column uint32
 }
 ```
 
 The location of specific code within a GraphQL statement.
 
-<ResponseField name="line" type="u32">
+<ResponseField name="Line" type="uint32">
   Line number within the GraphQL statement for the code.
 </ResponseField>
 
-<ResponseField name="column" type="u32">
+<ResponseField name="Column" type="uint32">
   Column number within the GraphQL statement for the code.
 </ResponseField>

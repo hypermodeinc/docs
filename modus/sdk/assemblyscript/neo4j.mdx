@@ -30,212 +30,96 @@ The APIs in the `neo4j` namespace are below, organized by category.
 
 #### executeQuery
 
-Execute a Neo4j query or mutation using a Neo4j query and parameters.
+Executes a Cypher query on the Neo4j database.
 
 ```ts
-func ExecuteQuery(connectionName, query string, parameters map[string]any, opts ...Neo4jOption) (*EagerResult, error)
+function executeQuery(
+  connection: string,
+  query: string,
+  parameters: Variables = new Variables(),
+  dbName: string = "neo4j",
+): EagerResult
 ```
 
-<ResponseField name="connectionName" type="string" required>
+<ResponseField name="connection" type="string" required>
   Name of the connection, as [defined in the
-  manifest](../../app-manifest#connections).
+  manifest](/modus/app-manifest#connections).
 </ResponseField>
 
 <ResponseField name="query" type="string" required>
-  A Neo4j query to execute.
+  A Neo4j Cypher query to execute.
 </ResponseField>
 
-<ResponseField name="parameters" type="map[string]any" required>
-  A map of parameters to pass to the query.
+<ResponseField name="parameters" type="Variables">
+  The parameters to pass to the query.
 </ResponseField>
 
-<ResponseField name="opts" type="Neo4jOption" required>
-  Optional arguments to pass to the query. Specify the database name using the
-  `WithDbName` option.
-</ResponseField>
-
-#### GetRecordValue
-
-Get the value of a record at a given key, and cast as a type.
-
-```ts
-func GetRecordValue[T RecordValue](record *Record, key string) (T, error)
-```
-
-<ResponseField name="record" type="Record" required>
-  The record to get the value from.
-</ResponseField>
-
-<ResponseField name="key" type="string" required>
-  The key of the value to get.
-</ResponseField>
-
-<ResponseField name="T" type="RecordValue" required>
-  The type to cast the value as.
-</ResponseField>
-
-#### Get
-
-Get the value of a record object at a given key as a string.
-
-```ts
-func (r *Record) Get(key string) (string, error)
-```
-
-<ResponseField name="key" type="string" required>
-  The key of the value to get.
-</ResponseField>
-
-#### AsMap
-
-Convert a record object to a map.
-
-```ts
-func (r *Record) AsMap() map[string]string
-```
-
-#### GetProperty
-
-Get the value of an `Entity` (`Node`, `Path`, or `Relationship`) property, and
-cast as a type.
-
-```ts
-func GetProperty[T PropertyValue](e Entity, key string) (T, error)
-```
-
-<ResponseField name="e" type="Entity" required>
-  The entity to get the property from.
-</ResponseField>
-
-<ResponseField name="key" type="string" required>
-  The key of the property to get.
-</ResponseField>
-
-<ResponseField name="T" type="PropertyValue" required>
-  The type to cast the property as.
+<ResponseField name="dbName" type="string">
+  An optional database name to use. Defaults to "neo4j" if not provided.
 </ResponseField>
 
 ### Types
 
 #### EagerResult
 
-The result of a Neo4j query or mutation.
+The result of a Neo4j query.
 
 ```ts
-type EagerResult struct {
-  Keys    []string
-  Records []*Record
+class EagerResult {
+  Keys: string[]
+  Records: Record[]
 }
 ```
 
-<ResponseField name="Keys" type="string[]" required>
+<ResponseField name="keys" type="string[]">
   The keys of the result.
 </ResponseField>
 
-<ResponseField name="Records" type="Record[]" required>
+<ResponseField name="records" type="Record[]">
   The records of the result.
 </ResponseField>
 
-#### Record
-
-A record in a Neo4j query result.
-
-```ts
-type Record struct {
-  Values []string
-  Keys   []string
-}
-```
-
-<ResponseField name="Values" type="string[]" required>
-  The values of the record.
-</ResponseField>
-
-<ResponseField name="Keys" type="string[]" required>
-  The keys of the record.
-</ResponseField>
-
-#### RecordValue
-
-A value of a record in a Neo4j query result.
-
-```ts
-type RecordValue interface {
-  bool | int64 | float64 | string |
-    time.Time |
-    []byte | []any | map[string]any |
-    Node | Relationship | Path | Point2D | Point3D
-}
-```
-
 #### Entity
 
-An interface representing possible entities in a Neo4j query result. `Node`,
-`Relationship`, and `Path` implement this interface.
+An abstract class representing possible entities in a Neo4j query result.
 
 ```ts
-type Entity interface {
-  GetElementId() string
-  GetProperties() map[string]any
+abstract class Entity {
+  elementId: string
+  props: DynamicMap
 }
 ```
+
+<ResponseField name="elementId" type="string">
+  The ID of the entity.
+</ResponseField>
+
+<ResponseField name="props" type="DynamicMap">
+  The properties of the entity.
+</ResponseField>
 
 #### Node
 
 A node in a Neo4j query result.
 
 ```ts
-type Node struct {
-  ElementId string         `json:"ElementId"`
-  Labels    []string       `json:"Labels"`
-  Props     map[string]any `json:"Props"`
+class Node extends Entity {
+  elementId: string // from base class
+  props: DynamicMap // from base class
+  labels: string[]
 }
 ```
 
-<ResponseField name="ElementId" type="string" required>
+<ResponseField name="elementId" type="string">
   The ID of the node.
 </ResponseField>
 
-<ResponseField name="Labels" type="string[]" required>
-  The labels of the node.
-</ResponseField>
-
-<ResponseField name="Props" type="map[string]any" required>
+<ResponseField name="props" type="DynamicMap">
   The properties of the node.
 </ResponseField>
 
-#### Relationship
-
-A relationship in a Neo4j query result.
-
-```ts
-type Relationship struct {
-  ElementId      string         `json:"ElementId"`
-  StartElementId string         `json:"StartElementId"`
-  EndElementId   string         `json:"EndElementId"`
-  Type           string         `json:"Type"`
-  Props          map[string]any `json:"Props"`
-}
-```
-
-<ResponseField name="ElementId" type="string" required>
-  The ID of the relationship.
-</ResponseField>
-
-<ResponseField name="StartElementId" type="string" required>
-  The ID of the start node.
-</ResponseField>
-
-<ResponseField name="EndElementId" type="string" required>
-  The ID of the end node.
-</ResponseField>
-
-<ResponseField name="Type" type="string" required>
-  The type of the relationship.
-</ResponseField>
-
-<ResponseField name="Props" type="map[string]any" required>
-  The properties of the relationship.
+<ResponseField name="labels" type="string[]">
+  The labels of the node.
 </ResponseField>
 
 #### Path
@@ -243,52 +127,41 @@ type Relationship struct {
 A path in a Neo4j query result.
 
 ```ts
-type Path struct {
-  Nodes         []Node         `json:"Nodes"`
-  Relationships []Relationship `json:"Relationships"`
+class Path {
+  nodes: Node[]
+  relationships: Relationship[]
 }
 ```
 
-<ResponseField name="Nodes" type="Node[]" required>
+<ResponseField name="nodes" type="Node[]">
   The nodes in the path.
 </ResponseField>
 
-<ResponseField name="Relationships" type="Relationship[]" required>
+<ResponseField name="relationships" type="Relationship[]">
   The relationships in the path.
 </ResponseField>
-
-#### PropertyValue
-
-A value of a property in a Neo4j query result.
-
-```ts
-type PropertyValue interface {
-  bool | int64 | float64 | string |
-    time.Time | []byte | []any | Point2D | Point3D
-}
-```
 
 #### Point2D
 
 A 2D point in a Neo4j query result.
 
 ```ts
-type Point2D struct {
-  X            float64
-  Y            float64
-  SpatialRefId uint32
+class Point2D {
+  x: f64
+  y: f64
+  spatialRefId: u32
 }
 ```
 
-<ResponseField name="X" type="float64" required>
+<ResponseField name="x" type="f64">
   The X coordinate of the point.
 </ResponseField>
 
-<ResponseField name="Y" type="float64" required>
+<ResponseField name="y" type="f64">
   The Y coordinate of the point.
 </ResponseField>
 
-<ResponseField name="SpatialRefId" type="uint32" required>
+<ResponseField name="spatialRefId" type="u32">
   The spatial reference ID of the point.
 </ResponseField>
 
@@ -297,26 +170,99 @@ type Point2D struct {
 A 3D point in a Neo4j query result.
 
 ```ts
-type Point3D struct {
-  X            float64
-  Y            float64
-  Z            float64
-  SpatialRefId uint32
+class Point3D {
+  x: f64
+  y: f64
+  z: f64
+  spatialRefId: u32
 }
 ```
 
-<ResponseField name="X" type="float64" required>
+<ResponseField name="x" type="f64">
   The X coordinate of the point.
 </ResponseField>
 
-<ResponseField name="Y" type="float64" required>
+<ResponseField name="y" type="f64">
   The Y coordinate of the point.
 </ResponseField>
 
-<ResponseField name="Z" type="float64" required>
+<ResponseField name="z" type="f64">
   The Z coordinate of the point.
 </ResponseField>
 
-<ResponseField name="SpatialRefId" type="uint32" required>
+<ResponseField name="spatialRefId" type="u32">
   The spatial reference ID of the point.
+</ResponseField>
+
+#### Record
+
+A record in a Neo4j query result.
+
+```ts
+class Record {
+  keys: string[]
+  values: string[]
+  get(key: string): string
+  getValue<T>(key: string): T
+  asMap(): Map<string, string>
+}
+```
+
+<ResponseField name="keys" type="string[]">
+  The keys of the record.
+</ResponseField>
+
+<ResponseField name="values" type="string[]">
+  The values of the record.
+</ResponseField>
+
+<ResponseField name="get(key)" type="method">
+  Get a value from a record at a given key as a JSON encoded string.
+
+  <Info>
+    Usually, you should use `getValue<T>(key)` instead of this method.
+  </Info>
+</ResponseField>
+
+<ResponseField name="getValue<T>(key)" type="method">
+  Get a value from a record at a given key and cast or decode it to a specific
+  type.
+</ResponseField>
+
+<ResponseField name="asMap()" type="method">
+  Convert the record to a map of keys and JSON encoded string values.
+</ResponseField>
+
+#### Relationship
+
+A relationship in a Neo4j query result.
+
+```ts
+class Relationship extends Entity {
+  elementId: string // from base class
+  props: DynamicMap // from base class
+  startElementId: string
+  endElementId: string
+  type: string
+}
+```
+
+<ResponseField name="elementId" type="string">
+  The ID of the relationship.
+</ResponseField>
+
+<ResponseField name="props" type="DynamicMap">
+  The properties of the relationship.
+</ResponseField>
+
+<ResponseField name="startElementId" type="string">
+  The ID of the start node.
+</ResponseField>
+
+<ResponseField name="endElementId" type="string">
+  The ID of the end node.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  The type of the relationship.
 </ResponseField>
