@@ -6,7 +6,6 @@
 [Cc]omputeSimilarity
 [Cc]onsole
 [Dd]eserialize
-[Dd]graph
 [Dd]istilbert
 [Dd]ropAll
 [Dd]ropAttr
@@ -47,6 +46,7 @@ AWS
 CLI|cli
 CRUD
 Debugf
+Dgraph
 DQL
 Errorf
 GitHub|github
@@ -58,9 +58,10 @@ Hugging Face
 Infof
 LLM
 Logf
+MySQL
 NPM|npm
 NQuads
-PostgreSQL|postgresql
+PostgreSQL
 PUT
 repo
 REST|[Rr]est

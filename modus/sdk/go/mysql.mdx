@@ -1,28 +1,28 @@
 ---
-title: PostgreSQL
-description: "Execute queries against a PostgreSQL database"
+title: MySQL
+description: "Execute queries against a MySQL database"
 ---
 
 import { SdkHeader, SdkTip } from "/snippets/sdk-snippets.mdx"
 
-<SdkHeader language="Go" feature="PostgreSQL" />
+<SdkHeader language="Go" feature="MySQL" />
 
-The Modus PostgreSQL APIs allow you to run queries against PostgreSQL or any
-PostgreSQL-compatible database platform.
+The Modus MySQL APIs allow you to run queries against MySQL or any
+MySQL-compatible database platform.
 
 ## Import
 
-To begin, import the `postgresql` package from the SDK:
+To begin, import the `mysql` package from the SDK:
 
 ```go
-import github.com/hypermodeinc/modus/sdk/go/pkg/postgresql
+import github.com/hypermodeinc/modus/sdk/go/pkg/mysql
 ```
 
-## PostgreSQL APIs
+## MySQL APIs
 
 {/* <!-- vale Google.Headings = NO --> */}
 
-The APIs in the `postgresql` package are below, organized by category.
+The APIs in the `mysql` package are below, organized by category.
 
 <SdkTip />
 
@@ -30,9 +30,9 @@ The APIs in the `postgresql` package are below, organized by category.
 
 #### Execute
 
-Execute a SQL statement against a PostgreSQL database, without any data
-returned. Use this for insert, update, or delete operations, or for other SQL
-statements that don't return data.
+Execute a SQL statement against a MySQL database, without any data returned. Use
+this for insert, update, or delete operations, or for other SQL statements that
+don't return data.
 
 <Note>
   The `Execute` function is for operations that don't return data. However, some
@@ -67,8 +67,8 @@ SQL statement containing the query or mutation operation to execute.
 
 #### Query
 
-Execute a SQL statement against a PostgreSQL database, returning a set of rows.
-In the results, each row converts to an object of type `T`, with fields matching
+Execute a SQL statement against a MySQL database, returning a set of rows. In
+the results, each row converts to an object of type `T`, with fields matching
 the column names.
 
 ```go
@@ -87,8 +87,8 @@ Define custom types in the project's source code. All types must be JSON
 serializable. You can also use built-in types such as strings, numbers, slices,
 and maps.
 
-If working with PostgreSQL's `point` data type, you can use a [`Point`](#point)
-or [`Location`](#location) object to represent the data.
+If working with MySQL's `point` data type, you can use a [`Point`](#point) or
+[`Location`](#location) object to represent the data.
 
 </Tip>
 
@@ -117,7 +117,7 @@ SQL statement containing the query or mutation operation to execute.
 
 #### QueryScalar
 
-Execute a SQL statement against a PostgreSQL database, returning a single scalar
+Execute a SQL statement against a MySQL database, returning a single scalar
 value. For example, the result could be a count, sum, or average, or it could be
 an identifier.
 
@@ -158,8 +158,8 @@ SQL statement containing the query or mutation operation to execute.
 
 Represents a location on Earth, having `Longitude` and `Latitude` coordinates.
 
-Correctly serializes to and from PostgreSQL's point type, in (longitude,
-latitude) order.
+Correctly serializes to and from MySQL's point type, in (longitude, latitude)
+order.
 
 <Info>
   This struct is identical to the [Point](#point) struct, but uses different
@@ -184,7 +184,7 @@ type Location struct {
 #### Point
 
 Represents a point in 2D space, having `X` and `Y` coordinates. Correctly
-serializes to and from PostgreSQL's point type, in (x, y) order.
+serializes to and from MySQL's point type, in (x, y) order.
 
 <Info>
   This struct is identical to the [Location](#location) struct, but uses
@@ -223,10 +223,9 @@ type QueryResponse[T any] struct {
   the number of rows returned.
 </ResponseField>
 
-<ResponseField name="LastInsertId" type="uint64">
-  This field is available for other database types, but isn't populated for
-  PostgreSQL. Instead, use `Query` or `QueryScalar` with a `RETURNING` clause to
-  get the last inserted ID.
+<ResponseField name="lastInsertId" type="uint64">
+  When inserting a row, this field contains the ID of the last inserted row.
+  This is useful for tables with auto-incrementing primary keys.
 </ResponseField>
 
 <ResponseField name="Rows" type="[]T">
@@ -250,10 +249,9 @@ type Response struct {
   the number of rows returned.
 </ResponseField>
 
-<ResponseField name="LastInsertId" type="uint64">
-  This field is available for other database types, but isn't populated for
-  PostgreSQL. Instead, use `Query` or `QueryScalar` with a `RETURNING` clause to
-  get the last inserted ID.
+<ResponseField name="lastInsertId" type="uint64">
+  When inserting a row, this field contains the ID of the last inserted row.
+  This is useful for tables with auto-incrementing primary keys.
 </ResponseField>
 
 #### ScalarResponse
@@ -273,10 +271,9 @@ type ScalarResponse[T any] struct {
   the number of rows returned.
 </ResponseField>
 
-<ResponseField name="LastInsertId" type="uint64">
-  This field is available for other database types, but isn't populated for
-  PostgreSQL. Instead, use `Query` or `QueryScalar` with a `RETURNING` clause to
-  get the last inserted ID.
+<ResponseField name="lastInsertId" type="uint64">
+  When inserting a row, this field contains the ID of the last inserted row.
+  This is useful for tables with auto-incrementing primary keys.
 </ResponseField>
 
 <ResponseField name="Value" type="T">

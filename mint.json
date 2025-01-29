@@ -118,6 +118,7 @@
               "group": "Database APIs",
               "pages": [
                 "modus/sdk/assemblyscript/dgraph",
+                "modus/sdk/assemblyscript/mysql",
                 "modus/sdk/assemblyscript/neo4j",
                 "modus/sdk/assemblyscript/postgresql"
               ]
@@ -147,6 +148,7 @@
               "group": "Database APIs",
               "pages": [
                 "modus/sdk/go/dgraph",
+                "modus/sdk/go/mysql",
                 "modus/sdk/go/neo4j",
                 "modus/sdk/go/postgresql"
               ]

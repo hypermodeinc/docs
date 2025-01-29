@@ -1,28 +1,28 @@
 ---
-title: PostgreSQL
-description: "Execute queries against a PostgreSQL database"
+title: MySQL
+description: "Execute queries against a MySQL database"
 ---
 
 import { SdkHeader, SdkTip } from "/snippets/sdk-snippets.mdx"
 
-<SdkHeader language="AssemblyScript" feature="PostgreSQL" />
+<SdkHeader language="AssemblyScript" feature="MySQL" />
 
-The Modus PostgreSQL APIs allow you to run queries against PostgreSQL or any
-PostgreSQL-compatible database platform.
+The Modus MySQL APIs allow you to run queries against MySQL or any
+MySQL-compatible database platform.
 
 ## Import
 
-To begin, import the `postgresql` namespace from the SDK:
+To begin, import the `mysql` namespace from the SDK:
 
 ```ts
-import { postgresql } from "@hypermode/modus-sdk-as"
+import { mysql } from "@hypermode/modus-sdk-as"
 ```
 
-## PostgreSQL APIs
+## MySQL APIs
 
 {/* <!-- vale Google.Headings = NO --> */}
 
-The APIs in the `postgresql` namespace are below, organized by category.
+The APIs in the `mysql` namespace are below, organized by category.
 
 <SdkTip />
 
@@ -30,9 +30,9 @@ The APIs in the `postgresql` namespace are below, organized by category.
 
 #### execute
 
-Execute a SQL statement against a PostgreSQL database, without any data
-returned. Use this for insert, update, or delete operations, or for other SQL
-statements that don't return data.
+Execute a SQL statement against a MySQL database, without any data returned. Use
+this for insert, update, or delete operations, or for other SQL statements that
+don't return data.
 
 <Note>
   The `execute` function is for operations that don't return data. However, some
@@ -76,8 +76,8 @@ See the details of the [`Params`](#params) object for more information.
 
 #### query
 
-Execute a SQL statement against a PostgreSQL database, returning a set of rows.
-In the results, each row converts to an object of type `T`, with fields matching
+Execute a SQL statement against a MySQL database, returning a set of rows. In
+the results, each row converts to an object of type `T`, with fields matching
 the column names.
 
 ```ts
@@ -103,8 +103,8 @@ All types, including classes, base classes, and field types must be JSON
 serializable. You can also use built-in types such as strings, numbers, arrays,
 and maps.
 
-If working with PostgreSQL's `point` data type, you can use a [`Point`](#point)
-or [`Location`](#location) object to represent the data.
+If working with MySQL's `point` data type, you can use a [`Point`](#point) or
+[`Location`](#location) object to represent the data.
 
 </Tip>
 
@@ -138,7 +138,7 @@ See the details of the [`Params`](#params) object for more information.
 
 #### queryScalar
 
-Execute a SQL statement against a PostgreSQL database, returning a single scalar
+Execute a SQL statement against a MySQL database, returning a single scalar
 value. For example, the result could be a count, sum, or average, or it could be
 an identifier.
 
@@ -188,8 +188,8 @@ See the details of the [`Params`](#params) object for more information.
 
 Represents a location on Earth, having `longitude` and `latitude` coordinates.
 
-Correctly serializes to and from PostgreSQL's point type, in (longitude,
-latitude) order.
+Correctly serializes to and from MySQL's point type, in (longitude, latitude)
+order.
 
 <Info>
   This class is identical to the [Point](#point) class, but uses different field
@@ -245,7 +245,7 @@ numbers, boolean values, arrays, maps, and custom objects decorated with
 `@json`, as long as the database supports it.
 
 <Tip>
-  If working with PostgreSQL's `Point` data type, you can either pass separate
+  If working with MySQL's `Point` data type, you can either pass separate
   parameters for the coordinates and use a `point()` function in the SQL
   statement, or you can pass a [`Point`](#point) or [`Location`](#location)
   object as a single parameter.
@@ -268,7 +268,7 @@ numbers, boolean values, arrays, maps, and custom objects decorated with
 #### Point
 
 Represents a point in 2D space, having `x` and `y` coordinates. Correctly
-serializes to and from PostgreSQL's point type, in (x, y) order.
+serializes to and from MySQL's point type, in (x, y) order.
 
 <Info>
   This class is identical to the [Location](#location) class, but uses different
@@ -314,9 +314,8 @@ class QueryResponse<T> {
 </ResponseField>
 
 <ResponseField name="lastInsertId" type="u64">
-  This field is available for other database types, but isn't populated for
-  PostgreSQL. Instead, use `query` or `queryScalar` with a `RETURNING` clause to
-  get the last inserted ID.
+  When inserting a row, this field contains the ID of the last inserted row.
+  This is useful for tables with auto-incrementing primary keys.
 </ResponseField>
 
 <ResponseField name="rows" type="T[]">
@@ -347,9 +346,8 @@ class Response {
 </ResponseField>
 
 <ResponseField name="lastInsertId" type="u64">
-  This field is available for other database types, but isn't populated for
-  PostgreSQL. Instead, use `query` or `queryScalar` with a `RETURNING` clause to
-  get the last inserted ID.
+  When inserting a row, this field contains the ID of the last inserted row.
+  This is useful for tables with auto-incrementing primary keys.
 </ResponseField>
 
 #### ScalarResponse
@@ -376,9 +374,8 @@ class ScalarResponse<T> {
 </ResponseField>
 
 <ResponseField name="lastInsertId" type="u64">
-  This field is available for other database types, but isn't populated for
-  PostgreSQL. Instead, use `query` or `queryScalar` with a `RETURNING` clause to
-  get the last inserted ID.
+  When inserting a row, this field contains the ID of the last inserted row.
+  This is useful for tables with auto-incrementing primary keys.
 </ResponseField>
 
 <ResponseField name="value" type="T">
