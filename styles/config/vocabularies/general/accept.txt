@@ -46,7 +46,7 @@ AWS
 CLI|cli
 CRUD
 Debugf
-Dgraph
+Dgraph|dgraph
 DQL
 Errorf
 GitHub|github
@@ -58,15 +58,16 @@ Hugging Face
 Infof
 LLM
 Logf
-MySQL
+MySQL|mysql
 NPM|npm
 NQuads
-PostgreSQL
+PostgreSQL|postgresql
 PUT
 repo
 REST|[Rr]est
 Scattergories
 SDK|sdk
+TLS
 URL|url
 urql
 UUID
