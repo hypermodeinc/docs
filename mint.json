@@ -45,8 +45,44 @@
   ],
   "redirects": [
     {
-      "source": "/modus/sdk/:slug*",
-      "destination": "/modus/sdk/assemblyscript/:slug*"
+      "source": "/modus/sdk/collections",
+      "destination": "/modus/sdk/assemblyscript/collections"
+    },
+    {
+      "source": "/modus/sdk/console",
+      "destination": "/modus/sdk/assemblyscript/console"
+    },
+    {
+      "source": "/modus/sdk/dgraph",
+      "destination": "/modus/sdk/assemblyscript/dgraph"
+    },
+    {
+      "source": "/modus/sdk/graphql",
+      "destination": "/modus/sdk/assemblyscript/graphql"
+    },
+    {
+      "source": "/modus/sdk/http",
+      "destination": "/modus/sdk/assemblyscript/http"
+    },
+    {
+      "source": "/modus/sdk/localtime",
+      "destination": "/modus/sdk/assemblyscript/localtime"
+    },
+    {
+      "source": "/modus/sdk/models",
+      "destination": "/modus/sdk/assemblyscript/models"
+    },
+    {
+      "source": "/modus/sdk/mysql",
+      "destination": "/modus/sdk/assemblyscript/mysql"
+    },
+    {
+      "source": "/modus/sdk/neo4j",
+      "destination": "/modus/sdk/assemblyscript/neo4j"
+    },
+    {
+      "source": "/modus/sdk/postgresql",
+      "destination": "/modus/sdk/assemblyscript/postgresql"
     }
   ],
   "navigation": [
