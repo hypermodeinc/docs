@@ -5,6 +5,7 @@ export const SdkHeader = ({language, feature}) => (
   <ul>
   {(() =>{
     const languages = ["AssemblyScript", "Go"];
+    const page = feature.toLowerCase().replace(/\W/g, "");
     return languages.map((lang) => {
       if (lang === language) {
         return (
@@ -12,7 +13,7 @@ export const SdkHeader = ({language, feature}) => (
         )
       } else {
         return (
-          <li><a href={`../${lang.toLowerCase()}/${feature.toLowerCase()}`}>{lang} {feature} APIs</a></li>
+          <li><a href={`../${lang.toLowerCase()}/${page}`}>{lang} {feature} APIs</a></li>
         )
       }
     })

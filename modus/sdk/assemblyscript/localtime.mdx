@@ -1,0 +1,133 @@
+---
+title: Local Time
+description: "Access the user's local time and time zone in your functions"
+---
+
+import { SdkHeader, SdkTip } from "/snippets/sdk-snippets.mdx"
+
+<SdkHeader language="AssemblyScript" feature="Local Time" />
+
+The Modus Local Time APIs allow you to access the user's local time and time
+zone from your functions.
+
+## Import
+
+To begin, import the `localtime` namespace from the SDK:
+
+```ts
+import { localtime } from "@hypermode/modus-sdk-as"
+```
+
+{/* <!-- vale Google.Headings = NO --> */}
+
+## Local Time APIs
+
+The APIs in the `localtime` namespace are below.
+
+All time zones use the IANA time zone database format. For example,
+`"America/New_York"`. You can find a list of valid time zones
+[here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
+
+<Info>
+
+{/* <!-- vale Google.Passive = NO --> */}
+
+For APIs that work with the user's local time, the time zone is determined in
+the following order of precedence:
+
+- If the `X-Time-Zone` header is present in the request, the time zone is set to
+  the value of the header.
+- If the `TZ` environment variable is set on the host, the time zone is set to
+  the value of the variable.
+- Otherwise, the time zone is set to the host's local time zone.
+
+{/* <!-- vale Google.Passive = YES --> */}
+
+</Info>
+
+<Tip>
+
+When working locally with `modus dev`, Modus uses the host's local time zone by
+default. You can override this by setting the `TZ` environment variable in your
+`.env.local` file.
+
+</Tip>
+
+<Tip>
+
+In a browser-based web app, you can get the user's time zone with the following
+JavaScript code:
+
+```js
+const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+```
+
+Assign that value to a `"X-Time-Zone"` request header when calling Modus, to use
+it for all local time calculations.
+
+</Tip>
+
+<Tip>
+
+If you just need the current UTC time, you can use AssemblyScript's built-in
+support:
+
+```ts
+const now = new Date(Date.now())
+
+// if you need a string
+const utcTime = now.toISOString()
+```
+
+</Tip>
+
+<SdkTip />
+
+### Functions
+
+#### getTimeZone
+
+Returns the user's time zone in IANA format.
+
+```ts
+function getTimeZone(): string
+```
+
+#### isValidTimeZone
+
+Determines whether the specified time zone is a valid IANA time zone and
+recognized by the system as such.
+
+```ts
+function isValidTimeZone(tz: string): bool
+```
+
+<ResponseField name="tz" type="string" required>
+  An IANA time zone identifier, such as `"America/New_York"`.
+</ResponseField>
+
+#### now
+
+Returns the current local time in the user's time zone, as a string in ISO 8601
+extended format, including the applicable time zone offset.
+
+For example, `"2025-12-31T12:34:56.789-04:00"`.
+
+```ts
+function now(): string
+```
+
+#### nowInZone
+
+Returns the current local time in a specified time zone, as a string in ISO 8601
+extended format, including the applicable time zone offset.
+
+For example, `"2025-12-31T12:34:56.789-04:00"`.
+
+```ts
+function nowInZone(tz: string): string
+```
+
+<ResponseField name="tz" type="string" required>
+  An IANA time zone identifier, such as `"America/New_York"`.
+</ResponseField>

@@ -55,7 +55,9 @@ GraphQL|graphql
 gRPC
 HTTP|http
 Hugging Face
+IANA
 Infof
+ISO
 LLM
 Logf
 MySQL|mysql
@@ -69,6 +71,8 @@ Scattergories
 SDK|sdk
 TLS
 URL|url
+UTC
 urql
 UUID
 Warnf
+WASM

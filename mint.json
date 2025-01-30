@@ -133,7 +133,10 @@
             },
             {
               "group": "System APIs",
-              "pages": ["modus/sdk/assemblyscript/console"]
+              "pages": [
+                "modus/sdk/assemblyscript/console",
+                "modus/sdk/assemblyscript/localtime"
+              ]
             }
           ]
         },
@@ -163,7 +166,7 @@
             },
             {
               "group": "System APIs",
-              "pages": ["modus/sdk/go/console"]
+              "pages": ["modus/sdk/go/console", "modus/sdk/go/localtime"]
             }
           ]
         }
