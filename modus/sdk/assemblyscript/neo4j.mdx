@@ -1,0 +1,272 @@
+---
+title: "Neo4j APIs"
+sidebarTitle: "Neo4j"
+description: "Execute queries and mutations against a Neo4j database"
+icon: "circle-small"
+iconType: "solid"
+---
+
+import { SdkHeader } from "/snippets/sdk-header.mdx"
+import SdkTip from "/snippets/sdk-tip.mdx"
+
+<SdkHeader language="AssemblyScript" feature="Neo4j" />
+
+The Modus Neo4j APIs allow you to run queries and mutations against a Neo4j
+database.
+
+## Import
+
+To begin, import the `neo4j` namespace from the SDK:
+
+```ts
+import { neo4j } from "@hypermode/modus-sdk-as"
+```
+
+## Neo4j APIs
+
+{/* <!-- vale Google.Headings = NO --> */}
+
+The APIs in the `neo4j` namespace are below, organized by category.
+
+<SdkTip />
+
+### Functions
+
+#### executeQuery
+
+Executes a Cypher query on the Neo4j database.
+
+```ts
+function executeQuery(
+  connection: string,
+  query: string,
+  parameters: Variables = new Variables(),
+  dbName: string = "neo4j",
+): EagerResult
+```
+
+<ResponseField name="connection" type="string" required>
+  Name of the connection, as [defined in the
+  manifest](/modus/app-manifest#connections).
+</ResponseField>
+
+<ResponseField name="query" type="string" required>
+  A Neo4j Cypher query to execute.
+</ResponseField>
+
+<ResponseField name="parameters" type="Variables">
+  The parameters to pass to the query.
+</ResponseField>
+
+<ResponseField name="dbName" type="string">
+  An optional database name to use. Defaults to "neo4j" if not provided.
+</ResponseField>
+
+### Types
+
+#### EagerResult
+
+The result of a Neo4j query.
+
+```ts
+class EagerResult {
+  Keys: string[]
+  Records: Record[]
+}
+```
+
+<ResponseField name="keys" type="string[]">
+  The keys of the result.
+</ResponseField>
+
+<ResponseField name="records" type="Record[]">
+  The records of the result.
+</ResponseField>
+
+#### Entity
+
+An abstract class representing possible entities in a Neo4j query result.
+
+```ts
+abstract class Entity {
+  elementId: string
+  props: DynamicMap
+}
+```
+
+<ResponseField name="elementId" type="string">
+  The ID of the entity.
+</ResponseField>
+
+<ResponseField name="props" type="DynamicMap">
+  The properties of the entity.
+</ResponseField>
+
+#### Node
+
+A node in a Neo4j query result.
+
+```ts
+class Node extends Entity {
+  elementId: string // from base class
+  props: DynamicMap // from base class
+  labels: string[]
+}
+```
+
+<ResponseField name="elementId" type="string">
+  The ID of the node.
+</ResponseField>
+
+<ResponseField name="props" type="DynamicMap">
+  The properties of the node.
+</ResponseField>
+
+<ResponseField name="labels" type="string[]">
+  The labels of the node.
+</ResponseField>
+
+#### Path
+
+A path in a Neo4j query result.
+
+```ts
+class Path {
+  nodes: Node[]
+  relationships: Relationship[]
+}
+```
+
+<ResponseField name="nodes" type="Node[]">
+  The nodes in the path.
+</ResponseField>
+
+<ResponseField name="relationships" type="Relationship[]">
+  The relationships in the path.
+</ResponseField>
+
+#### Point2D
+
+A 2D point in a Neo4j query result.
+
+```ts
+class Point2D {
+  x: f64
+  y: f64
+  spatialRefId: u32
+}
+```
+
+<ResponseField name="x" type="f64">
+  The X coordinate of the point.
+</ResponseField>
+
+<ResponseField name="y" type="f64">
+  The Y coordinate of the point.
+</ResponseField>
+
+<ResponseField name="spatialRefId" type="u32">
+  The spatial reference ID of the point.
+</ResponseField>
+
+#### Point3D
+
+A 3D point in a Neo4j query result.
+
+```ts
+class Point3D {
+  x: f64
+  y: f64
+  z: f64
+  spatialRefId: u32
+}
+```
+
+<ResponseField name="x" type="f64">
+  The X coordinate of the point.
+</ResponseField>
+
+<ResponseField name="y" type="f64">
+  The Y coordinate of the point.
+</ResponseField>
+
+<ResponseField name="z" type="f64">
+  The Z coordinate of the point.
+</ResponseField>
+
+<ResponseField name="spatialRefId" type="u32">
+  The spatial reference ID of the point.
+</ResponseField>
+
+#### Record
+
+A record in a Neo4j query result.
+
+```ts
+class Record {
+  keys: string[]
+  values: string[]
+  get(key: string): string
+  getValue<T>(key: string): T
+  asMap(): Map<string, string>
+}
+```
+
+<ResponseField name="keys" type="string[]">
+  The keys of the record.
+</ResponseField>
+
+<ResponseField name="values" type="string[]">
+  The values of the record.
+</ResponseField>
+
+<ResponseField name="get(key)" type="method">
+  Get a value from a record at a given key as a JSON encoded string.
+
+  <Info>
+    Usually, you should use `getValue<T>(key)` instead of this method.
+  </Info>
+</ResponseField>
+
+<ResponseField name="getValue<T>(key)" type="method">
+  Get a value from a record at a given key and cast or decode it to a specific
+  type.
+</ResponseField>
+
+<ResponseField name="asMap()" type="method">
+  Convert the record to a map of keys and JSON encoded string values.
+</ResponseField>
+
+#### Relationship
+
+A relationship in a Neo4j query result.
+
+```ts
+class Relationship extends Entity {
+  elementId: string // from base class
+  props: DynamicMap // from base class
+  startElementId: string
+  endElementId: string
+  type: string
+}
+```
+
+<ResponseField name="elementId" type="string">
+  The ID of the relationship.
+</ResponseField>
+
+<ResponseField name="props" type="DynamicMap">
+  The properties of the relationship.
+</ResponseField>
+
+<ResponseField name="startElementId" type="string">
+  The ID of the start node.
+</ResponseField>
+
+<ResponseField name="endElementId" type="string">
+  The ID of the end node.
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  The type of the relationship.
+</ResponseField>

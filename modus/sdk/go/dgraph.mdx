@@ -1,0 +1,172 @@
+---
+title: "Dgraph APIs"
+sidebarTitle: "Dgraph"
+description: "Execute queries and mutations against a Dgraph database"
+icon: "circle-small"
+iconType: "solid"
+---
+
+import { SdkHeader } from "/snippets/sdk-header.mdx"
+import SdkTip from "/snippets/sdk-tip.mdx"
+
+<SdkHeader language="Go" feature="Dgraph" />
+
+The Modus Dgraph APIs allow you to run queries and mutations against a Dgraph
+database.
+
+## Import
+
+To begin, import the `dgraph` package from the SDK:
+
+```go
+import "github.com/hypermodeinc/modus/sdk/go/pkg/dgraph"
+```
+
+## Dgraph APIs
+
+{/* <!-- vale Google.Headings = NO --> */}
+
+The APIs in the `dgraph` package are below, organized by category.
+
+<SdkTip />
+
+### Functions
+
+#### AlterSchema
+
+Alter the schema of a Dgraph database.
+
+```go
+func AlterSchema(connection, schema string) error
+```
+
+<ResponseField name="connection" type="string" required>
+  Name of the connection, as [defined in the
+  manifest](/modus/app-manifest#connections).
+</ResponseField>
+
+<ResponseField name="schema" type="string" required>
+  The schema to apply to the Dgraph database.
+</ResponseField>
+
+#### DropAll
+
+Drop all data from a Dgraph database.
+
+```go
+func DropAll(connection string) error
+```
+
+<ResponseField name="connection" type="string" required>
+  Name of the connection, as [defined in the
+  manifest](/modus/app-manifest#connections).
+</ResponseField>
+
+#### DropAttr
+
+Drop an attribute from a Dgraph schema.
+
+```go
+func DropAttr(connection, attr string) error
+```
+
+<ResponseField name="connection" type="string" required>
+  Name of the connection, as [defined in the
+  manifest](/modus/app-manifest#connections).
+</ResponseField>
+
+<ResponseField name="attr" type="string" required>
+  The attribute to drop from the Dgraph schema.
+</ResponseField>
+
+#### Execute
+
+Execute a Dgraph query or mutation using a Dgraph Request object.
+
+```go
+func Execute(connection string, request *Request) (*Response, error)
+```
+
+<ResponseField name="connection" type="string" required>
+  Name of the connection, as [defined in the
+  manifest](/modus/app-manifest#connections).
+</ResponseField>
+
+<ResponseField name="request" type="*Request" required>
+  A pointer to a Dgraph [`Request`](#request) object, describing the query or
+  mutation to execute.
+</ResponseField>
+
+### Types
+
+#### Mutation
+
+A Dgraph mutation object, used to execute mutations.
+
+```go
+type Mutation struct {
+  SetJson   string
+  DelJson   string
+  SetNquads string
+  DelNquads string
+  Condition string
+}
+```
+
+<ResponseField name="SetJson" type="string">
+  A JSON string representing the data to set in the mutation.
+</ResponseField>
+
+<ResponseField name="DelJson" type="string">
+  A JSON string representing the data to delete in the mutation.
+</ResponseField>
+
+<ResponseField name="SetNquads" type="string">
+  A string representing the data to set in the mutation in NQuads format.
+</ResponseField>
+
+<ResponseField name="DelNquads" type="string">
+  A string representing the data to delete in the mutation in NQuads format.
+</ResponseField>
+
+<ResponseField name="Condition" type="string">
+  A string representing the condition query for the mutation.
+</ResponseField>
+
+#### Query
+
+A Dgraph query object, used to execute queries.
+
+```go
+type Query struct {
+  Query     string
+  Variables map[string]string
+}
+```
+
+<ResponseField name="Query" type="string">
+  The DQL query to execute.
+</ResponseField>
+
+<ResponseField name="Variables" type="map[string]string">
+  A map of query variables.
+</ResponseField>
+
+#### Request
+
+A Dgraph request object, used to execute queries and mutations.
+
+```go
+type Request struct {
+  Query     *Query
+  Mutations []*Mutation
+}
+```
+
+<ResponseField name="Query" type="*Query">
+  A pointer to a Dgraph [`query`](#query) object.
+</ResponseField>
+
+<ResponseField name="Mutations" type="[]*Mutation">
+  An slice of pointers to Dgraph [`mutation`](#mutation) objects.
+</ResponseField>

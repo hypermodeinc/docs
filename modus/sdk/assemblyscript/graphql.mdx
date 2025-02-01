@@ -1,26 +1,26 @@
 ---
-title: GraphQL
+title: "GraphQL APIs"
+sidebarTitle: "GraphQL"
 description: "Access external GraphQL data sources from your functions"
+icon: "circle-small"
+iconType: "solid"
 ---
 
-The Modus GraphQL API allows you to securely call and fetch data from any
+import { SdkHeader } from "/snippets/sdk-header.mdx"
+import SdkTip from "/snippets/sdk-tip.mdx"
+
+<SdkHeader language="AssemblyScript" feature="GraphQL" />
+
+The Modus GraphQL APIs allow you to securely call and fetch data from any
 GraphQL endpoint.
 
 ## Import
 
 To begin, import the `graphql` namespace from the SDK:
 
-<CodeGroup>
-
-```go Go
-import github.com/hypermodeinc/modus/sdk/go/pkg/graphql
+```ts
+import { graphql } from "@hypermode/modus-sdk-as"
 ```
-
-```ts AssemblyScript
-import { http } from "@hypermode/modus-sdk-as"
-```
-
-</CodeGroup>
 
 ## GraphQL APIs
 
@@ -28,50 +28,50 @@ import { http } from "@hypermode/modus-sdk-as"
 
 The APIs in the `graphql` namespace are below, organized by category.
 
-<Tip>
-  We're constantly introducing new APIs through ongoing development with early
-  users. [Open an issue](https://github.com/hypermodeinc/modus/issues) if you
-  have ideas on what would make Modus even more powerful for your next app!
-</Tip>
+<SdkTip />
 
 ### Functions
 
 #### execute
 
 Execute a GraphQL statement to call a query or apply mutation against a GraphQL
-API endpoint.
+endpoint.
 
-```go
-graphql.execute<T> (
+```ts
+function execute<T>(
   connection: string,
   statement: string,
-  variables?: Variables
+  variables?: Variables,
 ): Response<T>
 ```
 
-<ResponseField name="T" type="Type" required>
+<ResponseField name="T" required>
 
 Type of object to use for the data returned from the query. This can be any
 type, including a custom type defined in your project. It should match the shape
 of the data returned from the GraphQL query.
 
-  <Tip>
-  Define custom types in the project's source code. In AssemblyScript, create classes decorated with `@json`.
+<Tip>
+
+Define custom types in the project's source code. In AssemblyScript, create
+classes decorated with `@json`.
 
 All types, including classes, base classes, and field types must be JSON
 serializable. You can also use built-in types such as strings, numbers, arrays,
 and maps.
 
-  </Tip>
+</Tip>
+
 </ResponseField>
 
 <ResponseField name="connection" type="string" required>
   Name of the connection, as [defined in the
-  manifest](../app-manifest#connection).
+  manifest](/modus/app-manifest#connection).
 </ResponseField>
 
 <ResponseField name="statement" type="string" required>
-  GraphQL statement containing the query or mutation operation to execute.
+
+GraphQL statement containing the query or mutation operation to execute.
 
 <Warning>
   While it's possible to directly include parameter values into your GraphQL
@@ -83,22 +83,16 @@ and maps.
 </ResponseField>
 
 <ResponseField name="variables" type="Variables">
-  Optional variables to include with the query.
+
+Optional variables to include with the query.
 
 See the details of the [`Variables`](#variables) object for more information.
 
 </ResponseField>
 
-### Objects
+### Types
 
 #### Variables
-
-```go
-class Variables {
-  public set(name: string, value: any): void;
-  public toJSON(): string;
-}
-```
 
 A container for variables to include with a GraphQL operation.
 
@@ -106,23 +100,38 @@ To use this feature, create a new `Variables` object and call the `set` method
 for each variable you want to include. Then pass the object to the `execute`
 function.
 
-<ResponseField name="set(name, value)">
-  Set a variable with a name and value to include with the GraphQL operation.
+```ts
+class Variables {
+  set<T>(name: string, value: T): void
+  toJSON(): string
+}
+```
 
-{" "}
+<ResponseField name="set(name, value)">
+
+Set a variable with a name and value to include with the GraphQL operation.
+
+<Expandable title="parameters">
+{/* <!-- markdownlint-disable MD046 --> */}
 
 <ResponseField name="name" type="string" required>
   The name of the variable to include in the GraphQL operation.
 </ResponseField>
 
-<ResponseField name="value" type="any" required>
-  The value of the variable to include in the GraphQL operation.
+<ResponseField name="value" required>
+
+The value of the variable to include in the GraphQL operation.
 
 The value can be of any type that's JSON serializable, including strings,
 numbers, boolean values, arrays, maps, and custom objects decorated with
 `@json`.
 
 </ResponseField>
+
+{/* <!-- markdownlint-restore MD046 --> */}
+
+</Expandable>
+  
 </ResponseField>
 
 <ResponseField name="toJSON()" type="string">
@@ -133,19 +142,20 @@ numbers, boolean values, arrays, maps, and custom objects decorated with
 
 #### Response
 
-```go
-class Response<T> {
-  errors: ErrorResult[] | null;
-  data: T | null;
-}
-```
-
 A response object from the GraphQL query.
 
 Either `errors` or `data` is present, depending on the result of the query.
 
+```ts
+class Response<T> {
+  errors: ErrorResult[] | null
+  data: T | null
+}
+```
+
 <ResponseField name="errors" type="ErrorResult[]">
-  An array of errors incurred as part of your GraphQL request, if any.
+
+An array of errors incurred as part of your GraphQL request, if any.
 
 Each error in the array is an [`ErrorResult`](#errorresult) object. If there are
 no errors, this field is `null`.
@@ -153,7 +163,8 @@ no errors, this field is `null`.
 </ResponseField>
 
 <ResponseField name="data" type="T">
-  The resulting data selected by the GraphQL operation.
+
+The resulting data selected by the GraphQL operation.
 
 The data has the type specified in the call to the `execute` function. If data
 is absent due to errors, this field is `null`.
@@ -162,25 +173,18 @@ is absent due to errors, this field is `null`.
 
 #### ErrorResult
 
-```go
+The details of an error incurred as part of a GraphQL operation.
+
+```ts
 class ErrorResult {
-  message: string;
-  locations: CodeLocation[] | null;
-  path: string[] | null;
+  message: string
+  locations: CodeLocation[] | null
+  path: string[] | null
 }
 ```
 
-The details of an error incurred as part of a GraphQL operation.
-
 <ResponseField name="message" type="string">
   Description of the error incurred.
-</ResponseField>
-
-<ResponseField name="path" type="string[]">
-  Path to the area of the GraphQL statement related to the error.
-
-Each item in the array represents a segment of the path.
-
 </ResponseField>
 
 <ResponseField name="locations" type="CodeLocation[]">
@@ -188,16 +192,24 @@ Each item in the array represents a segment of the path.
   location of the error in the GraphQL statement.
 </ResponseField>
 
+<ResponseField name="path" type="string[]">
+
+Path to the area of the GraphQL statement related to the error.
+
+Each item in the array represents a segment of the path.
+
+</ResponseField>
+
 #### CodeLocation
 
-```go
+The location of specific code within a GraphQL statement.
+
+```ts
 class CodeLocation {
-  line: u32;
-  column: u32;
+  line: u32
+  column: u32
 }
 ```
-
-The location of specific code within a GraphQL statement.
 
 <ResponseField name="line" type="u32">
   Line number within the GraphQL statement for the code.

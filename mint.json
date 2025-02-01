@@ -43,6 +43,48 @@
       "url": "modus"
     }
   ],
+  "redirects": [
+    {
+      "source": "/modus/sdk/collections",
+      "destination": "/modus/sdk/assemblyscript/collections"
+    },
+    {
+      "source": "/modus/sdk/console",
+      "destination": "/modus/sdk/assemblyscript/console"
+    },
+    {
+      "source": "/modus/sdk/dgraph",
+      "destination": "/modus/sdk/assemblyscript/dgraph"
+    },
+    {
+      "source": "/modus/sdk/graphql",
+      "destination": "/modus/sdk/assemblyscript/graphql"
+    },
+    {
+      "source": "/modus/sdk/http",
+      "destination": "/modus/sdk/assemblyscript/http"
+    },
+    {
+      "source": "/modus/sdk/localtime",
+      "destination": "/modus/sdk/assemblyscript/localtime"
+    },
+    {
+      "source": "/modus/sdk/models",
+      "destination": "/modus/sdk/assemblyscript/models"
+    },
+    {
+      "source": "/modus/sdk/mysql",
+      "destination": "/modus/sdk/assemblyscript/mysql"
+    },
+    {
+      "source": "/modus/sdk/neo4j",
+      "destination": "/modus/sdk/assemblyscript/neo4j"
+    },
+    {
+      "source": "/modus/sdk/postgresql",
+      "destination": "/modus/sdk/assemblyscript/postgresql"
+    }
+  ],
   "navigation": [
     {
       "group": "Getting Started",
@@ -96,16 +138,40 @@
       "pages": ["modus/deepseek-model"]
     },
     {
-      "group": "API Reference",
+      "group": "SDK Reference",
       "pages": [
-        "modus/sdk/collections",
-        "modus/sdk/console",
-        "modus/sdk/dgraph",
-        "modus/sdk/graphql",
-        "modus/sdk/http",
-        "modus/sdk/neo4j",
-        "modus/sdk/models",
-        "modus/sdk/postgresql"
+        {
+          "group": "AssemblyScript SDK",
+          "pages": [
+            "modus/sdk/assemblyscript/overview",
+            "modus/sdk/assemblyscript/collections",
+            "modus/sdk/assemblyscript/console",
+            "modus/sdk/assemblyscript/dgraph",
+            "modus/sdk/assemblyscript/graphql",
+            "modus/sdk/assemblyscript/http",
+            "modus/sdk/assemblyscript/localtime",
+            "modus/sdk/assemblyscript/models",
+            "modus/sdk/assemblyscript/mysql",
+            "modus/sdk/assemblyscript/neo4j",
+            "modus/sdk/assemblyscript/postgresql"
+          ]
+        },
+        {
+          "group": "Go SDK",
+          "pages": [
+            "modus/sdk/go/overview",
+            "modus/sdk/go/collections",
+            "modus/sdk/go/console",
+            "modus/sdk/go/dgraph",
+            "modus/sdk/go/graphql",
+            "modus/sdk/go/http",
+            "modus/sdk/go/localtime",
+            "modus/sdk/go/models",
+            "modus/sdk/go/mysql",
+            "modus/sdk/go/neo4j",
+            "modus/sdk/go/postgresql"
+          ]
+        }
       ]
     },
     {

@@ -1,0 +1,258 @@
+---
+title: "Console APIs"
+sidebarTitle: "Console"
+description: "Capture errors and debugging information in your functions"
+icon: "circle-small"
+iconType: "solid"
+---
+
+import { SdkHeader } from "/snippets/sdk-header.mdx"
+import SdkTip from "/snippets/sdk-tip.mdx"
+
+<SdkHeader language="Go" feature="Console" />
+
+The Modus Console APIs allow you to capture information from your functions,
+such as errors and other information that can help you debug your functions.
+
+<Info>
+
+In addition to the Console APIs, you can also use any standard Go function that
+emits output to `stdout` or `stderr`. The output from these functions are
+available in the runtime logs.
+
+For example, you may use:
+
+- `fmt.Println` to write to informational messages to the logs
+- `fmt.Fprintf(os.Stderr, ...)` to write error messages to the logs
+
+You may also _return_ `error` objects from your function, whose messages get
+captured and returned in the GraphQL response.
+
+</Info>
+
+## Import
+
+To begin, import the `console` package from the SDK:
+
+```go
+import "github.com/hypermodeinc/modus/sdk/go/pkg/console"
+```
+
+## Console APIs
+
+{/* <!-- vale Google.Headings = NO --> */}
+
+The APIs in the `console` package are below, organized by category.
+
+<SdkTip />
+
+### Assertion Functions
+
+#### Assert
+
+Asserts that a condition is true, and logs an error if it's not.
+
+```go
+func Assert(condition bool, message string)
+```
+
+<ResponseField name="condition" type="bool" required>
+  The boolean condition to assert.
+</ResponseField>
+
+<ResponseField name="message" type="string" required>
+  An error message to log, if the assertion is false.
+</ResponseField>
+
+### Logging Functions
+
+<Tip>
+  For Go, typically you use these logging APIs when you need detailed control of
+  the logging level, or when you need to log multi-line messages as a single log
+  entry. Otherwise, you can use the standard Go functions from the `fmt` package
+  to emit messages to `stdout` or `stderr`.
+</Tip>
+
+#### Log
+
+Generate a log message, with no particular logging level.
+
+```go
+func Log(message string)
+```
+
+<ResponseField name="message" type="string" required>
+  A message you want to log.
+</ResponseField>
+
+#### Logf
+
+Generate a message using Go format specifiers and logs the message, with no
+particular logging level.
+
+```go
+func Logf(message string, args ...any)
+```
+
+<ResponseField name="message" type="string" required>
+  A message you want to log.
+</ResponseField>
+
+<ResponseField name="args" type="...any">
+  Arguments that correspond to the format specifiers in the message.
+</ResponseField>
+
+#### Debug
+
+Generate a log message with the "debug" logging level.
+
+```go
+func Debug(message string)
+```
+
+<ResponseField name="message" type="string" required>
+  A debug message you want to log.
+</ResponseField>
+
+#### Debugf
+
+Generate a message using Go format specifiers and logs the message with the
+"debug" logging level.
+
+```go
+func Debugf(message string, args ...any)
+```
+
+<ResponseField name="message" type="string" required>
+  A debug message you want to log.
+</ResponseField>
+
+<ResponseField name="args" type="...any">
+  Arguments that correspond to the format specifiers in the message.
+</ResponseField>
+
+#### Info
+
+Generate a log message with the "info" logging level.
+
+```go
+func Info(message string)
+```
+
+<ResponseField name="message" type="string" required>
+  An informational message you want to log.
+</ResponseField>
+
+#### Infof
+
+Generate a message using Go format specifiers and logs the message with the
+"info" logging level.
+
+```go
+func Infof(message string, args ...any)
+```
+
+<ResponseField name="message" type="string" required>
+  An informational message you want to log.
+</ResponseField>
+
+<ResponseField name="args" type="...any">
+  Arguments that correspond to the format specifiers in the message.
+</ResponseField>
+
+#### Warn
+
+Generate a log message with the "warning" logging level.
+
+```go
+func Warn(message string)
+```
+
+<ResponseField name="message" type="string" required>
+  A warning message you want to log.
+</ResponseField>
+
+#### Warnf
+
+Generate a message using Go format specifiers and logs the message with the
+"warning" logging level.
+
+```go
+func Warnf(message string, args ...any)
+```
+
+<ResponseField name="message" type="string" required>
+  A warning message you want to log.
+</ResponseField>
+
+<ResponseField name="args" type="...any">
+  Arguments that correspond to the format specifiers in the message.
+</ResponseField>
+
+#### Error
+
+Generate a log message with the "error" logging level.
+
+```go
+func Error(message string)
+```
+
+<ResponseField name="message" type="string" required>
+  An error message you want to log.
+</ResponseField>
+
+#### Errorf
+
+Generate a message using Go format specifiers and logs the message with the
+"error" logging level.
+
+```go
+func Errorf(message string, args ...any)
+```
+
+<ResponseField name="message" type="string" required>
+  An error message you want to log.
+</ResponseField>
+
+<ResponseField name="args" type="...any">
+  Arguments that correspond to the format specifiers in the message.
+</ResponseField>
+
+### Timing Functions
+
+#### Time
+
+Starts a new timer using the specified label.
+
+```go
+func Time(label ...string)
+```
+
+<ResponseField name="label" type="string">
+  An optional label for the timer.
+</ResponseField>
+
+#### TimeLog
+
+Logs the current value of a timer previously started with `console.Time`.
+
+```go
+func TimeLog(label string)
+```
+
+<ResponseField name="label" type="string">
+  An optional label for the timer.
+</ResponseField>
+
+#### TimeEnd
+
+Logs the current value of a timer previously started with `console.Time`, and
+discards the timer.
+
+```go
+func TimeEnd(label string)
+```
+
+<ResponseField name="label" type="string">
+  An optional label for the timer.
+</ResponseField>

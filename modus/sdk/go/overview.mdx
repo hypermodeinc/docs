@@ -1,0 +1,63 @@
+---
+title: "Modus Go SDK"
+sidebarTitle: "Overview"
+description: "Learn how to use the Modus Go SDK"
+icon: "circle-info"
+---
+
+import SdkOverviewIntro from "/snippets/sdk-overview-intro.mdx"
+
+<SdkOverviewIntro language="Go" />
+
+## Importing the APIs
+
+The Modus Go SDK organizes its APIs into packages based on their purpose. In
+your Go code, you can import each package you'd like to use like this:
+
+```go
+import "github.com/hypermodeinc/modus/sdk/go/pkg/<package>"
+```
+
+## Available APIs
+
+import SdkTip from "/snippets/sdk-tip.mdx"
+
+<SdkTip />
+
+The following packages are available. They're grouped into categories below for
+your convenience. Click on a package to view more information about its APIs.
+
+### Client APIs
+
+| Package                | Purpose                                                                            |
+| :--------------------- | :--------------------------------------------------------------------------------- |
+| [`http`](./http)       | Provides access to external HTTP endpoints, including REST APIs and other services |
+| [`graphql`](./graphql) | Allows you to securely call and fetch data from any GraphQL endpoint               |
+
+### Database APIs
+
+| Package                      | Purpose                                         |
+| :--------------------------- | :---------------------------------------------- |
+| [`dgraph`](./dgraph)         | Access and modify data in a Dgraph database     |
+| [`mysql`](./mysql)           | Access and modify data in a MySQL database      |
+| [`neo4j`](./neo4j)           | Access and modify data in a Neo4j database      |
+| [`postgresql`](./postgresql) | Access and modify data in a PostgreSQL database |
+
+### Inference APIs
+
+| Package              | Purpose                                                                                        |
+| :------------------- | :--------------------------------------------------------------------------------------------- |
+| [`models`](./models) | Invoke AI models, including large language models, embedding models, and classification models |
+
+### Storage APIs
+
+| Package                        | Purpose                                                    |
+| :----------------------------- | :--------------------------------------------------------- |
+| [`collections`](./collections) | Provides integrated storage and vector search capabilities |
+
+### System APIs
+
+| Package                    | Purpose                                                  |
+| :------------------------- | :------------------------------------------------------- |
+| [`console`](./console)     | Provides logging, assertion, and timing functions        |
+| [`localtime`](./localtime) | Allows you to access the user's local time and time zone |

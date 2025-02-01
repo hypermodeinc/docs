@@ -37,6 +37,7 @@ lint:
     - linters: [ALL]
       paths:
         - styles
+        - snippets
     - linters: [checkov]
       paths:
         - mint.json

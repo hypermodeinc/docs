@@ -1,17 +1,25 @@
 ---
-title: Console
+title: "Console APIs"
+sidebarTitle: "Console"
 description: "Capture errors and debugging information in your functions"
+icon: "circle-small"
+iconType: "solid"
 ---
 
-The Modus Console API allows you to capture information from your functions,
+import { SdkHeader } from "/snippets/sdk-header.mdx"
+import SdkTip from "/snippets/sdk-tip.mdx"
+
+<SdkHeader language="AssemblyScript" feature="Console" />
+
+The Modus Console APIs allow you to capture information from your functions,
 such as errors and other information that can help you debug your functions.
 
 <Info>
-  Unlike other APIs, the Console API is globally available by default in all
-  functions, you don't need to import it.
+  Unlike other APIs, the `console` namespace is globally available by default in
+  all AssemblyScript functions, you don't need to import it.
 </Info>
 
-The Console API mimics the behavior of the AssemblyScript
+The Console APIs mimic the behavior of the AssemblyScript
 [`console`](https://www.assemblyscript.org/stdlib/console.html) object, but
 directs the output to Hypermode as follows:
 
@@ -27,11 +35,7 @@ directs the output to Hypermode as follows:
 
 The APIs in the `console` namespace are below, organized by category.
 
-<Tip>
-  We're constantly introducing new APIs through ongoing development with early
-  users. [Open an issue](https://github.com/hypermodeinc/modus/issues) if you
-  have ideas on what would make Modus even more powerful for your next app!
-</Tip>
+<SdkTip />
 
 ### Assertion Functions
 
@@ -39,11 +43,11 @@ The APIs in the `console` namespace are below, organized by category.
 
 Asserts that a condition is true, and logs an error if it's not.
 
-```go
-console.assert(assertion: any, message?: string): void
+```ts
+function assert<T>(assertion: T, message?: string): void
 ```
 
-<ResponseField name="assertion" type="any" required>
+<ResponseField name="assertion" required>
   The condition to assert. Typically a boolean value. In the case of an object,
   asserts that the object isn't `null`.
 </ResponseField>
@@ -58,8 +62,8 @@ console.assert(assertion: any, message?: string): void
 
 Generate a log message, with no particular logging level.
 
-```go
-console.log(message?: string): void
+```ts
+function log(message?: string): void
 ```
 
 <ResponseField name="message" type="string">
@@ -70,8 +74,8 @@ console.log(message?: string): void
 
 Generate a log message with the "debug" logging level.
 
-```go
-console.debug(message?: string): void
+```ts
+function debug(message?: string): void
 ```
 
 <ResponseField name="message" type="string">
@@ -82,8 +86,8 @@ console.debug(message?: string): void
 
 Generate a log message with the "info" logging level.
 
-```go
-console.info(message?: string): void
+```ts
+function info(message?: string): void
 ```
 
 <ResponseField name="message" type="string">
@@ -94,8 +98,8 @@ console.info(message?: string): void
 
 Generate a log message with the "warning" logging level.
 
-```go
-console.warn(message?: string): void
+```ts
+function warn(message?: string): void
 ```
 
 <ResponseField name="message" type="string">
@@ -106,8 +110,8 @@ console.warn(message?: string): void
 
 Generate a log message with the "error" logging level.
 
-```go
-console.error(message?: string): void
+```ts
+function error(message?: string): void
 ```
 
 <ResponseField name="message" type="string">
@@ -120,8 +124,8 @@ console.error(message?: string): void
 
 Starts a new timer using the specified label.
 
-```go
-console.time(label?: string): void
+```ts
+function time(label?: string): void
 ```
 
 <ResponseField name="label" type="string">
@@ -132,8 +136,8 @@ console.time(label?: string): void
 
 Logs the current value of a timer previously started with `console.time`.
 
-```go
-console.timeLog(label?: string): void
+```ts
+function timeLog(label?: string): void
 ```
 
 <ResponseField name="label" type="string">
@@ -145,8 +149,8 @@ console.timeLog(label?: string): void
 Logs the current value of a timer previously started with `console.time`, and
 discards the timer.
 
-```go
-console.timeEnd(label?: string): void
+```ts
+function timeEnd(label?: string): void
 ```
 
 <ResponseField name="label" type="string">

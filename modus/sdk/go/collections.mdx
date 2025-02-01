@@ -1,0 +1,718 @@
+---
+title: "Collections APIs"
+sidebarTitle: "Collections"
+description: "Add storage and vector search capabilities to your functions."
+icon: "circle-small"
+iconType: "solid"
+---
+
+import { SdkHeader } from "/snippets/sdk-header.mdx"
+import SdkTip from "/snippets/sdk-tip.mdx"
+
+<SdkHeader language="Go" feature="Collections" />
+
+The Modus Collection APIs allow you to add vector search within your functions.
+
+## Import
+
+To begin, import the `collections` package from the SDK:
+
+```go
+import "github.com/hypermodeinc/modus/sdk/go/pkg/collections"
+```
+
+## Collections APIs
+
+{/* <!-- vale Google.Headings = NO --> */}
+
+The APIs in the `collections` package are below, organized by category.
+
+<SdkTip />
+
+### Mutation Functions
+
+#### Upsert
+
+Inserts or updates an item in a collection.
+
+<Note>
+  If the item already exists, the function overwrites the previous value. If
+  not, it creates a new one.
+</Note>
+
+```go
+func Upsert(
+  collection string,
+  key *string,
+  text string,
+  labels []string,
+  opts ...NamespaceOption
+) (*CollectionMutationResult, error)
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the
+  manifest](/modus/app-manifest#collections).
+</ResponseField>
+
+<ResponseField name="key" type="*string">
+  The unique identifier for the item in the namespace. If `nil`, the function
+  generates a unique identifier.
+</ResponseField>
+
+<ResponseField name="text" type="string" required>
+  The text of the item to add to the collection.
+</ResponseField>
+
+<ResponseField name="labels" type="[]string">
+  An optional slice of labels to associate with the item.
+</ResponseField>
+
+<ResponseField name="opts" type="...NamespaceOption">
+  Associates the item with a specific namespace. Defaults to an empty namespace
+  if not provided.
+
+Pass `collections.WithNamespace("namespace")` to specify a namespace.
+
+</ResponseField>
+
+#### UpsertBatch
+
+Inserts or updates a batch of items into a collection.
+
+<Note>
+  If an item with the same key already exists, the original text is overwritten
+  with the new text.
+</Note>
+
+```go
+func UpsertBatch(
+  collection string,
+  keys []string,
+  texts []string,
+  labelsArr [][]string,
+  opts ...NamespaceOption
+) (*CollectionMutationResult, error)
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the
+  manifest](/modus/app-manifest#collections).
+</ResponseField>
+
+<ResponseField name="keys" type="[]string">
+  Slice of keys for the item to add to the collection. If you pass `nil` for any
+  key, Hypermode assigns a new UUID as the key for the item.
+</ResponseField>
+
+<ResponseField name="texts" type="[]string" required>
+  Slice of texts for the items to add to the collection.
+</ResponseField>
+
+<ResponseField name="labelsArr" type="[][]string">
+  An optional slice of slices of labels to associate with the items.
+</ResponseField>
+
+<ResponseField name="opts" type="...NamespaceOption">
+  Associates the item with a specific namespace. Defaults to an empty namespace
+  if not provided.
+
+Pass `collections.WithNamespace("namespace")` to specify a namespace.
+
+</ResponseField>
+
+#### Remove
+
+Removes an item from the collection.
+
+```go
+func Remove(
+  collection string,
+  key string,
+  opts ...NamespaceOption
+) (*CollectionMutationResult, error)
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the
+  manifest](/modus/app-manifest#collections).
+</ResponseField>
+
+<ResponseField name="key" type="string" required>
+  The key of the item to delete from the collection.
+</ResponseField>
+
+<ResponseField name="opts" type="...NamespaceOption">
+  The namespace to remove the item from. Defaults to the default namespace if
+  not provided.
+
+Pass `collections.WithNamespace("namespace")` to specify a namespace.
+
+</ResponseField>
+
+### Search and Retrieval Functions
+
+#### ComputeDistance
+
+Computes distance between two keys in a collection using a search method's
+embedder.
+
+```go
+func ComputeDistance(
+  collection string,
+  searchMethod string,
+  key1 string,
+  key2 string,
+  opts ...NamespaceOption
+) (*CollectionSearchResultObject, error)
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the
+  manifest](/modus/app-manifest#collections).
+</ResponseField>
+
+<ResponseField name="searchMethod" type="string" required>
+  The search method used to calculate embedding for key's texts.
+</ResponseField>
+
+<ResponseField name="key1, key2" type="string" required>
+  Keys to compute similarity on.
+</ResponseField>
+
+<ResponseField name="opts" type="...NamespaceOption">
+  The namespace to search the items from. Defaults to the default namespace if
+  not provided.
+
+Pass `collections.WithNamespace("namespace")` to specify a namespace.
+
+</ResponseField>
+
+#### NnClassify
+
+Classify an item in the collection using previous vectors' labels.
+
+```go
+func NnClassify(
+  collection string,
+  searchMethod string,
+  text string,
+  opts ...NamespaceOption
+) (*CollectionClassificationResult, error)
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the
+  manifest](/modus/app-manifest#collections).
+</ResponseField>
+
+<ResponseField name="searchMethod" type="string" required>
+  The search method used to calculate embedding for text & search against.
+</ResponseField>
+
+<ResponseField name="text" type="string" required>
+  The text to compute natural language search on.
+</ResponseField>
+
+<ResponseField name="opts" type="...NamespaceOption">
+  The namespace to search the items from. Defaults to the default namespace if
+  not provided.
+
+Pass `collections.WithNamespace("namespace")` to specify a namespace.
+
+</ResponseField>
+
+#### GetLabels
+
+Get the labels for an item in a collection.
+
+```go
+func GetLabels(
+  collection string,
+  key string,
+  opts ...NamespaceOption
+) ([]string, error)
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the
+  manifest](/modus/app-manifest#collections).
+</ResponseField>
+
+<ResponseField name="key" type="string" required>
+  The key of the item to retrieve.
+</ResponseField>
+
+<ResponseField name="opts" type="...NamespaceOption">
+  The namespace to get the item from. Defaults to the default namespace if not
+  provided.
+
+Pass `collections.WithNamespace("namespace")` to specify a namespace.
+
+</ResponseField>
+
+#### GetNamespaces
+
+Get all namespaces in a collection.
+
+```go
+func GetNamespaces(collection string) ([]string, error)
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the
+  manifest](/modus/app-manifest#collections).
+</ResponseField>
+
+#### GetText
+
+Gets an item's text from a collection, give the item's key.
+
+```go
+func GetText(
+  collection string,
+  key string,
+  opts ...NamespaceOption
+) (string, error)
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the
+  manifest](/modus/app-manifest#collections).
+</ResponseField>
+
+<ResponseField name="key" type="string" required>
+  The key of the item to retrieve.
+</ResponseField>
+
+<ResponseField name="opts" type="...NamespaceOption">
+  The namespace to get the item from. Defaults to the default namespace if not
+  provided.
+
+Pass `collections.WithNamespace("namespace")` to specify a namespace.
+
+</ResponseField>
+
+#### GetTexts
+
+Get all items from a collection. The result is a map of key to text for all
+items in the collection.
+
+```go
+func GetTexts(
+  collection string,
+  opts ...NamespaceOption
+) (map[string]string, error)
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the
+  manifest](/modus/app-manifest#collections).
+</ResponseField>
+
+<ResponseField name="opts" type="...NamespaceOption">
+  The namespace to get the items from. Defaults to the default namespace if not
+  provided.
+
+Pass `collections.WithNamespace("namespace")` to specify a namespace.
+
+</ResponseField>
+
+#### GetVector
+
+Get the vector for an item in a collection.
+
+```go
+func GetVector(
+  collection string,
+  searchMethod string,
+  key string,
+  opts ...NamespaceOption
+) ([]float32, error)
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the
+  manifest](/modus/app-manifest#collections).
+</ResponseField>
+
+<ResponseField name="searchMethod" type="string" required>
+  The search method used to calculate embedding for key's texts.
+</ResponseField>
+
+<ResponseField name="key" type="string" required>
+  The key of the item to retrieve.
+</ResponseField>
+
+<ResponseField name="opts" type="...NamespaceOption">
+  The namespace to get the item from. Defaults to the default namespace if not
+  provided.
+
+Pass `collections.WithNamespace("namespace")` to specify a namespace.
+
+</ResponseField>
+
+#### Search
+
+Perform a natural language search on items within a collection. This method is
+useful for finding items that match a search query based on semantic meaning.
+
+<Note>
+  Modus uses the same embedder for both inserting text into the collection, and
+  for the text used when searching the collection.
+</Note>
+
+```go
+func Search(
+  collection string,
+  searchMethod string,
+  text string,
+  opts ...SearchOption
+) (*CollectionSearchResult, error)
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the
+  manifest](/modus/app-manifest#collections).
+</ResponseField>
+
+<ResponseField name="searchMethod" type="string" required>
+  The search method used to calculate embedding for text & search against.
+</ResponseField>
+
+<ResponseField name="text" type="string" required>
+  The text to compute natural language search on.
+</ResponseField>
+
+<ResponseField name="opts" type="...SearchOption">
+  Additional options for the search:
+
+- `collections.WithLimit(limit int)`: The number of result objects to return.
+- `collections.WithReturnText(returnText bool)`: A flag to return the texts in
+  the response.
+- `collections.WithNamespaces(namespaces []string)`: A list of namespaces to
+  search the item from. Defaults to the default namespace if not provided.
+
+</ResponseField>
+
+#### SearchByVector
+
+Perform a vector-based search on a collection, which is helpful for scenarios
+requiring precise similarity calculations between pre-computed embeddings.
+
+<Note>
+  Modus uses the same embedder for both inserting text into the collection, and
+  for the vector used when searching the collection.
+</Note>
+
+```go
+func SearchByVector(
+  collection string,
+  searchMethod string,
+  vector []float32,
+  opts ...SearchOption
+) (*CollectionSearchResult, error)
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the
+  manifest](/modus/app-manifest#collections).
+</ResponseField>
+
+<ResponseField name="searchMethod" type="string" required>
+  The search method used to calculate embedding for vector & search against.
+</ResponseField>
+
+<ResponseField name="vector" type="[]float32" required>
+  The vector to compute search on.
+</ResponseField>
+
+<ResponseField name="opts" type="...SearchOption">
+  Additional options for the search:
+
+- `collections.WithLimit(limit int)`: The number of result objects to return.
+- `collections.WithReturnText(returnText bool)`: A flag to return the texts in
+  the response.
+- `collections.WithNamespaces(namespaces []string)`: A list of namespaces to
+  search the item from. Defaults to the default namespace if not provided.
+
+</ResponseField>
+
+### Maintenance Functions
+
+#### RecomputeSearchMethod
+
+Recalculates the embeddings for all items in a collection. It can be
+resource-intensive, use it when necessary, for example after you have updated
+the method for embedding calculation and want to re-compute the embeddings for
+existing data in the collection.
+
+```go
+func RecomputeSearchMethod(
+  collection string,
+  searchMethod string,
+  opts ...NamespaceOption
+) (*SearchMethodMutationResult, error)
+```
+
+<ResponseField name="collection" type="string" required>
+  Name of the collection, as [defined in the
+  manifest](/modus/app-manifest#collections).
+</ResponseField>
+
+<ResponseField name="searchMethod" type="string" required>
+  The search method to recompute embeddings for.
+</ResponseField>
+
+<ResponseField name="opts" type="...NamespaceOption">
+  The namespace to use. Defaults to the default namespace if not provided.
+
+Pass `collections.WithNamespace("namespace")` to specify a namespace.
+
+</ResponseField>
+
+### Types
+
+#### CollectionClassificationLabelObject
+
+Represents a classification label.
+
+```go
+type CollectionClassificationLabelObject struct {
+  Label string
+  Confidence float64
+}
+```
+
+<ResponseField name="Label" type="string">
+  The classification label.
+</ResponseField>
+
+<ResponseField name="Confidence" type="float64">
+  The confidence score of the classification label.
+</ResponseField>
+
+#### CollectionClassificationResult
+
+Represents the result of a classification operation on a collection.
+
+```go
+type CollectionClassificationResult struct {
+  Collection string
+  Status string
+  Error string
+  SearchMethod string
+  LabelsResult []*CollectionClassificationLabelObject
+  Cluster []*CollectionClassificationResultObject
+}
+```
+
+<ResponseField name="Collection" type="string">
+  Name of the collection.
+</ResponseField>
+
+<ResponseField name="Status" type="string">
+  The status of the operation.
+</ResponseField>
+
+<ResponseField name="Error" type="string">
+  Error message, if any.
+</ResponseField>
+
+<ResponseField name="SearchMethod" type="string">
+  The search method used in the operation.
+</ResponseField>
+
+<ResponseField
+  name="LabelsResult"
+  type="[]*CollectionClassificationLabelObject"
+>
+  The classification labels.
+</ResponseField>
+
+<ResponseField name="Cluster" type="[]*CollectionClassificationResultObject">
+  The classification results.
+</ResponseField>
+
+#### CollectionClassificationResultObject
+
+Represents an object in the classification results.
+
+```go
+type CollectionClassificationResultObject struct {
+  Key string
+  Labels []string
+  Distance float64
+  Score float64
+}
+```
+
+<ResponseField name="Key" type="string">
+  The key of the item classified.
+</ResponseField>
+
+<ResponseField name="Labels" type="[]string">
+  The classification labels.
+</ResponseField>
+
+<ResponseField name="Distance" type="float64">
+  The distance of the item from the classification labels.
+</ResponseField>
+
+<ResponseField name="Score" type="float64">
+  The similarity score of the item classified.
+</ResponseField>
+
+#### CollectionMutationResult
+
+Represents the result of a mutation operation on a collection.
+
+```go
+type CollectionMutationResult struct {
+  Collection string
+  Status string
+  Error string
+  Operation string
+  Keys []string
+}
+```
+
+<ResponseField name="Collection" type="string">
+  Name of the collection.
+</ResponseField>
+
+<ResponseField name="Status" type="string">
+  The status of the operation.
+</ResponseField>
+
+<ResponseField name="Error" type="string">
+  Error message, if any.
+</ResponseField>
+
+<ResponseField name="Operation" type="string">
+  The operation performed.
+</ResponseField>
+
+<ResponseField name="Keys" type="[]string">
+  The keys of the items affected by the operation.
+</ResponseField>
+
+#### CollectionSearchResult
+
+Represents the result of a search operation on a collection.
+
+```go
+type CollectionSearchResult struct {
+  Collection string
+  Status string
+  Error string
+  SearchMethod string
+  Objects []*CollectionSearchResultObject
+}
+```
+
+<ResponseField name="Collection" type="string">
+  Name of the collection.
+</ResponseField>
+
+<ResponseField name="Status" type="string">
+  The status of the operation.
+</ResponseField>
+
+<ResponseField name="Error" type="string">
+  Error message, if any.
+</ResponseField>
+
+<ResponseField name="SearchMethod" type="string">
+  The search method used in the operation.
+</ResponseField>
+
+<ResponseField name="Objects" type="[]*CollectionSearchResultObject">
+  The search results.
+</ResponseField>
+
+#### CollectionSearchResultObject
+
+Represents an object in the search results.
+
+```go
+type CollectionSearchResultObject struct {
+  Namespace string
+  Key string
+  Text string
+  Labels []string
+  Distance float64
+  Score float64
+}
+```
+
+<ResponseField name="Namespace" type="string">
+  The namespace of the item found as part of the search.
+</ResponseField>
+
+<ResponseField name="Key" type="string">
+  The key of the item found as part of the search.
+</ResponseField>
+
+<ResponseField name="Text" type="string">
+  The text of the item found as part of the search.
+</ResponseField>
+
+<ResponseField name="Distance" type="float64">
+  The distance of the item from the search text.
+</ResponseField>
+
+<ResponseField name="Score" type="float64">
+  The similarity score of the item found, as it pertains to the search.
+</ResponseField>
+
+#### CollectionStatus
+
+The status of a collection operation.
+
+```go
+type CollectionStatus = string
+
+const (
+  Success CollectionStatus = "success"
+  Error   CollectionStatus = "error"
+)
+```
+
+<ResponseField name="Success">The operation was successful.</ResponseField>
+
+<ResponseField name="Error">The operation encountered an error.</ResponseField>
+
+#### SearchMethodMutationResult
+
+Represents the result of a mutation operation on a search method.
+
+```go
+type SearchMethodMutationResult struct {
+  Collection string
+  Status string
+  Error string
+  Operation string
+  SearchMethod string
+}
+```
+
+<ResponseField name="Collection" type="string">
+  Name of the collection.
+</ResponseField>
+
+<ResponseField name="Status" type="string">
+  The status of the operation.
+</ResponseField>
+
+<ResponseField name="Error" type="string">
+  Error message, if any.
+</ResponseField>
+
+<ResponseField name="Operation" type="string">
+  The operation performed.
+</ResponseField>
+
+<ResponseField name="SearchMethod" type="string">
+  The search method affected by the operation.
+</ResponseField>

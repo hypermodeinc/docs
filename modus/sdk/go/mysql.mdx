@@ -1,0 +1,285 @@
+---
+title: "MySQL APIs"
+sidebarTitle: "MySQL"
+description: "Execute queries against a MySQL database"
+icon: "circle-small"
+iconType: "solid"
+---
+
+import { SdkHeader } from "/snippets/sdk-header.mdx"
+import SdkTip from "/snippets/sdk-tip.mdx"
+
+<SdkHeader language="Go" feature="MySQL" />
+
+The Modus MySQL APIs allow you to run queries against MySQL or any
+MySQL-compatible database platform.
+
+## Import
+
+To begin, import the `mysql` package from the SDK:
+
+```go
+import "github.com/hypermodeinc/modus/sdk/go/pkg/mysql"
+```
+
+## MySQL APIs
+
+{/* <!-- vale Google.Headings = NO --> */}
+
+The APIs in the `mysql` package are below, organized by category.
+
+<SdkTip />
+
+### Functions
+
+#### Execute
+
+Execute a SQL statement against a MySQL database, without any data returned. Use
+this for insert, update, or delete operations, or for other SQL statements that
+don't return data.
+
+<Note>
+  The `Execute` function is for operations that don't return data. However, some
+  insert/update/delete operations may still return data. In these cases, you can
+  use the `QueryScalar` or `Query` functions instead.
+</Note>
+
+```go
+func Execute(connection, statement string, params ...any) (*db.Response, error)
+```
+
+<ResponseField name="connection" type="string" required>
+  Name of the connection, as [defined in the
+  manifest](/modus/app-manifest#connections).
+</ResponseField>
+
+<ResponseField name="statement" type="string" required>
+
+SQL statement containing the query or mutation operation to execute.
+
+<Warning>
+  While it's possible to directly include parameter values into your SQL
+  statement, it's highly recommended to pass parameters as arguments instead.
+  This can help to protect injection attacks and other security vulnerabilities.
+</Warning>
+
+</ResponseField>
+
+<ResponseField name="params" type="...any">
+  Optional parameters to include with the query.
+</ResponseField>
+
+#### Query
+
+Execute a SQL statement against a MySQL database, returning a set of rows. In
+the results, each row converts to an object of type `T`, with fields matching
+the column names.
+
+```go
+func Query[T any](connection, statement string, params ...any) (*db.QueryResponse[T], error)
+```
+
+<ResponseField name="T" required>
+
+Type of object to use for the data returned from the query. This can be any
+type, including a custom type defined in your project. It should match the shape
+of the row returned from the SQL query.
+
+<Tip>
+
+Define custom types in the project's source code. All types must be JSON
+serializable. You can also use built-in types such as strings, numbers, slices,
+and maps.
+
+If working with MySQL's `point` data type, you can use a [`Point`](#point) or
+[`Location`](#location) object to represent the data.
+
+</Tip>
+
+</ResponseField>
+
+<ResponseField name="connection" type="string" required>
+  Name of the connection, as [defined in the
+  manifest](/modus/app-manifest#connections).
+</ResponseField>
+
+<ResponseField name="statement" type="string" required>
+
+SQL statement containing the query or mutation operation to execute.
+
+<Warning>
+  While it's possible to directly include parameter values into your SQL
+  statement, it's highly recommended to pass parameters as arguments instead.
+  This can help to protect injection attacks and other security vulnerabilities.
+</Warning>
+
+</ResponseField>
+
+<ResponseField name="params" type="...any">
+  Optional parameters to include with the query.
+</ResponseField>
+
+#### QueryScalar
+
+Execute a SQL statement against a MySQL database, returning a single scalar
+value. For example, the result could be a count, sum, or average, or it could be
+an identifier.
+
+```go
+func QueryScalar[T any](connection, statement string, params ...any) (*db.ScalarResponse[T], error)
+```
+
+<ResponseField name="T" required>
+  Type of object to use for the data returned from the query. This should
+  generally be a scalar data type, such as a number or string. It should match
+  the type of the data returned from the SQL query.
+</ResponseField>
+
+<ResponseField name="connection" type="string" required>
+  Name of the connection, as [defined in the
+  manifest](/modus/app-manifest#connections).
+</ResponseField>
+
+<ResponseField name="statement" type="string" required>
+
+SQL statement containing the query or mutation operation to execute.
+
+<Warning>
+  While it's possible to directly include parameter values into your SQL
+  statement, it's highly recommended to pass parameters as arguments instead.
+  This can help to protect injection attacks and other security vulnerabilities.
+</Warning>
+
+</ResponseField>
+
+<ResponseField name="params" type="...any">
+  Optional parameters to include with the query.
+</ResponseField>
+
+### Types
+
+#### Location
+
+Represents a location on Earth, having `Longitude` and `Latitude` coordinates.
+
+Correctly serializes to and from MySQL's point type, in (longitude, latitude)
+order.
+
+<Info>
+  This struct is identical to the [Point](#point) struct, but uses different
+  field names.
+</Info>
+
+```go
+type Location struct {
+  Longitude float64
+  Latitude float64
+}
+```
+
+<ResponseField name="Longitude" type="float64" required>
+  The longitude coordinate of the location, in degrees.
+</ResponseField>
+
+<ResponseField name="Latitude" type="float64" required>
+  The latitude coordinate of the location, in degrees.
+</ResponseField>
+
+#### Point
+
+Represents a point in 2D space, having `X` and `Y` coordinates. Correctly
+serializes to and from MySQL's point type, in (x, y) order.
+
+<Info>
+  This struct is identical to the [Location](#location) struct, but uses
+  different field names.
+</Info>
+
+```go
+type Point struct {
+  X float64
+  Y float64
+}
+```
+
+<ResponseField name="X" type="float64" required>
+  The X coordinate of the point.
+</ResponseField>
+
+<ResponseField name="Y" type="float64" required>
+  The Y coordinate of the point.
+</ResponseField>
+
+#### QueryResponse
+
+Represents the response from a [`Query`](#query) operation.
+
+```go
+type QueryResponse[T any] struct {
+  RowsAffected uint32
+  LastInsertId uint64
+  Rows []T
+}
+```
+
+<ResponseField name="RowsAffected" type="uint32">
+  The number of rows affected by the operation, which typically corresponds to
+  the number of rows returned.
+</ResponseField>
+
+<ResponseField name="lastInsertId" type="uint64">
+  When inserting a row, this field contains the ID of the last inserted row.
+  This is useful for tables with auto-incrementing primary keys.
+</ResponseField>
+
+<ResponseField name="Rows" type="[]T">
+  An slice of objects, each representing a row returned from the query. Each
+  object has fields corresponding to the columns in the result set.
+</ResponseField>
+
+#### Response
+
+Represents the response from an [`Execute`](#execute) operation.
+
+```go
+type Response struct {
+  RowsAffected uint32
+  LastInsertId uint64
+}
+```
+
+<ResponseField name="RowsAffected" type="uint32">
+  The number of rows affected by the operation, which typically corresponds to
+  the number of rows returned.
+</ResponseField>
+
+<ResponseField name="lastInsertId" type="uint64">
+  When inserting a row, this field contains the ID of the last inserted row.
+  This is useful for tables with auto-incrementing primary keys.
+</ResponseField>
+
+#### ScalarResponse
+
+Represents the response from a [`QueryScalar`](#queryscalar) operation.
+
+```go
+type ScalarResponse[T any] struct {
+  RowsAffected uint32
+  LastInsertId uint64
+  Value T
+}
+```
+
+<ResponseField name="RowsAffected" type="uint32">
+  The number of rows affected by the operation, which typically corresponds to
+  the number of rows returned.
+</ResponseField>
+
+<ResponseField name="lastInsertId" type="uint64">
+  When inserting a row, this field contains the ID of the last inserted row.
+  This is useful for tables with auto-incrementing primary keys.
+</ResponseField>
+
+<ResponseField name="Value" type="T">
+  The scalar value returned from the query.
+</ResponseField>

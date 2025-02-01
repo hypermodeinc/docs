@@ -1,0 +1,65 @@
+---
+title: "Modus AssemblyScript SDK"
+sidebarTitle: "Overview"
+description: "Learn how to use the Modus AssemblyScript SDK"
+icon: "circle-info"
+---
+
+import SdkOverviewIntro from "/snippets/sdk-overview-intro.mdx"
+
+<SdkOverviewIntro language="AssemblyScript" />
+
+## Importing the APIs
+
+The Modus AssemblyScript SDK organizes its APIs into namespaces based on their
+purpose. In your AssemblyScript code, you can import each namespace you'd like
+to use like this:
+
+```ts
+import { <namespace> } from "@hypermode/modus-sdk-as"
+```
+
+## Available APIs
+
+import SdkTip from "/snippets/sdk-tip.mdx"
+
+<SdkTip />
+
+The following namespaces are available. They're grouped into categories below
+for your convenience. Click on a namespace to view more information about its
+APIs.
+
+### Client APIs
+
+| Namespace              | Purpose                                                                            |
+| :--------------------- | :--------------------------------------------------------------------------------- |
+| [`http`](./http)       | Provides access to external HTTP endpoints, including REST APIs and other services |
+| [`graphql`](./graphql) | Allows you to securely call and fetch data from any GraphQL endpoint               |
+
+### Database APIs
+
+| Namespace                    | Purpose                                         |
+| :--------------------------- | :---------------------------------------------- |
+| [`dgraph`](./dgraph)         | Access and modify data in a Dgraph database     |
+| [`mysql`](./mysql)           | Access and modify data in a MySQL database      |
+| [`neo4j`](./neo4j)           | Access and modify data in a Neo4j database      |
+| [`postgresql`](./postgresql) | Access and modify data in a PostgreSQL database |
+
+### Inference APIs
+
+| Namespace            | Purpose                                                                                        |
+| :------------------- | :--------------------------------------------------------------------------------------------- |
+| [`models`](./models) | Invoke AI models, including large language models, embedding models, and classification models |
+
+### Storage APIs
+
+| Namespace                      | Purpose                                                    |
+| :----------------------------- | :--------------------------------------------------------- |
+| [`collections`](./collections) | Provides integrated storage and vector search capabilities |
+
+### System APIs
+
+| Namespace                  | Purpose                                                  |
+| :------------------------- | :------------------------------------------------------- |
+| [`console`](./console)     | Provides logging, assertion, and timing functions        |
+| [`localtime`](./localtime) | Allows you to access the user's local time and time zone |

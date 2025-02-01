@@ -1,0 +1,150 @@
+---
+title: "Local Time APIs"
+sidebarTitle: "Local Time"
+description: "Access the user's local time and time zone in your functions"
+icon: "circle-small"
+iconType: "solid"
+---
+
+import { SdkHeader } from "/snippets/sdk-header.mdx"
+import SdkTip from "/snippets/sdk-tip.mdx"
+
+<SdkHeader language="Go" feature="Local Time" />
+
+The Modus Local Time APIs allow you to access the user's local time and time
+zone from your functions.
+
+## Import
+
+To begin, import the `localtime` package from the SDK:
+
+```go
+import "github.com/hypermodeinc/modus/sdk/go/pkg/localtime"
+```
+
+{/* <!-- vale Google.Headings = NO --> */}
+
+## Local Time APIs
+
+The APIs in the `localtime` package are below.
+
+All time zones use the IANA time zone database format. For example,
+`"America/New_York"`. You can find a list of valid time zones
+[here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
+
+<Info>
+
+{/* <!-- vale Google.Passive = NO --> */}
+
+For APIs that work with the user's local time, the time zone is determined in
+the following order of precedence:
+
+- If the `X-Time-Zone` header is present in the request, the time zone is set to
+  the value of the header.
+- If the `TZ` environment variable is set on the host, the time zone is set to
+  the value of the variable.
+- Otherwise, the time zone is set to the host's local time zone.
+
+{/* <!-- vale Google.Passive = YES --> */}
+
+</Info>
+
+<Tip>
+
+When working locally with `modus dev`, Modus uses the host's local time zone by
+default. You can override this by setting the `TZ` environment variable in your
+`.env.local` file.
+
+</Tip>
+
+<Tip>
+
+In a browser-based web app, you can get the user's time zone with the following
+JavaScript code:
+
+```js
+const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+```
+
+Assign that value to a `"X-Time-Zone"` request header when calling Modus, to use
+it for all local time calculations.
+
+</Tip>
+
+<Tip>
+
+In many cases, you can use Go's built-in time support:
+
+```go
+// to get the current time in UTC
+now := time.Now().UTC()
+
+// if you need a string
+s := now.Format(time.RFC3339)
+```
+
+</Tip>
+
+<Warning>
+
+Due to Go's WASM implementation, the standard `time.Now()` function always
+returns the UTC time, not the user's local time like it usually does in Go. If
+you need the user's local time, use `localtime.Now()` instead.
+
+</Warning>
+
+<SdkTip />
+
+### Functions
+
+#### GetLocation
+
+Returns a pointer to a Go `time.Location` object for a specific time zone.
+Errors if the time zone provided is invalid.
+
+```go
+func GetLocation(tz string) (*time.Location, error)
+```
+
+#### GetTimeZone
+
+Returns the user's time zone in IANA format.
+
+```go
+func GetTimeZone() string
+```
+
+#### IsValidTimeZone
+
+Determines whether the specified time zone is a valid IANA time zone and
+recognized by the system as such.
+
+```go
+func IsValidTimeZone(tz string) bool
+```
+
+<ResponseField name="tz" type="string" required>
+  An IANA time zone identifier, such as `"America/New_York"`.
+</ResponseField>
+
+#### Now
+
+Returns the current time as a `time.Time` object, with the location set to the
+user's local time zone. Errors if the time zone passed to the host is invalid.
+
+```go
+func Now() (time.Time, error)
+```
+
+#### NowInZone
+
+Returns the current time as a `time.Time` object, with the location set to a
+specific time zone. Errors if the time zone provided is invalid.
+
+```go
+func NowInZone(tz string) (time.Time, error)
+```
+
+<ResponseField name="tz" type="string" required>
+  An IANA time zone identifier, such as `"America/New_York"`.
+</ResponseField>

@@ -109,9 +109,10 @@ connection types:
 | Type         | Purpose                          | Function Classes            |
 | :----------- | :------------------------------- | :-------------------------- |
 | `http`       | Connect to an HTTP(S) web server | `http`, `graphql`, `models` |
-| `postgresql` | Connect to a PostgreSQL database | `postgresql`                |
 | `dgraph`     | Connect to a Dgraph database     | `dgraph`                    |
+| `mysql`      | Connect to a MySQL database      | `mysql`                     |
 | `neo4j`      | Connect to a Neo4j database      | `neo4j`                     |
+| `postgresql` | Connect to a PostgreSQL database | `postgresql`                |
 
 <Warning>
 **Don't include secrets directly in the manifest!**
@@ -130,11 +131,12 @@ where they're securely stored until needed.
 ### HTTP connection
 
 This connection type supports the HTTP and HTTPS protocols to communicate with
-external hosts. You can use the [HTTP APIs](/modus/sdk/http) in the Modus SDK to
-interact with the host.
+external hosts. You can use the [HTTP APIs](/modus/sdk/assemblyscript/http) in
+the Modus SDK to interact with the host.
 
-This connection type is also used for [GraphQL APIs](/modus/sdk/graphql) and to
-invoke externally hosted AI [models](/modus/sdk/models).
+This connection type is also used for
+[GraphQL APIs](/modus/sdk/assemblyscript/graphql) and to invoke externally
+hosted AI [models](/modus/sdk/assemblyscript/models).
 
 **Example:**
 
@@ -246,11 +248,129 @@ This example specifies a query parameter named `key` provided by a secret named
   </Accordion>
 </ResponseField>
 
+### Dgraph connection
+
+This connection type supports connecting to Dgraph databases. You can use the
+[Dgraph APIs](/modus/sdk/assemblyscript/dgraph) in the Modus SDK to interact
+with the database.
+
+**Example:**
+
+```json modus.json
+{
+  "connections": {
+    "my-dgraph": {
+      "type": "dgraph",
+      "grpcTarget": "frozen-mango.grpc.eu-central-1.aws.cloud.dgraph.io:443",
+      "key": "{{DGRAPH_API_KEY}}"
+    }
+  }
+}
+```
+
+<ResponseField name="type" type="string" required>
+  Always set to `"dgraph"` for this connection type.
+</ResponseField>
+
+<ResponseField name="grpcTarget" type="string" required>
+  The gRPC target for the Dgraph database.
+</ResponseField>
+
+<ResponseField name="key" type="string" required>
+  The API key for the Dgraph database.
+</ResponseField>
+
+### MySQL connection
+
+This connection type supports connecting to MySQL databases. You can use the
+[MySQL APIs](/modus/sdk/assemblyscript/mysql) in the Modus SDK to interact with
+the database.
+
+**Example:**
+
+```json modus.json
+{
+  "connections": {
+    "my-database": {
+      "type": "mysql",
+      "connString": "mysql://{{USERNAME}}:{{PASSWORD}}@db.example.com:3306/dbname?tls=true"
+    }
+  }
+}
+```
+
+<ResponseField name="type" type="string" required>
+  Always set to `"mysql"` for this connection type.
+</ResponseField>
+
+<ResponseField name="connString" type="string" required>
+  The connection string for the MySQL database.
+
+Values may include variables using the `{{VARIABLE}}` template syntax, which
+resolve at runtime to secrets provided for each connection, via the Hypermode
+Console.
+
+The connection string in the preceding example includes:
+
+- A username and password provided by secrets named `USERNAME` & `PASSWORD`
+- A host named `db.example.com` on port `3306`
+- A database named `dbname`
+- Encryption enabled via `tls=true` - which is highly recommended for secure
+  connections
+
+Set the connection string using a URI format
+[as described in the MySQL documentation](https://dev.mysql.com/doc/refman/8.4/en/connecting-using-uri-or-key-value-pairs.html#connecting-using-uri).
+
+However, any optional parameters provided should be in the form specified by the
+Go MySQL driver used by the Modus Runtime,
+[as described here](https://github.com/go-sql-driver/mysql/blob/master/README.md#parameters)
+
+For example, use `tls=true` to enable encryption (not `sslmode=require`).
+
+</ResponseField>
+
+### Neo4j connection
+
+This connection type supports connecting to Neo4j databases. You can use the
+[Neo4j APIs](/modus/sdk/assemblyscript/neo4j) in the Modus SDK to interact with
+the database.
+
+**Example:**
+
+```json modus.json
+{
+  "connections": {
+    "my-neo4j": {
+      "type": "neo4j",
+      "dbUri": "bolt://localhost:7687",
+      "username": "neo4j",
+      "password": "{{NEO4J_PASSWORD}}"
+    }
+  }
+}
+```
+
+<ResponseField name="type" type="string" required>
+  Always set to `"neo4j"` for this connection type.
+</ResponseField>
+
+<ResponseField name="dbUri" type="string" required>
+  The URI for the Neo4j database.
+</ResponseField>
+
+<ResponseField name="username" type="string" required>
+  The username for the Neo4j database.
+</ResponseField>
+
+<ResponseField name="password" type="string" required>
+  The password for the Neo4j database.
+</ResponseField>
+
 ### PostgreSQL connection
 
 This connection type supports connecting to PostgreSQL databases. You can use
-the [PostgreSQL APIs](/modus/sdk/postgresql) in the Modus SDK to interact with
-the database.
+the [PostgreSQL APIs](/modus/sdk/assemblyscript/postgresql) in the Modus SDK to
+interact with the database.
 
 **Example:**
 
@@ -297,73 +417,6 @@ For example, if using Neon, refer to the
 
 </Tip>
 
-</ResponseField>
-
-### Dgraph connection
-
-This connection type supports connecting to Dgraph databases. You can use the
-[Dgraph APIs](/modus/sdk/dgraph) in the Modus SDK to interact with the database.
-
-**Example:**
-
-```json modus.json
-{
-  "connections": {
-    "my-dgraph": {
-      "type": "dgraph",
-      "grpcTarget": "frozen-mango.grpc.eu-central-1.aws.cloud.dgraph.io:443",
-      "key": "{{DGRAPH_API_KEY}}"
-    }
-  }
-}
-```
-
-<ResponseField name="type" type="string" required>
-  Always set to `"dgraph"` for this connection type.
-</ResponseField>
-
-<ResponseField name="grpcTarget" type="string" required>
-  The gRPC target for the Dgraph database.
-</ResponseField>
-
-<ResponseField name="key" type="string" required>
-  The API key for the Dgraph database.
-</ResponseField>
-
-### Neo4j connection
-
-This connection type supports connecting to Neo4j databases. You can use the
-[Neo4j APIs](/modus/sdk/neo4j) in the Modus SDK to interact with the database.
-
-**Example:**
-
-```json modus.json
-{
-  "connections": {
-    "my-neo4j": {
-      "type": "neo4j",
-      "dbUri": "bolt://localhost:7687",
-      "username": "neo4j",
-      "password": "{{NEO4J_PASSWORD}}"
-    }
-  }
-}
-```
-
-<ResponseField name="type" type="string" required>
-  Always set to `"neo4j"` for this connection type.
-</ResponseField>
-
-<ResponseField name="dbUri" type="string" required>
-  The URI for the Neo4j database.
-</ResponseField>
-
-<ResponseField name="username" type="string" required>
-  The username for the Neo4j database.
-</ResponseField>
-
-<ResponseField name="password" type="string" required>
-  The password for the Neo4j database.
 </ResponseField>
 
 ### Working locally with secrets
