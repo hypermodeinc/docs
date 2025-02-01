@@ -44,6 +44,7 @@ APIs
 AssemblyScript
 AWS
 CLI|cli
+const
 CRUD
 Debugf
 Dgraph|dgraph
