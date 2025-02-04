@@ -17,7 +17,7 @@ your functions.
 For more information on recording info, warnings, and errors in your Modus app,
 see [Error Handling](/modus/error-handling).
 
-## Inference history
+## Model tracing
 
 For each model invocation, Hypermode records the model inference and related
 metadata. This includes the input and output of the model, as well as the
@@ -26,4 +26,15 @@ timestamp and duration of the inference.
 From your project, select the Inferences tab to view the inferences from your
 app's models.
 
-![inference history](images/observe-functions/inference-history.png)
+![model tracing](images/observe-functions/inference-history.png)
+
+### Local model tracing
+
+When testing an AI app locally, Modus records the inference and related metadata
+in the `View Inferences` tab of the APIs explorer.
+
+The local model tracing stores inferences in the `/.modusdb` directory of your
+modus project. To delete inferences for cleanup, run `rm -rf .modusdb/` from the
+root of the project directory.
+
+![local model tracing](images/observe-functions/local-inference-history.png)
