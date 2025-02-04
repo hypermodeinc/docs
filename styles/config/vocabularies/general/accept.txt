@@ -49,6 +49,7 @@ CRUD
 Debugf
 Dgraph|dgraph
 DQL
+embeddable
 Errorf
 GitHub|github
 GraphiQL
