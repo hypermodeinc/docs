@@ -1,5 +1,3 @@
-{/_ <!-- markdownlint-disable first-line-heading --> _/}
-
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/hypermodeinc/docs)](https://github.com/hypermodeinc/docs/commits/main/)
 
 # Docs
