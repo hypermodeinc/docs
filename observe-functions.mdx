@@ -27,14 +27,3 @@ From your project, select the Inferences tab to view the inferences from your
 app's models.
 
 ![model tracing](images/observe-functions/inference-history.png)
-
-### Local model tracing
-
-When testing an AI app locally, Modus records the inference and related metadata
-in the `View Inferences` tab of the APIs explorer.
-
-The local model tracing stores inferences in the `/.modusdb` directory of your
-modus project. To delete inferences for cleanup, run `rm -rf .modusdb/` from the
-root of the project directory.
-
-![local model tracing](images/observe-functions/local-inference-history.png)
