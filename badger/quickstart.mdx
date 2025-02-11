@@ -1,6 +1,6 @@
 ---
 title: Quickstart
-description: "Everything you need to get started with Badger"
+description: Everything you need to get started with Badger
 "og:title": "Quickstart - Badger"
 ---
 
@@ -18,7 +18,7 @@ To start using Badger, run the following command to retrieve the library.
 go get github.com/dgraph-io/badger/v4
 ```
 
-Then, install the Badger command line utility into your $GOBIN path.
+Then, install the Badger command line utility into your `$GOBIN` path.
 
 ```sh
 go install github.com/dgraph-io/badger/v4/badger@latest
@@ -54,8 +54,10 @@ func main() {
   if err != nil {
     log.Fatal(err)
   }
+
   defer db.Close()
-  // Your code here…
+
+  // your code here
 }
 ```
 
@@ -63,9 +65,9 @@ func main() {
 
 By default, Badger ensures all data persists to disk. It also supports a pure
 in-memory mode. When Badger is running in this mode, all data remains in memory
-only. Reads and writes are much faster, but all data stored in Badger is lost in
-the case of a crash or close. To open badger in in-memory mode, set the
-`InMemory` option.
+only. Reads and writes are much faster, but Badger loses all stored data in the
+case of a crash or close. To open badger in in-memory mode, set the `InMemory`
+option.
 
 ```go
 opt := badger.DefaultOptions("").WithInMemory(true)
@@ -73,11 +75,11 @@ opt := badger.DefaultOptions("").WithInMemory(true)
 
 ### Encryption mode
 
-If you enable encryption on Badger, you also need to set the index cache size.
+If you enable encryption in Badger, you also need to set the index cache size.
 
 <Tip>
-  Having a cache improves the performance. Otherwise, your reads would be very
-  slow while encryption is enabled.
+  The cache improves the performance. Otherwise, reads can be very slow with
+  encryption enabled.
 </Tip>
 
 For example, to set a `100 Mb` cache:
@@ -94,7 +96,8 @@ To start a read-only transaction, you can use the `DB.View()` method:
 
 ```go
 err := db.View(func(txn *badger.Txn) error {
-  // Your code here…
+  // your code here
+
   return nil
 })
 ```
@@ -115,18 +118,18 @@ err := db.Update(func(txn *badger.Txn) error {
 })
 ```
 
-All database operations are allowed inside a read-write transaction.
+Badger allows all database operations inside a read-write transaction.
 
 Always check the returned error value. If you return an error within your
-closure it will be passed through.
+closure it's passed through.
 
-An `ErrConflict` error will be reported in case of a conflict. Depending on the
-state of your app, you have the option to retry the operation if you receive
-this error.
+An `ErrConflict` error is reported in case of a conflict. Depending on the state
+of your app, you have the option to retry the operation if you receive this
+error.
 
-An `ErrTxnTooBig` will be reported in case the number of pending writes/deletes
-in the transaction exceeds a certain limit. In that case, it's best to commit
-the transaction and start a new transaction immediately. Here is an example (we
+An `ErrTxnTooBig` is reported in case the number of pending writes/deletes in
+the transaction exceeds a certain limit. In that case, it's best to commit the
+transaction and start a new transaction immediately. Here is an example (we
 aren't checking for errors in some places for simplicity):
 
 ```go

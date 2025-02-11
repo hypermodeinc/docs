@@ -4,7 +4,7 @@ description: "Common issues and solutions with Badger"
 "og:title": "Troubleshooting - Badger"
 ---
 
-## My writes are getting stuck
+## Writes are getting stuck
 
 **Update: with the new `Value(func(v []byte))` API, this deadlock can no longer
 happen.**
@@ -12,7 +12,7 @@ happen.**
 The following is true for users on Badger v1.x.
 
 This can happen if a long running iteration with `Prefetch` is set to false, but
-a `Item::Value` call is made internally in the loop. That causes Badger to
+an `Item::Value` call is made internally in the loop. That causes Badger to
 acquire read locks over the value log files to avoid value log GC removing the
 file from underneath. As a side effect, this also blocks a new value log GC file
 from being created, when the value log file boundary is hit.
@@ -30,7 +30,7 @@ There are multiple workarounds during iteration:
    iteration. This might be useful if you just want to delete a lot of keys.
 1. Do the writes in a separate transaction after the reads.
 
-## My writes are really slow
+## Writes are really slow
 
 Are you creating a new transaction for every single key update, and waiting for
 it to `Commit` fully before creating a new one? This leads to very low
@@ -64,7 +64,7 @@ would only happen once `BaseTableSize` has been reached. So, if you're doing a
 few writes and then checking, you might not see anything on disk. Once you
 `Close` the database, you'll see these writes on disk.
 
-## Reverse iteration doesn't give me the right results
+## Reverse iteration doesn't produce the right results
 
 Just like forward iteration goes to the first key which is equal or greater than
 the SEEK key, reverse iteration goes to the first key which is equal or lesser
@@ -122,7 +122,7 @@ were on badger v1.6.0 and you wish to migrate to v2.0.0 version.
    - `git checkout v1.6.0`
    - `cd badger && go install`
 
-     This should install the old badger binary in your $GOBIN.
+     This should install the old badger binary in your `$GOBIN`.
 
 2. Create Backup
    - `badger backup --dir path/to/badger/directory -f badger.backup`
@@ -132,7 +132,7 @@ were on badger v1.6.0 and you wish to migrate to v2.0.0 version.
    - `git checkout v2.0.0`
    - `cd badger && go install`
 
-     This should install new badger binary in your $GOBIN
+     This should install the new badger binary in your `$GOBIN`.
 
 4. Restore data from backup
 
