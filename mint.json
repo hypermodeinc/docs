@@ -37,6 +37,10 @@
     {
       "name": "Modus",
       "url": "modus"
+    },
+    {
+      "name": "Badger",
+      "url": "badger"
     }
   ],
   "redirects": [
@@ -177,6 +181,14 @@
     {
       "group": "Resources",
       "pages": ["modus/changelog"]
+    },
+    {
+      "group": "Getting Started",
+      "pages": ["badger/overview", "badger/quickstart"]
+    },
+    {
+      "group": "Resources",
+      "pages": ["badger/troubleshooting", "badger/design"]
     }
   ],
   "feedback": {
