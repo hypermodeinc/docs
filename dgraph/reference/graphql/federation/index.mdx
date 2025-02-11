@@ -23,7 +23,7 @@ few limitations on how to use `@key` directives:
 - Users can define the `@key` directive only once for a type
 - Support for multiple key fields is not currently available.
 - Since the `@key` field acts as a foreign key to resolve entities from the
-  service where it is extended, the field provided as an argument inside the
+  service where it's extended, the field provided as an argument inside the
   `@key` directive should be of `ID` type or have the `@id` directive on it.
 
 For example -
@@ -55,7 +55,7 @@ between two types of syntax to extend a type into your Dgraph GraphQL service:
 ### `@external` directive
 
 You use this directive when the given field is not stored in this service. It
-can only be used on extended type definitions. For example, it is used in the
+can only be used on extended type definitions. For example, it's used in the
 example shown above on the `id` field of the `User` type.
 
 ### `@provides` directive
@@ -126,7 +126,7 @@ extend type User @key(fields: "id") {
 async function userReviews({ parent, graphql }) {
   let reviews = []
   // find the reviews for a user using the email and return them.
-  // Even though the email has been declared `@external`, it will be available as `parent.email` as it is mentioned in `@requires`.
+  // Even though the email has been declared `@external`, it will be available as `parent.email` as it's mentioned in `@requires`.
   return reviews
 }
 self.addGraphQLResolvers({

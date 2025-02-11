@@ -2,9 +2,9 @@
 title: Raw HTTP
 ---
 
-It's also possible to interact with Dgraph directly via its HTTP endpoints. This
-allows clients to be built for languages that don't have access to a working
-gRPC implementation.
+It is also possible to interact with Dgraph directly via its HTTP endpoints.
+This allows clients to be built for languages that don't have access to a
+working gRPC implementation.
 
 In the examples shown here, regular command line tools such as `curl` and
 [`jq`](https://stedolan.github.io/jq/) are used. However, the real intention
@@ -266,7 +266,7 @@ transaction state.
 ## Committing the transaction
 
 <Note>
-  It's possible to commit immediately after a mutation is made (without
+  It is possible to commit immediately after a mutation is made (without
   requiring to use the `/commit` endpoint as explained in this section). To do
   this, add the parameter `commitNow` in the URL `/mutate?commitNow=true`.
 </Note>
@@ -316,7 +316,7 @@ The transaction is now complete.
 
 If another client were to perform another transaction concurrently affecting the
 same keys, then it's possible that the transaction would _not_ be successful.
-This is indicated in the response when the commit is attempted.
+This is indicated in the response when the commit's attempted.
 
 ```json
 {

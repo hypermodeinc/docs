@@ -24,8 +24,8 @@ Skip the first five recent posts and then get the next 10.
 queryPost(order: { desc: datePublished }, offset: 5, first: 10) { ... }
 ```
 
-It's also possible to give multiple orders. For example, sort by date and within
-each date order the posts by number of likes.
+It is also possible to give multiple orders. For example, sort by date and
+within each date order the posts by number of likes.
 
 ```graphql
 queryPost(order: { desc: datePublished, then: { desc: numLikes } }, first: 5) { ... }

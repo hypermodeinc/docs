@@ -217,7 +217,7 @@ queries, you might benefit from a read-only transaction, which can share the
 same read timestamp across multiple such read-only transactions and can result
 in lower latencies.
 
-For normal read-write transactions, it is a good practice to call
+For normal read-write transactions, it's a good practice to call
 `Transaction#discard()` in a `finally` block after running the transaction.
 Calling `Transaction#discard()` after `Transaction#commit()` is a no-op and you
 can call `discard()` multiple times with no additional side-effects.

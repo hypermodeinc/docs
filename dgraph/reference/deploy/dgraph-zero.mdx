@@ -16,14 +16,14 @@ dgraph zero --help
 
 The `--replicas` option controls the replication factor: the number of replicas
 per data shard, including the original shard. For consensus, the replication
-factor must be set to an odd number, and the following error will occur if it is
+factor must be set to an odd number, and the following error will occur if it's
 set to an even number (for example, `2`):
 
 ```nix
 ERROR: Number of replicas must be odd for consensus. Found: 2
 ```
 
-When a new Alpha joins the cluster, it is assigned to a group based on the
+When a new Alpha joins the cluster, it's assigned to a group based on the
 replication factor. If the replication factor is set to `1`, then each Alpha
 node will serve a different group. If the replication factor is set to `3` and
 you then launch six Alpha nodes, the first three Alpha nodes will serve group 1

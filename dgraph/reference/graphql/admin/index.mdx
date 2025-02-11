@@ -836,8 +836,8 @@ type Mutation {
     refreshToken: String
   ): LoginPayload
   """
-  Add a user.  When linking to groups: if the group doesn't exist it is created; if the group
-  exists, the new user is linked to the existing group.  It's possible to both create new
+  Add a user.  When linking to groups: if the group doesn't exist it's created; if the group
+  exists, the new user is linked to the existing group.  It is possible to both create new
   groups and link to existing groups in the one mutation.
   Dgraph ensures that usernames are unique, hence attempting to add an existing user results
   in an error.
@@ -849,7 +849,7 @@ type Mutation {
   addGroup(input: [AddGroupInput!]!): AddGroupPayload
   """
   Update users, their passwords and groups.  As with AddUser, when linking to groups: if the
-  group doesn't exist it is created; if the group exists, the new user is linked to the existing
+  group doesn't exist it's created; if the group exists, the new user is linked to the existing
   group.  If the filter doesn't match any users, the mutation has no effect.
   """
   updateUser(input: UpdateUserInput!): AddUserPayload

@@ -92,11 +92,12 @@ a few things at once. Remember our first sketch of some graph data?
 
 ![sub graph with first posts](/images/message-board/first-posts-in-graph.png)
 
-At the moment we only have the `User1` and `Category1` nodes. It's not much of a
-graph, so let's flesh out the rest of the graph in a single mutation. We'll use
-the `addPost` mutation to add the three posts, link all the posts to `User1`,
-link posts 2 and 3 to the existing category, and then create `Category2`. And,
-you'll do all of this in a single operation using the following mutation:
+At the moment we only have the `User1` and `Category1` nodes. It is not much of
+a graph, so let's flesh out the rest of the graph in a single mutation. We'll
+use the `addPost` mutation to add the three posts, link all the posts to
+`User1`, link posts 2 and 3 to the existing category, and then create
+`Category2`. And, you'll do all of this in a single operation using the
+following mutation:
 
 ```graphql
 mutation {
@@ -174,7 +175,7 @@ mutation {
       }
       {
         title: "A Post about Dgraph"
-        text: "It's a GraphQL database"
+        text: "It is a GraphQL database"
         author: { username: "User1" }
         category: { id: "0xfffd8d6ab6e7890a" }
       }

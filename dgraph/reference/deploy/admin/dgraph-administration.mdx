@@ -201,7 +201,7 @@ wish to upgrade Dgraph or reconfigure the sharding of a cluster. The following
 are the right steps to safely export and restart.
 
 1. Start an [export](./#export-database)
-2. Ensure it is successful
+2. Ensure it's successful
 3. [Shutdown Dgraph](./#shut-down-database) and wait for all writes to complete
 4. Start a new Dgraph cluster using new data directories (this can be done by
    passing empty directories to the options `-p` and `-w` for Alphas and `-w`
@@ -231,7 +231,7 @@ it, and shutdown the old cluster.
 
 1. Use [binary backup](./enterprise-features/binary-backups.md) to export data
    from old cluster
-2. Ensure it is successful
+2. Ensure it's successful
 3. [Shutdown Dgraph](./#shut-down-database) and wait for all writes to complete
 4. Upgrade `dgraph` binary to `v20.03.0`
 5. [Restore](/enterprise-features/binary-backups.md#restore-from-backup) from
@@ -247,7 +247,7 @@ dgraph upgrade --acl -a localhost:9080 -u groot -p password
 
 1. Use [binary backup](./enterprise-features/binary-backups.md) to export data
    from old cluster
-2. Ensure it is successful
+2. Ensure it's successful
 3. [Shutdown Dgraph](./#shut-down-database) and wait for all writes to complete
 4. Upgrade `dgraph` binary to `v20.07.0`
 5. [Restore](/enterprise-features/binary-backups.md#restore-from-backup) from
@@ -279,7 +279,7 @@ dgraph upgrade --acl -a localhost:9080 -u groot -p password
 
 1. Use [binary backup](./enterprise-features/binary-backups.md) to export data
    from the old cluster
-2. Ensure it is successful
+2. Ensure it's successful
 3. [Shutdown Dgraph](./#shut-down-database) and wait for all writes to complete
 4. Upgrade `dgraph` binary to `v21.03.0`
 5. [Restore](/enterprise-features/binary-backups.md#restore-from-backup) from

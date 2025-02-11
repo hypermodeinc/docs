@@ -524,7 +524,7 @@ encryption keys sitting on [Hashicorp Vault](https://www.vaultproject.io/).
 
 A new `Encrypted` flag is added to the `manifest.json`. This flag indicates if
 the corresponding binary backup is encrypted or not. To be backward compatible,
-if this flag is absent, it is presumed that the corresponding backup is not
+if this flag is absent, it's presumed that the corresponding backup is not
 encrypted.
 
 For a series of full and incremental backups, per the current design, we don't
@@ -544,7 +544,7 @@ encryption.
 
 ### Backup
 
-Backup is an online tool, meaning it is available when Dgraph Alpha server is
+Backup is an online tool, meaning it's available when Dgraph Alpha server is
 running. For encrypted backups, the Dgraph Alpha server must be configured with
 the `--encryption key-file=value`. Starting with v20.07.0, the Dgraph Alpha
 server can alternatively be configured to interface with a
@@ -770,7 +770,7 @@ with `v20.07.0`, the `vault` superflag can be used to restore a backup.
 
 You can use the `dgraph restore` command to restore the postings directory from
 a previously-created backup to a directory in the local filesystem. This command
-restores a backup to a new Dgraph cluster, so it is not designed to restore a
+restores a backup to a new Dgraph cluster, so it's not designed to restore a
 backup to a Dgraph cluster that is currently live. During a restore operation, a
 new Dgraph Zero server might run to fully restore the backup state.
 

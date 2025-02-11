@@ -88,11 +88,11 @@ mutation {
 
 ### Many edges
 
-It's not really possible to auto-detect what a schema designer meant for two-way
-edges. There's not even only one possible relationship between two types.
-Consider, for example, if an app recorded the posts an `Author` had recently
-liked (so it can suggest interesting material) and just a tally of all likes on
-a post.
+It is not really possible to auto-detect what a schema designer meant for
+two-way edges. There's not even only one possible relationship between two
+types. Consider, for example, if an app recorded the posts an `Author` had
+recently liked (so it can suggest interesting material) and just a tally of all
+likes on a post.
 
 ```graphql
 type Author {
@@ -108,9 +108,9 @@ type Post {
 }
 ```
 
-It's not possible to detect what is meant here as a one-way edge, or which edges
-are linked as a two-way connection. That's why `@hasInverse` is needed - so you
-can enforce the semantics your app needs.
+It is not possible to detect what is meant here as a one-way edge, or which
+edges are linked as a two-way connection. That's why `@hasInverse` is needed -
+so you can enforce the semantics your app needs.
 
 ```graphql
 type Author {

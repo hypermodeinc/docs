@@ -170,7 +170,8 @@ func (t RuneTokenizer) Tokens(value interface{}) ([]string, error) {
 **Hints and tips:**
 
 - Inside `Tokens`, you can assume that `value` will have concrete type
-  corresponding to that specified by `Type()`. It's safe to do a type assertion.
+  corresponding to that specified by `Type()`. It is safe to do a type
+  assertion.
 
 - Even though the return value is `[]string`, you can always store non-unicode
   data inside the string. See [this blogpost](https://blog.golang.org/strings)
@@ -244,7 +245,7 @@ you would find `"Aaron"`, but not `"Ronald"`. But if you were to search for
 `"no"`, you would match both `"Aaron"` and `"Ronald"`. The order of the runes in
 the strings doesn't matter.
 
-It's possible to search for people that have _any_ of the supplied runes in
+It is possible to search for people that have _any_ of the supplied runes in
 their names (rather than _all_ of the supplied runes). To do this, use `anyof`
 instead of `allof`:
 

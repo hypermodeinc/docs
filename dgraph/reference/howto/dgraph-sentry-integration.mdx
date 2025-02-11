@@ -4,7 +4,7 @@ title: Using the Dgraph Sentry Integration
 
 Sentry is a powerful service that allows applications to send arbitrary events,
 messages, exceptions, bread-crumbs (logs) to your sentry account. In simplest
-terms, it is a dial-home service but also has a rich feature set including event
+terms, it's a dial-home service but also has a rich feature set including event
 filtering, data scrubbing, several SDKs, custom and release tagging, as well as
 integration with 3rd party tools such as Slack, GitHub.
 
@@ -23,7 +23,7 @@ turn off Sentry events reporting.
   research, we chose the approach of a wrapper process to capture these panics.
   The basic idea for this is that whenever a dgraph instance is started, a 2nd
   monitoring process is started whose only job is to monitor the stderr for
-  panics of the monitored process. When a panic is seen, it is reported back to
+  panics of the monitored process. When a panic is seen, it's reported back to
   sentry via the CaptureException API.
 
 **Reporting**

@@ -36,7 +36,7 @@ Dgraph is different from other graph databases in a number of ways, including:
 
 ## Dgraph and GraphQL
 
-In Dgraph, GraphQL is not an afterthought or an add-on; it is core to the
+In Dgraph, GraphQL is not an afterthought or an add-on; it's core to the
 product. GraphQL developers can get started in minutes, and need not concern
 themselves with the powerful graph database running in the background.
 
@@ -50,29 +50,6 @@ provides a query language called "DQL" which is inspired by GraphQL, but
 includes more features. With GraphQL simple use cases remain simple, and with
 DQL more complex cases become possible.
 
-{/\* TODO: too long. move this part below to GraphQL page Our GraphQL feature
-allows GraphQL users to get started immediately - simply define a schema and
-Dgraph automatically builds out CRUD and query APIs. Dgraph works as a
-standards-compliant GraphQL server, so many web and app developers may not know
-(or care) that Dgraph is a powerful graph database as well.
-
-As a native GraphQL database, Dgraph doesn’t have a relational database running
-in the background, or complex resolvers to map between database and GraphQL
-schemas. We often call this "single-schema development." The big time savings is
-that there are no GraphQL resolvers or custom queries needed to get started. All
-GraphQL fields are "resolved" simply by following our graph database edges to
-required fields. With single-schema development, you can change your GraphQL
-schema, insert data, and call your new APIs in seconds, not hours.
-
-If you are a SQL user, check out:
-
-[Dgraph for SQL Users](https://dgraph.io/learn/courses/datamodel/sql-to-dgraph/overview/introduction/).
-
-Read more about the motivations for GraphQL and how Facebook still uses it to
-provide generic yet efficient data access in
-[the original announcement of the spec from Facebook](https://engineering.fb.com/2015/09/14/core-data/graphql-a-data-query-language/).
-\*/}
-
 ## The Graph Model - Nodes, Relationships and Values
 
 Dgraph is fundamentally a
@@ -80,17 +57,17 @@ Dgraph is fundamentally a
 because it stores nodes, relations among those nodes, and associated properties
 for any relation.
 
-{/\* TODO move this to some JSON format page
-
 **Dgraph JSON input example with a facet:**
 
-    {
-      "name": "Bob",
-      "Address": {
-       "street": "123 Main St."
-      },
-      "Address|since": "2022-02-22"
-    }
+```json
+{
+  "name": "Bob",
+  "Address": {
+    "street": "123 Main St."
+  },
+  "Address|since": "2022-02-22"
+}
+```
 
 This JSON structure succinctly represents rich data:
 
@@ -145,7 +122,7 @@ consumer or app.
 
 ## Dgraph Architecture
 
-Dgraph scales to larger data sizes than other graph databases because it is
+Dgraph scales to larger data sizes than other graph databases because it's
 designed from the ground up to be distributed. Therefore Dgraph runs as a
 cluster of server nodes which communicate to form a single logical data store.
 There are two main types of processes (nodes) running: Zeros and Alphas.

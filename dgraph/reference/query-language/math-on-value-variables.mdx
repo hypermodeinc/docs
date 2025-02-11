@@ -33,16 +33,23 @@ Query Example: Form a score for each of Steven Spielberg's movies as the sum of
 number of actors, number of genres and number of countries. List the top five
 such movies in order of decreasing score.
 
-````json { var(func:allofterms(name@en, "steven spielberg")) { films as
-director.film { p as count(starring) q as count(genre) r as count(country) score
-as math(p + q + r) } }
-
-    TopMovies(func: uid(films), orderdesc: val(score), first: 5){
-    	name@en
-    	val(score)
+````json
+{
+  var(func:allofterms(name@en, "steven spielberg")) {
+    films as director.film {
+        p as count(starring)
+        q as count(genre)
+        r as count(country)
+        score as math(p + q + r)
     }
+  }
 
-} ```
+  TopMovies(func: uid(films), orderdesc: val(score), first: 5){
+    name@en
+    val(score)
+  }
+}
+```
 
 Value variables and aggregations of them can be used in filters.
 
@@ -50,13 +57,23 @@ Query Example: Calculate a score for each Steven Spielberg movie with a
 condition on release date to penalize movies that are more than 20 years old,
 filtering on the resulting score.
 
-```json { var(func:allofterms(name@en, "steven spielberg")) { films as
-director.film { p as count(starring) q as count(genre) date as
-initial_release_date years as math(since(date)/(365*24*60\*60)) score as
-math(cond(years > 20, 0, ln(p)+q-ln(years))) } }
+```json
+{
+  var(func:allofterms(name@en, "steven spielberg")) {
+    films as director.film {
+        p as count(starring)
+        q as count(genre)
+        date as initial_release_date
+        years as math(since(date)/(365*24*60\*60))
+        score as math(cond(years > 20, 0, ln(p)+q-ln(years)))
+    }
+  }
 
-TopMovies(func: uid(films), orderdesc: val(score)) @filter(gt(val(score), 2)){
-name@en val(score) val(date) } } ```
+  TopMovies(func: uid(films), orderdesc: val(score)) @filter(gt(val(score), 2)){
+    name@en val(score) val(date)
+  }
+}
+```
 
 Values calculated with math operations are stored to value variables and so can
 be aggregated.
@@ -64,10 +81,15 @@ be aggregated.
 Query Example: Compute a score for each Steven Spielberg movie and then
 aggregate the score.
 
-```json { steven as var(func:eq(name@en, "Steven Spielberg"))
-@filter(has(director.film)) { director.film { p as count(starring) q as
-count(genre) r as count(country) score as math(p + q + r) } directorScore as
-sum(val(score)) } score(func: uid(steven)){ name@en val(directorScore) }
-
-} ```
+```json
+{
+  steven as var(func:eq(name@en, "Steven Spielberg")) @filter(has(director.film)) {
+    director.film { p as count(starring) q as count(genre) r as count(country)
+      score as math(p + q + r)
+    }
+    directorScore as sum(val(score))
+  }
+  score(func: uid(steven)) { name@en val(directorScore) }
+}
+```
 ````

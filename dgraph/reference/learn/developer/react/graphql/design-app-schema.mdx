@@ -125,11 +125,11 @@ Graphs make these kinds of data traversals really clear, as compared to table
 joins or navigating your way through a RESTful API. It can also really help to
 jot down a quick sketch.
 
-It's also possible for a query to have multiple entry points and traversals from
-all of those entry points. Imagine, for example, the query that renders the post
-list on the main page. That's a query that finds multiple posts, maybe ordered
-by date or from particular categories, and then, for each, traverses to the
-author, category, etc.
+It is also possible for a query to have multiple entry points and traversals
+from all of those entry points. Imagine, for example, the query that renders the
+post list on the main page. That's a query that finds multiple posts, maybe
+ordered by date or from particular categories, and then, for each, traverses to
+the author, category, etc.
 
 You can now begin to see the GraphQL queries needed to fill out the UI. For
 example, in the sketch at the top, there will be a query starting at the logged

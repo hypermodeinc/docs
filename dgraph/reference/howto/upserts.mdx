@@ -5,12 +5,12 @@ title: Upserts
 Upsert-style operations are operations where:
 
 1. A node is searched for, and then
-2. Depending on if it is found or not, either:
+2. Depending on if it's found or not, either:
    - Updating some of its attributes, or
    - Creating a new node with those attributes.
 
 The upsert has to be an atomic operation such that either a new node is created,
-or an existing node is modified. It's not allowed that two concurrent upserts
+or an existing node is modified. It is not allowed that two concurrent upserts
 both create a new node.
 
 There are many examples where upserts are useful. Most examples involve the
@@ -67,8 +67,8 @@ The choice of index placed on the predicate is important for performance. **Hash
 is almost always the best choice of index for equality checking.**
 
 <Note>
-  It's the _index_ that typically causes upsert conflicts to occur. The index is
-  stored as many key/value pairs, where each key is a combination of the
+  It is the _index_ that typically causes upsert conflicts to occur. The index
+  is stored as many key/value pairs, where each key is a combination of the
   predicate name and some function of the predicate value (e.g. its hash for the
   hash index). If two transactions modify the same key concurrently, then one
   will fail.

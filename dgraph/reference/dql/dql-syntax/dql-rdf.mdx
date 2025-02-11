@@ -164,11 +164,11 @@ it must be the UID of the namespace that the data should go into as described in
 
 ## Processing RDF to comply with Dgraph syntax for subjects
 
-While it is valid RDF to specify subjects that are IRI strings, Dgraph requires
-a numeric UID or a blank node as the subject. If a string IRI is required,
-Dgraph support them via [xid properties](./external-ids-upsert-block). When
-importing RDF from another source that does not use numeric UID subjects, it
-will be required to replace arbitrary subject IRIs with blank node IRIs.
+While it's valid RDF to specify subjects that are IRI strings, Dgraph requires a
+numeric UID or a blank node as the subject. If a string IRI is required, Dgraph
+support them via [xid properties](./external-ids-upsert-block). When importing
+RDF from another source that does not use numeric UID subjects, it will be
+required to replace arbitrary subject IRIs with blank node IRIs.
 
 Typically this is done simply by prepending "\_:" to the start of the original
 IRI. So a triple such as:

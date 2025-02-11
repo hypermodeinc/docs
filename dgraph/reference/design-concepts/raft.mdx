@@ -82,7 +82,7 @@ on other servers), the leader does four things to coordinate RAFT consensus
 
 - Appends and persists to its log.
 - Issue `AppendEntries` in parallel to other servers.
-- Monitors for the majority to report it is replicated, after which it considers
+- Monitors for the majority to report it's replicated, after which it considers
   the entry committed and applies it to the leader's state machine.
 - Notifies followers that the entry is committed so that they can apply it to
   their state machines.

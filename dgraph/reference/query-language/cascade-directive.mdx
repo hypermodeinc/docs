@@ -94,7 +94,7 @@ The `@cascade` directive processes the nodes after the query, but before Dgraph
 returns query results. This means that all of the nodes that would normally be
 returned if there was no `@cascade` applied are still touched in the internal
 query process. If you see slower-than-expected performance when using the
-`@cascade` directive, it is probably because the internal query process returns
+`@cascade` directive, it's probably because the internal query process returns
 a large set of nodes but the cascade reduces those to a small set of nodes in
 query results. To improve the performance of queries that use the `@cascade`
 directive, you might want to use `var` blocks or `has` filters, as described

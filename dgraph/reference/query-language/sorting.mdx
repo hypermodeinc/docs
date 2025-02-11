@@ -32,20 +32,33 @@ and with the index in parallel and returns whichever result is computed first.
 Query Example: French director Jean-Pierre Jeunet's movies sorted by release
 date.
 
-````json { me(func: allofterms(name@en, "Jean-Pierre Jeunet")) { name@fr
-director.film(orderasc: initial_release_date) { name@fr name@en
-initial_release_date } } } ```
+```json
+{
+  me(func: allofterms(name@en, "Jean-Pierre Jeunet")) {
+    name@fr
+    director.film(orderasc: initial_release_date) {
+      name@fr name@en
+      initial_release_date
+    }
+  }
+}
+```
 
 Sorting can be performed at root and on value variables.
 
 Query Example: All genres sorted alphabetically and the five movies in each
 genre with the most genres.
 
-```json { genres as var(func: has(~genre)) { ~genre { numGenres as
-count(genre) } }
+```json
+{
+  genres as var(func: has(~genre)) {
+    ~genre { numGenres as count(genre) }
+  }
 
-genres(func: uid(genres), orderasc: name@en) { name@en ~genre (orderdesc:
-val(numGenres), first: 5) { name@en genres : val(numGenres) } } }
+  genres(func: uid(genres), orderasc: name@en) {
+    name@en ~genre (orderdesc: val(numGenres), first: 5) { name@en genres : val(numGenres) }
+  }
+}
 ```
 
 Sorting can also be performed by multiple predicates as shown below. If the
@@ -63,4 +76,7 @@ in descending order.
   }
 }
 ```
-````
+
+```
+
+```
