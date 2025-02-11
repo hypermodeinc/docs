@@ -106,6 +106,8 @@ types:
 - A [`Content`](#content) object, or a pointer to one.
 - A `[]byte` of binary content, or a pointer to one.
 - A `string` of text content.
+- Any other object that's JSON serializable. The content then becomes the JSON
+  representation of the object.
 
 </ResponseField>
 
