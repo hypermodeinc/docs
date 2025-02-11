@@ -10,6 +10,7 @@
 [Dd]ropAll
 [Dd]ropAttr
 [Ee]mbedder
+[Ee]xecuteMutations
 [Ee]xecuteQuery
 [Ff]etch
 [Gg]etLabels
@@ -64,10 +65,11 @@ LLM
 Logf
 MySQL|mysql
 NPM|npm
-NQuads
+NQuads|nquads
 PostgreSQL|postgresql
 PUT
 repo
+RDF
 REST|[Rr]est
 Scattergories
 SDK|sdk
