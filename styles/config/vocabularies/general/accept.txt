@@ -68,6 +68,7 @@ NPM|npm
 NQuads|nquads
 PostgreSQL|postgresql
 PUT
+recompiles
 repo
 RDF
 REST|[Rr]est

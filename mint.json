@@ -130,7 +130,8 @@
         "modus/search",
         "modus/api-generation",
         "modus/authentication",
-        "modus/error-handling"
+        "modus/error-handling",
+        "modus/run-locally"
       ]
     },
     {
