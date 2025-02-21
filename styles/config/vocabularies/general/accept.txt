@@ -10,6 +10,7 @@
 [Dd]ropAll
 [Dd]ropAttr
 [Ee]mbedder
+[Ee]xecuteMutations
 [Ee]xecuteQuery
 [Ff]etch
 [Gg]etLabels
@@ -49,6 +50,7 @@ CRUD
 Debugf
 Dgraph|dgraph
 DQL
+embeddable
 Errorf
 GitHub|github
 GraphiQL
@@ -63,10 +65,12 @@ LLM
 Logf
 MySQL|mysql
 NPM|npm
-NQuads
+NQuads|nquads
 PostgreSQL|postgresql
 PUT
+recompiles
 repo
+RDF
 REST|[Rr]est
 Scattergories
 SDK|sdk

@@ -121,7 +121,7 @@ If your connection requires authentication, you can include _placeholders_ in
 connection properties which resolve to their respective secrets at runtime.
 
 When developing locally,
-[set secrets using environment variables](#working-locally-with-secrets).
+[set secrets using environment variables](/modus/run-locally#environment-secrets).
 
 When deployed on Hypermode, set the actual secrets via the Hypermode Console,
 where they're securely stored until needed.
@@ -419,48 +419,10 @@ For example, if using Neon, refer to the
 
 </ResponseField>
 
-### Working locally with secrets
-
-When you run your app locally using `modus dev`, the runtime replaces the
-placeholders of the manifest with values from environment variables defined in
-your operating system or in `.env` files.
-
-The environment variables keys must be upper case and follow the naming
-convention:
-
-`MODUS_<CONNECTION NAME>_<PLACEHOLDER>`
-
-For example, with the following manifest:
-
-```json modus.json
-{
-  "connections": {
-    "openai": {
-      "type": "http",
-      "baseUrl": "https://api.openai.com/",
-      "headers": {
-        "Authorization": "Bearer {{API_KEY}}"
-      }
-    }
-  }
-}
-```
-
-The Modus runtime substitutes `{{API_KEY}}` with the value of the environment
-variable `MODUS_OPENAI_API_KEY`
-
-An easy way to define the environment variables when working locally is to use
-the file `.env.dev.local` located in your app folder.
-
-For the previous manifest, we can set the key in the .env.dev.local file as
-follow:
-
-```text .env.dev.local
-MODUS_OPENAI_API_KEY="your openai key"
-```
-
-You should exclude `.env` files from source control. Projects created with
-`modus new` exclude these files automatically when creating your project.
+<Tip>
+  See [Running locally with secrets](/modus/run-locally#environment-secrets) for
+  more details on how to set secrets for local development.
+</Tip>
 
 ## Models
 
@@ -475,7 +437,7 @@ alphanumeric characters and hyphens.
 {
   "models": {
     "text-generator": {
-      "sourceModel": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+      "sourceModel": "meta-llama/Llama-3.2-3B-Instruct",
       "provider": "hugging-face",
       "connection": "hypermode"
     }

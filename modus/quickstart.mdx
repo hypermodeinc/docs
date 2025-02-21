@@ -181,7 +181,7 @@ learn how to use the basic components of a Modus app and how to run it locally.
       ```json
         "models": {
           "text-generator": {
-            "sourceModel": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+            "sourceModel": "meta-llama/Llama-3.2-3B-Instruct",
             "provider": "hugging-face",
             "connection": "hypermode"
           }
@@ -198,6 +198,20 @@ learn how to use the basic components of a Modus app and how to run it locally.
 
     You can now use the `hyp login` command to log in to the Hyp CLI.
     This links your project to the Hypermode platform, allowing you to leverage the model in your modus app.
+
+  </Step>
+
+  <Step title="Track local model inferences">
+
+    When testing an AI app locally, Modus records the inference and related metadata
+    in the `View Inferences` tab of the APIs explorer.
+
+    <Note>
+      Local model tracing is only supported on Linux and macOS. Windows support is
+      coming soon.
+    </Note>
+
+    ![local model tracing](../images/observe-functions/local-inference-history.png)
 
   </Step>
 </Steps>

@@ -1,0 +1,9 @@
+/* default code padding is 2px 8px, which is too wide */
+code {
+  padding: 2px 4px !important;
+}
+
+/* anchors around code blocks don't need additional decoration */
+a code {
+  text-decoration: none !important;
+}

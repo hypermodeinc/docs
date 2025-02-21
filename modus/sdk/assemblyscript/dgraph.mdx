@@ -79,12 +79,35 @@ function dropAttr(connection: string, attr: string): string
   The attribute to drop from the Dgraph schema.
 </ResponseField>
 
-#### execute
+#### escapeRDF
 
-Execute a Dgraph query or mutation using a Dgraph Request object.
+Ensures proper escaping of RDF string literals.
 
 ```ts
-function execute(connection: string, request: Request): Response
+function escapeRDF(value: string): string
+```
+
+<ResponseField name="value" type="string" required>
+  The RDF string literal to escape.
+</ResponseField>
+
+#### executeMutations
+
+Execute one or more mutations, without a filtering query.
+
+<Tip>
+
+If you need to filter the mutations based on a query, use the
+[`executeQuery`](#executequery) function instead, and pass the mutations after
+the query.
+
+</Tip>
+
+```ts
+function executeMutations(
+  connection: string,
+  ...mutations: Mutation[]
+): Response
 ```
 
 <ResponseField name="connection" type="string" required>
@@ -92,9 +115,44 @@ function execute(connection: string, request: Request): Response
   manifest](/modus/app-manifest#connections).
 </ResponseField>
 
-<ResponseField name="request" type="Request" required>
-  A Dgraph [`Request`](#request) object, describing the query or mutation to
-  execute.
+<ResponseField name="mutations" type="...Mutation[]" required>
+  One or more [`Mutation`](#mutation) objects to execute.
+</ResponseField>
+
+#### executeQuery
+
+Execute a DQL query to retrieve data from a Dgraph database.
+
+Also used to execute a filtering query and apply one or more mutations to the
+result of the query.
+
+<Tip>
+
+If you need apply mutations _without_ a filtering query, use the
+[`executeMutations`](#executemutations) function instead.
+
+</Tip>
+
+```ts
+function executeQuery(
+  connection: string,
+  query: Query,
+  ...mutations: Mutation[]
+): Response
+```
+
+<ResponseField name="connection" type="string" required>
+  Name of the connection, as [defined in the
+  manifest](/modus/app-manifest#connections).
+</ResponseField>
+
+<ResponseField name="request" type="Query" required>
+  A [`Query`](#query) object describing the DQL query to execute.
+</ResponseField>
+
+<ResponseField name="mutations" type="...Mutation[]">
+  Optional parameters specifying one or more [`Mutation`](#mutation) objects to
+  execute on the nodes matched by the query.
 </ResponseField>
 
 ### Types
@@ -105,11 +163,16 @@ A Dgraph mutation object, used to execute mutations.
 
 ```ts
 class Mutation {
-  setJson: string,
-  delJson: string,
-  setNquads: string,
-  delNquads: string,
-  condition: string,
+  setJson: string
+  delJson: string
+  setNquads: string
+  delNquads: string
+  condition: string
+  withSetJson(json: string): Mutation
+  withDelJson(json: string): Mutation
+  withSetNquads(nquads: string): Mutation
+  withDelNquads(nquads: string): Mutation
+  withCondition(cond: string): Mutation
 }
 ```
 
@@ -127,15 +190,43 @@ class Mutation {
 </ResponseField>
 
 <ResponseField name="setNquads" type="string">
-  A string representing the data to set in the mutation in NQuads format.
+  A string representing the data to set in the mutation in RDF N-Quads format.
 </ResponseField>
 
 <ResponseField name="delNquads" type="string">
-  A string representing the data to delete in the mutation in NQuads format.
+  A string representing the data to delete in the mutation in RDF N-Quads
+  format.
 </ResponseField>
 
 <ResponseField name="condition" type="string">
-  A string representing the condition query for the mutation.
+  A string representing the condition query for the mutation, as a DQL `@if`
+  directive.
+</ResponseField>
+
+<ResponseField name="withSetJson(json)">
+  Sets the `setJson` field of the mutation to the given `json` string. Returns
+  the `Mutation` object to allow for method chaining.
+</ResponseField>
+
+<ResponseField name="withDelJson(json)">
+  Sets the `delJson` field of the mutation to the given `json` string. Returns
+  the `Mutation` object to allow for method chaining.
+</ResponseField>
+
+<ResponseField name="withSetNquads(nquads)">
+  Sets the `setNquads` field of the mutation to the given `nquads` string.
+  Returns the `Mutation` object to allow for method chaining.
+</ResponseField>
+
+<ResponseField name="withDelNquads(nquads)">
+  Sets the `delNquads` field of the mutation to the given `nquads` string.
+  Returns the `Mutation` object to allow for method chaining.
+</ResponseField>
+
+<ResponseField name="withCondition(cond)">
+  Sets the `condition` field of the mutation to the given `cond` string, which
+  should be a DQL `@if` directive. Returns the `Mutation` object to allow for
+  method chaining.
 </ResponseField>
 
 #### Query
@@ -146,12 +237,13 @@ A Dgraph query object, used to execute queries.
 class Query {
   query: string = ""
   variables: Map<string, string> = new Map<string, string>()
+  withVariable<T>(name: string, value: T): this
 }
 ```
 
 <ResponseField name="new dgraph.Query(query, variables)">
   Creates a new `Query` object with the given `query` and `variables`. `query`
-  is a Dgraph Query Language (DQL) query string, and `variables` is a
+  is a Dgraph Query Language (DQL) query string, and `variables` is an optional
   [`Variables`](#variables) object.
 </ResponseField>
 
@@ -160,12 +252,56 @@ class Query {
 </ResponseField>
 
 <ResponseField name="variables" type="Map<string, string>">
-  A map of query variables.
+  A map of query variables, with values encoded as JSON strings.
+</ResponseField>
+
+<ResponseField name="withVariable(name, value)">
+
+Sets a query variable with the given `name` and `value`. `name` is of type
+`string`, and `value` can be a string, number, or boolean.
+
+Returns the `Query` object to allow for method chaining.
+
+<Tip>
+
+The `withVariable` method is the preferred way to set query variables in a
+`Query` object, and allows for fluent method chaining to add multiple variables.
+For example:
+
+```ts
+const query = new Query(`
+  query all($name: string, $age: int) {
+    all(func: eq(name, $name)) {
+      name
+      age
+    }
+  }
+`)
+  .withVariable("name", "Alice")
+  .withVariable("age", 30)
+
+const response = dgraph.executeQuery("my-dgraph-connection", query)
+```
+
+</Tip>
+
 </ResponseField>
 
 #### Request
 
 A Dgraph request object, used to execute queries and mutations.
+
+<Info>
+
+{/* vale Google.Passive = NO */}
+
+This object was used by the `execute` function, which has been replaced by the
+[`executeQuery`](#executequery) and [`executeMutations`](#executemutations)
+functions. You should no longer need to create a `Request` object directly.
+
+{/* vale Google.Passive = YES */}
+
+</Info>
 
 ```ts
 class Request {
@@ -195,6 +331,14 @@ default to `null`.
 
 A Variables object used to set query variables in a Dgraph query.
 
+<Info>
+
+As of SDK version 0.17.1, it's no longer necessary to explicitly create a
+`Variables` object. Instead, use the `withVariable` method on the
+[`Query`](#query) object to set query variables.
+
+</Info>
+
 ```ts
 class Variables {
   set<T>(name: string, value: T): void
@@ -204,9 +348,10 @@ class Variables {
 
 <ResponseField name="Variables.set(name, value)">
   Sets a query variable with the given `name` and `value`. `name` is of type
-  `string`, and `value` can be of any type.
+  `string`, and `value` can be a string, number, or boolean.
 </ResponseField>
 
 <ResponseField name="Variables.toMap()">
-  Returns a map of all query variables set in the `Variables` object.
+  Returns a map of all query variables set in the `Variables` object, with
+  values encoded as strings.
 </ResponseField>

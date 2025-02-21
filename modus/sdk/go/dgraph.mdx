@@ -79,12 +79,35 @@ func DropAttr(connection, attr string) error
   The attribute to drop from the Dgraph schema.
 </ResponseField>
 
-#### Execute
+#### EscapeRDF
 
-Execute a Dgraph query or mutation using a Dgraph Request object.
+Ensures proper escaping of RDF string literals.
 
 ```go
-func Execute(connection string, request *Request) (*Response, error)
+func EscapeRDF(value string) string
+```
+
+<ResponseField name="value" type="string" required>
+  The RDF string literal to escape.
+</ResponseField>
+
+#### ExecuteMutations
+
+Execute one or more mutations, without a filtering query.
+
+<Tip>
+
+If you need to filter the mutations based on a query, use the
+[`ExecuteQuery`](#executequery) function instead, and pass the mutations after
+the query.
+
+</Tip>
+
+```go
+func ExecuteMutations(
+  connection string,
+  mutations ...*Mutation
+) (*Response, error)
 ```
 
 <ResponseField name="connection" type="string" required>
@@ -92,9 +115,64 @@ func Execute(connection string, request *Request) (*Response, error)
   manifest](/modus/app-manifest#connections).
 </ResponseField>
 
-<ResponseField name="request" type="*Request" required>
-  A pointer to a Dgraph [`Request`](#request) object, describing the query or
-  mutation to execute.
+<ResponseField name="mutations" type="...*Mutation" required>
+  One or more pointers to [`Mutation`](#mutation) objects to execute.
+</ResponseField>
+
+#### ExecuteQuery
+
+Execute a DQL query to retrieve data from a Dgraph database.
+
+Also used to execute a filtering query and apply one or more mutations to the
+result of the query.
+
+<Tip>
+
+If you need apply mutations _without_ a filtering query, use the
+[`ExecuteMutations`](#executemutations) function instead.
+
+</Tip>
+
+```go
+func ExecuteQuery(
+  connection string,
+  query *Query,
+  mutations ...*Mutation
+) (*Response, error)
+```
+
+<ResponseField name="connection" type="string" required>
+  Name of the connection, as [defined in the
+  manifest](/modus/app-manifest#connections).
+</ResponseField>
+
+<ResponseField name="request" type="*Query*" required>
+  A pointer to a [`Query`](#query) object describing the DQL query to execute.
+</ResponseField>
+
+<ResponseField name="mutations" type="...*Mutation">
+  Optional parameters specifying pointers to one or more [`Mutation`](#mutation)
+  objects to execute on the nodes matched by the query.
+</ResponseField>
+
+#### NewMutation
+
+Creates a new [`Mutation`](#mutation) object.
+
+```go
+func NewMutation() *Mutation
+```
+
+#### NewQuery
+
+Creates a new [`Query`](#query) object from a DQL query string.
+
+```go
+func NewQuery(query string) *Query
+```
+
+<ResponseField name="query" type="string" required>
+  The DQL query to execute.
 </ResponseField>
 
 ### Types
@@ -111,6 +189,13 @@ type Mutation struct {
   DelNquads string
   Condition string
 }
+
+// methods
+func (*Mutation) WithSetJson(json string) *Mutation
+func (*Mutation) WithDelJson(json string) *Mutation
+func (*Mutation) WithSetNquads(nquads string) *Mutation
+func (*Mutation) WithDelNquads(nquads string) *Mutation
+func (*Mutation) WithCondition(cond string) *Mutation
 ```
 
 <ResponseField name="SetJson" type="string">
@@ -122,15 +207,48 @@ type Mutation struct {
 </ResponseField>
 
 <ResponseField name="SetNquads" type="string">
-  A string representing the data to set in the mutation in NQuads format.
+  A string representing the data to set in the mutation in RDF N-Quads format.
 </ResponseField>
 
 <ResponseField name="DelNquads" type="string">
-  A string representing the data to delete in the mutation in NQuads format.
+  A string representing the data to delete in the mutation in RDF N-Quads
+  format.
 </ResponseField>
 
 <ResponseField name="Condition" type="string">
-  A string representing the condition query for the mutation.
+  A string representing the condition query for the mutation, as a DQL `@if`
+  directive.
+</ResponseField>
+
+<ResponseField name="condition" type="string">
+  A string representing the condition query for the mutation, as a DQL `@if`
+  directive.
+</ResponseField>
+
+<ResponseField name="WithSetJson(json)">
+  Sets the `SetJson` field of the mutation to the given `json` string. Returns
+  the `Mutation` object to allow for method chaining.
+</ResponseField>
+
+<ResponseField name="WithDelJson(json)">
+  Sets the `DelJson` field of the mutation to the given `json` string. Returns
+  the `Mutation` object to allow for method chaining.
+</ResponseField>
+
+<ResponseField name="WithSetNquads(nquads)">
+  Sets the `SetNquads` field of the mutation to the given `nquads` string.
+  Returns the `Mutation` object to allow for method chaining.
+</ResponseField>
+
+<ResponseField name="WithDelNquads(nquads)">
+  Sets the `DelNquads` field of the mutation to the given `nquads` string.
+  Returns the `Mutation` object to allow for method chaining.
+</ResponseField>
+
+<ResponseField name="WithCondition(cond)">
+  Sets the `condition` field of the mutation to the given `cond` string, which
+  should be a DQL `@if` directive. Returns the `Mutation` object to allow for
+  method chaining.
 </ResponseField>
 
 #### Query
@@ -142,6 +260,9 @@ type Query struct {
   Query     string
   Variables map[string]string
 }
+
+// methods
+func (*Query) WithVariable(key string, value any) *Query
 ```
 
 <ResponseField name="Query" type="string">
@@ -149,12 +270,56 @@ type Query struct {
 </ResponseField>
 
 <ResponseField name="Variables" type="map[string]string">
-  A map of query variables.
+  A map of query variables, with values encoded as strings.
+</ResponseField>
+
+<ResponseField name="WithVariable(name, value)">
+
+Sets a query variable with the given `name` and `value`. `name` is of type
+`string`, and `value` can be a string, number, or boolean.
+
+Returns the `*Query` object to allow for method chaining.
+
+<Tip>
+
+The `WithVariable` method is the preferred way to set query variables in a
+`Query` object, and allows for fluent method chaining to add multiple variables.
+For example:
+
+```go
+query := NewQuery(`
+  query all($name: string, $age: int) {
+    all(func: eq(name, $name)) {
+      name
+      age
+    }
+  }
+`).
+  WithVariable("name", "Alice").
+  WithVariable("age", 30)
+
+response := dgraph.ExecuteQuery("my-dgraph-connection", query)
+```
+
+</Tip>
+
 </ResponseField>
 
 #### Request
 
 A Dgraph request object, used to execute queries and mutations.
+
+<Info>
+
+{/* vale Google.Passive = NO */}
+
+This object was used by the `Execute` function, which has been replaced by the
+[`ExecuteQuery`](#executequery) and [`ExecuteMutations`](#executemutations)
+functions. You should no longer need to create a `Request` object directly.
+
+{/* vale Google.Passive = YES */}
+
+</Info>
 
 ```go
 type Request struct {
