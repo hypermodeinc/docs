@@ -39,7 +39,7 @@ lint:
         - styles
     - linters: [checkov]
       paths:
-        - mint.json
+        - docs.json
     - linters: [markdownlint]
       paths:
         - snippets
