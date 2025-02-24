@@ -173,6 +173,9 @@
   "integrations": {
     "fathom": {
       "siteId": "LQSVRZXR"
+    },
+    "koala": {
+      "publicApiKey": "pk_11b969347385f3731b3fb58b4a358e5e1720"
     }
   },
   "redirects": [
