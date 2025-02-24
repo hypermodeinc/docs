@@ -1,0 +1,41 @@
+---
+title: Count
+---
+
+Syntax Examples:
+
+- `count(predicate)`
+- `count(uid)`
+
+The form `count(predicate)` counts how many `predicate` edges lead out of a
+node.
+
+The form `count(uid)` counts the number of UIDs matched in the enclosing block.
+
+Query Example: the number of films acted in by each actor with `Orlando` in
+their name.
+
+````json { me(func: allofterms(name@en, "Orlando"))
+@filter(has(actor.film)) { name@en count(actor.film) } } ```
+
+Count can be used at root and [aliased](./query-language/alias).
+
+Query Example: count of directors who have directed more than five films. When
+used at the query root, the [count index](./dql-schema.md#count-index) is
+required.
+
+```json { directors(func: gt(count(director.film), 5)) { totalDirectors
+: count(uid) } } ```
+
+Count can be assigned to a
+[value variable](./query-language/value-variables.md).
+
+Query Example: the actors of Ang Lee's "Eat Drink Man Woman" ordered by the
+number of movies acted in.
+
+```json { var(func: allofterms(name@en, "eat drink man woman")) {
+starring { actors as performance.actor { totalRoles as count(actor.film) } } }
+
+edmw(func: uid(actors), orderdesc: val(totalRoles)) { name@en name@zh totalRoles
+: val(totalRoles) } } ```
+````

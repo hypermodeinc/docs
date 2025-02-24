@@ -122,6 +122,75 @@
         ]
       },
       {
+        "tab": "Dgraph",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": ["dgraph/overview", "dgraph/quickstart"]
+          },
+          {
+            "group": "SDKs",
+            "pages": [
+              "dgraph/sdks/go",
+              "dgraph/sdks/python",
+              "dgraph/sdks/java"
+            ]
+          },
+          {
+            "group": "Query Language Reference",
+            "pages": [
+              {
+                "group": "Statements",
+                "pages": [
+                  "dgraph/dql/aggregation",
+                  "dgraph/dql/alias",
+                  "dgraph/dql/cascade-directive",
+                  "dgraph/dql/connecting-filters",
+                  "dgraph/dql/count",
+                  "dgraph/dql/debug",
+                  "dgraph/dql/expand-predicates",
+                  "dgraph/dql/facets",
+                  "dgraph/dql/functions",
+                  "dgraph/dql/groupby",
+                  "dgraph/dql/ignorereflex-directive",
+                  "dgraph/dql/indexing-custom-tokenizers"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Tools",
+            "pages": ["dgraph/ratel/overview"]
+          },
+          {
+            "group": "Administration",
+            "pages": [
+              "dgraph/admin/data-compression",
+              "dgraph/admin/data-migration",
+              {
+                "group": "Self-Managed Deployments",
+                "pages": ["dgraph/self-managed/overview"]
+              }
+            ]
+          },
+          {
+            "group": "Resources",
+            "pages": [
+              "dgraph/changelog",
+              "dgraph/glossary",
+              {
+                "group": "Enterprise",
+                "pages": ["dgraph/enterprise/access-control-lists"]
+              },
+              {
+                "group": "Dgraph Cloud",
+                "pages": ["dgraph/cloud/introduction"]
+              }
+            ]
+          }
+        ]
+      },
+      {
         "tab": "Badger",
         "groups": [
           {
