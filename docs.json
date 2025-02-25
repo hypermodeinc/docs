@@ -159,19 +159,29 @@
             ]
           },
           {
-            "group": "Tools",
-            "pages": ["dgraph/ratel/overview"]
-          },
-          {
             "group": "Administration",
             "pages": [
+              "dgraph/admin/overview",
               "dgraph/admin/data-compression",
-              "dgraph/admin/data-migration",
+              "dgraph/admin/drop-data",
+              "dgraph/admin/export-data",
+              {
+                "group": "Data Migration",
+                "pages": [
+                  "dgraph/admin/data-migration",
+                  "dgraph/admin/live-loader",
+                  "dgraph/admin/bulk-loader"
+                ]
+              },
               {
                 "group": "Self-Managed Deployments",
                 "pages": ["dgraph/self-managed/overview"]
               }
             ]
+          },
+          {
+            "group": "Tools",
+            "pages": ["dgraph/ratel/overview"]
           },
           {
             "group": "Resources",
