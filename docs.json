@@ -126,14 +126,17 @@
         "groups": [
           {
             "group": "Getting Started",
-            "pages": ["dgraph/overview", "dgraph/quickstart"]
+            "pages": ["dgraph/overview", "dgraph/quickstart", "dgraph/guides"]
           },
           {
             "group": "SDKs",
             "pages": [
+              "dgraph/sdks/overview",
               "dgraph/sdks/go",
               "dgraph/sdks/python",
-              "dgraph/sdks/java"
+              "dgraph/sdks/java",
+              "dgraph/sdks/javascript",
+              "dgraph/sdks/csharp"
             ]
           },
           {
@@ -142,6 +145,8 @@
               {
                 "group": "Statements",
                 "pages": [
+                  "dgraph/dql/query",
+                  "dgraph/dql/mutation",
                   "dgraph/dql/aggregation",
                   "dgraph/dql/alias",
                   "dgraph/dql/cascade-directive",
@@ -149,11 +154,122 @@
                   "dgraph/dql/count",
                   "dgraph/dql/debug",
                   "dgraph/dql/expand-predicates",
+                  "dgraph/dql/external-ids-upsert-block",
                   "dgraph/dql/facets",
+                  "dgraph/dql/fragments",
                   "dgraph/dql/functions",
                   "dgraph/dql/groupby",
                   "dgraph/dql/ignorereflex-directive",
-                  "dgraph/dql/indexing-custom-tokenizers"
+                  "dgraph/dql/indexing-custom-tokenizers",
+                  "dgraph/dql/json-mutation-format",
+                  "dgraph/dql/kshortest-path-queries",
+                  "dgraph/dql/language-support",
+                  "dgraph/dql/math-on-value-variables",
+                  "dgraph/dql/multiple-query-blocks",
+                  "dgraph/dql/normalize-directive",
+                  "dgraph/dql/pagination",
+                  "dgraph/dql/predicate-indexing",
+                  "dgraph/dql/query-variables",
+                  "dgraph/dql/rdf",
+                  "dgraph/dql/recurse-query",
+                  "dgraph/dql/schema-request",
+                  "dgraph/dql/schema",
+                  "dgraph/dql/sorting",
+                  "dgraph/dql/tips",
+                  "dgraph/dql/uid-upsert",
+                  "dgraph/dql/upserts",
+                  "dgraph/dql/val-upsert",
+                  "dgraph/dql/value-variables"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "GraphQL-based Development",
+            "pages": [
+              "dgraph/graphql/overview",
+              "dgraph/graphql/quickstart",
+              "dgraph/graphql/connecting",
+              "dgraph/graphql/http",
+              "dgraph/graphql/api",
+              "dgraph/graphql/variables",
+              {
+                "group": "Schema",
+                "pages": [
+                  "dgraph/graphql/schema/overview",
+                  "dgraph/graphql/schema/types",
+                  "dgraph/graphql/schema/relationships",
+                  "dgraph/graphql/schema/custom-dql",
+                  {
+                    "group": "Directives",
+                    "pages": [
+                      "dgraph/graphql/schema/directives/overview",
+                      "dgraph/graphql/schema/directives/auth",
+                      "dgraph/graphql/schema/directives/custom",
+                      "dgraph/graphql/schema/directives/deprecated",
+                      "dgraph/graphql/schema/directives/dgraph",
+                      "dgraph/graphql/schema/directives/embedding",
+                      "dgraph/graphql/schema/directives/generate",
+                      "dgraph/graphql/schema/directives/ids",
+                      "dgraph/graphql/schema/directives/search",
+                      "dgraph/graphql/schema/directives/withsubscription"
+                    ]
+                  },
+                  "dgraph/graphql/schema/migration",
+                  "dgraph/graphql/schema/documentation",
+                  "dgraph/graphql/schema/reserved",
+                  "dgraph/graphql/schema/graphql-dql"
+                ]
+              },
+              {
+                "group": "Queries",
+                "pages": [
+                  "dgraph/graphql/query/overview",
+                  "dgraph/graphql/query/aggregate",
+                  "dgraph/graphql/query/and-or-not",
+                  "dgraph/graphql/query/cached-results",
+                  "dgraph/graphql/query/cascade",
+                  "dgraph/graphql/query/order-page",
+                  "dgraph/graphql/query/persistent-queries",
+                  "dgraph/graphql/query/search-filtering",
+                  "dgraph/graphql/query/skip-include",
+                  "dgraph/graphql/query/vector-similarity"
+                ]
+              },
+              {
+                "group": "Mutations",
+                "pages": [
+                  "dgraph/graphql/mutation/overview",
+                  "dgraph/graphql/mutation/add",
+                  "dgraph/graphql/mutation/deep",
+                  "dgraph/graphql/mutation/delete",
+                  "dgraph/graphql/mutation/update",
+                  "dgraph/graphql/mutation/upsert"
+                ]
+              },
+              "dgraph/graphql/subscriptions",
+              "dgraph/graphql/federation",
+              {
+                "group": "Security",
+                "pages": [
+                  "dgraph/graphql/security/overview",
+                  "dgraph/graphql/security/anonymous-access",
+                  "dgraph/graphql/security/auth-tips",
+                  "dgraph/graphql/security/cors",
+                  "dgraph/graphql/security/graphtraversal-rules",
+                  "dgraph/graphql/security/jwt",
+                  "dgraph/graphql/security/mutations",
+                  "dgraph/graphql/security/rbac-rules"
+                ]
+              },
+              {
+                "group": "Lambda",
+                "pages": [
+                  "dgraph/graphql/lambda/overview",
+                  "dgraph/graphql/lambda/query",
+                  "dgraph/graphql/lambda/mutation",
+                  "dgraph/graphql/lambda/field",
+                  "dgraph/graphql/lambda/webhook"
                 ]
               }
             ]
@@ -164,24 +280,76 @@
               "dgraph/admin/overview",
               "dgraph/admin/data-compression",
               "dgraph/admin/drop-data",
+              "dgraph/admin/update-dgraph-types",
+              "dgraph/admin/export",
               "dgraph/admin/export-data",
+              "dgraph/admin/import",
+              "dgraph/admin/log-format",
+              "dgraph/admin/metrics",
+              "dgraph/admin/tracing",
+              "dgraph/admin/using-debug-tool",
+              "dgraph/admin/retrieving-debug-information",
+              "dgraph/admin/sentry",
+              "dgraph/admin/login-system",
+              "dgraph/admin/using-increment-tool",
               {
                 "group": "Data Migration",
                 "pages": [
                   "dgraph/admin/data-migration",
                   "dgraph/admin/live-loader",
-                  "dgraph/admin/bulk-loader"
+                  "dgraph/admin/bulk-loader",
+                  "dgraph/admin/loading-csv-data",
+                  "dgraph/admin/migrate-tool"
                 ]
               },
               {
                 "group": "Self-Managed Deployments",
-                "pages": ["dgraph/self-managed/overview"]
+                "pages": [
+                  "dgraph/self-managed/overview",
+                  "dgraph/self-managed/download",
+                  "dgraph/self-managed/dgraph-alpha",
+                  "dgraph/self-managed/dgraph-zero",
+                  "dgraph/self-managed/config",
+                  "dgraph/self-managed/tls-configuration",
+                  "dgraph/self-managed/decrypt",
+                  "dgraph/self-managed/ports-usage",
+                  "dgraph/self-managed/monitoring",
+                  "dgraph/self-managed/single-host-setup",
+                  "dgraph/self-managed/cluster-setup",
+                  "dgraph/self-managed/cluster-types",
+                  "dgraph/self-managed/single-server-cluster",
+                  "dgraph/self-managed/ha-cluster",
+                  "dgraph/self-managed/monitoring-cluster",
+                  "dgraph/self-managed/cluster-checklist",
+                  "dgraph/self-managed/troubleshooting"
+                ]
               }
             ]
           },
           {
             "group": "Tools",
-            "pages": ["dgraph/ratel/overview"]
+            "pages": [
+              {
+                "group": "Ratel",
+                "pages": [
+                  "dgraph/ratel/overview",
+                  "dgraph/ratel/console",
+                  "dgraph/ratel/connection",
+                  "dgraph/ratel/schema",
+                  "dgraph/ratel/cluster",
+                  "dgraph/ratel/backups"
+                ]
+              },
+              {
+                "group": "CLI",
+                "pages": [
+                  "dgraph/cli/about-cli",
+                  "dgraph/cli/create-cli",
+                  "dgraph/cli/completion",
+                  "dgraph/cli/command-reference"
+                ]
+              }
+            ]
           },
           {
             "group": "Resources",
@@ -189,12 +357,78 @@
               "dgraph/changelog",
               "dgraph/glossary",
               {
+                "group": "Concepts",
+                "pages": [
+                  "dgraph/concepts/acl",
+                  "dgraph/concepts/badger",
+                  "dgraph/concepts/clients",
+                  "dgraph/concepts/consistency-model",
+                  "dgraph/concepts/discovery",
+                  "dgraph/concepts/dql-graphql-layering",
+                  "dgraph/concepts/dql",
+                  "dgraph/concepts/facets",
+                  "dgraph/concepts/graphql",
+                  "dgraph/concepts/group",
+                  "dgraph/concepts/index-tokenize",
+                  "dgraph/concepts/lambda",
+                  "dgraph/concepts/minimizing-network-calls",
+                  "dgraph/concepts/namespace-tenant",
+                  "dgraph/concepts/network-call-minimization",
+                  "dgraph/concepts/posting-list",
+                  "dgraph/concepts/protocol-buffers",
+                  "dgraph/concepts/queries-process",
+                  "dgraph/concepts/raft",
+                  "dgraph/concepts/relationships",
+                  "dgraph/concepts/replication",
+                  "dgraph/concepts/transaction-mutation",
+                  "dgraph/concepts/transactions",
+                  "dgraph/concepts/wal-memtable",
+                  "dgraph/concepts/workers"
+                ]
+              },
+              {
                 "group": "Enterprise",
-                "pages": ["dgraph/enterprise/access-control-lists"]
+                "pages": [
+                  "dgraph/enterprise/overview",
+                  "dgraph/enterprise/license",
+                  "dgraph/enterprise/access-control-lists",
+                  "dgraph/enterprise/audit-logs",
+                  "dgraph/enterprise/binary-backups",
+                  "dgraph/enterprise/lsbackup",
+                  "dgraph/enterprise/change-data-capture",
+                  "dgraph/enterprise/encryption-at-rest",
+                  "dgraph/enterprise/learner-nodes",
+                  "dgraph/enterprise/multitenancy"
+                ]
               },
               {
                 "group": "Dgraph Cloud",
-                "pages": ["dgraph/cloud/introduction"]
+                "pages": [
+                  "dgraph/cloud/overview",
+                  "dgraph/cloud/provision-backend",
+                  "dgraph/cloud/authentication",
+                  "dgraph/cloud/schema",
+                  "dgraph/cloud/schema-modes",
+                  "dgraph/cloud/advanced-queries",
+                  "dgraph/cloud/monitoring",
+                  "dgraph/cloud/drop-data",
+                  "dgraph/cloud/clone",
+                  "dgraph/cloud/cloud-multitenancy",
+                  "dgraph/cloud/import-export",
+                  "dgraph/cloud/export-data-cloud",
+                  "dgraph/cloud/migrating-from-hosted-dgraph",
+                  {
+                    "group": "Cloud API",
+                    "pages": [
+                      "dgraph/cloud/api/overview",
+                      "dgraph/cloud/api/authentication",
+                      "dgraph/cloud/api/backend",
+                      "dgraph/cloud/api/schema",
+                      "dgraph/cloud/api/backup",
+                      "dgraph/cloud/api/lambda"
+                    ]
+                  }
+                ]
               }
             ]
           }

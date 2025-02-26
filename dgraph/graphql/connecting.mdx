@@ -1,0 +1,77 @@
+---
+title: Connecting to GraphQL Endpoint
+---
+
+When you deploy a GraphQL schema, Dgraph serves the corresponding
+[spec-compliant GraphQL](https://graphql.github.io/graphql-spec/June2018/) API
+at the HTTP endpoint `/graphql`. GraphQL requests can be sent via HTTP POST or
+HTTP GET requests.
+
+## Getting your GraphQL endpoint
+
+<TabGroup>
+<TabItem value="Dgraph Cloud">
+
+- access the [Overview](https://cloud.dgraph.io/_/dashboard) panel of Dgraph
+  Cloud dashboard.
+- the `GraphQL Endpoint` is displayed at the bottom.
+- click on the link button to copy it.
+
+</TabItem>
+<TabItem value="On prem">
+
+`/graphql` is served by the Alpha nodes of the Dgraph cluster on the
+HTTP-external-public port. Refer to
+[ports usage](/graphql/graphql-clients/ports-usage).
+
+For a local install the graphql endpoint would be
+
+```
+http://localhost:8080/graphql
+```
+
+The URL depends on your configuration and specifically
+
+- the port offest defined by `--port_offset` option of the dgraph alpha command.
+- the configuration of TLS for https.
+- the usage of a load balancer.
+
+</TabItem>
+</TabGroup>
+
+## IDEs
+
+As Dgraph serves a
+[spec-compliant GraphQL](https://graphql.github.io/graphql-spec/June2018/) API,
+you can use your favorite GraphQL IDE.
+
+- Postman
+- Insomnia
+- GraphiQL
+- VSCode with GraphQL extensions
+
+### General IDE setup
+
+- Copy Dgraph GraphQL endpoint.
+- Set the security header as required.
+- use IDE instrospection capability.
+
+## Clients
+
+You are ready to write GraphQL queries and mutation and to run them against
+Dgraph cluster.
+
+When building an application in React, Vue, Svelte or any of you favorite
+framework, using a GraphQL client library is a must.
+
+As Dgraph serves a
+[spec-compliant GraphQL](https://graphql.github.io/graphql-spec/June2018/) API
+from your schema, supports instropection and GraphQL subscriptions, the
+integration with GraphQL UI client libraries is seamless.
+
+Here is a not limited list of popular GraphQL UI clients that you can use with
+Dgraph to build applications:
+
+- [graphql-request](https://github.com/jasonkuhrt/graphql-request)
+- [URQL](https://github.com/urql-graphql/urql)
+- [Apollo client](https://github.com/apollographql/apollo-client)
