@@ -13,17 +13,16 @@ by adding more Alphas.
 
 Badger is a fast, open-source key-value database written in pure Go that
 provides the storage layer for Dgraph. More at
-[Badger documentation](https://dgraph.io/docs/badger)
+[Badger documentation](/badger/overview)
 
 ### DQL
 
 Dgraph Query Language is Dgraph's proprietary language to insert, update, delete
-and query data. It is based on GraphQL, but is more expressive. (See also:
-[GraphQL](#GraphQL))
+and query data. It is based on GraphQL, but is more expressive.
 
 ### Edge
 
-In the mental picture of a graph: bubbles connected by lines ; the bubbles are
+In the mental picture of a graph "bubbles connected by lines," the bubbles are
 nodes, the lines are edges. In Dgraph terminology edges are
 [relationships](#relationship) i.e an information about the relation between two
 nodes.
@@ -41,8 +40,8 @@ terminology, the objects are [nodes](#node) and the connections between them are
 ### GraphQL
 
 [GraphQL](https://graphql.org/) is a declarative language for querying data used
-by application developers to get the data they need using GraphQL APIs. GraphQL
-is an open standard with a robust ecosystem. Dgraph supports the deployment of a
+by app developers to get the data they need using GraphQL APIs. GraphQL is an
+open standard with a robust ecosystem. Dgraph supports the deployment of a
 GraphQL data model (GraphQL schema) and automatically exposes a GraphQL API
 endpoint accepting GraphQL queries.
 
@@ -50,9 +49,8 @@ endpoint accepting GraphQL queries.
 
 [gRPC](https://grpc.io/) is a high performance Remote Procedure Call (RPC)
 framework used by Dgraph to interface with clients. Dgraph has official gRPC
-clients for go, C#, Java, JavaScript and Python. Applications written in those
-language can perform mutations and queries inside transactions using Dgraph
-clients.
+clients for go, C#, Java, JavaScript and Python. Apps written in those language
+can perform mutations and queries inside transactions using Dgraph clients.
 
 ### Lambda
 
@@ -80,7 +78,7 @@ computer or a virtual machine running a module of Dgraph in a cluster. See
 
 ### Predicate
 
-In [RDF](#RDF) terminology, a predicate is the smallest piece of information
+In [RDF](#rdf) terminology, a predicate is the smallest piece of information
 about an object. A predicate can hold a literal value or can describe a relation
 to another entity :
 
@@ -91,7 +89,7 @@ to another entity :
   of the node representing Bob. In that case, `knows` is a
   [relationship](#relationship).
 
-### RATEL
+### Ratel
 
 Ratel is an open source GUI tool for data visualization and cluster management
 that’s designed to work with Dgraph and DQL. See also:
@@ -122,7 +120,7 @@ of) servers, an approach referred to as 'predicate-based sharding'.
 ### Triple
 
 Because RDF statements consist of three elements:
-`<subject> <predicate> <object>`, they are called triples. A triple represents a
+`<subject> <predicate> <object>`, they're called triples. A triple represents a
 single atomic statement about a node. The object in an RDF triple can be a
 literal value or can point to another node. See [DQL RDF Syntax](./dql-rdf) for
 more details.

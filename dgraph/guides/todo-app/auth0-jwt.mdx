@@ -5,8 +5,8 @@ description:
   through using Auth0 in an example to-do app tutorial.
 ---
 
-Let's start by going to our Auth0 dashboard where we can see the application
-which we have already created and used in our frontend-application.
+Let's start by going to our Auth0 dashboard where we can see the app which we
+have already created and used in our frontend-app.
 
 ![Dashboard](/images/graphql/tutorial/todo/dashboard.png)
 
@@ -35,7 +35,7 @@ In the above function, we are only just adding the custom claim to the token
 with a field as `USER` which if you recall from the last step is used in our
 auth rules, so it needs to match exactly with that name.
 
-Now let's go to `Settings` of our Auth0 application and then go down to view the
+Now let's go to `Settings` of our Auth0 app and then go down to view the
 `Advanced Settings` to check the JWT signature algorithm (OAuth tab) and then
 get the certificate (Certificates tab). We will be using `RS256` in this example
 so let's make sure it's set to that and then copy the certificate which we will
@@ -67,8 +67,7 @@ be used to send the value of the JWT. Next is the `Namespace` name
 `https://dgraph.io/jwt/claims` (again can be anything, just needs to match with
 the name specified in Auth0). Then next is the `Algo` which is `RS256`, the JWT
 signature algorithm (another option is `HS256` but remember to use the same
-algorithm in Auth0). Then for the `Audience`, add your application's Auth0
-client ID.
+algorithm in Auth0). Then for the `Audience`, add your app's Auth0 client ID.
 
 The updated schema will look something like this (update the public key with
 your key) -
@@ -156,8 +155,8 @@ query {
 The above should give you only your todos and verifies that our auth rule
 worked!
 
-Now let's update our frontend application to include the `X-Auth0-Token` header
-with value as JWT from Auth0 when sending a request.
+Now let's update our frontend app to include the `X-Auth0-Token` header with
+value as JWT from Auth0 when sending a request.
 
 To do this, we need to update the Apollo client setup to include the header
 while sending the request, and we need to get the JWT from Auth0.

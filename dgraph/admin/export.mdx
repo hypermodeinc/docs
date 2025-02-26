@@ -62,23 +62,25 @@ cluster. Dgraph does not copy all files to the Alpha that initiated the export.
 
 When the export is complete a response similar to this appears:
 
-```
-{"data":{
-  "export":{
-    "response":{
-      "message":"Export completed.",
-      "code":"Success"
+```json
+{
+  "data": {
+    "export": {
+      "response": {
+        "message": "Export completed.",
+        "code": "Success"
       }
     }
   },
-  "extensions":{
-    "tracing":{
-      "version":1,
-      "startTime":"2022-12-14T07:39:51.061712416Z","endTime":"2022-12-14T07:39:51.129431494Z",
-      "duration":67719080
-      }
+  "extensions": {
+    "tracing": {
+      "version": 1,
+      "startTime": "2022-12-14T07:39:51.061712416Z",
+      "endTime": "2022-12-14T07:39:51.129431494Z",
+      "duration": 67719080
     }
   }
+}
 ```
 
 ## Export data format
@@ -193,14 +195,17 @@ You can access Azure Blob Storage locally using one of these methods:
 - Using
   [MinIO Azure Gateway](https://docs.min.io/docs/minio-gateway-for-azure.html)
   with the MinIO Binary
+
   ```bash
   export MINIO_ACCESS_KEY="<AccountName>"
   export MINIO_SECRET_KEY="<AccountKey>"
   minio gateway azure
   ```
+
 - Using
   [MinIO Azure Gateway](https://docs.min.io/docs/minio-gateway-for-azure.html)
   with Docker
+
   ```bash
   docker run --detach --rm --name gateway \
    --publish 9000:9000 \
@@ -208,15 +213,18 @@ You can access Azure Blob Storage locally using one of these methods:
    --env MINIO_SECRET_KEY="<AccountKey>" \
    minio/minio gateway azure
   ```
+
 - Using
   [MinIO Azure Gateway](https://docs.min.io/docs/minio-gateway-for-azure.html)
   with the [MinIO Helm chart](https://github.com/minio/charts) for Kubernetes:
+
   ```bash
   helm repo add minio https://helm.min.io/
   helm install my-gateway minio/minio \
     --set accessKey="<AccountName>",secretKey="<AccountKey>" \
     --set azuregateway.enabled=true
   ```
+
   You can use the
   [MinIO GraphQL mutation](.//howto/exportdata/export-data.md#example-mutation-to-export-to-minio)
   with MinIO configured as a gateway.
@@ -239,14 +247,17 @@ these methods:
 
 - Using [MinIO GCS Gateway](https://docs.min.io/docs/minio-gateway-for-gcs.html)
   with the MinIO Binary
+
   ```bash
   export GOOGLE_APPLICATION_CREDENTIALS="/path/to/credentials.json"
   export MINIO_ACCESS_KEY="<minio-access-key>"
   export MINIO_SECRET_KEY="<minio-secret-key>"
   minio gateway gcs "<project-id>"
   ```
+
 - Using [MinIO GCS Gateway](https://docs.min.io/docs/minio-gateway-for-gcs.html)
   with Docker
+
   ```bash
   docker run --detach --rm --name gateway \
     --publish 9000:9000  \
@@ -256,6 +267,7 @@ these methods:
     --env MINIO_SECRET_KEY="<minio-secret-key>" \
     minio/minio gateway gcs "<project-id>"
   ```
+
 - Using [MinIO GCS Gateway](https://docs.min.io/docs/minio-gateway-for-gcs.html)
   with the [MinIO Helm chart](https://github.com/minio/charts) for Kubernetes:
 
@@ -282,9 +294,9 @@ these methods:
   [MinIO GraphQL mutation](.//howto/exportdata/export-data.md#example-mutation-to-export-to-minio)
   with MinIO configured as a gateway.
 
-## Disable HTTPS for exports to S3 and Minio
+## Disable HTTPS for exports to S3 and MinIO
 
-By default, Dgraph assumes the destination bucket is using HTTPS. If that is not
+By default, Dgraph assumes the destination bucket is using HTTPS. If that's not
 the case, the export fails. To export to a bucket using HTTP (insecure), set the
 query parameter `secure=false` with the destination endpoint in the
 `destination` field:
@@ -308,7 +320,7 @@ mutation {
 
 ## Use anonymous credentials
 
-When exporting to S3 or MinIO where credentials are not required, can set
+When exporting to S3 or MinIO where credentials aren't required, can set
 `anonymous` to true.
 
 ```graphql
@@ -333,9 +345,9 @@ Export is available wherever an Alpha is running. To encrypt an export, the
 Alpha must be configured with the `--encryption key-file=value`.
 
 <Note>
-  The `--encryption key-file` was used for [Encryption at
-  Rest](./enterprise-features/encryption-at-rest) and will now also be used for
-  encrypted exports.
+  The `--encryption key-file` used for [Encryption at
+  Rest](./enterprise-features/encryption-at-rest) and is also used for encrypted
+  exports.
 </Note>
 
 ## Use `curl` to trigger an export
@@ -343,6 +355,7 @@ Alpha must be configured with the `--encryption key-file=value`.
 This is an example of how you can use `curl` to trigger an export.
 
 1. Create GraphQL file for the desired mutation:
+
    ```bash
    cat <<-EOF > export.graphql
    mutation {
@@ -359,7 +372,9 @@ This is an example of how you can use `curl` to trigger an export.
    }
    EOF
    ```
+
 2. Trigger an export with `curl`
+
    ```bash
    curl http://localhost:8080/admin --silent --request POST \
      --header "Content-Type: application/graphql" \

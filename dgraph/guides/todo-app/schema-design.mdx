@@ -36,9 +36,9 @@ So each user can have many tasks.
 ![Todo Graph complete](/images/graphql/tutorial/todo/todo-graph-2.png) \*Note -
 ' \* ' signifies one-to-many relationship
 
-Now let's add `@id` directive to `username ` which makes it the unique key &
-also add `@hasInverse` directive to enable the above relationship between tasks
-and user. We represent that in the GraphQL schema shown below:
+Now let's add `@id` directive to `username` which makes it the unique key & also
+add `@hasInverse` directive to enable the above relationship between tasks and
+user. We represent that in the GraphQL schema shown below:
 
 ```graphql
 type Task {

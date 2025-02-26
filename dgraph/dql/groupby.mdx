@@ -28,17 +28,37 @@ can't be extracted in the `groupby` because it's not an aggregate, but `uid(a)`
 can be used to extract the UIDs from the UID to value map and thus organize the
 `byGenre` query by genre UID.
 
-````json { var(func:allofterms(name@en, "steven spielberg")) {
-director.film @groupby(genre) { a as count(uid) # a is a genre UID to count
-value variable } }
+```json
+{
+  var(func: allofterms(name@en, "steven spielberg")) {
+    director.film @groupby(genre) {
+      a as count(uid)
+    }
+  }
 
-byGenre(func: uid(a), orderdesc: val(a)) { name@en total_movies : val(a) } }
+  byGenre(func: uid(a), orderdesc: val(a)) {
+    name@en
+    total_movies : val(a)
+  }
+}
 ```
 
 Query Example: Actors from Tim Burton movies and how many roles they have played
-in Tim Burton movies. ```json { var(func:allofterms(name@en, "Tim
-Burton")) { director.film { starring @groupby(performance.actor) { a as
-count(uid) # a is an actor UID to count value variable } } }
+in Tim Burton movies.
 
-byActor(func: uid(a), orderdesc: val(a)) { name@en val(a) } } ```
-````
+```json
+{
+  var(func: allofterms(name@en, "Tim Burton")) {
+    director.film {
+      starring @groupby(performance.actor) {
+        a as count(uid) # a is an actor UID to count value variable
+      }
+    }
+  }
+
+  byActor(func: uid(a), orderdesc: val(a)) {
+    name@en
+    val(a)
+  }
+}
+```

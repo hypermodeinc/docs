@@ -28,9 +28,9 @@ are flushed to on-disk files called SSTs.
 
 ### Dgraph transactions are cluster-wide (not key-only, or any other non-ACID version of transactions)
 
-Dgraph uses the RAFT protocol to synchronize updates and ensure updates are
+Dgraph uses the Raft protocol to synchronize updates and ensure updates are
 durably written to a majority of alpha nodes in a cluster before the transaction
-is considered successful. RAFT ensures true, distributed, cluster wide
+is considered successful. Raft ensures true, distributed, cluster wide
 transactions across multiple nodes, keys, edges, indexes and facets. Dgraph
 provides true ACID transactions, and does not impose limitations on what can be
 in a transaction: a transaction can involve multiple predicates, multiple nodes,
@@ -67,11 +67,11 @@ Tc.
   predicates, etc.) has been committed or is being modified. The oracle hands
   out timestamps and aborts transactions if another transaction has modified its
   data.
-- **RAFT:** a well-known consistency algorithm to ensure distributed processes
+- **Raft:** a well-known consistency algorithm to ensure distributed processes
   durably store data
 - **Write-Ahead Log:** Also WAL. A fast log of updates on each alpha that
   ensures buffered in-memory structures are persisted.
-- **Proposal:** A process within the RAFT algorithm to track possible updates
+- **Proposal:** A process within the Raft algorithm to track possible updates
   during the consensus process.
 - **SST:** Persistent files comprising the LSM tree, together with memtables.
 - **Memtable:** An in-memory version of an SST, supporting fast updates.

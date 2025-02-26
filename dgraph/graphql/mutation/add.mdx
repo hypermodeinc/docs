@@ -35,14 +35,14 @@ Dgraph automatically generates input and return types in the schema for the
 addPost(input: [AddPostInput!]!): AddPostPayload
 
 input AddPostInput {
-	title: String!
-	text: String
-	datePublished: DateTime
+  title: String!
+  text: String
+  datePublished: DateTime
 }
 
 type AddPostPayload {
-	post(filter: PostFilter, order: PostOrder, first: Int, offset: Int): [Post]
-	numUids: Int
+  post(filter: PostFilter, order: PostOrder, first: Int, offset: Int): [Post]
+  numUids: Int
 }
 ```
 

@@ -59,7 +59,7 @@ Query Example: All Steven Spielberg films that contain the words `indiana` and
 Spielberg that aren't the director --- the data also contains a character in a
 film called Steven Spielberg.
 
-````json
+```json
 {
   me(func: eq(name@en, "Steven Spielberg"))
   @filter(has(director.film)) {
@@ -423,8 +423,9 @@ more than `100` actors.
 ```
 
 Query Example: A movie in each genre that has over 30000 movies. Because there
-is no order specified on genres, the order will be by UID. The [count index](/dql-schema.md#count-index) records the number of edges out of nodes and
-makes such queries more.
+is no order specified on genres, the order will be by UID. The
+[count index](/dql-schema.md#count-index) records the number of edges out of
+nodes and makes such queries more.
 
 ```json
 {
@@ -518,7 +519,8 @@ Query Example: The films of Taraji Henson by genre.
   }
 
   Taraji_films_by_genre(func: uid(G)) { genre_name : name@en films : ~genre
-  @filter(uid(F)) { film_name : name@en } } }
+  @filter(uid(F)) { film_name : name@en } }
+}
 ```
 
 Query Example: Taraji Henson films ordered by number of genres, with genres
@@ -735,8 +737,15 @@ Matches all entities where the polygon describing the location given by
 `predicate` contains geojson coordinate `[long, lat]` or given geojson polygon.
 
 Query Example : All entities that contain a point in the flamingo enclosure of
-San Francisco Zoo. ```json { tourist(func: contains(loc, [
--122.50326097011566, 37.73353615592843 ] )) { name } } ```
+San Francisco Zoo.
+
+```json
+{
+  tourist(func: contains(loc, [-122.50326097011566, 37.73353615592843])) {
+    name
+  }
+}
+```
 
 #### intersects
 
@@ -756,5 +765,3 @@ Matches all entities where the polygon describing the location given by
   }
 }
 ```
-
-````

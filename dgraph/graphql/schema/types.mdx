@@ -86,7 +86,7 @@ type User {
 ```
 
 In this schema, the field `name_v` is an embedding on which the
-[@search ](/graphql/schema/directives/search/#vector-embedding) directive for
+[@search](/graphql/schema/directives/search/#vector-embedding) directive for
 vector embeddings is used.
 
 ### The `ID` type
@@ -418,6 +418,7 @@ For example, to set a password, first set schema:
 
 3. Set the password by pointing to the `graphql` endpoint
    (http://localhost:8080/graphql):
+
    ```graphql
    mutation {
      addAuthor(input: [{ name: "myname", pwd: "mypassword" }]) {

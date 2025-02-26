@@ -12,8 +12,6 @@ define in your schema. The mutation field returns an object type that allows you
 to query for nested fields. This can be useful for fetching an object's new
 state after an add/update, or to get the old state of an object before a delete.
 
-**Example**
-
 ```graphql
 type Author {
   id: ID!
@@ -30,7 +28,7 @@ type Post {
 }
 ```
 
-The following mutations would be generated from the above schema.
+The following mutations would be generated from the schema.
 
 ```graphql
 type Mutation {
@@ -98,9 +96,9 @@ type in the schema.
 
 ```graphql
 input AddAuthorInput {
-	name: String!
-	dob: DateTime
-	posts: [PostRef]
+  name: String!
+  dob: DateTime
+  posts: [PostRef]
 }
 
 mutation {
@@ -257,7 +255,7 @@ mutation {
 }
 ```
 
-## Vector Embedding mutations
+## Vector embedding mutations
 
 For types with vector embeddings Dgraph automatically generates the add
 mutation. For this example of add mutation we use the following schema.

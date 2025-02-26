@@ -162,6 +162,6 @@ required. The new library is
 <Note>
   Yes they're compatible both ways. The only exception is 0 bytes of input which
   gives 0 bytes output with the Go zstd. But you already have the
-  zstd.WithZeroFrames(true) which will wrap 0 bytes in a header so it can be fed
-  to DD zstd. This is only relevant when downgrading.
+  zstd.WithZeroFrames(true) which wraps 0 bytes in a header so it can be fed to
+  DD zstd. This is only relevant when downgrading.
 </Note>

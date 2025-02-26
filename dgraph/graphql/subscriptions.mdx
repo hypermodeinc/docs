@@ -50,9 +50,9 @@ type Todo
     query: {
       rule: """
       query ($USER: String!) {
-      	queryTodo(filter: { owner: { eq: $USER } } ) {
-      		__typename
-      	}
+        queryTodo(filter: { owner: { eq: $USER } } ) {
+          __typename
+        }
       }
       """
     }
@@ -86,7 +86,7 @@ terminates when the JWT expires.
 
 Here are some examples of frontend clients setup.
 
-### URQL client setup in a React application
+### URQL client setup in a React app
 
 In this scenario, we are using
 [urql client](https://formidable.com/open-source/urql/) and
@@ -203,10 +203,10 @@ type Query {
     @custom(
       dql: """
       query {
-      	queryUserTweetCounts(func: type(User)) {
-      		screen_name: User.screen_name
-      		tweetCount: count(User.tweets)
-      	}
+        queryUserTweetCounts(func: type(User)) {
+          screen_name: User.screen_name
+          tweetCount: count(User.tweets)
+        }
       }
       """
     )

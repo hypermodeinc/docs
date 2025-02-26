@@ -297,18 +297,18 @@ backups in the given location along with the information included in the
 
 ```
 query backup() {
-	listBackups(input: {location: "/data/backup"}) {
-		backupId
-		backupNum
-		encrypted
-		groups {
-			groupId
-			predicates
-		}
-		path
-		since
-		type
-	}
+  listBackups(input: {location: "/data/backup"}) {
+    backupId
+    backupNum
+    encrypted
+    groups {
+      groupId
+      predicates
+    }
+    path
+    since
+    type
+  }
 }
 ```
 
@@ -317,30 +317,30 @@ field is required.
 
 ```
 input ListBackupsInput {
-	"""
-	Destination for the backup: e.g. Minio or S3 bucket.
-	"""
-	location: String!
+  """
+  Destination for the backup: e.g. Minio or S3 bucket.
+  """
+  location: String!
 
-	"""
-	Access key credential for the destination.
-	"""
-	accessKey: String
+  """
+  Access key credential for the destination.
+  """
+  accessKey: String
 
-	"""
-	Secret key credential for the destination.
-	"""
-	secretKey: String
+  """
+  Secret key credential for the destination.
+  """
+  secretKey: String
 
-	"""
-	AWS session token, if required.
-	"""
-	sessionToken: String
+  """
+  AWS session token, if required.
+  """
+  sessionToken: String
 
-	"""
-	Whether the destination doesn't require credentials (e.g. S3 public bucket).
-	"""
-	anonymous: Boolean
+  """
+  Whether the destination doesn't require credentials (e.g. S3 public bucket).
+  """
+  anonymous: Boolean
 }
 ```
 
@@ -349,53 +349,53 @@ corresponds to the fields in the `manifest.json` file.
 
 ```
 type Manifest {
-	"""
-	Unique ID for the backup series.
-	"""
-	backupId: String
+  """
+  Unique ID for the backup series.
+  """
+  backupId: String
 
-	"""
-	Number of this backup within the backup series. The full backup always has a value of one.
-	"""
-	backupNum: Int
+  """
+  Number of this backup within the backup series. The full backup always has a value of one.
+  """
+  backupNum: Int
 
-	"""
-	Whether this backup was encrypted.
-	"""
-	encrypted: Boolean
+  """
+  Whether this backup was encrypted.
+  """
+  encrypted: Boolean
 
-	"""
-	List of groups and the predicates they store in this backup.
-	"""
-	groups: [BackupGroup]
+  """
+  List of groups and the predicates they store in this backup.
+  """
+  groups: [BackupGroup]
 
-	"""
-	Path to the manifest file.
-	"""
-	path: String
+  """
+  Path to the manifest file.
+  """
+  path: String
 
-	"""
-	The timestamp at which this backup was taken. The next incremental backup will
-	start from this timestamp.
-	"""
-	since: Int
+  """
+  The timestamp at which this backup was taken. The next incremental backup will
+  start from this timestamp.
+  """
+  since: Int
 
-	"""
-	The type of backup, either full or incremental.
-	"""
-	type: String
+  """
+  The type of backup, either full or incremental.
+  """
+  type: String
 }
 
 type BackupGroup {
-	"""
-	The ID of the cluster group.
-	"""
-	groupId: Int
+  """
+  The ID of the cluster group.
+  """
+  groupId: Int
 
-	"""
-	List of predicates assigned to the group.
-	"""
-	predicates: [String]
+  """
+  List of predicates assigned to the group.
+  """
+  predicates: [String]
 }
 ```
 
@@ -747,16 +747,16 @@ Documentation of restoreTenant inputs
 
 ```
 input RestoreTenantInput {
-	"""
-	restoreInput contains fields that are required for the restore operation,
-	i.e., location, backupId, and backupNum
-	"""
-	restoreInput: RestoreInput
+  """
+  restoreInput contains fields that are required for the restore operation,
+  i.e., location, backupId, and backupNum
+  """
+  restoreInput: RestoreInput
 
-	"""
-	fromNamespace is the namespace of the tenant that needs to be restored into namespace 0 of the new cluster.
-	"""
-	fromNamespace: Int!
+  """
+  fromNamespace is the namespace of the tenant that needs to be restored into namespace 0 of the new cluster.
+  """
+  fromNamespace: Int!
 }
 ```
 

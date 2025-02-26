@@ -54,14 +54,14 @@ explained [here](./graphql/mutations/upsert.md).
 ## Conflicts
 
 Upsert operations are intended to be run concurrently, as per the needs of the
-application. As such, it's possible that two concurrently running operations
-could try to add the same node at the same time. For example, both try to add a
-user with the same email address. If they do, then one of the transactions will
-fail with an error indicating that the transaction was aborted.
+app. As such, it's possible that two concurrently running operations could try
+to add the same node at the same time. For example, both try to add a user with
+the same email address. If they do, then one of the transactions will fail with
+an error indicating that the transaction was aborted.
 
-If this happens, the transaction is rolled back and it's up to the user's
-application logic to retry the whole operation. The transaction has to be
-retried in its entirety, all the way from creating a new transaction.
+If this happens, the transaction is rolled back and it's up to the user's app
+logic to retry the whole operation. The transaction has to be retried in its
+entirety, all the way from creating a new transaction.
 
 The choice of index placed on the predicate is important for performance. **Hash
 is almost always the best choice of index for equality checking.**

@@ -33,7 +33,7 @@ This library supports two styles of clients, the synchronous client
 `DgraphClient` and the async client `DgraphAsyncClient`. A `DgraphClient` or
 `DgraphAsyncClient` can be initialized by passing it a list of
 `DgraphBlockingStub` clients. The `anyClient()` API can randomly pick a stub,
-which can then be used for GRPC operations. In the next section, we will explain
+which can then be used for gRPC operations. In the next section, we will explain
 how to create a synchronous client and use it to mutate or query dgraph. For the
 async client, more details can be found in the
 [Using the Asynchronous Client](#using-the-asynchronous-client) section.
@@ -326,15 +326,15 @@ try {
 ### Running a Query
 
 You can run a query by calling `Transaction#query()`. You will need to pass in a
-GraphQL+- query string, and a map (optional, could be empty) of any variables
-that you might want to set in the query.
+DQL query string, and a map (optional, could be empty) of any variables that you
+might want to set in the query.
 
 The response would contain a `JSON` field, which has the JSON encoded result.
 You will need to decode it before you can do anything useful with it.
 
 Let’s run the following query:
 
-```
+```dql
 query all($a: string) {
   all(func: eq(name, $a)) {
             name
@@ -376,7 +376,7 @@ ppl.all.forEach(person -> System.out.println(person.name));
 
 This should print:
 
-```
+```sh
 people found: 1
 Alice
 ```
@@ -411,7 +411,7 @@ System.out.println(response.getRdf().toStringUtf8());
 
 This should print (assuming Alice's `uid` is `0x2`):
 
-```
+```sh
 <0x2> <name> "Alice" .
 ```
 
@@ -529,7 +529,7 @@ dgraphClient.newTransaction().mutate(mu);
 To disconnect from Dgraph, call `ManagedChannel#shutdown` on the gRPC channel
 object created when [creating a Dgraph client](#creating-a-client).
 
-```
+```java
 channel.shutdown();
 ```
 

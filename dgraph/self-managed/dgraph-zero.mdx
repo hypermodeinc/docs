@@ -16,8 +16,8 @@ dgraph zero --help
 
 The `--replicas` option controls the replication factor: the number of replicas
 per data shard, including the original shard. For consensus, the replication
-factor must be set to an odd number, and the following error will occur if it's
-set to an even number (for example, `2`):
+factor must be set to an odd number, and the following error occurs if it's set
+to an even number (for example, `2`):
 
 ```nix
 ERROR: Number of replicas must be odd for consensus. Found: 2
@@ -25,11 +25,11 @@ ERROR: Number of replicas must be odd for consensus. Found: 2
 
 When a new Alpha joins the cluster, it's assigned to a group based on the
 replication factor. If the replication factor is set to `1`, then each Alpha
-node will serve a different group. If the replication factor is set to `3` and
-you then launch six Alpha nodes, the first three Alpha nodes will serve group 1
-and next three nodes will serve group 2. Zero monitors the space occupied by
-predicates in each group and moves predicates between groups as-needed to
-rebalance the cluster.
+node serves a different group. If the replication factor is set to `3` and you
+then launch six Alpha nodes, the first three Alpha nodes serve group 1 and next
+three nodes serve group 2. Zero monitors the space occupied by predicates in
+each group and moves predicates between groups as-needed to re-balance the
+cluster.
 
 ## Endpoints
 
@@ -50,25 +50,25 @@ following endpoints:
   timestamp.
 - `/removeNode?id=3&group=2` removes a dead Zero or Alpha node. When a replica
   node goes offline and can't be recovered, you can remove it and add a new node
-  to th quorum. To remove dead Zero nodes, pass `group=0` and the id of the Zero
-  node to this endpoint.
+  to the quorum. To remove dead Zero nodes, pass `group=0` and the id of the
+  Zero node to this endpoint.
 
 <Note>
   Before using the API ensure that the node is down and ensure that it doesn't
-  come back up ever again. Do not use the same `idx` of a node that was removed
+  come back up ever again. Don't use the same `idx` of a node that was removed
   earlier.
 </Note>
 
 - `/moveTablet?tablet=name&group=2` Moves a tablet to a group. Zero already
-  rebalances shards every 8 mins, but this endpoint can be used to force move a
-  tablet.
+  re-balances shards every 8 minutes, but this endpoint can be used to force
+  move a tablet.
 
 You can also use the following **POST** endpoint on HTTP port 6080:
 
 - `/enterpriseLicense` applies an enterprise license to the cluster by supplying
   it as part of the body.
 
-### More About the /state Endpoint
+### More about the /state endpoint
 
 The `/state` endpoint of Dgraph Zero returns a JSON document of the current
 group membership info, which includes the following:
@@ -245,17 +245,17 @@ shown with their node name and HTTP port number:
   - This increments in batches of 10,000 IDs. Once the maximum lease is reached,
     another 10,000 IDs are leased. In the event that the Zero leader is lost,
     the new leader starts a new lease from `maxUID`+1. Any UIDs lost between
-    these leases will never be used for blank-node UID assignment.
+    these leases is never used for blank-node UID assignment.
   - An admin can use the Zero endpoint HTTP GET `/assign?what=uids&num=1000` to
-    reserve a range of UIDs (in this case, 1000) to use externally. Zero will
-    **never** use these UIDs for blank node UID assignment, so the user can use
-    the range to assign UIDs manually to their own data sets.
+    reserve a range of UIDs (in this case, 1000) to use externally. Zero never
+    use these UIDs for blank node UID assignment, so the user can use the range
+    to assign UIDs manually to their own data sets.
 - `maxTxnTs`
   - The current maximum lease of transaction timestamps used to hand out start
     timestamps and commit timestamps. This increments in batches of 10,000 IDs.
     After the max lease is reached, another 10,000 IDs are leased. If the Zero
     leader is lost, then the new leader starts a new lease from `maxTxnTs`+1 .
-    Any lost transaction IDs between these leases will never be used.
+    Any lost transaction IDs between these leases is never used.
   - An admin can use the Zero endpoint HTTP GET
     `/assign?what=timestamps&num=1000` to increase the current transaction
     timestamp (in this case, by 1000). This is mainly useful in special-case
@@ -263,7 +263,7 @@ shown with their node name and HTTP port number:
     cluster to be able to query the latest data in the DB.
 - `maxRaftId`
   - The number of Zeros available to serve as a leader node. Used by the
-    [RAFT](/design-concepts/raft/) consensus algorithm.
+    [Raft](/design-concepts/raft/) consensus algorithm.
 - `CID`
   - This is a unique UUID representing the _cluster-ID_ for this cluster. It is
     generated during the initial DB startup and is retained across restarts.
@@ -273,7 +273,7 @@ shown with their node name and HTTP port number:
   - License expiration, shown in seconds since the Unix epoch.
 
 <Note>
-  The terms "tablet", "predicate", and "edge" are currently synonymous. In
-  future, Dgraph might improve data scalability to shard a predicate into
-  separate tablets that can be assigned to different groups.
+  The terms tablet, predicate, and edge are currently synonymous in this
+  context. In future, Dgraph might improve data scalability to shard a predicate
+  into separate tablets that can be assigned to different groups.
 </Note>

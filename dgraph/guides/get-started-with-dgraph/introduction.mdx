@@ -4,7 +4,7 @@ title: Get Started with Dgraph - Introduction
 
 **Welcome to getting started with Dgraph.**
 
-[Dgraph](https://dgraph.io) is an open-source, transactional, distributed,
+[Dgraph](https://dgraph.io) is an open source, transactional, distributed,
 native Graph Database. Here is the first tutorial of the get started series on
 using Dgraph.
 
@@ -16,8 +16,8 @@ In this tutorial, we'll learn about:
 - Creating an edge between two nodes.
 - Querying for the nodes.
 
-Our use case will represent a person named "Ann", age 28, who "follows" in
-social media, a person named "Ben", age 31.
+Our use case represents a person named Ann, age 28, who follows on social media,
+a person named Ben, age 31.
 
 You can see the accompanying video below.
 
@@ -49,24 +49,23 @@ and running.
 docker run --rm -it -p 8080:8080 -p 9080:9080 dgraph/standalone:latest
 ```
 
-### Nodes and Relationships
+### Nodes and relationships
 
-The mental picture of the use case may be a graph where we have 2 nodes
-representing the 2 persons and an relationship representing the fact that "Ann"
-follows "Ben" :
+The mental picture of the use case may be a graph with 2 nodes representing the
+2 persons and an relationship representing the fact that "Ann" follows "Ben" :
 
 ![A simple graph](/images/tutorials/1/gs-1.png)
 
 Dgraph is using those very same concepts, making it simple to store and
 manipulate your data.
 
-We will then create two nodes, one representing the information we know about
-`Ann` and one holding the information about `Ben`.
+We then create two nodes, one representing the information we know about `Ann`
+and one holding the information about `Ben`.
 
 What we know is the `name` and the `age` of those persons.
 
-We also know that Ann follows Jessica. This will also be stored as a
-relationship between the two nodes.
+We also know that Ann follows Jessica. This is also stored as a relationship
+between the two nodes.
 
 ### Using Ratel
 
@@ -76,14 +75,14 @@ Launch Ratel image
 docker run --rm -d -p 8000:8000 dgraph/ratel:latest
 ```
 
-Just visit [http://localhost:8000](http://localhost:8000) from your browser, and
-you will be able to access it.
+Visit [http://localhost:8000](http://localhost:8000) from your browser, and you
+are able to access it.
 
-![ratel-1](/images/tutorials/1/gs-2.png)
+![Ratel](/images/tutorials/1/gs-2.png)
 
 We'll be using the Console tab of Ratel.
 
-![ratel-2](/images/tutorials/1/gs-3.png)
+![Ratel console tab](/images/tutorials/1/gs-3.png)
 
 ### Mutations using Ratel
 
@@ -107,14 +106,14 @@ the text area.
 }
 ```
 
-The query above creates an entity and saves the predicates `name` and `age` with
-the corresponding values.
+The query creates an entity and saves the predicates `name` and `age` with the
+corresponding values.
 
-It also creates a predicate 'follows' for that entity but the value is not a
-literal (string, int, float, bool).
+It also creates a predicate 'follows' for that entity but the value isn't a
+literal (string, int, float, boolean).
 
-So Dgraph also creates a second entity that is the object of this predicate.
-This second entity has itself some predicates (`name` and `age`).
+So Dgraph also creates a second entity that's the object of this predicate. This
+second entity has itself some predicates (`name` and `age`).
 
 Let's execute this mutation. Click Run!
 
@@ -122,7 +121,7 @@ Let's execute this mutation. Click Run!
 
 You can see in the response that two UIDs (Universal IDentifiers) have been
 created. The two values in the `"uids"` field of the response correspond to the
-two entities created for "Ann" and "Ben".
+two entities created for Ann and Ben.
 
 ### Querying using the has function
 
@@ -139,14 +138,14 @@ entities with a predicate `name` associated with them.
 }
 ```
 
-Go to the `Query` tab this time and type in the query above. Then, click `Run`
-on the top right of the screen.
+Go to the `Query` tab this time and type in the query. Then, click `Run` on the
+top right of the screen.
 
 ![query-1](/images/tutorials/1/query-1.png)
 
 Ratel renders a graph visualization of the result.
 
-Just click on any of them, notice that the nodes are assigned UIDs, matching the
+Just click any of them, notice that the nodes are assigned UIDs, matching the
 ones, we saw in the mutation's response.
 
 You can also view the JSON results in the JSON tab on the right.
@@ -214,13 +213,13 @@ Let's look at this mutation.
 }
 ```
 
-We are creating two entities, while the first entity has predicates `name`,
+We're creating two entities, while the first entity has predicates `name`,
 `age`, and `country`, the second one has `name`, `age`, and `city`.
 
-Schemas are not needed initially. Dgraph creates new predicates as they appear
-in your mutations. This flexibility can be beneficial, but if you prefer to
-force your mutations to follow a given schema there are options available that
-we will explore in an next tutorial.
+Schemas aren't needed initially. Dgraph creates new predicates as they appear in
+your mutations. This flexibility can be beneficial, but if you prefer to force
+your mutations to follow a given schema there are options available that we'll
+explore in the next tutorial.
 
 ## Wrapping up
 
@@ -230,7 +229,7 @@ database, add new entities and predicates, and query them back.
 Check out our next tutorial of the getting started series
 [here](./tutorial-2/index).
 
-## Need Help
+## Need help
 
 - Please use [discuss.dgraph.io](https://discuss.dgraph.io) for questions,
   feature requests, bugs, and discussions.

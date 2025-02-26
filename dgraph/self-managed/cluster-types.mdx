@@ -4,15 +4,15 @@ title: Cluster Types
 
 ### Terminology
 
-An **N-node cluster** is a Dgraph cluster that contains N number of Dgraph
+An N-node cluster is a Dgraph cluster that contains N number of Dgraph
 instances. For example, a 6-node cluster means six Dgraph instances. The
-**replication setting** specifies the number of Dgraph Alpha replicas that are
-in each group. If this is higher than 1, each alpha in a group will hold a full
-copy of that group's data. The replication setting is a configuration flag
-(`--replicas`) on Dgraph Zero. Sharding is done (typically for databases near
-1TB in size) by creating multiple **Dgraph Alpha groups**. Every Dgraph Alpha
-group is automatically assigned a set of distinct predicates to store and serve,
-thus dividing up the data.
+replication setting specifies the number of Dgraph Alpha replicas that are in
+each group. If this is higher than 1, each Alpha in a group holds a full copy of
+that group's data. The replication setting is a configuration flag
+(`--replicas`) on Dgraph Zero. Sharding is done (typically for databases near 1
+TB in size) by creating multiple Dgraph Alpha groups. Every Dgraph Alpha group
+is automatically assigned a set of distinct predicates to store and serve, thus
+dividing up the data.
 
 Examples of different cluster settings:
 
@@ -28,7 +28,7 @@ a 2-node cluster and a 6-node cluster.
 
 ### Basic setup: 2-node cluster
 
-We provide sample configs for both
+We provide sample configuration for both
 [Docker Compose](https://github.com/hypermodeinc/dgraph/blob/main/contrib/config/docker/docker-compose.yml)
 and
 [Kubernetes](https://github.com/hypermodeinc/dgraph/tree/main/contrib/config/kubernetes/dgraph-single)
@@ -37,12 +37,12 @@ for a 2-node cluster. You can also run Dgraph directly on your host machines.
 ![2-node cluster](/images/deploy-guide-1.png)
 
 Configuration can be set either as command-line flags, environment variables, or
-in a config file (see [Config](./deploy/config)).
+in a file (see [Configuration](./deploy/config)).
 
 Dgraph Zero:
 
 - The `--my` flag should be set to the address:port (the internal-gRPC port)
-  that will be accessible to the Dgraph Alpha (default: `localhost:5080`).
+  that's accessible to the Dgraph Alpha (default: `localhost:5080`).
 - The `--raft` superflag's `idx` option should be set to a unique Raft ID within
   the Dgraph Zero group (default: `1`).
 - The `--wal` flag should be set to the directory path to store write-ahead-log
@@ -55,7 +55,7 @@ Dgraph Zero:
 Dgraph Alpha:
 
 - The `--my` flag should be set to the address:port (the internal-gRPC port)
-  that will be accessible to the Dgraph Zero (default: `localhost:7080`).
+  that's accessible to the Dgraph Zero (default: `localhost:7080`).
 - The `--zero` flag should be set to the corresponding Zero address set for
   Dgraph Zero's `--my` flag.
 - The `--postings` flag should be set to the directory path for data storage
@@ -67,9 +67,9 @@ Dgraph Alpha:
 - Recommended: For better issue diagnostics, set the log level verbosity to 2
   `--v=2`.
 
-### HA setup: 6-node cluster
+### High availability setup: 6-node cluster
 
-We provide sample configs for both
+We provide sample configuration for both
 [Docker Compose](https://github.com/hypermodeinc/dgraph/blob/main/contrib/config/docker/docker-compose-ha.yml)
 and
 [Kubernetes](https://github.com/hypermodeinc/dgraph/tree/main/contrib/config/kubernetes/dgraph-ha)
@@ -79,12 +79,12 @@ directly on your host machines.
 A Dgraph cluster can be configured in a high-availability setup with Dgraph Zero
 and Dgraph Alpha each set up with peers. These peers are part of Raft consensus
 groups, which elect a single leader among themselves. The non-leader peers are
-called followers. In the event that the peers cannot communicate with the leader
-(e.g., a network partition or a machine shuts down), the group automatically
-elects a new leader to continue.
+called followers. In the event that the peers can't communicate with the leader
+(for example, a network partition or a machine shuts down), the group
+automatically elects a new leader to continue.
 
 Configuration can be set either as command-line flags, environment variables, or
-in a config file (see [Config](./deploy/config)).
+in a file (see [Configuration](./deploy/config)).
 
 In this setup, we assume the following hostnames are set:
 
@@ -95,8 +95,8 @@ In this setup, we assume the following hostnames are set:
 - `alpha2`
 - `alpha3`
 
-We will configure the cluster with 3 Alpha replicas per group. The cluster
-group-membership topology will look like the following:
+We configure the cluster with 3 Alpha replicas per group. The cluster
+group-membership topology looks like the following:
 
 ![Dgraph cluster image](/images/deploy-guide-2.png)
 

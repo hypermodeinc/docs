@@ -49,7 +49,7 @@ import (
 
 func main() {
   // Open the Badger database located in the /tmp/badger directory.
-  // It will be created if it doesn't exist.
+  // It is created if it doesn't exist.
   db, err := badger.Open(badger.DefaultOptions("/tmp/badger"))
   if err != nil {
     log.Fatal(err)
@@ -185,8 +185,8 @@ The first argument to `DB.NewTransaction()` is a boolean stating if the
 transaction should be writable.
 
 Badger allows an optional callback to the `Txn.Commit()` method. Normally, the
-callback can be set to `nil`, and the method will return after all the writes
-have succeeded. However, if this callback is provided, the `Txn.Commit()` method
+callback can be set to `nil`, and the method returns after all the writes have
+succeeded. However, if this callback is provided, the `Txn.Commit()` method
 returns as soon as it has checked for any conflicts. The actual writing to the
 disk happens asynchronously, and the callback is invoked once the writing has
 finished, or an error has occurred. This can improve the throughput of the app
@@ -458,8 +458,8 @@ db.View(func(txn *badger.Txn) error {
 Considering that iteration happens in **byte-wise lexicographical sorting**
 order, it's possible to create a sorting-sensitive key. For example, a simple
 blog post key might look like:`feed:userUuid:timestamp:postUuid`. Here, the
-`timestamp` part of the key is treated as an attribute, and items will be stored
-in the corresponding order:
+`timestamp` part of the key is treated as an attribute, and items are stored in
+the corresponding order:
 
 | Order ASC | Key                                                           |
 | :-------: | :------------------------------------------------------------ |
@@ -486,7 +486,7 @@ identify where to resume.
 
 ```go
 // startCursor may look like 'feed:tQpnEDVRoCxTFQDvyQEzdo:1733127486'.
-// A prefix scan with this cursor will locate the specific key where
+// A prefix scan with this cursor locates the specific key where
 // the previous iteration stopped.
 err = db.badger.View(func(txn *badger.Txn) error {
         it := txn.NewIterator(opts)

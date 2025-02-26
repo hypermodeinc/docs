@@ -14,11 +14,14 @@ Note that, `NOT` binds more tightly than `AND` which binds more tightly than
 Query Example: All Steven Spielberg movies that contain either both "indiana"
 and "jones" OR both "jurassic" and "park".
 
-```json { me(func: eq(name@en, "Steven Spielberg"))
-@filter(has(director.film)) { name@en director.film @filter(allofterms(name@en,
-"jones indiana") OR allofterms(name@en, "jurassic park")) { uid name@en } } }
-```
-
-```
-
+```json
+{
+  me(func: eq(name@en, "Steven Spielberg")) @filter(has(director.film)) {
+    name@en
+    director.film @filter(allofterms(name@en, "jones indiana") OR allofterms(name@en, "jurassic park")) {
+      uid
+      name@en
+    }
+  }
+}
 ```

@@ -4,7 +4,7 @@ title: Dgraph types schema
 
 Here is an example of Dgraph types schema:
 
-```
+```dql
 name: string @index(term) .
 release_date: datetime @index(year) .
 revenue: float .
@@ -36,7 +36,7 @@ The schema contains information about [predicate types](#predicate-types) and
 
 A [predicate](./dgraph-glossary.md#Predicate) is the smallest piece of
 information about an object. A predicate can hold a literal value or a relation
-to another entity :
+to another entity:
 
 - when we store that an entity name is "Alice". The predicate is `name` and
   predicate value is the string "Alice".
@@ -505,8 +505,8 @@ the function
 queries.
 
 <Warning>
-`delete { <uid> * * . }` will only delete the
-predicates declared in the type. You may have added other predicates by running
-DQL mutation on this node: the node may still exist after the operation if it
-holds predicates not declared in the node type. 
+  `delete { <uid> * * . }` only deletes the
+  predicates declared in the type. You may have added other predicates by running
+  DQL mutation on this node: the node may still exist after the operation if it
+  holds predicates not declared in the node type.
 </Warning>

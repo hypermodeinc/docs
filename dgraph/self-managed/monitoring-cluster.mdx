@@ -20,14 +20,14 @@ This Helm chart also installs [Grafana](http://grafana.com/),
 [node_exporter](https://github.com/prometheus/node_exporter),
 [kube-state-metrics](https://github.com/kubernetes/kube-state-metrics).
 
-### Before you begin:
+### Before you begin
 
 - Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
 - Ensure that you have a production-ready Kubernetes cluster with at least three
   worker nodes running in a cloud provider of your choice.
 - Install [Helm](https://helm.sh/docs/intro/install/)
 
-### Install using Helm Chart
+### Install using Helm chart
 
 1. Create a `YAML` file named `dgraph-prometheus-operator.yaml` and edit the
    values as appropriate for adding endpoints, adding alert rules, adjusting
@@ -292,7 +292,7 @@ for AWS EBS volumes is based on the total disk size. With Kubernetes, you can
 request io1 disks to be provisioned with this config with 50 IOPS/GB using the
 `iopsPerGB` parameter:
 
-```
+```yaml
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:

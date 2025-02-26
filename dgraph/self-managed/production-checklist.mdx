@@ -173,7 +173,7 @@ running multiple Dgraph processes networked together.
 ### Backup Policy
 
 A backup policy is a predefined, set schedule used to schedule backups of
-information from business applications. A backup policy helps to ensure data
+information from business apps. A backup policy helps to ensure data
 recoverability in the event of accidental data deletion, data corruption, or a
 system outage.
 
@@ -184,9 +184,9 @@ also create full exports of your data and schema using
 open source feature.
 
 We **strongly** recommend that you have a backup policy in place before moving
-your application to the production phase, and we also suggest that you have a
-backup policy even for pre-production apps supported by Dgraph database
-instances running in development, staging, QA or pre-production clusters.
+your app to the production phase, and we also suggest that you have a backup
+policy even for pre-production apps supported by Dgraph database instances
+running in development, staging, QA or pre-production clusters.
 
 We suggest that your policy include frequent full and incremental backups.
 Accordingly, we suggest the following backup policy for your production apps:
@@ -197,11 +197,9 @@ Accordingly, we suggest the following backup policy for your production apps:
 
 ### Supplementary Services
 
-These services are not required for a Dgraph cluster to function but are
+These services aren't required for a Dgraph cluster to function but are
 recommended for better insight when operating a Dgraph cluster.
 
-- [Metrics] and [monitoring][] with Prometheus and Grafana.
-- [Distributed tracing][] with Jaeger.
-
-[Metrics]: ./metrics [Monitoring]: ./deploy/monitoring [Distributed tracing]:
-./tracing
+- [Metrics](./metrics) and [monitoring](./monitoring) with Prometheus and
+  Grafana.
+- [Distributed tracing](./traces) with Jaeger.

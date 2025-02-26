@@ -12,8 +12,8 @@ To define a DQL custom query, use the notation:
 
 ```graphql
  @custom(dql: """
-	...
-	""")
+  ...
+  """)
 ```
 
 <Tip>
@@ -40,11 +40,11 @@ type User {
 and you wanted to query tweets containing some particular text sorted by the
 number of followers their author has. Then, this is not possible with the
 automatically generated CRUD API. Similarly, let's say you have a table sort of
-UI component in your application which displays only a user's name and the
-number of tweets done by that user. Doing this with the auto-generated CRUD API
-would require you to fetch unnecessary data at client side, and then employ
-client side logic to find the count. Instead, all this could simply be achieved
-by specifying a DQL query for such custom use-cases.
+UI component in your app which displays only a user's name and the number of
+tweets done by that user. Doing this with the auto-generated CRUD API would
+require you to fetch unnecessary data at client side, and then employ client
+side logic to find the count. Instead, all this could simply be achieved by
+specifying a DQL query for such custom use-cases.
 
 So, you would need to modify your schema like this:
 
@@ -70,21 +70,21 @@ type Query {
     @custom(
       dql: """
       query q($search: string) {
-      	var(func: type(Tweets)) @filter(anyoftext(Tweets.text, $search)) {
-      		Tweets.author {
-      			followers as User.followers
-      		}
-      		authorFollowerCount as sum(val(followers))
-      	}
-      	queryTweetsSortedByAuthorFollowers(func: uid(authorFollowerCount), orderdesc: val(authorFollowerCount)) {
-      		id: uid
-      		text: Tweets.text
-      		author: Tweets.author {
-      		    screen_name: User.screen_name
-      		    followers: User.followers
-      		}
-      		timestamp: Tweets.timestamp
-      	}
+        var(func: type(Tweets)) @filter(anyoftext(Tweets.text, $search)) {
+          Tweets.author {
+            followers as User.followers
+          }
+          authorFollowerCount as sum(val(followers))
+        }
+        queryTweetsSortedByAuthorFollowers(func: uid(authorFollowerCount), orderdesc: val(authorFollowerCount)) {
+          id: uid
+          text: Tweets.text
+          author: Tweets.author {
+              screen_name: User.screen_name
+              followers: User.followers
+          }
+          timestamp: Tweets.timestamp
+        }
       }
       """
     )
@@ -93,10 +93,10 @@ type Query {
     @custom(
       dql: """
       query {
-      	queryUserTweetCounts(func: type(User)) {
-      		screen_name: User.screen_name
-      		tweetCount: count(User.tweets)
-      	}
+        queryUserTweetCounts(func: type(User)) {
+          screen_name: User.screen_name
+          tweetCount: count(User.tweets)
+        }
       }
       """
     )

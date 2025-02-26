@@ -3,15 +3,15 @@ title: Initial Import (Bulk Loader)
 ---
 
 Dgraph Bulk Loader serves a similar purpose to the Dgraph Live Loader, but can
-only be used to load data into a new cluster. It cannot be run on an existing
+only be used to load data into a new cluster. It can't be run on an existing
 Dgraph cluster. Dgraph Bulk Loader is **considerably faster** than the Dgraph
 Live Loader and is the recommended way to perform the initial import of large
 datasets into Dgraph.
 
 Only one or more Dgraph Zeros should be running for bulk loading. Dgraph Alphas
-will be started later.
+are started later.
 
-You can [read some technical details](https://dgraph.io/blog/post/bulkloader/)
+You can [read the technical details](https://dgraph.io/blog/post/bulkloader/)
 about the bulk loader on the blog.
 
 <Warning>
@@ -27,9 +27,9 @@ about the bulk loader on the blog.
 ## Settings
 
 <Note>
-  Bulk Loader only accept [RDF N-Quad/Triple
-  data](https://www.w3.org/TR/n-quads/) or JSON in plain or gzipped format. Data
-  in other formats must be converted.
+  Bulk Loader only accepts data in the [RDF
+  N-Quad/Triple](https://www.w3.org/TR/n-quads/) or JSON formats. Data can be
+  raw or compressed with gzip.
 </Note>
 
 ```sh
@@ -43,16 +43,15 @@ $ dgraph bulk -f <./path-to-gzipped-RDF-or-JSON-files> ...
 
 # Read multiple files strictly by name.
 $ dgraph bulk -f <file1.rdf, file2.rdf> ...
-
 ```
 
 - **Reduce shards**: Before running the bulk load, you need to decide how many
-  Alpha groups will be running when the cluster starts. The number of Alpha
-  groups will be the same number of reduce shards you set with the
-  `--reduce_shards` flag. For example, if your cluster will run 3 Alpha with 3
-  replicas per group, then there is 1 group and `--reduce_shards` should be set
-  to 1. If your cluster will run 6 Alphas with 3 replicas per group, then there
-  are 2 groups and `--reduce_shards` should be set to 2.
+  Alpha groups are running when the cluster starts. The number of Alpha groups
+  is the same number of reduce shards you set with the `--reduce_shards` flag.
+  For example, if your cluster has 3 Alpha with 3 replicas per group, then there
+  is 1 group and `--reduce_shards` should be set to 1. If your cluster has 6
+  Alphas with 3 replicas per group, then there are 2 groups and
+  `--reduce_shards` should be set to 2.
 
 - **Map shards**: The `--map_shards` option must be set to at least what's set
   for `--reduce_shards`. A higher number helps the bulk loader evenly distribute
@@ -61,31 +60,34 @@ $ dgraph bulk -f <file1.rdf, file2.rdf> ...
 For example:
 
 ```sh
-$ dgraph bulk -f goldendata.rdf.gz -s goldendata.schema --map_shards=4 --reduce_shards=2 --http localhost:8000 --zero=localhost:5080
+dgraph bulk -f goldendata.rdf.gz -s goldendata.schema --map_shards=4 --reduce_shards=2 --http localhost:8000 --zero=localhost:5080
 ```
 
-```
+```sh
 {
-	"DataFiles": "goldendata.rdf.gz",
-	"DataFormat": "",
-	"SchemaFile": "goldendata.schema",
-	"DgraphsDir": "out",
-	"TmpDir": "tmp",
-	"NumGoroutines": 4,
-	"MapBufSize": 67108864,
-	"ExpandEdges": true,
-	"SkipMapPhase": false,
-	"CleanupTmp": true,
-	"NumShufflers": 1,
-	"Version": false,
-	"StoreXids": false,
-	"ZeroAddr": "localhost:5080",
-	"HttpAddr": "localhost:8000",
-	"IgnoreErrors": false,
-	"MapShards": 4,
-	"ReduceShards": 2
+  "DataFiles": "goldendata.rdf.gz",
+  "DataFormat": "",
+  "SchemaFile": "goldendata.schema",
+  "DgraphsDir": "out",
+  "TmpDir": "tmp",
+  "NumGoroutines": 4,
+  "MapBufSize": 67108864,
+  "ExpandEdges": true,
+  "SkipMapPhase": false,
+  "CleanupTmp": true,
+  "NumShufflers": 1,
+  "Version": false,
+  "StoreXids": false,
+  "ZeroAddr": "localhost:5080",
+  "HttpAddr": "localhost:8000",
+  "IgnoreErrors": false,
+  "MapShards": 4,
+  "ReduceShards": 2
 }
-The bulk loader needs to open many files at once. This number depends on the size of the data set loaded, the map file output size, and the level of indexing. 100,000 is adequate for most data set sizes. See `man ulimit` for details of how to change the limit.
+The bulk loader needs to open many files at once. This number depends on the size of the data set loaded,
+the map file output size, and the level of indexing. 100,000 is adequate for most data set sizes.
+See `man ulimit` for details of how to change the limit.
+
 Current max open files limit: 1024
 MAP 01s rdf_count:176.0 rdf_speed:174.4/sec edge_count:564.0 edge_speed:558.8/sec
 MAP 02s rdf_count:399.0 rdf_speed:198.5/sec edge_count:1.291k edge_speed:642.4/sec
@@ -113,11 +115,11 @@ REDUCE 22s [100.00%] edge_count:3.695M edge_speed:584.4k/sec plist_count:1.778M 
 Total: 22s
 ```
 
-The output will be generated in the `out` directory by default. Here's the bulk
-load output from the example above:
+The output is generated in the `out` directory by default. Here's the bulk load
+output from the preceding example:
 
 ```sh
-$ tree ./out
+tree ./out
 ```
 
 ```txt
@@ -142,8 +144,8 @@ generated:
 - the `./out/0` folder
 - the `./out/1` folder
 
-Once the output is created, the files must be copied to all the servers that
-will run Dgraph Alphas:
+Once the output is created, the files must be copied to all the servers that run
+Dgraph Alphas:
 
 - Each replica of the first group (`Alpha1`, `Alpha2`, `Alpha3`) should have a
   copy of `./out/0/p`
@@ -176,21 +178,21 @@ You can further configure Bulk Loader using the following options:
 
 - `-f`, `--files`: Location of `*.rdf(.gz)` or `*.json(.gz)` file(s) to load. It
   can load multiple files in a given path. If the path is a directory, then all
-  files ending in `.rdf`, `.rdf.gz`, `.json`, and `.json.gz` will be loaded.
+  files ending in `.rdf`, `.rdf.gz`, `.json`, and `.json.gz` are loaded.
 
 - `--format` (optional): Specify file format (`rdf` or `json`) instead of
   getting it from filenames. This is useful if you need to define a strict
   format manually.
 
-- `--store_xids`: Generate a xid edge for each node. It will store the XIDs (The
+- `--store_xids`: Generate a xid edge for each node. It stores the XIDs (The
   identifier / Blank-nodes) in an attribute named `xid` in the entity itself.
 
 - `--xidmap` (default: `disabled`. Need a path): Store xid to uid mapping to a
-  directory. Dgraph will save all identifiers used in the load for later use in
-  other data ingest operations. The mapping will be saved in the path you
-  provide and you must indicate that same path in the next load. It is
-  recommended to use this flag if you have full control over your identifiers
-  (Blank-nodes). Because the identifier will be mapped to a specific UID.
+  directory. Dgraph saves all identifiers used in the load for later use in
+  other data ingest operations. The mapping is saved in the path you provide and
+  you must indicate that same path in the next load. It is recommended to use
+  this flag if you have full control over your identifiers (Blank-nodes).
+  Because the identifier is mapped to a specific UID.
 
 - `--vault` superflag (and its options): specify the Vault server address, role
   id, secret id, and field that contains the encryption key required to decrypt
@@ -237,8 +239,8 @@ environment variables:
 
 | Environment Variable | Description                                                           |
 | -------------------- | --------------------------------------------------------------------- |
-| `MINIO_ACCESS_KEY`   | Minio access key with permissions to write to the destination bucket. |
-| `MINIO_SECRET_KEY`   | Minio secret key with permissions to write to the destination bucket. |
+| `MINIO_ACCESS_KEY`   | MinIO access key with permissions to write to the destination bucket. |
+| `MINIO_SECRET_KEY`   | MinIO secret key with permissions to write to the destination bucket. |
 
 Once your setup is ready, you can execute the bulk load from MinIO:
 
@@ -248,9 +250,8 @@ dgraph bulk -f minio://minio-server:port/bucket-name/directory-with-rdf -s minio
 
 ## How to properly bulk load
 
-Starting from Dgraph v20.03.7, v20.07.3 and v20.11.0 onwards, depending on your
-dataset size, you can follow one of the following ways to use bulk loader and
-initialize your new Cluster.
+Starting from Dgraph v20.03.7, depending on your dataset size, you can follow
+one of the following ways to use Bulk Loader and initialize your new cluster.
 
 _The following procedure is particularly relevant for Clusters that have
 `--replicas` flag greater than 1_
@@ -261,49 +262,51 @@ In case your dataset is small (a few GBs) it would be convenient to start by
 initializing just one Alpha node and then let the snapshot be streamed among the
 other Alpha replicas. You can follow these steps:
 
-1. Run bulk loader only on one server
-2. Once the `p` directory has been created by the bulk loader, then start
+1. Run Bulk Loader only on one server
+
+2. Once the `p` directory has been created by the Bulk Loader, then start
    **only** the first Alpha replica
+
 3. Wait for 1 minute to ensure that a snapshot has been taken by the first Alpha
    node replica. You can confirm that a snapshot has been taken by looking for
    the following message":
 
-```txt
-I1227 13:12:24.202196   14691 draft.go:571] Creating snapshot at index: 30. ReadTs: 4.
-```
+   ```txt
+   I1227 13:12:24.202196   14691 draft.go:571] Creating snapshot at index: 30. ReadTs: 4.
+   ```
 
 4. After confirming that the snapshot has been taken, you can start the other
    Alpha node replicas (number of Alpha nodes must be equal to the `--replicas`
-   flag value set in the zero nodes). Now the Alpha node (the one started in
-   point 2) will be printing similar messages:
+   flag value set in the Zero nodes). Now the Alpha node (the one started in
+   step 2) logs similar messages:
 
-```txt
-I1227 13:18:16.154674   16779 snapshot.go:246] Streaming done. Sent 1093470 entries. Waiting for ACK...
-I1227 13:18:17.126494   16779 snapshot.go:251] Received ACK with done: true
-I1227 13:18:17.126514   16779 snapshot.go:292] Stream snapshot: OK
-```
+   ```txt
+   I1227 13:18:16.154674   16779 snapshot.go:246] Streaming done. Sent 1093470 entries. Waiting for ACK...
+   I1227 13:18:17.126494   16779 snapshot.go:251] Received ACK with done: true
+   I1227 13:18:17.126514   16779 snapshot.go:292] Stream snapshot: OK
+   ```
 
-These messages indicate that all replica nodes are now using the same snapshot.
-Thus, all your data is correctly in sync across the cluster. Also, the other
-alpha nodes will be printing (in their logs) something similar to:
+   These messages indicate that all replica nodes are now using the same
+   snapshot. Thus, all your data is correctly in sync across the cluster. Also,
+   the other Alpha nodes print (in their logs) something similar to:
 
-```txt
-I1227 13:18:17.126621    1720 draft.go:567] Skipping snapshot at 28, because found one at 28
-```
+   ```txt
+   I1227 13:18:17.126621    1720 draft.go:567] Skipping snapshot at 28, because found one at 28
+   ```
 
 ### For bigger datasets
 
-When your dataset is pretty big (e.g. dataset size > 10GB) it will be faster
-that you just copy the generated `p` directory (by the bulk loader) among all
-the Alphas nodes. You can follow these steps:
+When your dataset is pretty big (larger than 10 GB) it is faster that you just
+copy the generated `p` directory (by the Bulk Loader) among all the Alphas
+nodes. You can follow these steps:
 
-1. Run bulk loader only on one server
+1. Run Bulk Loader only on one server
 2. Copy (or use `rsync`) the `p` directory to the other servers (the servers you
-   will be using to start the other Alpha nodes)
+   are using to start the other Alpha nodes)
 3. Now, start all Alpha nodes at the same time
 
-If the process went well **all** Alpha nodes will take a snapshot after 1
-minute. You will be seeing something similar to this in the Alpha logs:
+If the process went well **all** Alpha nodes take a snapshot after 1 minute. You
+should see something similar to this in the Alpha logs:
 
 ```txt
 I1227 13:27:53.959671   29781 draft.go:571] Creating snapshot at index: 34. ReadTs: 6.
@@ -312,17 +315,17 @@ I1227 13:27:53.959671   29781 draft.go:571] Creating snapshot at index: 34. Read
 Note that `snapshot at index` value must be the same within the same Alpha group
 and `ReadTs` must be the same value within and among all the Alpha groups.
 
-## Enterprise Features
+## Enterprise features
 
-### Multi-tenancy (Enterprise Feature)
+### Multi-tenancy
 
-By default, Bulk loader preserves the namespace in the data and schema files. If
+By default, Bulk Loader preserves the namespace in the data and schema files. If
 there's no namespace information available, it loads the data into the default
 namespace.
 
 Using the `--force-namespace` flag, you can load all the data into a specific
 namespace. In that case, the namespace information from the data and schema
-files will be ignored.
+files are ignored.
 
 For example, to force the bulk data loading into namespace `123`:
 
@@ -330,7 +333,7 @@ For example, to force the bulk data loading into namespace `123`:
 dgraph bulk -s /tmp/data/1million.schema -f /tmp/data/1million.rdf.gz --force-namespace 123
 ```
 
-### Encryption at rest (Enterprise Feature)
+### Encryption at rest
 
 Even before the Dgraph cluster starts, we can load data using Bulk Loader with
 the encryption feature turned on. Later we can point the generated `p` directory
@@ -338,49 +341,49 @@ to a new Alpha server.
 
 Here's an example to run Bulk Loader with a key used to write encrypted data:
 
-```bash
+```sh
 dgraph bulk --encryption key-file=./enc_key_file -f data.json.gz -s data.schema --map_shards=1 --reduce_shards=1 --http localhost:8000 --zero=localhost:5080
 ```
 
 Alternatively, starting with v20.07.0, the `vault_*` options can be used to
 decrypt the encrypted export.
 
-### Encrypting imports (Enterprise Feature)
+### Encrypting imports
 
 The Bulk Loader’s `--encryption key-file=value` option was previously used to
-encrypt the output `p` directory. This same option will also be used to decrypt
-the encrypted export data and schema files.
+encrypt the output `p` directory. This same option is also used to decrypt the
+encrypted export data and schema files.
 
 Another option, `--encrypted`, indicates whether the input `rdf`/`json` data and
 schema files are encrypted or not. With this switch, we support the use case of
 migrating data from unencrypted exports to encrypted import.
 
-So, with the above two options we have 4 cases:
+So, with the preceding two options we have 4 cases:
 
 1. `--encrypted=true` and no `encryption key-file=value`.
 
-Error: If the input is encrypted, a key file must be provided.
+   Error: if the input is encrypted, a key file must be provided.
 
 2. `--encrypted=true` and `encryption key-file=path-to-key`.
 
-Input is encrypted and output `p` dir is encrypted as well.
+   Input is encrypted and output `p` dir is encrypted as well.
 
 3. `--encrypted=false` and no `encryption key-file=value`.
 
-Input is not encrypted and the output `p` dir is also not encrypted.
+   Input isn't encrypted and the output `p` dir is also not encrypted.
 
 4. `--encrypted=false` and `encryption key-file=path-to-key`.
 
-Input is not encrypted but the output is encrypted. (This is the migration use
-case mentioned above).
+   Input isn't encrypted but the output is encrypted. (This is the migration use
+   case mentioned previously).
 
 Alternatively, starting with v20.07.0, the `vault_*` options can be used instead
-of the `--encryption key-file=value` option above to achieve the same effect
-except that the keys are sitting in a Vault server.
+of the `--encryption key-file=value` option to achieve the same effect except
+that the keys are sitting in a Vault server.
 
-You can also use _bulk loader_, to turn off encryption. This will generate a new
-unencrypted `p` that will be used by the Alpha process. In this, case you need
-to pass `--encryption key-file`, `--encrypted` and `--encrypted_out` flags.
+You can also use Bulk Loader, to turn off encryption. This generates a new
+unencrypted `p` that's used by the Alpha process. In this, case you need to pass
+`--encryption key-file`, `--encrypted` and `--encrypted_out` flags.
 
 ```bash
 # Encryption Key from the file path
@@ -395,27 +398,27 @@ dgraph bulk --files "<path-to-gzipped-RDF-or-JSON-file>" --schema "<path-to-sche
 
 ```
 
-In this case, we are also passing the flag `--encrypted=true` as the exported
-data has been taken from an encrypted Dgraph cluster and we are also specifying
-the flag `--encrypted_out=false` to specify that we want the `p` directory
-(_that will be generated by the bulk loader process_) to be unencrypted.
+In this case, we're also passing the flag `--encrypted=true` as the exported
+data has been taken from an encrypted Dgraph cluster and we're also specifying
+the flag `--encrypted_out=false` to specify that we want the `p` directory (that
+is generated by the Bulk Loader process) to be unencrypted.
 
 ## Tuning & monitoring
 
-### Performance Tuning
+### Performance tuning
 
 <Tip>
-  We highly recommend [disabling swap
+  We highly recommend [turning off swap
   space](https://askubuntu.com/questions/214805/how-do-i-disable-swap) when
   running Bulk Loader. It is better to fix the parameters to decrease memory
   usage, than to have swapping grind the loader down to a halt.
 </Tip>
 
 Flags can be used to control the behavior and performance characteristics of the
-bulk loader. You can see the full list by running `dgraph bulk --help`. In
+Bulk Loader. You can see the full list by running `dgraph bulk --help`. In
 particular, **you should tune the flags so that Bulk Loader doesn't use more
-memory than is available as RAM**. If it starts swapping, it will become
-incredibly slow.
+memory than is available as RAM**. If it starts swapping, it becomes incredibly
+slow.
 
 **In the map phase**, tweaking the following flags can reduce memory usage:
 
@@ -434,10 +437,10 @@ has a negligible impact on memory usage.
 use a lot. Some flags may be increased to improve performance, _but only if you
 have large amounts of RAM_:
 
-- The `--reduce_shards` flag controls the number of resultant Dgraph alpha
+- The `--reduce_shards` flag controls the number of resultant Dgraph Alpha
   instances. Increasing this increases memory consumption, but in exchange
   allows for higher CPU utilization.
 
 - The `--map_shards` flag controls the number of separate map output shards.
   Increasing this increases memory consumption but balances the resultant Dgraph
-  alpha instances more evenly.
+  Alpha instances more evenly.

@@ -43,7 +43,7 @@ The indices available for strings are as follows.
 <Warning>
   Incorrect index choice can impose performance penalties and an increased
   transaction conflict rate. Use only the minimum number of and simplest indexes
-  that your application needs.
+  that your app needs.
 </Warning>
 
 ## Vector Indices
@@ -87,10 +87,10 @@ The indices available for `dateTime` are as follows.
 | `hour`                 | index on year, month, day and hour |
 
 The choices of `dateTime` index allow selecting the precision of the index.
-Applications, such as the movies examples in these docs, that require searching
-over dates but have relatively few nodes per year may prefer the `year`
-tokenizer; applications that are dependent on fine grained date searches, such
-as real-time sensor readings, may prefer the `hour` index.
+Apps, such as the movies examples in these docs, that require searching over
+dates but have relatively few nodes per year may prefer the `year` tokenizer;
+apps that are dependent on fine grained date searches, such as real-time sensor
+readings, may prefer the `hour` index.
 
 All the `dateTime` indices are sortable.
 

@@ -332,14 +332,14 @@ Flags:
                                        days=10; The number of days audit logs will be preserved.
                                        encrypt-file=; The path to the key file to be used for audit log encryption.
                                        output=; [stdout, /path/to/dir] This specifies where audit logs should be output to.
-                                   			"stdout" is for standard output. You can also specify the directory where audit logs
-                                   			will be saved. When stdout is specified as output other fields will be ignored.
+                                         "stdout" is for standard output. You can also specify the directory where audit logs
+                                         will be saved. When stdout is specified as output other fields will be ignored.
                                        size=100; The audit log max size in MB after which it will be rolled over.
                                     (default "compress=false; days=10; size=100; dir=; output=; encrypt-file=;")
       --badger string              Badger options
                                        compression=snappy; [none, zstd:level, snappy] Specifies the compression algorithm and
-                                   			compression level (if applicable) for the postings directory."none" would disable
-                                   			compression, while "zstd:1" would set zstd compression at level 1.
+                                         compression level (if applicable) for the postings directory."none" would disable
+                                         compression, while "zstd:1" would set zstd compression at level 1.
                                        numgoroutines=8; The number of goroutines to use in badger.Stream.
                                        max-retries=-1; Commits to disk will give up after these number of retries to prevent locking the worker in a failed state. Use -1 to retry infinitely.
                                     (default "compression=snappy; numgoroutines=8; max-retries=-1;")
@@ -454,8 +454,8 @@ Flags:
                                           days=10; The number of days audit logs will be preserved.
                                           encrypt-file=; The path to the key file to be used for audit log encryption.
                                           output=; [stdout, /path/to/dir] This specifies where audit logs should be output to.
-                                      			"stdout" is for standard output. You can also specify the directory where audit logs
-                                      			will be saved. When stdout is specified as output other fields will be ignored.
+                                            "stdout" is for standard output. You can also specify the directory where audit logs
+                                            will be saved. When stdout is specified as output other fields will be ignored.
                                           size=100; The audit log max size in MB after which it will be rolled over.
                                        (default "compress=false; days=10; size=100; dir=; output=; encrypt-file=;")
       --enterprise_license string     Path to the enterprise license file.
@@ -464,7 +464,7 @@ Flags:
                                           disable-admin-http=false; Turn on/off the administrative endpoints exposed over Zero's HTTP port.
                                           refill-interval=30s; The interval after which the tokens for UID lease are replenished.
                                           uid-lease=0; The maximum number of UIDs that can be leased by namespace (except default namespace)
-                                      			in an interval specified by refill-interval. Set it to 0 to remove limiting.
+                                            in an interval specified by refill-interval. Set it to 0 to remove limiting.
                                        (default "uid-lease=0; refill-interval=30s; disable-admin-http=false;")
       --my string                     addr:port of this server, so other Dgraph servers can talk to this.
       --peer string                   Address of another dgraphzero server.
@@ -591,10 +591,10 @@ Flags:
   -m, --bufferSize string            Buffer for each thread (default "100")
   -c, --conc int                     Number of concurrent requests to make to Dgraph (default 10)
       --creds string                 Various login credentials if login is required.
-                                     	user defines the username to login.
-                                     	password defines the password of the user.
-                                     	namespace defines the namespace to log into.
-                                     	Sample flag could look like --creds user=username;password=mypass;namespace=2
+                                       user defines the username to login.
+                                       password defines the password of the user.
+                                       namespace defines the namespace to log into.
+                                       Sample flag could look like --creds user=username;password=mypass;namespace=2
       --encryption string            [Enterprise Feature] Encryption At Rest options
                                          key-file=; The file that stores the symmetric key of length 16, 24, or 32 bytes. The key size determines the chosen AES cipher (AES-128, AES-192, and AES-256 respectively).
                                       (default "key-file=;")
@@ -605,7 +605,7 @@ Flags:
       --http string                  Address to serve http (pprof). (default "localhost:6060")
       --new_uids                     Ignore UIDs in load files and assign new ones.
   -s, --schema string                Location of schema file
-      --slash_grpc_endpoint string   Path to Slash GraphQL GRPC endpoint. If --slash_grpc_endpoint is set, all other TLS options and connection options will beignored
+      --slash_grpc_endpoint string   Path to Slash GraphQL gRPC endpoint. If --slash_grpc_endpoint is set, all other TLS options and connection options will beignored
       --tls string                   TLS Client options
                                          ca-cert=; The CA cert file used to verify server certificates. Required for enabling TLS.
                                          client-cert=; (Optional) The Cert file provided by the client to the server.
@@ -981,13 +981,13 @@ Flags:
       --encryption string    [Enterprise Feature] Encryption At Rest options
                                  key-file=; The file that stores the symmetric key of length 16, 24, or 32 bytes. The key size determines the chosen AES cipher (AES-128, AES-192, and AES-256 respectively).
                               (default "key-file=;")
-  -f, --format string        The format of the export output. Accepts a value of either rdf or json (default "rdf")
+  -f, --format string        The format of the export output. Accepts a value of either rdf or JSON (default "rdf")
   -h, --help                 help for export_backup
   -l, --location string      Sets the location of the backup. Both file URIs and s3 are supported.
-                             		This command will take care of all the full + incremental backups present in the location.
+                                 This command will take care of all the full + incremental backups present in the location.
       --upgrade              If true, retrieve the CORS from DB and append at the end of GraphQL schema.
-                             		It also deletes the deprecated types and predicates.
-                             		Use this option when exporting a backup of 20.11 for loading onto 21.03.
+                                 It also deletes the deprecated types and predicates.
+                                 Use this option when exporting a backup of 20.11 for loading onto 21.03.
       --vault string         Vault options
                                  acl-field=; Vault field containing ACL key.
                                  acl-format=base64; ACL key format, can be 'raw' or 'base64'.

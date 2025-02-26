@@ -12,40 +12,40 @@ Increment the default predicate (`counter.val`) once. If the predicate doesn't
 yet exist, then it will be created starting at counter 0.
 
 ```sh
-$ dgraph increment
+dgraph increment
 ```
 
 Increment the counter predicate against the Alpha running at address `--alpha`
 (default: `localhost:9080`):
 
 ```sh
-$ dgraph increment --alpha=192.168.1.10:9080
+dgraph increment --alpha=192.168.1.10:9080
 ```
 
 Increment the counter predicate specified by `--pred` (default: `counter.val`):
 
 ```sh
-$ dgraph increment --pred=counter.val.healthcheck
+dgraph increment --pred=counter.val.healthcheck
 ```
 
 Run a read-only query for the counter predicate and does not run a mutation to
 increment it:
 
 ```sh
-$ dgraph increment --ro
+dgraph increment --ro
 ```
 
 Run a best-effort query for the counter predicate and does not run a mutation to
 increment it:
 
 ```sh
-$ dgraph increment --be
+dgraph increment --be
 ```
 
 Run the increment tool 1000 times every 1 second:
 
 ```sh
-$ dgraph increment --num=1000 --wait=1s
+dgraph increment --num=1000 --wait=1s
 ```
 
 ## Increment Tool Output

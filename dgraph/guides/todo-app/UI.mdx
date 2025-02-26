@@ -177,14 +177,14 @@ export default App
 
 ## Auth0 Integration
 
-Now, let's integrate Auth0 in our application and use that to add the logged-in
-user. Let's first create an app in Auth0.
+Now, let's integrate Auth0 in our app and use that to add the logged-in user.
+Let's first create an app in Auth0.
 
 - Head over to Auth0 and create an account. Click 'sign up'
   [here](https://auth0.com/)
 - Once the signup is done, click "Create Application" in "Integrate Auth0 into
-  your application".
-- Give your app a name and select "Single Page Web App" application type
+  your app".
+- Give your app a name and select "Single Page Web App" app type
 - Select React as the technology
 - No need to do the sample app, scroll down to "Configure Auth0" and select
   "Application Settings".
@@ -259,8 +259,8 @@ ReactDOM.render(
 )
 ```
 
-Note that for the application to work from this point on, the
-`src/auth_template.json` file must be configured with your auth0 credentials.
+Note that for the app to work from this point on, the `src/auth_template.json`
+file must be configured with your auth0 credentials.
 
 Here is a reference
 [Here](https://github.com/dgraph-io/auth-webinar/blob/marcelo/fix-finished-app/src/auth_template.json)
@@ -272,7 +272,7 @@ Let's also add definitions for updating, deleting and clearing all tasks to
 to know if the user is logged in or not. This variable will show a button to
 login or logout depending on the status of logged in or logged out. Note that
 before calling the component Todos we call our variable `{logInOut}` so that our
-login button appears above the application.
+login button appears above the app.
 
 ```javascript
 import React from "react"
@@ -395,8 +395,8 @@ function App() {
 export default App
 ```
 
-For our application to work correctly we need to update the `src/GraphQLData.js`
-file with the remaining queries.
+For our app to work correctly we need to update the `src/GraphQLData.js` file
+with the remaining queries.
 
 ```javascript
 import gql from "graphql-tag"

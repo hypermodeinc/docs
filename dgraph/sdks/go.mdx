@@ -29,16 +29,16 @@ to multiple Dgraph Alphas to distribute the workload evenly.
 
 ```go
 func newClient() *dgo.Dgraph {
-	// Dial a gRPC connection. The address to dial to can be configured when
-	// setting up the dgraph cluster.
-	d, err := grpc.Dial("localhost:9080", grpc.WithInsecure())
-	if err != nil {
-		log.Fatal(err)
-	}
+  // Dial a gRPC connection. The address to dial to can be configured when
+  // setting up the dgraph cluster.
+  d, err := grpc.Dial("localhost:9080", grpc.WithInsecure())
+  if err != nil {
+    log.Fatal(err)
+  }
 
-	return dgo.NewDgraphClient(
-		api.NewDgraphClient(d),
-	)
+  return dgo.NewDgraphClient(
+    api.NewDgraphClient(d),
+  )
 }
 ```
 
@@ -46,20 +46,20 @@ The client can be configured to use gRPC compression:
 
 ```go
 func newClient() *dgo.Dgraph {
-	// Dial a gRPC connection. The address to dial to can be configured when
-	// setting up the dgraph cluster.
-	dialOpts := append([]grpc.DialOption{},
-		grpc.WithInsecure(),
-		grpc.WithDefaultCallOptions(grpc.UseCompressor(gzip.Name)))
-	d, err := grpc.Dial("localhost:9080", dialOpts...)
+  // Dial a gRPC connection. The address to dial to can be configured when
+  // setting up the dgraph cluster.
+  dialOpts := append([]grpc.DialOption{},
+    grpc.WithInsecure(),
+    grpc.WithDefaultCallOptions(grpc.UseCompressor(gzip.Name)))
+  d, err := grpc.Dial("localhost:9080", dialOpts...)
 
-	if err != nil {
-		log.Fatal(err)
-	}
+  if err != nil {
+    log.Fatal(err)
+  }
 
-	return dgo.NewDgraphClient(
-		api.NewDgraphClient(d),
-	)
+  return dgo.NewDgraphClient(
+    api.NewDgraphClient(d),
+  )
 }
 
 ```
@@ -75,13 +75,13 @@ In order to create a dgo client, and make the client login into namespace `123`:
 ```go
 conn, err := grpc.Dial("127.0.0.1:9080", grpc.WithInsecure())
 if err != nil {
-	glog.Error("While trying to dial gRPC, got error", err)
+  glog.Error("While trying to dial gRPC, got error", err)
 }
 dc := dgo.NewDgraphClient(api.NewDgraphClient(conn))
 ctx := context.Background()
 // Login to namespace 123
 if err := dc.LoginIntoNamespace(ctx, "groot", "password", 123); err != nil {
-	glog.Error("Failed to login: ",err)
+  glog.Error("Failed to login: ",err)
 }
 ```
 
@@ -118,13 +118,13 @@ To set the schema, set it on a `api.Operation` object, and pass it down to the
 
 ```go
 func setup(c *dgo.Dgraph) {
-	// Install a schema into dgraph. Accounts have a `name` and a `balance`.
-	err := c.Alter(context.Background(), &api.Operation{
-		Schema: `
-			name: string @index(term) .
-			balance: int .
-		`,
-	})
+  // Install a schema into dgraph. Accounts have a `name` and a `balance`.
+  err := c.Alter(context.Background(), &api.Operation{
+    Schema: `
+      name: string @index(term) .
+      balance: int .
+    `,
+  })
 }
 ```
 
@@ -133,20 +133,20 @@ all. Drop all is useful if you wish to discard all the data, and start from a
 clean slate, without bringing the instance down.
 
 ```go
-	// Drop all data including schema from the dgraph instance. This is useful
-	// for small examples such as this, since it puts dgraph into a clean
-	// state.
-	err := c.Alter(context.Background(), &api.Operation{DropOp: api.Operation_ALL})
+  // Drop all data including schema from the dgraph instance. This is useful
+  // for small examples such as this, since it puts dgraph into a clean
+  // state.
+  err := c.Alter(context.Background(), &api.Operation{DropOp: api.Operation_ALL})
 ```
 
 The old way to send a drop all operation is still supported but will be
 eventually deprecated. It is shown below for reference.
 
 ```go
-	// Drop all data including schema from the dgraph instance. This is useful
-	// for small examples such as this, since it puts dgraph into a clean
-	// state.
-	err := c.Alter(context.Background(), &api.Operation{DropAll: true})
+  // Drop all data including schema from the dgraph instance. This is useful
+  // for small examples such as this, since it puts dgraph into a clean
+  // state.
+  err := c.Alter(context.Background(), &api.Operation{DropAll: true})
 ```
 
 Starting with version 1.1, `api.Operation` also supports a drop data operation.
@@ -154,10 +154,10 @@ This operation drops all the data but preserves the schema. This is useful when
 the schema is large and needs to be reused, such as in between unit tests.
 
 ```go
-	// Drop all data including schema from the dgraph instance. This is useful
-	// for small examples such as this, since it puts dgraph into a clean
-	// state.
-	err := c.Alter(context.Background(), &api.Operation{DropOp: api.Operation_DATA})
+  // Drop all data including schema from the dgraph instance. This is useful
+  // for small examples such as this, since it puts dgraph into a clean
+  // state.
+  err := c.Alter(context.Background(), &api.Operation{DropOp: api.Operation_DATA})
 ```
 
 ## Create a transaction
@@ -170,9 +170,9 @@ be a no-op.
 
 ```go
 func runTxn(c *dgo.Dgraph) {
-	txn := c.NewTxn()
-	defer txn.Discard(ctx)
-	...
+  txn := c.NewTxn()
+  defer txn.Discard(ctx)
+  ...
 }
 ```
 
@@ -197,31 +197,31 @@ field, which has the JSON encoded result. You can unmarshal it into Go struct
 via `json.Unmarshal`.
 
 ```go
-	// Query the balance for Alice and Bob.
-	const q = `
-		{
-			all(func: anyofterms(name, "Alice Bob")) {
-				uid
-				balance
-			}
-		}
-	`
-	resp, err := txn.Query(context.Background(), q)
-	if err != nil {
-		log.Fatal(err)
-	}
+  // Query the balance for Alice and Bob.
+  const q = `
+    {
+      all(func: anyofterms(name, "Alice Bob")) {
+        uid
+        balance
+      }
+    }
+  `
+  resp, err := txn.Query(context.Background(), q)
+  if err != nil {
+    log.Fatal(err)
+  }
 
-	// After we get the balances, we have to decode them into structs so that
-	// we can manipulate the data.
-	var decode struct {
-		All []struct {
-			Uid     string
-			Balance int
-		}
-	}
-	if err := json.Unmarshal(resp.GetJson(), &decode); err != nil {
-		log.Fatal(err)
-	}
+  // After we get the balances, we have to decode them into structs so that
+  // we can manipulate the data.
+  var decode struct {
+    All []struct {
+      Uid     string
+      Balance int
+    }
+  }
+  if err := json.Unmarshal(resp.GetJson(), &decode); err != nil {
+    log.Fatal(err)
+  }
 ```
 
 ## Query with RDF response
@@ -234,23 +234,23 @@ response would contain a `Rdf` field, which has the RDF encoded result.
 </Note>
 
 ```go
-	// Query the balance for Alice and Bob.
-	const q = `
-		{
-			all(func: anyofterms(name, "Alice Bob")) {
-				name
-				balance
-			}
-		}
-	`
-	resp, err := txn.QueryRDF(context.Background(), q)
-	if err != nil {
-		log.Fatal(err)
-	}
+  // Query the balance for Alice and Bob.
+  const q = `
+    {
+      all(func: anyofterms(name, "Alice Bob")) {
+        name
+        balance
+      }
+    }
+  `
+  resp, err := txn.QueryRDF(context.Background(), q)
+  if err != nil {
+    log.Fatal(err)
+  }
 
-	// <0x17> <name> "Alice" .
-	// <0x17> <balance> 100 .
-	fmt.Println(resp.Rdf)
+  // <0x17> <name> "Alice" .
+  // <0x17> <balance> 100 .
+  fmt.Println(resp.Rdf)
 ```
 
 ## Run a mutation
@@ -272,16 +272,16 @@ We're going to continue using JSON. You could modify the Go structs parsed from
 the query, and marshal them back into JSON.
 
 ```go
-	// Move $5 between the two accounts.
-	decode.All[0].Bal += 5
-	decode.All[1].Bal -= 5
+  // Move $5 between the two accounts.
+  decode.All[0].Bal += 5
+  decode.All[1].Bal -= 5
 
-	out, err := json.Marshal(decode.All)
-	if err != nil {
-		log.Fatal(err)
-	}
+  out, err := json.Marshal(decode.All)
+  if err != nil {
+    log.Fatal(err)
+  }
 
-	_, err := txn.Mutate(context.Background(), &api.Mutation{SetJson: out})
+  _, err := txn.Mutate(context.Background(), &api.Mutation{SetJson: out})
 ```
 
 Sometimes, you only want to commit mutation, without querying anything further.
@@ -294,12 +294,12 @@ Once all the queries and mutations are done, you can commit the transaction. It
 returns an error in case the transaction could not be committed.
 
 ```go
-	// Finally, we can commit the transactions. An error will be returned if
-	// other transactions running concurrently modify the same data that was
-	// modified in this transaction. It is up to the library user to retry
-	// transactions when they fail.
+  // Finally, we can commit the transactions. An error will be returned if
+  // other transactions running concurrently modify the same data that was
+  // modified in this transaction. It is up to the library user to retry
+  // transactions when they fail.
 
-	err := txn.Commit(context.Background())
+  err := txn.Commit(context.Background())
 ```
 
 ## Complete Example
@@ -322,162 +322,162 @@ relationships with other nodes.
 package dgo_test
 
 import (
-	"context"
-	"encoding/json"
-	"fmt"
-	"log"
-	"time"
+  "context"
+  "encoding/json"
+  "fmt"
+  "log"
+  "time"
 
-	"github.com/dgraph-io/dgo/v200/protos/api"
+  "github.com/dgraph-io/dgo/v200/protos/api"
 )
 
 type School struct {
-	Name  string   `json:"name,omitempty"`
-	DType []string `json:"dgraph.type,omitempty"`
+  Name  string   `json:"name,omitempty"`
+  DType []string `json:"dgraph.type,omitempty"`
 }
 
 type loc struct {
-	Type   string    `json:"type,omitempty"`
-	Coords []float64 `json:"coordinates,omitempty"`
+  Type   string    `json:"type,omitempty"`
+  Coords []float64 `json:"coordinates,omitempty"`
 }
 
 // If omitempty is not set, then edges with empty values (0 for int/float, "" for string, false
 // for bool) would be created for values not specified explicitly.
 
 type Person struct {
-	Uid      string     `json:"uid,omitempty"`
-	Name     string     `json:"name,omitempty"`
-	Age      int        `json:"age,omitempty"`
-	Dob      *time.Time `json:"dob,omitempty"`
-	Married  bool       `json:"married,omitempty"`
-	Raw      []byte     `json:"raw_bytes,omitempty"`
-	Friends  []Person   `json:"friend,omitempty"`
-	Location loc        `json:"loc,omitempty"`
-	School   []School   `json:"school,omitempty"`
-	DType    []string   `json:"dgraph.type,omitempty"`
+  Uid      string     `json:"uid,omitempty"`
+  Name     string     `json:"name,omitempty"`
+  Age      int        `json:"age,omitempty"`
+  Dob      *time.Time `json:"dob,omitempty"`
+  Married  bool       `json:"married,omitempty"`
+  Raw      []byte     `json:"raw_bytes,omitempty"`
+  Friends  []Person   `json:"friend,omitempty"`
+  Location loc        `json:"loc,omitempty"`
+  School   []School   `json:"school,omitempty"`
+  DType    []string   `json:"dgraph.type,omitempty"`
 }
 
 func Example_setObject() {
-	dg, cancel := getDgraphClient()
-	defer cancel()
+  dg, cancel := getDgraphClient()
+  defer cancel()
 
-	dob := time.Date(1980, 01, 01, 23, 0, 0, 0, time.UTC)
-	// While setting an object if a struct has a Uid then its properties in the graph are updated
-	// else a new node is created.
-	// In the example below new nodes for Alice, Bob and Charlie and school are created (since they
-	// don't have a Uid).
-	p := Person{
-		Uid:     "_:alice",
-		Name:    "Alice",
-		Age:     26,
-		Married: true,
-		DType:   []string{"Person"},
-		Location: loc{
-			Type:   "Point",
-			Coords: []float64{1.1, 2},
-		},
-		Dob: &dob,
-		Raw: []byte("raw_bytes"),
-		Friends: []Person{{
-			Name:  "Bob",
-			Age:   24,
-			DType: []string{"Person"},
-		}, {
-			Name:  "Charlie",
-			Age:   29,
-			DType: []string{"Person"},
-		}},
-		School: []School{{
-			Name:  "Crown Public School",
-			DType: []string{"Institution"},
-		}},
-	}
+  dob := time.Date(1980, 01, 01, 23, 0, 0, 0, time.UTC)
+  // While setting an object if a struct has a Uid then its properties in the graph are updated
+  // else a new node is created.
+  // In the example below new nodes for Alice, Bob and Charlie and school are created (since they
+  // don't have a Uid).
+  p := Person{
+    Uid:     "_:alice",
+    Name:    "Alice",
+    Age:     26,
+    Married: true,
+    DType:   []string{"Person"},
+    Location: loc{
+      Type:   "Point",
+      Coords: []float64{1.1, 2},
+    },
+    Dob: &dob,
+    Raw: []byte("raw_bytes"),
+    Friends: []Person{{
+      Name:  "Bob",
+      Age:   24,
+      DType: []string{"Person"},
+    }, {
+      Name:  "Charlie",
+      Age:   29,
+      DType: []string{"Person"},
+    }},
+    School: []School{{
+      Name:  "Crown Public School",
+      DType: []string{"Institution"},
+    }},
+  }
 
-	op := &api.Operation{}
-	op.Schema = `
-		name: string @index(exact) .
-		age: int .
-		married: bool .
-		loc: geo .
-		dob: datetime .
-		Friend: [uid] .
-		type: string .
-		coords: float .
-		type Person {
-			name: string
-			age: int
-			married: bool
-			Friend: [Person]
-			loc: Loc
-		}
-		type Institution {
-			name: string
-		}
-		type Loc {
-			type: string
-			coords: float
-		}
-	`
+  op := &api.Operation{}
+  op.Schema = `
+    name: string @index(exact) .
+    age: int .
+    married: bool .
+    loc: geo .
+    dob: datetime .
+    Friend: [uid] .
+    type: string .
+    coords: float .
+    type Person {
+      name: string
+      age: int
+      married: bool
+      Friend: [Person]
+      loc: Loc
+    }
+    type Institution {
+      name: string
+    }
+    type Loc {
+      type: string
+      coords: float
+    }
+  `
 
-	ctx := context.Background()
-	if err := dg.Alter(ctx, op); err != nil {
-		log.Fatal(err)
-	}
+  ctx := context.Background()
+  if err := dg.Alter(ctx, op); err != nil {
+    log.Fatal(err)
+  }
 
-	mu := &api.Mutation{
-		CommitNow: true,
-	}
-	pb, err := json.Marshal(p)
-	if err != nil {
-		log.Fatal(err)
-	}
+  mu := &api.Mutation{
+    CommitNow: true,
+  }
+  pb, err := json.Marshal(p)
+  if err != nil {
+    log.Fatal(err)
+  }
 
-	mu.SetJson = pb
-	response, err := dg.NewTxn().Mutate(ctx, mu)
-	if err != nil {
-		log.Fatal(err)
-	}
+  mu.SetJson = pb
+  response, err := dg.NewTxn().Mutate(ctx, mu)
+  if err != nil {
+    log.Fatal(err)
+  }
 
-	// Assigned uids for nodes which were created would be returned in the response.Uids map.
-	variables := map[string]string{"$id1": response.Uids["alice"]}
-	q := `query Me($id1: string){
-		me(func: uid($id1)) {
-			name
-			dob
-			age
-			loc
-			raw_bytes
-			married
-			dgraph.type
-			friend @filter(eq(name, "Bob")){
-				name
-				age
-				dgraph.type
-			}
-			school {
-				name
-				dgraph.type
-			}
-		}
-	}`
+  // Assigned uids for nodes which were created would be returned in the response.Uids map.
+  variables := map[string]string{"$id1": response.Uids["alice"]}
+  q := `query Me($id1: string){
+    me(func: uid($id1)) {
+      name
+      dob
+      age
+      loc
+      raw_bytes
+      married
+      dgraph.type
+      friend @filter(eq(name, "Bob")){
+        name
+        age
+        dgraph.type
+      }
+      school {
+        name
+        dgraph.type
+      }
+    }
+  }`
 
-	resp, err := dg.NewTxn().QueryWithVars(ctx, q, variables)
-	if err != nil {
-		log.Fatal(err)
-	}
+  resp, err := dg.NewTxn().QueryWithVars(ctx, q, variables)
+  if err != nil {
+    log.Fatal(err)
+  }
 
-	type Root struct {
-		Me []Person `json:"me"`
-	}
+  type Root struct {
+    Me []Person `json:"me"`
+  }
 
-	var r Root
-	err = json.Unmarshal(resp.Json, &r)
-	if err != nil {
-		log.Fatal(err)
-	}
+  var r Root
+  err = json.Unmarshal(resp.Json, &r)
+  if err != nil {
+    log.Fatal(err)
+  }
 
-	out, _ := json.MarshalIndent(r, "", "\t")
-	fmt.Printf("%s\n", out)
+  out, _ := json.MarshalIndent(r, "", "\t")
+  fmt.Printf("%s\n", out)
 }
 ```
 
@@ -485,42 +485,42 @@ Example output result:
 
 ```json
  Output: {
- 	"me": [
- 		{
- 			"name": "Alice",
- 			"age": 26,
- 			"dob": "1980-01-01T23:00:00Z",
- 			"married": true,
- 			"raw_bytes": "cmF3X2J5dGVz",
- 			"friend": [
- 				{
- 					"name": "Bob",
- 					"age": 24,
- 					"loc": {},
- 					"dgraph.type": [
- 						"Person"
- 					]
- 				}
- 			],
- 			"loc": {
- 				"type": "Point",
- 				"coordinates": [
- 					1.1,
- 					2
- 				]
- 			},
- 			"school": [
- 				{
- 					"name": "Crown Public School",
- 					"dgraph.type": [
- 						"Institution"
- 					]
- 				}
- 			],
- 			"dgraph.type": [
- 				"Person"
- 			]
- 		}
- 	]
+   "me": [
+     {
+       "name": "Alice",
+       "age": 26,
+       "dob": "1980-01-01T23:00:00Z",
+       "married": true,
+       "raw_bytes": "cmF3X2J5dGVz",
+       "friend": [
+         {
+           "name": "Bob",
+           "age": 24,
+           "loc": {},
+           "dgraph.type": [
+             "Person"
+           ]
+         }
+       ],
+       "loc": {
+         "type": "Point",
+         "coordinates": [
+           1.1,
+           2
+         ]
+       },
+       "school": [
+         {
+           "name": "Crown Public School",
+           "dgraph.type": [
+             "Institution"
+           ]
+         }
+       ],
+       "dgraph.type": [
+         "Person"
+       ]
+     }
+   ]
  }
 ```

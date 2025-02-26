@@ -13,32 +13,31 @@ and help our Zoologist friend, Mary, and her team in their mission to conserve
 birds using Dgraph's geolocation capabilities.
 
 You might have used Google to find the restaurants near you or to find the
-shopping centers within a mile of your current location. Applications like these
-make use of your geolocation data.
+shopping centers within a mile of your current location. Apps like these make
+use of your geolocation data.
 
-Geolocation has become an integral part of mobile applications, especially with
-the advent of smartphones in the last decade, the list of applications which
-revolves around users location to power application features has grown beyond
-imagination.
+Geolocation has become an integral part of mobile apps, especially with the
+advent of smartphones in the last decade, the list of apps which revolves around
+users location to power app features has grown beyond imagination.
 
 Let's take Uber, for instance, the location data of the driver and passenger is
-pivotal for the functionality of the application. We're gathering more GPS data
-than ever before, being able to store and query the location data efficiently
-can give you an edge over your competitors.
+pivotal for the app. We're gathering more GPS data than ever before, being able
+to store and query the location data efficiently can give you an edge over your
+competitors.
 
-Real-world data is interconnected; they are not sparse; this is more relevant
-when it comes to location data. The natural representation of railway networks,
-maps, routes are graphs.
+Real-world data is interconnected and they are not sparse. This is even more
+relevant when it comes to location data. The natural representation of railway
+networks, maps, routes are graphs.
 
-The good news is that [Dgraph](https://dgraph.io), the world's most advanced
-graph database, comes with functionalities to efficiently store and perform
-useful queries on graphs containing location data. If you want to run queries
-like `find me the hotels near Golden Gate Bridge`, or find me all the tourist
-location around `Golden Gate Park`, Dgraph has your back.
+The good news is that Dgraph, the world's most advanced graph database, comes
+with functionalities to efficiently store and perform useful queries on graphs
+containing location data. If you want to run queries like
+`find hotels near Golden Gate Bridge`, or
+`find all the tourist location around Golden Gate Park`, Dgraph has your back.
 
 First, let's learn how to represent Geolocation data in Dgraph.
 
-## Representing Geolocation data
+## Representing geolocation data
 
 You can represent location data in Dgraph using two ways:
 
@@ -48,15 +47,15 @@ Point location contains the geo-coordinate tuple (latitude, longitude) of your
 location of interest.
 
 The following image has the point location with the latitude and longitude for
-the Eifel tower in Paris. Point locations are useful for representing a precise
-location; for instance, your location when booking a cab or your delivery
+the Eiffel Tower in Paris. Point locations are useful for representing a precise
+location. For instance, your location when booking a cab or your delivery
 address.
 
 ![model](/images/tutorials/8/b-paris.png)
 
 - **Polygonal location**
 
-It is not possible to represent geographical entities which are spread across
+It isn't possible to represent geographical entities which are spread across
 multiple geo-coordinates just using a point location. To represent geo entities
 like a city, a lake, or a national park, you should use a polygonal location.
 
@@ -66,7 +65,7 @@ Here is an example:
 
 The polygonal fence above represents the city of Delhi, India. This polygonal
 fence or the geo-fence is formed by connecting multiple straight-line
-boundaries, and they are collectively represented using an array of location
+boundaries, and they're collectively represented using an array of location
 tuples of format `[(latitude, longitude), (latitude, longitude), ...]`. Each
 tuple pair `(2 tuples and 4 coordinates)` represents a straight line boundary of
 the geo-fence, and a polygonal fence can contain any number of lines.
@@ -101,7 +100,7 @@ There are different ways to model the same graph. For instance, the
 rather than being a node of its own.
 
 The queries you want to perform or the relationships you like to explore mostly
-influence the modeling decisions. The goal of the tutorial is not to arrive at
+influence the modeling decisions. The goal of the tutorial isn't to arrive at
 the ideal graph model, but to use a simple dataset to demonstrate the
 geolocation capabilities of Dgraph.
 
@@ -111,16 +110,18 @@ the node representing the `Location Type` as a `location type` node.
 
 Here's the relationship between these nodes:
 
-- Every `city node` is connected to a `location node` via the `has_location `
+- Every `city node` is connected to a `location node` via the `has_location`
   edge.
 - Every `location node` is connected to its node representing a `location type`
   via the `has_type` edge.
 
-_Note: Dgraph allows you to associate one or more types for the nodes using its
-type system feature, for now, we are using nodes without types, we'll learn
-about type system for nodes in a future tutorial. Check
-[this page from the documentation site](https://dgraph.io/docs/query-language/#type-system),
-if you want to explore type system feature for nodes._
+<Note>
+  Dgraph allows you to associate one or more types for the nodes using its type
+  system feature, for now, we're using nodes without types, we'll learn about
+  type system for nodes in a future tutorial. Check [this page from the
+  documentation site](https://dgraph.io/docs/query-language/#type-system), if
+  you want to explore type system feature for nodes
+</Note>
 
 Here is our sample dataset. Open Ratel, go to the mutate tab, paste the
 mutation, and click Run.
@@ -838,7 +839,7 @@ newsletter to get the latest tutorial right into your inbox.
 ## What's Next?
 
 - Go to [Clients](./clients) to see how to communicate with Dgraph from your
-  application.
+  app.
 - Take the [Tour](https://dgraph.io/tour/) for a guided tour of how to write
   queries in Dgraph.
 - A wider range of queries can also be found in the

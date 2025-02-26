@@ -2,7 +2,7 @@
 title: Monitoring
 ---
 
-Dgraph exposes metrics via the `/debug/vars` endpoint in json format and the
+Dgraph exposes metrics via the `/debug/vars` endpoint in JSON format and the
 `/debug/prometheus_metrics` endpoint in Prometheus's text-based format. Dgraph
 doesn't store the metrics and only exposes the value of the metrics at that
 instant. You can either poll this endpoint to get the data in your monitoring
@@ -87,7 +87,7 @@ alarms with the health check.
 
 <Note>
   Currently, Route53 metrics are only
-  (available)[https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/monitoring-health-checks.html]
+  [available](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/monitoring-health-checks.html)
   in the **US East (N. Virginia)** region. The Cloudwatch Alarm (and the SNS
   Topic) should therefore be created in `us-east-1`.
 </Note>

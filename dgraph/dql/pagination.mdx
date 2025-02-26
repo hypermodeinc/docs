@@ -33,25 +33,36 @@ use a positive `N`.
 Query Example: last two films, by UID order, directed by Steven Spielberg and
 the first three genres of those movies, sorted alphabetically by English name.
 
-````json { me(func: allofterms(name@en, "Steven Spielberg")) {
-director.film (first: -2) { name@en initial_release_date genre (orderasc:
-name@en) (first: 3) { name@en } } } } ```
-
-Query Example: The three directors named Steven who have directed the most
-actors of all directors named Steven.
-
-```json { ID as var(func: allofterms(name@en, "Steven"))
-@filter(has(director.film)) { director.film { stars as count(starring) }
-totalActors as sum(val(stars)) }
-
-mostStars(func: uid(ID), orderdesc: val(totalActors), first: 3) { name@en stars
-: val(totalActors)
-
-    director.film {
+```dql
+{ me(func: allofterms(name@en, "Steven Spielberg")) {
+  director.film (first: -2) {
+    name@en
+    initial_release_date
+    genre (orderasc: name@en) (first: 3) {
       name@en
     }
+  }
+}
+}
+```
 
-} } ```
+Query Example: the three directors named Steven who have directed the most
+actors of all directors named Steven.
+
+```dql
+{
+  ID as var(func: allofterms(name@en, "Steven")) @filter(has(director.film)) {
+    director.film {
+      stars as count(starring)
+    }
+    totalActors as sum(val(stars))
+  }
+
+  directors(func: uid(ID), orderdesc: val(totalActors), first: 3) {
+    name@en
+  }
+}
+```
 
 ## Offset
 
@@ -62,9 +73,9 @@ Syntax Examples:
 - `predicate (first: M, offset: N) { ... }`
 - `predicate @filter(...) (offset: N) { ... }`
 
-With `offset: N` the first `N` results are not returned. Used in combination
-with first, `first: M, offset: N` skips over `N` results and returns the
-following `M`.
+With `offset: N` the first `N` results aren't returned. Used in combination with
+first, `first: M, offset: N` skips over `N` results and returns the following
+`M`.
 
 <Note>
   Skipping over `N` results takes time proportional to `N` (complexity `O(N)`).
@@ -72,12 +83,25 @@ following `M`.
   Prefer [after](./#after) over `offset`.
 </Note>
 
-Query Example: Order Hark Tsui's films by English title, skip over the first 4
+Query Example: order Hark Tsui's films by English title, skip over the first 4
 and return the following 6.
 
-```json { me(func: allofterms(name@en, "Hark Tsui")) { name@zh name@en
-director.film (orderasc: name@en) (first:6, offset:4) { genre { name@en }
-name@zh name@en initial_release_date } } } ```
+```dql
+{
+  me(func: allofterms(name@en, "Hark Tsui")) {
+    name@zh
+    name@en
+    director.film (orderasc: name@en) (first:6, offset:4) {
+      genre {
+        name@en
+      }
+      name@zh
+      name@en
+      initial_release_date
+    }
+  }
+}
+```
 
 ## After
 
@@ -99,14 +123,31 @@ or just `predicate (first: N)`, with subsequent queries of the form
   computing the result set. This should be preferred over [offset](./#offset).
 </Note>
 
-Query Example: The first five of Baz Luhrmann's films, sorted by UID order.
+Query Example: the first five of Baz Luhrmann's films, sorted by UID order.
 
-```json { me(func: allofterms(name@en, "Baz Luhrmann")) { name@en
-director.film (first:5) { uid name@en } } } ```
+```dql
+{
+  me(func: allofterms(name@en, "Baz Luhrmann")) {
+    name@en
+    director.film (first:5) {
+      uid
+      name@en
+    }
+  }
+}
+```
 
 The fifth movie is the Australian movie classic Strictly Ballroom. It has UID
 `0x99e44`. The results after Strictly Ballroom can now be obtained with `after`.
 
-```json { me(func: allofterms(name@en, "Baz Luhrmann")) { name@en
-director.film (first:5, after: 0x99e44) { uid name@en } } } ```
-````
+```dql
+{
+  me(func: allofterms(name@en, "Baz Luhrmann")) {
+    name@en
+    director.film (first:5, after: 0x99e44) {
+      uid
+      name@en
+    }
+  }
+}
+```

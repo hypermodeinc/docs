@@ -5,7 +5,7 @@ title: GraphQL and DQL schemas
 The first step in mastering DQL in the context of GraphQL API is probably to
 understand the fundamental difference between GraphQL schema and DQL schema.
 
-### In GraphQL, the schema is a central notion.
+### In GraphQL, the schema is a central notion
 
 GraphQL is a strongly typed language. Contrary to REST which is organized in
 terms of endpoints, GraphQL APIs are organized in terms of types and fields. The
@@ -13,7 +13,7 @@ type system is used to define the schema, which is a contract between client and
 server. GraphQL uses types to ensure Apps only ask for what’s possible and
 provide clear and helpful errors.
 
-In the [GraphQL Quick start](./quick-start), we have used a schema to generate a
+In the [GraphQL Quick start](./quick-start), we used a schema to generate a
 GraphQL API:
 
 ```graphql
@@ -38,7 +38,7 @@ type Review {
 ```
 
 The API and the engine logic are generated from the schema defining the types of
-objects we are dealing with, the fields, and the relationships in the form of
+objects we're dealing with, the fields, and the relationships in the form of
 fields referencing other types.
 
 ### In DQL, the schema described the predicates
@@ -48,10 +48,10 @@ the [Dgraph types schema](./dql-schema).
 
 ### Schema mapping
 
-When deploying a GraphQL Schema, Dgraph will generates DQL predicates and types
-for the graph backend. In order to distinguish a field `name` from a type
-`Person` from the field `name` of different type (they may have different
-indexes), Dgraph is using a dotted notation for the DQL schema.
+When deploying a GraphQL Schema, Dgraph generates DQL predicates and types for
+the graph backend. In order to distinguish a field `name` from a type `Person`
+from the field `name` of different type (they may have different indexes),
+Dgraph is using a dotted notation for the DQL schema.
 
 For example, deploying the following GraphQL Schema
 
@@ -63,7 +63,7 @@ type Person {
 }
 ```
 
-will lead the the declaration of 3 predicates in the DQL Schema:
+leads to the declaration of 3 predicates in the DQL Schema:
 
 - `Person.id default`
 - `Person.name string`
@@ -71,7 +71,7 @@ will lead the the declaration of 3 predicates in the DQL Schema:
 
 and one DQL type
 
-```
+```dql
 type Person {
    Person.name
    Person.friends
@@ -86,7 +86,7 @@ The default mapping can be customized by using the
 
 #### GraphQL ID type and Dgraph `uid`
 
-Person.id is not part of the Person DQL type: internally Dgraph is using `uid`
+Person.id isn't part of the Person DQL type: internally Dgraph is using `uid`
 predicate as unique identifier for every node in the graph. Dgraph returns the
 value of `uid` when a GraphQL field of type ID is requested.
 
@@ -100,15 +100,15 @@ type Person {
     ...
 ```
 
-Is simply translated into a prediate index specification in the Dgraph schema:
+Is simply translated into a predicate index specification in the Dgraph schema:
 
-```
+```dql
 Person.name: string @index(hash) .
 ```
 
 #### Constraints
 
-DQL does not have 'non nullable' constraint `!` nor 'unique' constraint.
+DQL doesn't have 'non nullable' constraint `!` nor 'unique' constraint.
 Constraints on the graph are handled by correctly using `upsert` operation in
 DQL.
 
@@ -145,13 +145,12 @@ can be executed in DQL
 }
 ```
 
-Note that in this query, we are using `aliases` such as `name: Person.name` to
-name the predicates in the JSON response,as they are declared in the GraphQL
-schema.
+Note that in this query, we use `aliases` such as `name: Person.name` to name
+the predicates in the JSON response,as they're declared in the GraphQL schema.
 
 #### GraphQL Interface
 
-DQL does not have the concept of interfaces.
+DQL doesn't have the concept of interfaces.
 
 Considering the following GraphQL schema :
 
@@ -173,16 +172,16 @@ Location.geoloc: geo .
 Location.name: string .
 Property.price: float .
 type Property {
-	Location.name
-	Location.geoloc
-	Property.price
+  Location.name
+  Location.geoloc
+  Property.price
 }
 ```
 
 ### Consequences
 
 The fact that the GraphQL API backend is a graph in Dgraph, implies that you can
-use Dgraph DQL on the data that is also served by the GraphQL API operations.
+use Dgraph DQL on the data that's also served by the GraphQL API operations.
 
 In particular, you can
 
@@ -191,13 +190,13 @@ In particular, you can
   [GraphQL data loading](./graphql-data-loading.md)
 - use DQL to query the graph in the context of authorization rules and custom
   resolvers.
-- add knowledge to your graph such as meta-data, score, annotations, ..., but
-  also relationships or relationships attributes (facets) that could be the
-  result of similarity computation, threat detection a.s.o. The added data could
-  be hidden from your GraphQL API clients but be available to logic written with
-  DQL clients.
+- add knowledge to your graph such as metadata, score, and annotations, but also
+  relationships or relationships attributes (facets) that could be the result of
+  similarity computation, threat detection a.s.o. The added data could be hidden
+  from your GraphQL API clients but be available to logic written with DQL
+  clients.
 - break things using DQL: DQL is powerful and is bypassing constraints expressed
-  in the GraphQL schema. You can for example delete a node predicate that is
+  in the GraphQL schema. You can for example delete a node predicate that's
   mandatory in the GraphQL API! Hopefully there are ways to secure who can
   read/write/delete predicates. ( see the [ACL](./access-control-lists))
   section.

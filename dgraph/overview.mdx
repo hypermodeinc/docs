@@ -6,47 +6,47 @@ description: Dgraph is a horizontally-scalable and distributed graph database.
 ## Dgraph
 
 Designed from day one to be distributed for scale and speed, **Dgraph** is the
-native Graph database with native GraphQL support. It is open-source, scalable,
-distributed, highly-available, and lightning fast.
+native Graph database with native GraphQL support. It is open source, scalable,
+distributed, highly available, and lightning fast.
 
 Dgraph is different from other graph databases in a number of ways, including:
 
-- **Distributed Scale**: &emsp; _Built from day 1 to be distributed, to handle
-  larger data sets._
+- **Distributed Scale**: Built from day 1 to be distributed, to handle larger
+  data sets.
 
-- **GraphQL Support**: &emsp; _GraphQL is built in to make data access simple
-  and standards-compliant. Unlike most GraphQL solutions, no resolvers are
-  needed - Dgraph resolves queries automatically through graph navigation._
+- **GraphQL Support**: GraphQL is built in to make data access simple and
+  standards-compliant. Unlike most GraphQL solutions, no resolvers are needed -
+  Dgraph resolves queries automatically through graph navigation.
 
-- **Fully Transactional and ACID Compliant**: &emsp; _Dgraph satisfies demanding
-  OLTP workloads that require frequent inserts and updates._
+- **Fully Transactional and ACID Compliant**: Dgraph satisfies demanding OLTP
+  workloads that require frequent inserts and updates.
 
-- **Language support & Text Search**: &emsp; _Full-text searching is included
-  and strings can be expressed in multiple languages_
+- **Language support & Text Search**: Full-text searching is included and
+  strings can be expressed in multiple languages.
 
-- **Geo data and geo queries**: &emsp; _Dgraph supports points and shapes data
-  and queries can use near, within, contains, or intersects geo functions_
+- **Geo data and geo queries**: Dgraph supports points and shapes data and
+  queries can use near, within, contains, or intersects geo functions.
 
-- **True Free Open Source Software (FOSS)**: &emsp; _Dgraph is free to use, and
-  [available on github](https://github.com/hypermodeinc/dgraph)._
+- **True Free Open Source Software (FOSS)**: Dgraph is free to use, and
+  [available on github](https://github.com/hypermodeinc/dgraph).
 
 ## Dgraph and GraphQL
 
-In Dgraph, GraphQL is not an afterthought or an add-on; it's core to the
-product. GraphQL developers can get started in minutes, and need not concern
-themselves with the powerful graph database running in the background.
+In Dgraph, GraphQL isn't an afterthought or an add-on–it's core to the product.
+GraphQL developers can get started in minutes, and need not concern themselves
+with the powerful graph database running in the background.
 
 The difference with Dgraph is that no resolvers or custom queries are needed.
-Simply update a GraphQL schema, and all apis are ready to go. The "resolvers"
+Simply update a GraphQL schema, and all APIs are ready to go. The "resolvers"
 are transparently implemented by simply following graph relationships from node
 to node and node to field, and with native graph performance.
 
-For complex queries that the GraphQL specification does not support, Dgraph
+For complex queries that the GraphQL specification doesn't support, Dgraph
 provides a query language called "DQL" which is inspired by GraphQL, but
 includes more features. With GraphQL simple use cases remain simple, and with
 DQL more complex cases become possible.
 
-## The Graph Model - Nodes, Relationships and Values
+## The graph model - nodes, relationships, and values
 
 Dgraph is fundamentally a
 [**property-graph database**](https://www.dataversity.net/what-is-a-property-graph/)
@@ -75,53 +75,57 @@ This JSON structure succinctly represents rich data:
 - **Facet** metadata: the Address relation is qualified with a property
   specifying the Address relationship started on February 20, 2022. \*/}
 
-Dgraph supports [JSON](./json-mutation-format) data as both a return structure
-and an insert/update format. In Dgraph JSON nesting represents relations among
-nodes, so `{ "name":"Bob", "homeAddress": { "Street":"123 Main st" } }`
-efficiently and intuitively represents a Person node, an Address node, and a
-relation (called "homeAddress") between them.
+Dgraph supports [JSON](/dgraph/dql/json-mutation-format) data as both a return
+structure and an insert/update format. In Dgraph JSON nesting represents
+relations among nodes, so
+`{ "name":"Bob", "homeAddress": { "Street":"123 Main st" } }` efficiently and
+intuitively represents a Person node, an Address node, and a relation (called
+"homeAddress") between them.
 
-In addition, Dgraph supports [RDF triples](./dql-rdf) as an input and output
-format.
+In addition, Dgraph supports [RDF triples](/dgraph/dql/rdf) as an input and
+output format.
 
 Dgraph relationships are directed links between nodes, allowing optimized
 traversal from node to node. Dgraph allows a bidirectional relation via directed
 relationships in both directions if desired.
 
-## Application developers and data engineers work together seamlessly
+## App developers and data engineers work together seamlessly
 
 Dgraph allows a particularly smooth interaction among data teams or experts and
 data consumers. GraphQL's flexibility empowers data consumers to get exactly the
 data they want, in the format they want it, at the speed they need, without
 writing custom REST APIs or understanding a new graph query language.
 
-Database experts can focus on the data, schema and indexes, without maintaining
+Database experts can focus on the data, schema, and indexes, without maintaining
 a sprawling set of REST APIs, views, or optimized queries tailored to each data
 consumer or app.
 
-### Dgraph Cloud Cluster Types
+### Dgraph Cloud cluster types
 
 - **Shared Instance**: Dgraph Cloud with
-  [shared instances](https://cloud.dgraph.io/pricing?type=shared) is a
-  fully-managed graph database service that lets you focus on building apps, not
+  [shared instances](https://cloud.dgraph.io/pricing?type=shared) is a fully
+  managed graph database service that lets you focus on building apps, not
   managing infrastructure. This is a fast and easy way to get started with
-  GraphQL, and does not require any graph database knowledge to start and run.
+  GraphQL, and doesn't require any graph database knowledge to start and run.
 
-      Shared instances run in a common database using Dgraph multi-tenancy. Your data is protected but you share resources and will have limited scale.
+  Shared instances run in a common database using Dgraph multi-tenancy. Your
+  data is protected but you share resources and have limited scale.
 
-      Try the [Introduction to GraphQL](https://dgraph.io/tour/graphqlintro/2/) tutorial to define a GraphQL schema, insert and query data in just a few minutes.
+  Try the [Introduction to GraphQL](https://dgraph.io/tour/graphqlintro/2/)
+  tutorial to define a GraphQL schema, insert and query data in just a few
+  minutes.
 
 - **Dedicated instances** run on their own dedicated hardware to ensure
   consistent performance. This option extends the capabilities of the lower-cost
   shared instances to support enterprise, production workloads, and includes a
   high availability option.
 
-## Dgraph Architecture
+## Dgraph architecture
 
 Dgraph scales to larger data sizes than other graph databases because it's
 designed from the ground up to be distributed. Therefore Dgraph runs as a
 cluster of server nodes which communicate to form a single logical data store.
-There are two main types of processes (nodes) running: Zeros and Alphas.
+There are two main types of processes (nodes) running: zeros and alphas.
 
 - **Dgraph Zero** server nodes hold metadata for the Dgraph cluster, coordinate
   distributed transactions, and re-balance data among server groups.
@@ -152,14 +156,14 @@ database:
 
 ### Scale, replication and sharding
 
-Every cluster will have at least one Dgraph Zero node and one Dgraph Alpha node.
-Then databases are expanded in two ways.
+Every cluster has at least one Dgraph Zero node and one Dgraph Alpha node. Then
+databases are expanded in two ways.
 
 - **High Availability Replication**: For high-availability, Dgraph runs with
   three zeros and three alphas instead of one of each. This configuration is
-  recommended for the scale and reliability required by most production
-  applications. Having three servers both triples the capacity of the overall
-  cluster, and also provides redundancy.
+  recommended for the scale and reliability required by most production apps.
+  Having three servers both triples the capacity of the overall cluster, and
+  also provides redundancy.
 
 - **Sharding**: When data sizes approach or exceed 1 TB, Dgraph databases are
   typically sharded so that full data replicas are not kept on any single alpha
@@ -171,7 +175,7 @@ Then databases are expanded in two ways.
   automatically detect, restart and heal any cluster (HA, sharded, both or
   neither) to keep things running smoothly and at full capacity.
 
-## What's Next
+## What's next
 
 - **Get Started** with a [free database instance](https://cloud.dgraph.io)
 - Get familiar with some terms in our [Glossary](/dgraph-glossary)

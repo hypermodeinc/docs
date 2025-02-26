@@ -2,7 +2,7 @@
 title: Importing and Exporting data from Dgraph Cloud
 ---
 
-## Exporting and Importing Data in Dgraph Cloud
+## Exporting and importing data in Dgraph Cloud
 
 You can export your data as an Administrator from one Dgraph Cloud backend, and
 then import this data back into another Dgraph instance or Dgraph Cloud backend.
@@ -14,7 +14,7 @@ information, see [Cloud API documentation](./cloud/cloud-api/backup).
 To import data to Dgraph Cloud, see
 [live loader](./howto/importdata/live-loader).
 
-## Exporting Data with Multi-Tenancy feature enabled in Dgraph Cloud
+## Exporting data with multi-tenancy feature enabled in Dgraph Cloud
 
 <Note>
   With Multi-Tenancy feature enabled, for any GraphQL request you need to
@@ -32,7 +32,7 @@ You can trigger two types of exports:
   request can be triggered by the _Guardian of Galaxy_ users and by the
   _Guardian of Namespace_ users.
 
-### Cluster-wide Exports
+### Cluster-wide exports
 
 This can only be done by the _Guardian of Galaxy_ users (AKA Super Admin), the
 steps are:
@@ -40,62 +40,62 @@ steps are:
 1. Get the `accessJWT` token for the _Guardian of Galaxy_ user. Send the
    following GraphQL mutation to the `/admin` endpoint:
 
-```graphql
-mutation login($userId: String, $password: String, $namespace: Int) {
-  login(userId: $userId, password: $password, namespace: $namespace) {
-    response {
-      accessJWT
-      refreshJWT
-    }
-  }
-}
-```
+   ```graphql
+   mutation login($userId: String, $password: String, $namespace: Int) {
+     login(userId: $userId, password: $password, namespace: $namespace) {
+       response {
+         accessJWT
+         refreshJWT
+       }
+     }
+   }
+   ```
 
-Your variables should be referring to the _Guardian of Galaxy_ user:
+   Your variables should be referring to the _Guardian of Galaxy_ user:
 
-```json
-{
-  "userId": "groot",
-  "password": "password",
-  "namespace": 0
-}
-```
+   ```json
+   {
+     "userId": "groot",
+     "password": "password",
+     "namespace": 0
+   }
+   ```
 
 2. Once obtained the `accessJWT` token you need to pass it in
    `X-Dgraph-AccessToken` Header and only then you can send the following
    GraphQL mutation to `/admin/slash` endpoint:
 
-```graphql
-mutation {
-  export(namespace: -1) {
-    response {
-      code
-      message
-    }
-    exportId
-    taskId
-  }
-}
-```
+   ```graphql
+   mutation {
+     export(namespace: -1) {
+       response {
+         code
+         message
+       }
+       exportId
+       taskId
+     }
+   }
+   ```
 
 3. Once done, you can now send the following GraqhQL mutation to get the
    `signedUrls` from where you can download your export files:
 
-```graphql
-query {
-  exportStatus(
-    exportId: "<paste-your-exportId>"
-    taskId: "<paste-your-taskId>"
-  ) {
-    kind
-    lastUpdated
-    signedUrls
-    status
-  }
-}
-```
+   ```graphql
+   query {
+     exportStatus(
+       exportId: "<paste-your-exportId>"
+       taskId: "<paste-your-taskId>"
+     ) {
+       kind
+       lastUpdated
+       signedUrls
+       status
+     }
+   }
+   ```
 
-### Namespace-specific Exports
+### Namespace-specific exports
 
 Namespace-specific exports can be triggered by the _Guardian of Galaxy_ users.
 In this case you can follow the same steps for the Cluster-wide exports and

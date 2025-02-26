@@ -44,14 +44,14 @@ the filtered objects. It returns the state of the objects after updating.
 updatePost(input: UpdatePostInput!): UpdatePostPayload
 
 input UpdatePostInput {
-	filter: PostFilter!
-	set: PostPatch
-	remove: PostPatch
+  filter: PostFilter!
+  set: PostPatch
+  remove: PostPatch
 }
 
 type UpdatePostPayload {
-	post(filter: PostFilter, order: PostOrder, first: Int, offset: Int): [Post]
-	numUids: Int
+  post(filter: PostFilter, order: PostOrder, first: Int, offset: Int): [Post]
+  numUids: Int
 }
 ```
 

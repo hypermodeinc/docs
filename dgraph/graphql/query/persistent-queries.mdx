@@ -1,8 +1,8 @@
 ---
 title: Persistent Queries
 description:
-  Persistent queries significantly improve the performance of an application as
-  the smaller hash signature reduces bandwidth utilization.
+  Persistent queries significantly improve the performance of an app as the
+  smaller hash signature reduces bandwidth utilization.
 ---
 
 Dgraph supports Persistent Queries. When a client uses persistent queries, the
@@ -10,8 +10,8 @@ client only sends the hash of a query to the server. The server has a list of
 known hashes and uses the associated query accordingly.
 
 Persistent queries significantly improve the performance and the security of an
-application since the smaller hash signature reduces bandwidth utilization and
-speeds up client loading times.
+app since the smaller hash signature reduces bandwidth utilization and speeds up
+client loading times.
 
 ### Persisted Query logic
 
@@ -19,7 +19,7 @@ The execution of Persistent Queries follows this logic:
 
 - If the `extensions` key is not provided in the `GET` request, Dgraph will
   process the request as usual
-- If a `persistedQuery ` exists under the `extensions` key, Dgraph will try to
+- If a `persistedQuery` exists under the `extensions` key, Dgraph will try to
   process a Persisted Query:
   - if no `sha256` hash is provided, process the query without persisting
   - if the `sha256` hash is provided, try to retrieve the persisted query

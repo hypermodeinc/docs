@@ -71,37 +71,35 @@ type Film {
 ' | python -m json.tool
 ```
 
-_Success response_
+The success response looks like:
 
-```
+```json
 {
-    "data": {
-        "code": "Success",
-        "message": "Done"
-    }
+  "data": {
+    "code": "Success",
+    "message": "Done"
+  }
 }
 ```
 
-_Error response_
+In case of errors, the API returns an error message such as:
 
-In case of errors, the API will reply with an error message such as:
-
-```
+```json
 {
-    "errors": [
-        {
-            "extensions": {
-                "code": "Error"
-            },
-            "message": "line 5 column 18: Invalid ending"
-        }
-    ]
+  "errors": [
+    {
+      "extensions": {
+        "code": "Error"
+      },
+      "message": "line 5 column 18: Invalid ending"
+    }
+  ]
 }
 ```
 
 <Note>
-  The request will update or create the predicates and types present in the
-  request. It will not modify or delete other schema information that may be
+  The request updates or creates the predicates and types present in the
+  request. It doesn't modify or delete other schema information that may be
   present.
 </Note>
 
@@ -195,34 +193,32 @@ The result should look like this:
 ```
 
 Notice that along with the query result under the `data` field is additional
-data in the `extensions -> txn` field. This data will have to be tracked by the
+data in the `extensions -> txn` field. This data has to be tracked by the
 client.
 
-For queries, there is a `start_ts` in the response. This `start_ts` will need to
-be used in all subsequent interactions with Dgraph for this transaction, and so
+For queries, there is a `start_ts` in the response. This `start_ts` needs to be
+used in all subsequent interactions with Dgraph for this transaction, and so
 should become part of the transaction state.
 
-## Run a Mutation
+## Run a mutation
 
 Mutations can be done over HTTP by making a `POST` request to an Alpha's
-`/mutate` endpoint. Now that we have the current balances, we need to send a
-mutation to Dgraph with the updated balances. If Bob transfers $10 to Alice,
-then the RDFs to send are:
+`/mutate` endpoint. We need to send a mutation to Dgraph with the updated
+balances. If Bob transfers $10 to Alice, then the RDFs to send are:
 
-```
+```txt
 <0x1> <balance> "110" .
 <0x1> <dgraph.type> "Balance" .
 <0x2> <balance> "60" .
 <0x2> <dgraph.type> "Balance" .
 ```
 
-Note that we have to refer to the Alice and Bob nodes by UID in the RDF format.
+Note that refer to the Alice and Bob nodes by UID in the RDF format.
 
 We now send the mutations via the `/mutate` endpoint. We need to provide our
 transaction start timestamp as a path parameter, so that Dgraph knows which
 transaction the mutation should be part of. We also need to set `Content-Type`
-header to `application/rdf` in order to specify that mutation is written in RDF
-format.
+header to `application/rdf` to specify that mutation is written in RDF format.
 
 ```sh
 $ curl -H "Content-Type: application/rdf" -X POST localhost:8080/mutate?startTs=4 -d $'
@@ -286,12 +282,12 @@ accepts the old format, which was a single array of keys.
 $ curl -X POST localhost:8080/commit?startTs=4 -d $'
 {
   "keys": [
-		"2ahy9oh4s9csc",
-		"3ekeez23q5149"
-	],
+    "2ahy9oh4s9csc",
+    "3ekeez23q5149"
+  ],
   "preds": [
     "1-balance"
-	]
+  ]
 }' | jq
 ```
 
@@ -338,7 +334,7 @@ To abort a transaction, use the same `/commit` endpoint with the `abort=true`
 parameter while specifying the `startTs` value for the transaction.
 
 ```sh
-$ curl -X POST "localhost:8080/commit?startTs=4&abort=true" | jq
+curl -X POST "localhost:8080/commit?startTs=4&abort=true" | jq
 ```
 
 The result:
@@ -445,12 +441,12 @@ curl -X POST --compressed -H "Content-Type: application/dql" localhost:8080/quer
 ## Run a query in JSON format
 
 The HTTP API also accepts requests in JSON format. For queries you have the keys
-"query" and "variables". The JSON format is required to set
+`query` and `variables`. The JSON format is required to set
 [GraphQL Variables](./query-language/graphql-variables) with the HTTP API.
 
 This query:
 
-```
+```dql
 {
   balances(func: anyofterms(name, "Alice Bob")) {
     uid

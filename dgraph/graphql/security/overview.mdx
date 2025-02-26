@@ -89,14 +89,14 @@ conflicting, claims typically have a namespace, and it's a good practice to
 specify the namespace of your claims. put specific claims in a nested structure
 called a namespace.
 
-```
+```json
 {
   "https://mycompany.org/jwt/claims": {
     "username": "auth0|63fe77f32cef38f4fa3dab34",
     "role": "Admin"
   },
-  "name": "raph@dgraph.io",
-  "email": "raph@dgraph.io",
+  "name": "raph@hypermode.com",
+  "email": "raph@@hypermode.com",
   "email_verified": false,
   "iss": "https://dev-5q3n8cc7nckhu5w8.us.auth0.com/",
   "aud": "aqk1CSVtliyoXUfLaaLKSKUtkaIel6Vd",
@@ -105,5 +105,5 @@ called a namespace.
 }
 ```
 
-This json is a JWT token payload containing a namespace
+This JSON is a JWT token payload containing a namespace
 `https://mycompany.org/jwt/claims` having a `username` claim and a `role` claim.

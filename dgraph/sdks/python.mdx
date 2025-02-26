@@ -203,7 +203,7 @@ txn.mutate(del_obj=person)
 ```
 
 For a complete example with multiple fields and relationships, look at the
-[simple project][simple] in the `examples` folder.
+simple project in the `examples` folder.
 
 Sometimes, you only want to commit a mutation, without querying anything
 further. In such cases, you can set the keyword argument `commit_now=True` to
@@ -416,7 +416,7 @@ method `handle_alter_future` to handle any possible exception.
 
 ```python
 alter_future = self.client.async_alter(pydgraph.Operation(
-	schema="name: string @index(term) ."))
+  schema="name: string @index(term) ."))
 response = pydgraph.DgraphClient.handle_alter_future(alter_future)
 ```
 
@@ -447,7 +447,7 @@ alter_future = client.async_alter()
 try:
     response = alter_future.result()
 except Exception as e:
-	# You can use this function in the util package to check for JWT
+  # You can use this function in the util package to check for JWT
     # expired errors.
     if pydgraph.util.is_jwt_expired(e):
         # retry your request here.

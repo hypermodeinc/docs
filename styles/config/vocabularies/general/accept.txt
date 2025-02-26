@@ -84,4 +84,23 @@ WASM
 
 # Dgraph terms
 Alpha
+Bulk Loader
+dgo
+dgraph4j
+gzip
+MinIO
+pydgraph
+Ratel
+[Ss]harding
+S3
+subgraph
+tablet
+UID|UIDs
+[Uu]psert|[Uu]pserts
 Zero
+
+# General
+admin
+Docker Compose
+Helm
+JWT

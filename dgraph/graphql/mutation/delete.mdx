@@ -32,9 +32,9 @@ objects and returns the state of the objects before deletion.
 deleteAuthor(filter: AuthorFilter!): DeleteAuthorPayload
 
 type DeleteAuthorPayload {
-	author(filter: AuthorFilter, order: AuthorOrder, first: Int, offset: Int): [Author]
-	msg: String
-	numUids: Int
+  author(filter: AuthorFilter, order: AuthorOrder, first: Int, offset: Int): [Author]
+  msg: String
+  numUids: Int
 }
 ```
 

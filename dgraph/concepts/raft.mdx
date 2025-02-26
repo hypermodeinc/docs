@@ -1,16 +1,16 @@
 ---
-title: RAFT
+title: Raft
 ---
 
-Dgraph uses RAFT whenever consensus among a distributed set of servers is
+Dgraph uses Raft whenever consensus among a distributed set of servers is
 required, such as ensuring that a transaction has been properly committed, or
 determining the proper timestamp for a read or write. Each zero or alpha `group`
 uses raft to elect leaders.
 
-This section aims to explain the RAFT consensus algorithm in simple terms. The
+This section aims to explain the Raft consensus algorithm in simple terms. The
 idea is to give you just enough to make you understand the basic concepts,
 without going into explanations about why it works accurately. For a detailed
-explanation of RAFT, please read the original thesis paper by
+explanation of Raft, please read the original thesis paper by
 [Diego Ongaro](https://github.com/ongardie/dissertation).
 
 ## Term
@@ -77,7 +77,7 @@ are numbered sequentially and contain a term number. An Entry is considered
 servers.
 
 On being notified of the results of a client request (which is often processed
-on other servers), the leader does four things to coordinate RAFT consensus
+on other servers), the leader does four things to coordinate Raft consensus
 (this is also called Log Replication):
 
 - Appends and persists to its log.
@@ -87,7 +87,7 @@ on other servers), the leader does four things to coordinate RAFT consensus
 - Notifies followers that the entry is committed so that they can apply it to
   their state machines.
 
-A leader never overwrites or deletes its entries. RAFT guarantees that if an
+A leader never overwrites or deletes its entries. Raft guarantees that if an
 entry is committed, all future leaders will have it. A leader can, however,
 force overwrite the followers' logs, so they match leader's logs if necessary.
 
@@ -169,7 +169,7 @@ subsequent RPCs.
 
 Servers must filter out duplicate requests. They can do this via session
 tracking where they use the client id and another request UID set by the client
-to avoid reprocessing duplicate requests. RAFT also suggests storing responses
+to avoid reprocessing duplicate requests. Raft also suggests storing responses
 along with the request UIDs to reply back in case it receives a duplicate
 request.
 

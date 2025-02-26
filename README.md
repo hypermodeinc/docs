@@ -38,8 +38,8 @@ The design and hosting of our docs site is provided by
 [Mintlify](https://mintlify.com/). The vast majority of configuration is in code
 in `mint.json`.
 
-Changes will be deployed to [production](https://docs.hypermode.com)
-automatically after pushing to the `main` branch.
+Changes are deployed to [production](https://docs.hypermode.com) automatically
+after pushing to the `main` branch.
 
 ### Development Environment Setup
 
@@ -109,7 +109,7 @@ trunk fmt
 To run lint checks, run:
 
 ```bash
-trunk check # appending --all will run checks beyond changes on the current branch
+trunk check # appending --all runs checks beyond changes on the current branch
 ```
 
 Note that Trunk also has a
@@ -118,7 +118,7 @@ you can install.
 
 However, when installing it please be aware of the `trunk.autoInit` setting,
 which is `true` (enabled) by default This controls whether to auto-initialize
-trunk in non-trunk repositories - meaning _any_ folder you open with VS Code
-will get configured with a `.trunk` subfolder, and will start using Trunk. You
-should probably set this to `false` in your VS Code user settings, to not
-interfere with other projects you may be working on.
+trunk in non-trunk repositories - meaning _any_ folder you open with VS Code is
+configured with a `.trunk` subfolder, and starts using Trunk. You should
+probably set this to `false` in your VS Code user settings, to not interfere
+with other projects you may be working on.

@@ -60,12 +60,12 @@ Run.
 
 ## Query using UIDs
 
-The UID of the nodes can be used to query them back. The built-in function uid
-takes a list of UIDs as a variadic argument, so you can pass one (e.g. uid(0x1))
-or as many as you need (e.g. uid(0x1, 0x2)).
+The UID of the nodes can be used to query them back. The built-in function `uid`
+takes a list of UIDs as an argument, so you can pass one (`uid(0x1)`) or as many
+as you need (`uid(0x1, 0x2)`).
 
 It returns the same UIDs that were passed as input, no matter whether they exist
-in the database or not. But the predicates asked will be returned only if both
+in the database or not. But the predicates requested are returned only if both
 the UIDs and their predicates exist.
 
 Let's see the `uid` function in action.
@@ -86,7 +86,7 @@ Go to the query tab, type in the query below, and click Run.
 
 Now, from the result, copy the UID of Michael's node.
 
-![get-uid](/images/tutorials/2/b-get-uid-1.png)
+![Get UID](/images/tutorials/2/b-get-uid-1.png)
 
 In the query below, replace the placeholder `MICHAELS_UID` with the UID you just
 copied, and run the query.
@@ -101,7 +101,7 @@ copied, and run the query.
 }
 ```
 
-![get_node_from_uid](/images/tutorials/2/c-query-uid.png)
+![Get node from UID](/images/tutorials/2/c-query-uid.png)
 
 _Note: `MICHAELS_UID` appears as `0x8` in the images. The UID you get on your
 machine might have a different value._
@@ -116,7 +116,7 @@ related to the structure of the query in general.
 
 You can also update one or more predicates of a node using its UID.
 
-Michael recently celebrated his 41st birthday. Let's update his age to 41.
+Michael recently celebrated his birthday. Let's update his age to 41.
 
 Go to the mutate tab and execute the mutation. Again, don't forget to replace
 the placeholder `MICHAELS_UID` with the actual UID of the node for `Michael`.
@@ -224,7 +224,7 @@ The query has three parts:
 - **Selecting the root nodes.**
 
 First, you need to select one or more nodes as the starting point for
-traversals. These are called the root nodes. In the query above, we use the
+traversals. These are called the root nodes. In the preceding query, we use the
 `uid()` function to select the node created for `Michael` as the root node.
 
 - **Choosing the edge to be traversed**
@@ -244,12 +244,12 @@ These are `level-2` nodes. The root nodes constitute the nodes for `level-1`.
 Again, we need to specify which predicates you want to get back from `level-2`
 nodes.
 
-![get_node_from_uid](/images/tutorials/2/j-explain.JPG)
+![Get node from UID](/images/tutorials/2/j-explain.JPG)
 
 You can extend the query to make use of `level-2` nodes and traverse the Graph
 further and deeper. Let's explore that in the next section.
 
-#### Multi-level traversals
+### Multi-level traversals
 
 The first level of traversal returns people followed by Michael. The next level
 of traversal further returns the people they in-turn follow.
@@ -327,9 +327,9 @@ query. But, with a much better querying experience.
 }
 ```
 
-In the query above, the `recurse` function traverses the graph starting from the
-node for `Michael`. You can choose any other node to be the starting point. The
-depth parameter specifies the maximum depth the traversal query should consider.
+In the query, the `recurse` function traverses the graph starting from the node
+for `Michael`. You can choose any other node to be the starting point. The depth
+parameter specifies the maximum depth the traversal query should consider.
 
 Let's run the recursive traversal query after replacing the placeholder with the
 UID of node for Michael.
@@ -362,8 +362,8 @@ syntax of the delete mutation to delete any predicate of a node,
 }
 ```
 
-Using the mutation syntax above, let's compose a delete mutation. Let's delete
-the `age` predicate of the node for `Michael`.
+Using the mutation syntax, let's compose a delete mutation. Let's delete the
+`age` predicate of the node for `Michael`.
 
 ```graphql
 {
@@ -389,7 +389,7 @@ Sounds interesting?
 Check out our next tutorial of the getting started series
 [here](./tutorial-3/index).
 
-## Need Help
+## Need help
 
 - Please use [discuss.dgraph.io](https://discuss.dgraph.io) for questions,
   feature requests, bugs, and discussions.

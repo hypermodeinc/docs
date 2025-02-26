@@ -111,28 +111,28 @@ Here's an example -
 
 1. Schema:
 
-```graphql
-extend type User @key(fields: "id") {
-  id: ID! @external
-  email: String @external
-  reviews: [Review] @requires(fields: "email") @lambda
-}
-```
+   ```graphql
+   extend type User @key(fields: "id") {
+     id: ID! @external
+     email: String @external
+     reviews: [Review] @requires(fields: "email") @lambda
+   }
+   ```
 
-2. Lambda Script:
+2. Lambda script:
 
-```js
-// returns a list of reviews for a user
-async function userReviews({ parent, graphql }) {
-  let reviews = []
-  // find the reviews for a user using the email and return them.
-  // Even though the email has been declared `@external`, it will be available as `parent.email` as it's mentioned in `@requires`.
-  return reviews
-}
-self.addGraphQLResolvers({
-  "User.reviews": userReviews,
-})
-```
+   ```js
+   // returns a list of reviews for a user
+   async function userReviews({ parent, graphql }) {
+     let reviews = []
+     // find the reviews for a user using the email and return them.
+     // Even though the email has been declared `@external`, it will be available as `parent.email` as it's mentioned in `@requires`.
+     return reviews
+   }
+   self.addGraphQLResolvers({
+     "User.reviews": userReviews,
+   })
+   ```
 
 ## Generated queries and mutations
 

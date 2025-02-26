@@ -36,9 +36,9 @@ type User {
 }
 ```
 
-and you had your application working fine with it. Now, you feel that the name
-`AppUser` would be more sensible than the name `User` because `User` seems a bit
-generic to you. Then you are in a situation where you need migration.
+and you had your app working fine with it. Now, you feel that the name `AppUser`
+would be more sensible than the name `User` because `User` seems a bit generic
+to you. Then you are in a situation where you need migration.
 
 This can be handled in a couple of ways:
 
@@ -48,9 +48,9 @@ This can be handled in a couple of ways:
 
 Depending on your use-case, you might find option 1 or 2 better for you. For
 example, if you have accumulated very little data for the `User` type till now,
-then you might want to go with option #1. But, if you have an active application
-with a very large dataset then updating the node of each user may not be a thing
-you might want to commit to, as that can require some maintenance downtime. So,
+then you might want to go with option #1. But, if you have an active app with a
+very large dataset then updating the node of each user may not be a thing you
+might want to commit to, as that can require some maintenance downtime. So,
 option #2 could be a better choice in such conditions.
 
 Option #2 makes your new schema compatible with your existing data. Here's an

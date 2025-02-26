@@ -19,40 +19,38 @@ access the data permitted by the ACL rules.
 
 ## Enable enterprise ACL feature
 
-1.  Generate a data encryption key that is 32 bytes long:
+1. Generate a data encryption key that is 32 bytes long:
 
-    ```bash
-    tr -dc 'a-zA-Z0-9' < /dev/urandom | dd bs=1 count=32 of=enc_key_file
-    ```
+   ```bash
+   tr -dc 'a-zA-Z0-9' < /dev/urandom | dd bs=1 count=32 of=enc_key_file
+   ```
 
-<Note>
-  On a macOS you may have to use `LC_CTYPE=C; tr -dc 'a-zA-Z0-9' < /dev/urandom | dd bs=1 count=32 of=enc_key_file`.
-</Note>
+   <Note>On a macOS you may have to use `LC_CTYPE=C; tr -dc 'a-zA-Z0-9' < /dev/urandom | dd bs=1 count=32 of=enc_key_file`.</Note>
 
-1.  To view the secret key value use `cat enc_key_file`.
-1.  Create a plain text file named `hmac_secret_file`, and store a randomly
-    generated `<SECRET KEY VALUE>` in it. The secret key is used by Dgraph Alpha
-    nodes to sign JSON Web Tokens (JWT).
+2. To view the secret key value use `cat enc_key_file`.
+3. Create a plain text file named `hmac_secret_file`, and store a randomly
+   generated `<SECRET KEY VALUE>` in it. The secret key is used by Dgraph Alpha
+   nodes to sign JSON Web Tokens (JWT).
 
-    ```bash
-    echo '<SECRET KEY VALUE>' > hmac_secret_file
-    ```
+   ```bash
+   echo '<SECRET KEY VALUE>' > hmac_secret_file
+   ```
 
-1.  Start all the Dgraph Alpha nodes in your cluster with the option
-    `--acl secret-file="/path/to/secret"`, and make sure that they are all using
-    the same secret key file created in Step 1. Alternatively, you can
-    [store the secret in Hashicorp Vault](#storing-acl-secret-in-hashicorp-vault).
+4. Start all the Dgraph Alpha nodes in your cluster with the option
+   `--acl secret-file="/path/to/secret"`, and make sure that they use the same
+   secret key file created in Step 1. Alternatively, you can
+   [store the secret in HashiCorp Vault](#storing-acl-secret-in-hashicorp-vault).
 
-    ```bash
-    dgraph alpha --acl "secret-file=/path/to/secret" --security "whitelist=<permitted-ip-addresses>"
-    ```
+   ```bash
+   dgraph alpha --acl "secret-file=/path/to/secret" --security "whitelist=<permitted-ip-addresses>"
+   ```
 
 <Tip>
 In addition to command line flags
 `--acl secret-file="/path/to/secret"` and
 `--security "whitelist=<permitted-ip-addresses>"`, you can also configure Dgraph
 using a configuration file (`config.yaml`, `config.json`). You can also use
-environment variables, i.e. `DGRAPH_ALPHA_ACL="secret-file=</path/to/secret>"`
+environment variables such as `DGRAPH_ALPHA_ACL="secret-file=</path/to/secret>"`
 and `DGRAPH_ALPHA_SECURITY="whitelist=<permitted-ip-addresses>"`. See
 [Config](./deploy/config) for more information in general about configuring
 Dgraph.
@@ -170,6 +168,7 @@ Do the following to set up on the
    [K/V Version 2](https://www.vaultproject.io/docs/secrets/kv/kv-v2)). For
    example, you can upload this below to KV Secrets Engine Version 2 path of
    `secret/data/dgraph/alpha`:
+
    ```json
    {
      "options": {
@@ -180,14 +179,17 @@ Do the following to set up on the
      }
    }
    ```
+
 4. Create or use a role with an attached policy that grants access to the
    secret. For example, the following policy would grant access to
    `secret/data/dgraph/alpha`:
+
    ```hcl
    path "secret/data/dgraph/*" {
      capabilities = [ "read", "update" ]
    }
    ```
+
 5. Using the `role_id` generated from the previous step, create a corresponding
    `secret_id`, and copy the `role_id` and `secret_id` over to local files, like
    `./dgraph/vault/role_id` and `./dgraph/vault/secret_id`, that will be used by
@@ -412,7 +414,7 @@ curl http://localhost:8080/admin --silent --request POST \
   Parsing JSON results on the command line can be challenging, so you will find
   some alternatives to extract the desired data using popular tools, such as
   [the silver searcher](https://github.com/ggreer/the_silver_searcher) or the
-  json query tool [jq](https://stedolan.github.io/jq), embedded in this snippet.
+  JSON query tool [jq](https://stedolan.github.io/jq), embedded in this snippet.
 </Tip>
 
 ## User and group administration
@@ -848,7 +850,7 @@ group's ACL rules, e.g.
 }
 ```
 
-## Reset Groot Password
+## Reset Groot password
 
 If you have forgotten the password to the `groot` user, then you may reset the
 `groot` password (or the password for any user) by following these steps.
@@ -861,6 +863,7 @@ If you have forgotten the password to the `groot` user, then you may reset the
 4. Connect to Dgraph Alpha using Ratel and run the following upsert mutation to
    update the `groot` password to `newpassword` (choose your own secure
    password):
+
    ```graphql
    upsert {
      query {
@@ -873,6 +876,7 @@ If you have forgotten the password to the `groot` user, then you may reset the
      }
    }
    ```
+
 5. Restart Dgraph Alpha with ACLs turned on by setting the `--acl_hmac_secret`
    config flag.
 6. Login as groot with your new password.
