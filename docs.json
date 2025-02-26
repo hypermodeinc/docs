@@ -142,8 +142,8 @@
           {
             "group": "Query Language Reference",
             "pages": [
+              "dgraph/dql/json",
               "dgraph/dql/rdf",
-              "dgraph/dql/json-mutation-format",
               "dgraph/dql/schema",
               "dgraph/dql/query",
               "dgraph/dql/mutation",
