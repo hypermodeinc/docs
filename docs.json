@@ -148,8 +148,6 @@
               "dgraph/dql/query",
               "dgraph/dql/mutation",
               "dgraph/dql/upsert",
-              "dgraph/dql/uid-upsert",
-              "dgraph/dql/val-upsert",
               "dgraph/dql/facets",
               "dgraph/dql/tips",
               {
