@@ -90,7 +90,7 @@ $ curl -H "Content-Type: application/rdf" "localhost:8080/mutate?commitNow=true"
   set {
     _:dgraph <name> "Dgraph" .
     _:dgraph <dgraph.type> "Software" .
-    _:dgraph <url> "https://github.com/dgraph-io/dgraph" .
+    _:dgraph <url> "https://github.com/hypermodeinc/dgraph" .
     _:dgraph <description> "Fast, Transactional, Distributed Graph Database." .
   }
 }'
@@ -101,7 +101,7 @@ $ curl -H "Content-Type: application/rdf" "localhost:8080/mutate?commitNow=true"
   set {
     _:badger <name> "Badger" .
     _:badger <dgraph.type> "Software" .
-    _:badger <url> "https://github.com/dgraph-io/badger" .
+    _:badger <url> "https://github.com/hypermodeinc/badger" .
     _:badger <description> "Embeddable, persistent and fast key-value (KV) database written in pure Go." .
   }
 }'
@@ -173,11 +173,11 @@ this is the full-text index ([0x8][tok_fulltext]). These IDs match the index IDs
 in [tok.go][tok].
 
 [tok_term]:
-  https://github.com/dgraph-io/dgraph/blob/ce82aaafba3d9e57cf5ea1aeb9b637193441e1e2/tok/tok.go#L39
+  https://github.com/hypermodeinc/dgraph/blob/ce82aaafba3d9e57cf5ea1aeb9b637193441e1e2/tok/tok.go#L39
 [tok_fulltext]:
-  https://github.com/dgraph-io/dgraph/blob/ce82aaafba3d9e57cf5ea1aeb9b637193441e1e2/tok/tok.go#L48
+  https://github.com/hypermodeinc/dgraph/blob/ce82aaafba3d9e57cf5ea1aeb9b637193441e1e2/tok/tok.go#L48
 [tok]:
-  https://github.com/dgraph-io/dgraph/blob/ce82aaafba3d9e57cf5ea1aeb9b637193441e1e2/tok/tok.go#L37-L53
+  https://github.com/hypermodeinc/dgraph/blob/ce82aaafba3d9e57cf5ea1aeb9b637193441e1e2/tok/tok.go#L37-L53
 
 ## Key Lookup
 
@@ -205,7 +205,7 @@ $ dgraph debug --postings ./p --lookup 000000000000000000000375726c0000000000000
 ```text
 Opening DB: ./p
 
-Key: 000000000000000000000375726c000000000000000001 Length: 1 Is multi-part list? false Uid: 18446744073709551615 Op: 1  Type: STRING.  String Value: "https://github.com/dgraph-io/dgraph
+Key: 000000000000000000000375726c000000000000000001 Length: 1 Is multi-part list? false Uid: 18446744073709551615 Op: 1  Type: STRING.  String Value: "https://github.com/hypermodeinc/dgraph
 ```
 
 For index keys, a lookup shows the UIDs that are part of this index. Below, we

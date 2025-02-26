@@ -62,20 +62,20 @@ flags not shown here are unchanged in release v21.03.
 
 ### ACL superflag
 
-|            Old flag | Old type      | New superflag and options | New type                                                                        | Applies to |                                    Notes                                    |
-| ------------------: | :------------ | ------------------------: | :------------------------------------------------------------------------------ | :--------: | :-------------------------------------------------------------------------: |
-|                     |               |               **`--acl`** |                                                                                 |            | [Access Control List](./enterprise-features/access-control-lists) superflag |
-| `--acl_secret_file` | string        |             `secret-file` | string                                                                          |  `alpha`   |      File that stores the HMAC secret that is used for signing the JWT      |
-|  `--acl_access_ttl` | time.Duration |              `access-ttl` | [string](https://github.com/dgraph-io/ristretto/blob/master/z/flags.go#L80-L98) |  `alpha`   |                           TTL for the access JWT                            |
-| `--acl_refresh_ttl` | time.Duration |             `refresh-ttl` | [string](https://github.com/dgraph-io/ristretto/blob/master/z/flags.go#L80-L98) |  `alpha`   |                         The TTL for the refresh JWT                         |
+|            Old flag | Old type      | New superflag and options | New type                                                                         | Applies to |                                    Notes                                    |
+| ------------------: | :------------ | ------------------------: | :------------------------------------------------------------------------------- | :--------: | :-------------------------------------------------------------------------: |
+|                     |               |               **`--acl`** |                                                                                  |            | [Access Control List](./enterprise-features/access-control-lists) superflag |
+| `--acl_secret_file` | string        |             `secret-file` | string                                                                           |  `alpha`   |      File that stores the HMAC secret that is used for signing the JWT      |
+|  `--acl_access_ttl` | time.Duration |              `access-ttl` | [string](https://github.com/hypermodeinc/ristretto/blob/main/z/flags.go#L80-L98) |  `alpha`   |                           TTL for the access JWT                            |
+| `--acl_refresh_ttl` | time.Duration |             `refresh-ttl` | [string](https://github.com/hypermodeinc/ristretto/blob/main/z/flags.go#L80-L98) |  `alpha`   |                         The TTL for the refresh JWT                         |
 
 ### Badger superflag
 
-|               Old flag | Old type |                  New superflag and options | New type |        Applies to         |                       Notes                       |
-| ---------------------: | :------- | -----------------------------------------: | :------- | :-----------------------: | :-----------------------------------------------: |
-|                        |          |                             **`--badger`** |          |                           | [Badger](https://dgraph.io/docs/badger) superflag |
-| `--badger.compression` | string   |                              `compression` | string   | `alpha`, `bulk`, `backup` |   Specifies the compression level and algorithm   |
-|                        |          | (new) [`numgoroutines`](./troubleshooting) | int      | `alpha`, `bulk`, `backup` |       Number of Go routines used by Dgraph        |
+|               Old flag | Old type |                  New superflag and options | New type |        Applies to         |                     Notes                     |
+| ---------------------: | :------- | -----------------------------------------: | :------- | :-----------------------: | :-------------------------------------------: |
+|                        |          |                             **`--badger`** |          |                           |     [Badger](/badger/overview) superflag      |
+| `--badger.compression` | string   |                              `compression` | string   | `alpha`, `bulk`, `backup` | Specifies the compression level and algorithm |
+|                        |          | (new) [`numgoroutines`](./troubleshooting) | int      | `alpha`, `bulk`, `backup` |     Number of Go routines used by Dgraph      |
 
 <Note>
   The `--badger` superflag allows you to set many advanced [Badger
@@ -109,14 +109,14 @@ flags not shown here are unchanged in release v21.03.
 
 ### GraphQL superflag
 
-|                  Old flag | Old type      | New superflag and options | New type                                                                        | Applies to |                                     Notes                                      |
-| ------------------------: | :------------ | ------------------------: | :------------------------------------------------------------------------------ | :--------: | :----------------------------------------------------------------------------: |
-|                           |               |           **`--graphql`** |                                                                                 |            |                               GraphQL superflag                                |
-| `--graphql_introspection` | bool          |           `introspection` | bool                                                                            |  `alpha`   |                      Enables GraphQL schema introspection                      |
-|         `--graphql_debug` | bool          |                   `debug` | bool                                                                            |  `alpha`   |                         Enables debug mode in GraphQL                          |
-|    `--graphql_extensions` | bool          |              `extensions` | bool                                                                            |  `alpha`   |                  Enables extensions in GraphQL response body                   |
-| `--graphql_poll_interval` | time.Duration |           `poll-interval` | [string](https://github.com/dgraph-io/ristretto/blob/master/z/flags.go#L80-L98) |  `alpha`   |                 The polling interval for GraphQL subscriptions                 |
-|    `--graphql_lambda_url` | string        |              `lambda-url` | string                                                                          |  `alpha`   | The URL of a lambda server that implements custom GraphQL JavaScript resolvers |
+|                  Old flag | Old type      | New superflag and options | New type                                                                         | Applies to |                                     Notes                                      |
+| ------------------------: | :------------ | ------------------------: | :------------------------------------------------------------------------------- | :--------: | :----------------------------------------------------------------------------: |
+|                           |               |           **`--graphql`** |                                                                                  |            |                               GraphQL superflag                                |
+| `--graphql_introspection` | bool          |           `introspection` | bool                                                                             |  `alpha`   |                      Enables GraphQL schema introspection                      |
+|         `--graphql_debug` | bool          |                   `debug` | bool                                                                             |  `alpha`   |                         Enables debug mode in GraphQL                          |
+|    `--graphql_extensions` | bool          |              `extensions` | bool                                                                             |  `alpha`   |                  Enables extensions in GraphQL response body                   |
+| `--graphql_poll_interval` | time.Duration |           `poll-interval` | [string](https://github.com/hypermodeinc/ristretto/blob/main/z/flags.go#L80-L98) |  `alpha`   |                 The polling interval for GraphQL subscriptions                 |
+|    `--graphql_lambda_url` | string        |              `lambda-url` | string                                                                           |  `alpha`   | The URL of a lambda server that implements custom GraphQL JavaScript resolvers |
 
 ### Limit superflag
 

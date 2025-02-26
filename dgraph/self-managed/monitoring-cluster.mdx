@@ -33,7 +33,7 @@ This Helm chart also installs [Grafana](http://grafana.com/),
    values as appropriate for adding endpoints, adding alert rules, adjusting
    alert manager configuration, adding Grafana dashboard, and others. For more
    information see,
-   [Dgraph helm chart values](https://github.com/dgraph-io/dgraph/tree/main/contrib/config/monitoring/prometheus/chart-values).
+   [Dgraph helm chart values](https://github.com/hypermodeinc/dgraph/tree/main/contrib/config/monitoring/prometheus/chart-values).
 
    ```yaml
    prometheusOperator:
@@ -187,7 +187,7 @@ This Helm chart also installs [Grafana](http://grafana.com/),
    file.
 1. In the **Dashboards** menu of Grafana, select **Import**.
 1. In the **Dashboards/Import dashboard** page copy the contents of the
-   [dgraph-kubernetes-grafana-dashboard.json](https://github.com/dgraph-io/dgraph/blob/main/contrib/config/monitoring/grafana/dgraph-kubernetes-grafana-dashboard.json)
+   [dgraph-kubernetes-grafana-dashboard.json](https://github.com/hypermodeinc/dgraph/blob/main/contrib/config/monitoring/grafana/dgraph-kubernetes-grafana-dashboard.json)
    file in **Import via panel json** and click **Load**.
 
    You can visualize all Dgraph Alpha and Zero Kubernetes Pods, using the regex
@@ -339,5 +339,5 @@ from the [Dgraph Bulk Loader](./bulk-loader). You can use
 to copy the data to the Pod volume before the Alpha process runs.
 
 See the `initContainers` configuration in
-[dgraph-ha.yaml](https://github.com/dgraph-io/dgraph/blob/main/contrib/config/kubernetes/dgraph-ha/dgraph-ha.yaml)
+[dgraph-ha.yaml](https://github.com/hypermodeinc/dgraph/blob/main/contrib/config/kubernetes/dgraph-ha/dgraph-ha.yaml)
 to learn more.

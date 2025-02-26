@@ -4,15 +4,16 @@ title: Access Control Lists
 
 <Note>
   This feature was introduced in
-  [v1.1.0](https://github.com/dgraph-io/dgraph/releases/tag/v1.1.0). The `dgraph
-  acl` command is deprecated and will be removed in a future release. ACL
-  changes can be made by using the `/admin` GraphQL endpoint on any Alpha node.
+  [v1.1.0](https://github.com/hypermodeinc/dgraph/releases/tag/v1.1.0). The
+  `dgraph acl` command is deprecated and will be removed in a future release.
+  ACL changes can be made by using the `/admin` GraphQL endpoint on any Alpha
+  node.
 </Note>
 
 Access Control List (ACL) provides access protection to your data stored in
 Dgraph. When the ACL feature is enabled, a client, e.g.
-[dgo](https://github.com/dgraph-io/dgo) or
-[dgraph4j](https://github.com/dgraph-io/dgraph4j), must authenticate with a
+[dgo](https://github.com/hypermodeinc/dgo) or
+[dgraph4j](https://github.com/hypermodeinc/dgraph4j), must authenticate with a
 username and password before executing any transactions, and is only allowed to
 access the data permitted by the ACL rules.
 
@@ -194,7 +195,7 @@ Do the following to set up on the
 
 <Tip>
   To learn more about the above steps, see [Dgraph Vault Integration:
-  Docker](https://github.com/dgraph-io/dgraph/blob/main/contrib/config/vault/docker/README.md).
+  Docker](https://github.com/hypermodeinc/dgraph/blob/main/contrib/config/vault/docker/README.md).
 </Tip>
 
 <Note>
@@ -375,12 +376,12 @@ method.
 
 Here are some code samples using a client:
 
-- **Go** ([dgo client](https://github.com/dgraph-io/dgo)): example
+- **Go** ([dgo client](https://github.com/hypermodeinc/dgo)): example
   `acl_over_tls_test.go`
-  ([here](https://github.com/dgraph-io/dgraph/blob/main/tlstest/acl/acl_over_tls_test.go))
-- **Java** ([dgraph4j](https://github.com/dgraph-io/dgraph4j)): example
+  ([here](https://github.com/hypermodeinc/dgraph/blob/main/tlstest/acl/acl_over_tls_test.go))
+- **Java** ([dgraph4j](https://github.com/hypermodeinc/dgraph4j)): example
   `AclTest.java`
-  ([here](https://github.com/dgraph-io/dgraph4j/blob/master/src/test/java/io/dgraph/AclTest.java))
+  ([here](https://github.com/hypermodeinc/dgraph4j/blob/main/src/test/java/io/dgraph/AclTest.java))
 
 ### Login using curl
 

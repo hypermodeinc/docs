@@ -8,7 +8,7 @@ server with `--replicas 3` flag, so that all data is replicated on three Alpha
 servers and forms one Alpha group. You can install a highly available cluster
 using:
 
-- [dgraph-ha.yaml](https://github.com/dgraph-io/dgraph/blob/main/contrib/config/kubernetes/dgraph-ha/dgraph-ha.yaml)
+- [dgraph-ha.yaml](https://github.com/hypermodeinc/dgraph/blob/main/contrib/config/kubernetes/dgraph-ha/dgraph-ha.yaml)
   file
 - Helm charts.
 
@@ -44,13 +44,13 @@ using:
     ```
 
     After your Kubernetes cluster is up, you can use
-    [dgraph-ha.yaml](https://github.com/dgraph-io/dgraph/blob/main/contrib/config/kubernetes/dgraph-ha/dgraph-ha.yaml)
+    [dgraph-ha.yaml](https://github.com/hypermodeinc/dgraph/blob/main/contrib/config/kubernetes/dgraph-ha/dgraph-ha.yaml)
     to start the cluster.
 
 1.  Start a StatefulSet that creates Pods with `Zero`, `Alpha`, and `Ratel UI`:
 
     ```bash
-    kubectl create --filename https://raw.githubusercontent.com/dgraph-io/dgraph/main/contrib/config/kubernetes/dgraph-ha/dgraph-ha.yaml
+    kubectl create --filename https://raw.githubusercontent.com/hypermodeinc/dgraph/main/contrib/config/kubernetes/dgraph-ha/dgraph-ha.yaml
     ```
 
     An output similar to this appears:
@@ -104,7 +104,7 @@ using:
 Delete all the resources using:
 
 ```sh
-kubectl delete --filename https://raw.githubusercontent.com/dgraph-io/dgraph/main/contrib/config/kubernetes/dgraph-ha/dgraph-ha.yaml
+kubectl delete --filename https://raw.githubusercontent.com/hypermodeinc/dgraph/main/contrib/config/kubernetes/dgraph-ha/dgraph-ha.yaml
 kubectl delete persistentvolumeclaims --selector app=dgraph-zero
 kubectl delete persistentvolumeclaims --selector app=dgraph-alpha
 ```

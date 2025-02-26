@@ -4,7 +4,7 @@ title: Encryption at Rest
 
 <Note>
   This feature was introduced in
-  [v1.1.1](https://github.com/dgraph-io/dgraph/releases/tag/v1.1.1). For
+  [v1.1.1](https://github.com/hypermodeinc/dgraph/releases/tag/v1.1.1). For
   migrating unencrypted data to a new Dgraph cluster with encryption enabled,
   you need to [export the database](./dgraph-administration.md#export-database)
   and [import data](./about_import), preferably using the [bulk
@@ -21,8 +21,8 @@ algorithm to encrypt the data and secure it.
 
 Prior to v20.07.0, the encryption key file must be present on the local file
 system. Starting with
-[v20.07.0](https://github.com/dgraph-io/dgraph/releases/tag/v20.07.0), we have
-added support for encryption keys sitting on Vault servers. This allows an
+[v20.07.0](https://github.com/hypermodeinc/dgraph/releases/tag/v20.07.0), we
+have added support for encryption keys sitting on Vault servers. This allows an
 alternate way to configure the encryption keys needed for encrypting the data at
 rest.
 
@@ -109,7 +109,7 @@ prerequisites for the Vault Server.
 
 <Tip>
   To learn more about the above steps, see [Dgraph Vault Integration:
-  Docker](https://github.com/dgraph-io/dgraph/blob/main/contrib/config/vault/docker/README.md).
+  Docker](https://github.com/hypermodeinc/dgraph/blob/main/contrib/config/vault/docker/README.md).
 </Tip>
 
 <Note>
