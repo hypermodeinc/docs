@@ -10,11 +10,11 @@ the query root or in filters.
   Support for filters on non-indexed predicates was added with Dgraph `v1.2.0`.
 </Note>
 
-Comparison functions (`eq`, `ge`, `gt`, `le`, `lt`) in the query root (aka
-`func:`) can only be applied on [indexed predicates](./dql-schema.md#indexing).
-Since v1.2, comparison functions can now be used on
+Comparison functions (`eq`, `ge`, `gt`, `le`, `lt`) in the query root (`func:`)
+can only be applied on [indexed predicates](./dql-schema.md#indexing). Since
+v1.2, comparison functions can now be used on
 [@filter](./query-language/graphql-fundamentals.md#applying-filters) directives
-even on predicates that have not been indexed. Filtering on non-indexed
+even on predicates that haven't been indexed. Filtering on non-indexed
 predicates can be slow for large datasets, as they require iterating over all of
 the possible values at the level where the filter is being used.
 
@@ -22,13 +22,13 @@ All other functions, in the query root or in the filter can only be applied to
 indexed predicates.
 
 For functions on string valued predicates, if no language preference is given,
-the function is applied to all languages and strings without a language tag; if
+the function is applied to all languages and strings without a language tag. If
 a language preference is given, the function is applied only to strings of the
 given language.
 
 ## Term matching
 
-### allofterms
+### `allofterms`
 
 Syntax Example: `allofterms(predicate, "space-separated term list")`
 
@@ -36,11 +36,11 @@ Schema Types: `string`
 
 Index Required: `term`
 
-Matches strings that have all specified terms in any order; case insensitive.
+Matches strings that have all specified terms in any order, case-insensitive.
 
 #### Usage at root
 
-Query Example: All nodes that have `name` containing terms `indiana` and
+Query Example: all nodes that have `name` containing terms `indiana` and
 `jones`, returning the English name and genre in English.
 
 ```json
@@ -52,9 +52,9 @@ Query Example: All nodes that have `name` containing terms `indiana` and
 }
 ```
 
-#### Usage as Filter
+#### Usage as filter
 
-Query Example: All Steven Spielberg films that contain the words `indiana` and
+Query Example: all Steven Spielberg films that contain the words `indiana` and
 `jones`. The `@filter(has(director.film))` removes nodes with name Steven
 Spielberg that aren't the director --- the data also contains a character in a
 film called Steven Spielberg.
@@ -72,7 +72,7 @@ film called Steven Spielberg.
 }
 ```
 
-### anyofterms
+### `anyofterms`
 
 Syntax Example: `anyofterms(predicate, "space-separated term list")`
 
@@ -118,7 +118,7 @@ Steven Spielberg.
 }
 ```
 
-## Regular Expressions
+## Regular expressions
 
 Syntax Examples: `regexp(predicate, /regular-expression/)` or case insensitive
 `regexp(predicate, /regular-expression/i)`
@@ -131,10 +131,9 @@ Matches strings by regular expression. The regular expression language is that
 of [go regular expressions](https://golang.org/pkg/regexp/syntax/).
 
 Query Example: At root, match nodes with `Steven Sp` at the start of `name`,
-followed by any characters. For each such matched uid, match the films
+followed by any characters. For each such matched UID, match the films
 containing `ryan`. Note the difference with `allofterms`, which would match only
-`ryan` but regular expression search will also match within terms, such as
-`bryan`.
+`ryan` but regular expression search also matches within terms, such as `bryan`.
 
 ```json
 {
@@ -152,20 +151,20 @@ A Trigram is a substring of three continuous runes. For example, `Dgraph` has
 trigrams `Dgr`, `gra`, `rap`, `aph`.
 
 To ensure efficiency of regular expression matching, Dgraph uses
-[trigram indexing](https://swtch.com/~rsc/regexp/regexp4.html). That is, Dgraph
-converts the regular expression to a trigram query, uses the trigram index and
-trigram query to find possible matches and applies the full regular expression
-search only to the possibles.
+[trigram indexing](https://swtch.com/~rsc/regexp/regexp4.html). Dgraph converts
+the regular expression to a trigram query, uses the trigram index and trigram
+query to find possible matches and applies the full regular expression search
+only to the possibles.
 
-### Writing Efficient Regular Expressions and Limitations
+### Writing efficient regular expressions and limitations
 
 Keep the following in mind when designing regular expression queries.
 
 - At least one trigram must be matched by the regular expression (patterns
-  shorter than 3 runes are not supported). That is, Dgraph requires regular
+  shorter than 3 runes aren't supported) since Dgraph requires regular
   expressions that can be converted to a trigram query.
 - The number of alternative trigrams matched by the regular expression should be
-  as small as possible (`[a-zA-Z][a-zA-Z][0-9]` is not a good idea). Many
+  as small as possible (`[a-zA-Z][a-zA-Z][0-9]` isn't a good idea). Many
   possible matches means the full regular expression is checked against many
   strings; where as, if the expression enforces more trigrams to match, Dgraph
   can make better use of the index and check the full regular expression against
@@ -179,7 +178,7 @@ Keep the following in mind when designing regular expression queries.
 - Repeat specifications after bracket expressions (e.g. `[fgh]{7}`, `[0-9]+` or
   `[a-z]{3,5}`) are often considered as matching any string because they match
   too many trigrams.
-- If the partial result (for subset of trigrams) exceeds 1000000 uids during
+- If the partial result (for subset of trigrams) exceeds 1000000 UIDs during
   index scan, the query is stopped to prohibit expensive queries.
 
 ## Fuzzy matching

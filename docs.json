@@ -143,13 +143,14 @@
             "group": "Query Language Reference",
             "pages": [
               "dgraph/dql/rdf",
+              "dgraph/dql/json-mutation-format",
+              "dgraph/dql/schema",
               "dgraph/dql/query",
               "dgraph/dql/mutation",
               "dgraph/dql/upsert",
               "dgraph/dql/uid-upsert",
               "dgraph/dql/val-upsert",
               "dgraph/dql/facets",
-              "dgraph/dql/json-mutation-format",
               "dgraph/dql/tips",
               {
                 "group": "Statements",
@@ -177,7 +178,6 @@
                   "dgraph/dql/query-variables",
                   "dgraph/dql/recurse-query",
                   "dgraph/dql/schema-request",
-                  "dgraph/dql/schema",
                   "dgraph/dql/sorting",
                   "dgraph/dql/value-variables"
                 ]
