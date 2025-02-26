@@ -136,7 +136,7 @@
               "dgraph/sdks/python",
               "dgraph/sdks/java",
               "dgraph/sdks/javascript",
-              "dgraph/sdks/csharp"
+              "dgraph/sdks/dotnet"
             ]
           },
           {
