@@ -142,11 +142,18 @@
           {
             "group": "Query Language Reference",
             "pages": [
+              "dgraph/dql/rdf",
+              "dgraph/dql/query",
+              "dgraph/dql/mutation",
+              "dgraph/dql/upsert",
+              "dgraph/dql/uid-upsert",
+              "dgraph/dql/val-upsert",
+              "dgraph/dql/facets",
+              "dgraph/dql/json-mutation-format",
+              "dgraph/dql/tips",
               {
                 "group": "Statements",
                 "pages": [
-                  "dgraph/dql/query",
-                  "dgraph/dql/mutation",
                   "dgraph/dql/aggregation",
                   "dgraph/dql/alias",
                   "dgraph/dql/cascade-directive",
@@ -155,13 +162,11 @@
                   "dgraph/dql/debug",
                   "dgraph/dql/expand-predicates",
                   "dgraph/dql/external-ids-upsert-block",
-                  "dgraph/dql/facets",
                   "dgraph/dql/fragments",
                   "dgraph/dql/functions",
                   "dgraph/dql/groupby",
                   "dgraph/dql/ignorereflex-directive",
                   "dgraph/dql/indexing-custom-tokenizers",
-                  "dgraph/dql/json-mutation-format",
                   "dgraph/dql/kshortest-path-queries",
                   "dgraph/dql/language-support",
                   "dgraph/dql/math-on-value-variables",
@@ -170,15 +175,10 @@
                   "dgraph/dql/pagination",
                   "dgraph/dql/predicate-indexing",
                   "dgraph/dql/query-variables",
-                  "dgraph/dql/rdf",
                   "dgraph/dql/recurse-query",
                   "dgraph/dql/schema-request",
                   "dgraph/dql/schema",
                   "dgraph/dql/sorting",
-                  "dgraph/dql/tips",
-                  "dgraph/dql/uid-upsert",
-                  "dgraph/dql/upserts",
-                  "dgraph/dql/val-upsert",
                   "dgraph/dql/value-variables"
                 ]
               }
@@ -189,10 +189,14 @@
             "pages": [
               "dgraph/graphql/overview",
               "dgraph/graphql/quickstart",
-              "dgraph/graphql/connecting",
-              "dgraph/graphql/http",
-              "dgraph/graphql/api",
-              "dgraph/graphql/variables",
+              {
+                "group": "Connecting",
+                "pages": [
+                  "dgraph/graphql/connecting",
+                  "dgraph/graphql/api",
+                  "dgraph/graphql/http"
+                ]
+              },
               {
                 "group": "Schema",
                 "pages": [
@@ -218,6 +222,7 @@
                   "dgraph/graphql/schema/migration",
                   "dgraph/graphql/schema/documentation",
                   "dgraph/graphql/schema/reserved",
+                  "dgraph/graphql/schema/federation",
                   "dgraph/graphql/schema/graphql-dql"
                 ]
               },
@@ -233,6 +238,7 @@
                   "dgraph/graphql/query/persistent-queries",
                   "dgraph/graphql/query/search-filtering",
                   "dgraph/graphql/query/skip-include",
+                  "dgraph/graphql/query/variables",
                   "dgraph/graphql/query/vector-similarity"
                 ]
               },
@@ -282,15 +288,13 @@
               "dgraph/admin/drop-data",
               "dgraph/admin/update-dgraph-types",
               "dgraph/admin/export",
-              "dgraph/admin/export-data",
               "dgraph/admin/import",
-              "dgraph/admin/log-format",
+              "dgraph/admin/logs",
               "dgraph/admin/metrics",
-              "dgraph/admin/tracing",
+              "dgraph/admin/traces",
               "dgraph/admin/using-debug-tool",
               "dgraph/admin/retrieving-debug-information",
               "dgraph/admin/sentry",
-              "dgraph/admin/login-system",
               "dgraph/admin/using-increment-tool",
               {
                 "group": "Data Migration",

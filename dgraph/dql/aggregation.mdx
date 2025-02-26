@@ -26,7 +26,7 @@ An aggregation is applied at the query block enclosing the variable definition.
 As opposed to query variables and value variables, which are global, aggregation
 is computed locally. For example:
 
-```
+```dql
 A as predicateA {
   ...
   B as predicateB {
@@ -60,13 +60,20 @@ an empty block.
 Query Example: Directors called Steven and the date of release of their first
 movie, in ascending order of first movie.
 
-````json { stevens as var(func: allofterms(name@en, "steven")) {
-director.film { ird as initial_release_date # ird is a value variable mapping a
-film UID to its release date } minIRD as min(val(ird)) # minIRD is a value
-variable mapping a director UID to their first release date }
+```json
+{
+  stevens as var(func: allofterms(name@en, "steven")) {
+    director.film {
+      ird as initial_release_date # ird is a value variable mapping a film UID to its release date
+    }
+    minIRD as min(val(ird)) # minIRD is a value variable mapping a director UID to their first release date
+  }
 
-byIRD(func: uid(stevens), orderasc: val(minIRD)) { name@en firstRelease:
-val(minIRD) } } ```
+  byIRD(func: uid(stevens), orderasc: val(minIRD)) {
+    name@en firstRelease:val(minIRD)
+  }
+}
+```
 
 ## Max
 
@@ -75,16 +82,20 @@ val(minIRD) } } ```
 Query Example: Get the max initial release date for any Harry Potter movie.
 
 The release date is assigned to a variable, then it's aggregated and fetched in
-an empty block. ```json { var(func: allofterms(name@en, "Harry
-Potter")) { d as initial_release_date } me() { max(val(d)) } } ```
+an empty block.
+`json { var(func: allofterms(name@en, "Harry Potter")) { d as initial_release_date } me() { max(val(d)) } } `
 
 ### Usage at other levels
 
 Query Example: Quentin Tarantino's movies and date of release of the most recent
 movie.
 
-```json { director(func: allofterms(name@en, "Quentin Tarantino")) {
-director.film { name@en x as initial_release_date } max(val(x)) } }
+```json
+{
+  director(func: allofterms(name@en, "Quentin Tarantino")) {
+    director.film { name@en x as initial_release_date } max(val(x))
+  }
+}
 ```
 
 ## Sum and Avg
@@ -94,19 +105,27 @@ director.film { name@en x as initial_release_date } max(val(x)) } }
 Query Example: Get the sum and average of number of count of movies directed by
 people who have Steven or Tom in their name.
 
-```json { var(func: anyofterms(name@en, "Steven Tom")) { a as
-count(director.film) }
+```json
+{
+  var(func: anyofterms(name@en, "Steven Tom")) { a as count(director.film) }
 
-me() { avg(val(a)) sum(val(a)) } } ```
+  me() { avg(val(a)) sum(val(a)) }
+}
+```
 
 ### Usage at other levels
 
 Query Example: Steven Spielberg's movies, with the number of recorded genres per
 movie, and the total number of genres and average genres per movie.
 
-```json { director(func: eq(name@en, "Steven Spielberg")) { name@en
-director.film { name@en numGenres : g as count(genre) } totalGenres :
-sum(val(g)) genresPerMovie : avg(val(g)) } } ```
+```json
+{
+  director(func: eq(name@en, "Steven Spielberg")) {
+    name@en director.film { name@en numGenres : g as count(genre) }
+    totalGenres : sum(val(g)) genresPerMovie : avg(val(g))
+  }
+}
+```
 
 ## Aggregating Aggregates
 
@@ -121,13 +140,28 @@ demonstrates how to aggregate aggregates; the answer in this case isn't quite
 precise though, because actors that have appeared in multiple Peter Jackson
 movies are counted more than once.
 
-```json { PJ as var(func:allofterms(name@en, "Peter Jackson")) {
-director.film { starring { # starring an actor performance.actor { movies as
-count(actor.film) # number of roles for this actor } perf_total as
-sum(val(movies)) } movie_total as sum(val(perf_total)) # total roles for all
-actors in this movie } gt as sum(val(movie_total)) }
+```json
+{
+  PJ as var(func:allofterms(name@en, "Peter Jackson")) {
+    director.film {
+      starring { # starring an actor performance.actor
+        { movies as count(actor.film) # number of roles for this actor
+      }
 
-PJmovies(func: uid(PJ)) { name@en director.film (orderdesc: val(movie_total),
-first: 5) { name@en totalRoles : val(movie_total) } grandTotal : val(gt) } }
+      perf_total as sum(val(movies))
+    }
+
+    movie_total as sum(val(perf_total)) # total roles for all actors in this movie
+    }
+    gt as sum(val(movie_total))
+  }
+
+  PJmovies(func: uid(PJ)) {
+    name@en director.film (orderdesc: val(movie_total), first: 5) {
+      name@en totalRoles : val(movie_total)
+    }
+
+    grandTotal : val(gt)
+  }
+}
 ```
-````
