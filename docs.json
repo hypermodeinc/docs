@@ -251,7 +251,6 @@
                 ]
               },
               "dgraph/graphql/subscriptions",
-              "dgraph/graphql/federation",
               {
                 "group": "Security",
                 "pages": [
