@@ -140,7 +140,7 @@
             ]
           },
           {
-            "group": "Query Language Reference",
+            "group": "Query Language",
             "pages": [
               "dgraph/dql/json",
               "dgraph/dql/rdf",
@@ -152,7 +152,7 @@
               "dgraph/dql/facets",
               "dgraph/dql/tips",
               {
-                "group": "Statements",
+                "group": "Advanced Features",
                 "pages": [
                   "dgraph/dql/aggregation",
                   "dgraph/dql/alias",
