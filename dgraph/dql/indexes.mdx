@@ -10,7 +10,7 @@ Indices are defined in the [Dgraph types schema](./dql/dql-schema) using
 
 Here are some examples:
 
-```
+```dql
 name: string @index(term) .
 release_date: datetime @index(year) .
 description_vector: float32vector @index(hnsw(metric:"cosine")) .

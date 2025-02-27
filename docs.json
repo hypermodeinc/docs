@@ -145,6 +145,7 @@
               "dgraph/dql/json",
               "dgraph/dql/rdf",
               "dgraph/dql/schema",
+              "dgraph/dql/indexes",
               "dgraph/dql/query",
               "dgraph/dql/mutation",
               "dgraph/dql/upsert",
@@ -172,10 +173,8 @@
                   "dgraph/dql/multiple-query-blocks",
                   "dgraph/dql/normalize-directive",
                   "dgraph/dql/pagination",
-                  "dgraph/dql/predicate-indexing",
                   "dgraph/dql/query-variables",
                   "dgraph/dql/recurse-query",
-                  "dgraph/dql/schema-request",
                   "dgraph/dql/sorting",
                   "dgraph/dql/value-variables"
                 ]
@@ -292,6 +291,7 @@
               "dgraph/admin/traces",
               "dgraph/admin/using-debug-tool",
               "dgraph/admin/retrieving-debug-information",
+              "dgraph/admin/schema-request",
               "dgraph/admin/sentry",
               "dgraph/admin/using-increment-tool",
               {
