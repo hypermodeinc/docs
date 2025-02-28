@@ -279,34 +279,36 @@
           {
             "group": "Administration",
             "pages": [
-              "dgraph/admin/overview",
-              "dgraph/admin/data-compression",
+              "dgraph/admin/schema",
+              "dgraph/admin/update-types",
               "dgraph/admin/drop-data",
-              "dgraph/admin/update-dgraph-types",
-              "dgraph/admin/export",
-              "dgraph/admin/import",
-              "dgraph/admin/logs",
-              "dgraph/admin/metrics",
-              "dgraph/admin/traces",
-              "dgraph/admin/using-debug-tool",
-              "dgraph/admin/retrieving-debug-information",
-              "dgraph/admin/schema-request",
-              "dgraph/admin/sentry",
-              "dgraph/admin/using-increment-tool",
+              {
+                "group": "Observability",
+                "pages": [
+                  "dgraph/admin/logs",
+                  "dgraph/admin/metrics",
+                  "dgraph/admin/traces",
+                  "dgraph/admin/increment-tool",
+                  "dgraph/admin/debug",
+                  "dgraph/admin/sentry"
+                ]
+              },
               {
                 "group": "Data Migration",
                 "pages": [
-                  "dgraph/admin/data-migration",
+                  "dgraph/admin/import",
                   "dgraph/admin/live-loader",
                   "dgraph/admin/bulk-loader",
-                  "dgraph/admin/loading-csv-data",
-                  "dgraph/admin/migrate-tool"
+                  "dgraph/admin/import-csv",
+                  "dgraph/admin/import-mysql",
+                  "dgraph/admin/export"
                 ]
               },
               {
                 "group": "Self-Managed Deployments",
                 "pages": [
                   "dgraph/self-managed/overview",
+                  "dgraph/self-managed/data-compression",
                   "dgraph/self-managed/download",
                   "dgraph/self-managed/dgraph-alpha",
                   "dgraph/self-managed/dgraph-zero",
@@ -344,10 +346,8 @@
               {
                 "group": "CLI",
                 "pages": [
-                  "dgraph/cli/about-cli",
-                  "dgraph/cli/create-cli",
-                  "dgraph/cli/completion",
-                  "dgraph/cli/command-reference"
+                  "dgraph/cli/command-reference",
+                  "dgraph/cli/completion"
                 ]
               }
             ]
@@ -374,7 +374,6 @@
                   "dgraph/concepts/lambda",
                   "dgraph/concepts/minimizing-network-calls",
                   "dgraph/concepts/namespace-tenant",
-                  "dgraph/concepts/network-call-minimization",
                   "dgraph/concepts/posting-list",
                   "dgraph/concepts/protocol-buffers",
                   "dgraph/concepts/queries-process",
@@ -414,10 +413,8 @@
                   "dgraph/cloud/monitoring",
                   "dgraph/cloud/drop-data",
                   "dgraph/cloud/clone",
-                  "dgraph/cloud/cloud-multitenancy",
+                  "dgraph/cloud/multitenancy",
                   "dgraph/cloud/import-export",
-                  "dgraph/cloud/export-data-cloud",
-                  "dgraph/cloud/migrating-from-hosted-dgraph",
                   {
                     "group": "Cloud API",
                     "pages": [
