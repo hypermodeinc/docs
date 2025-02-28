@@ -107,7 +107,9 @@ Zero
 
 # General
 admin
+CPU
 CSV
 Docker Compose
 Helm
 JWT
+vCPU|vCPUs

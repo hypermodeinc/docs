@@ -74,7 +74,7 @@ nodes.
 
 The term "node" is also used in software architecture to reference a physical
 computer or a virtual machine running a module of Dgraph in a cluster. See
-[Aplha node](#alpha) and [Zero node](#zero).
+[Alpha node](#alpha) and [Zero node](#zero).
 
 ### Predicate
 
@@ -85,7 +85,7 @@ to another entity :
 - when we store that an entity name is "Alice". The predicate is `name` and
   predicate value is the string "Alice". It becomes a node property.
 - when we store that Alice knows Bob, we may use a predicate `knows` with the
-  node representing Alice. The value of this predicate would be the [uid](#uid)
+  node representing Alice. The value of this predicate would be the [UID](#uid)
   of the node representing Bob. In that case, `knows` is a
   [relationship](#relationship).
 
@@ -128,7 +128,7 @@ more details.
 - when we store that a node name is "Alice". The predicate is `name` and
   predicate value is the string "Alice". The string becomes a node property.
 - when we store that Alice knows Bob, we may use a predicate `knows` with the
-  node representing Alice. The value of this predicate would be the [uid](#uid)
+  node representing Alice. The value of this predicate would be the [UID](#uid)
   of the node representing Bob. In that case, `knows` is a
   [relationship](#relationship).
 
@@ -142,7 +142,7 @@ when creating nodes, or can be set explicitly.
 
 An upsert operation combines a Query with a [Mutation](#mutation). Typically, a
 node is searched for, and then depending on if it's found or not, a new node is
-created with associated predicates or the exixting node relationships are
+created with associated predicates or the existing node relationships are
 updated. Upsert operations are important to implement uniqueness of predicates.
 
 ### Zero

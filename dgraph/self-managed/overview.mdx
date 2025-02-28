@@ -43,13 +43,13 @@ authentication:
 2. Poor-man's auth, if Dgraph Alpha is started with the `--security` superflag's
    `token` option, then you should pass the token as an `X-Dgraph-AuthToken`
    header while making the HTTP request.
-3. Guardian-only access, if ACL is enabled. In this case you should pass the
-   ACL-JWT of a Guardian user using the `X-Dgraph-AccessToken` header while
-   making the HTTP request.
+3. Guardian-only access, if Access Control Lists (ACL) is enabled. In this case
+   you should pass the ACL-JWT of a Guardian user using the
+   `X-Dgraph-AccessToken` header while making the HTTP request.
 
-An admin endpoint is any HTTP endpoint which provides admin functionality. Admin
-endpoints usually start with the `/admin` path. The current list of admin
-endpoints includes the following:
+An administration endpoint is any HTTP endpoint which provides admin
+capabilities. Administration endpoints usually start with the `/admin` path. The
+current list of admin endpoints includes the following:
 
 - `/admin`
 - `/admin/config/cache_mb`
@@ -60,7 +60,7 @@ endpoints includes the following:
 - `/alter`
 - `/login`
 
-There are a few exceptions to the general rule described above:
+There are a few exceptions to this general rule:
 
 - `/login`: This endpoint logs-in an ACL user, and provides them with a JWT.
   Only IP Whitelisting and Poor-man's auth checks are performed for this
@@ -68,9 +68,9 @@ There are a few exceptions to the general rule described above:
 - `/admin`: This endpoint provides GraphQL queries/mutations corresponding to
   the HTTP admin endpoints. All of the queries/mutations on `/admin` have all
   three layers of authentication, except for `login (mutation)`, which has the
-  same behavior as the above HTTP `/login` endpoint.
+  same behavior as the HTTP `/login` endpoint.
 
-## Whitelisting Admin Operations
+## Whitelisting admin operations
 
 By default, admin operations can only be initiated from the machine on which the
 Dgraph Alpha runs.
@@ -85,8 +85,8 @@ for hosts from which admin operations can be initiated.
 dgraph alpha --security whitelist=127.0.0.1 ...
 ```
 
-This would allow admin operations from hosts with IP 127.0.0.1 (i.e., localhost
-only).
+This would allow admin operations from hosts with IP 127.0.0.1 (that's
+`localhost` only).
 
 **IP Range**
 
@@ -118,7 +118,7 @@ dgraph alpha --security whitelist=admin-bastion,host.docker.internal ...
 This would allow admin operations from hosts with hostnames `admin-bastion` and
 `host.docker.internal`.
 
-## Restrict Mutation Operations
+## Restrict mutation operations
 
 By default, you can perform mutation operations for any predicate. If the
 predicate in mutation doesn't exist in the schema, the predicate gets added to
@@ -140,7 +140,7 @@ operation with that predicate and its schema type.
 dgraph alpha --limit "mutations=strict; mutations-nquad=1000000"
 ```
 
-## Secure Alter Operations
+## Secure alter operations
 
 Clients can use alter operations to apply schema updates and drop particular or
 all predicates from the database. By default, all clients are allowed to perform
@@ -237,7 +237,7 @@ are the right steps to safely export and restart.
 4. Start a new Dgraph cluster using new data directories (this can be done by
    passing empty directories to the options `-p` and `-w` for Alphas and `-w`
    for Zeros)
-5. Reload the data via [bulk loader](/dgraph/admin/bulk-loader)
+5. Reload the data via [Bulk Loader](/dgraph/admin/bulk-loader)
 6. Verify the correctness of the new Dgraph cluster. If all looks good, you can
    delete the old directories (export serves as an insurance)
 
@@ -248,13 +248,11 @@ Blue-green deployment is a common approach to minimize downtime during the
 upgrade process. This approach involves switching your app to read-only mode. To
 make sure that no mutations are executed during the maintenance window you can
 do a rolling restart of all your Alpha using the option `--mutations disallow`
-when you restart the Alpha nodes. This will ensure the cluster is in read-only
-mode.
+when you restart the Alpha nodes. This ensures the cluster is in read-only mode.
 
 At this point your app can still read from the old cluster and you can perform
-the steps 4. and 5. described above. When the new cluster (that uses the
-upgraded version of Dgraph) is up and running, you can point your app to it, and
-shutdown the old cluster.
+steps 4 and 5. When the new cluster (that uses the upgraded version of Dgraph)
+is up and running, you can point your app to it, and shutdown the old cluster.
 
 ## Post Installation
 

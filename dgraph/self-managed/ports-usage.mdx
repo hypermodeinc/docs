@@ -4,8 +4,8 @@ title: Ports Usage
 
 Dgraph cluster nodes use a range of ports to communicate over gRPC and HTTP.
 Choose these ports carefully based on your topology and mode of deployment, as
-this will impact the access security rules or firewall configurations required
-for each port.
+this impacts the access security rules or firewall configurations required for
+each port.
 
 ## Types of ports
 
@@ -15,7 +15,7 @@ follows:
 - **gRPC-internal-private**: Used between the cluster nodes for internal
   communication and message exchange. Communication using these ports is
   TLS-encrypted.
-- **gRPC-external-private**: Used by Dgraph Live Loader and Dgraph Bulk loader
+- **gRPC-external-private**: Used by Dgraph Live Loader and Dgraph Bulk Loader
   to access APIs over gRPC.
 - **gRPC-external-public**: Used by Dgraph clients to access APIs in a session
   that can persist after a query.
