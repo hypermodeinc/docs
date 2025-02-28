@@ -146,39 +146,39 @@
               "dgraph/dql/rdf",
               "dgraph/dql/schema",
               "dgraph/dql/indexes",
-              "dgraph/dql/query",
+              {
+                "group": "Query",
+                "pages": [
+                  "dgraph/dql/query",
+                  "dgraph/dql/alias",
+                  "dgraph/dql/aggregation",
+                  "dgraph/dql/functions",
+                  "dgraph/dql/language-support",
+                  "dgraph/dql/pagination",
+                  "dgraph/dql/sorting",
+                  "dgraph/dql/variables"
+                ]
+              },
               "dgraph/dql/mutation",
               "dgraph/dql/upsert",
               "dgraph/dql/facets",
-              "dgraph/dql/tips",
               {
-                "group": "Advanced Features",
+                "group": "Keywords",
                 "pages": [
-                  "dgraph/dql/aggregation",
-                  "dgraph/dql/alias",
-                  "dgraph/dql/cascade-directive",
-                  "dgraph/dql/connecting-filters",
+                  "dgraph/dql/cascade",
                   "dgraph/dql/count",
                   "dgraph/dql/debug",
-                  "dgraph/dql/expand-predicates",
-                  "dgraph/dql/external-ids-upsert-block",
-                  "dgraph/dql/fragments",
-                  "dgraph/dql/functions",
+                  "dgraph/dql/expand",
+                  "dgraph/dql/filter",
+                  "dgraph/dql/fragment",
                   "dgraph/dql/groupby",
-                  "dgraph/dql/ignorereflex-directive",
-                  "dgraph/dql/indexing-custom-tokenizers",
-                  "dgraph/dql/kshortest-path-queries",
-                  "dgraph/dql/language-support",
-                  "dgraph/dql/math-on-value-variables",
-                  "dgraph/dql/multiple-query-blocks",
-                  "dgraph/dql/normalize-directive",
-                  "dgraph/dql/pagination",
-                  "dgraph/dql/query-variables",
-                  "dgraph/dql/recurse-query",
-                  "dgraph/dql/sorting",
-                  "dgraph/dql/value-variables"
+                  "dgraph/dql/ignorereflex",
+                  "dgraph/dql/normalize",
+                  "dgraph/dql/recurse",
+                  "dgraph/dql/shortest"
                 ]
-              }
+              },
+              "dgraph/dql/tips"
             ]
           },
           {

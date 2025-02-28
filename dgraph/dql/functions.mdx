@@ -6,10 +6,6 @@ Functions allow filtering based on properties of nodes or
 [variables](./query-language/value-variables.md). Functions can be applied in
 the query root or in filters.
 
-<Note>
-  Support for filters on non-indexed predicates was added with Dgraph `v1.2.0`.
-</Note>
-
 Comparison functions (`eq`, `ge`, `gt`, `le`, `lt`) in the query root (`func:`)
 can only be applied on [indexed predicates](./dql-schema.md#indexing). Since
 v1.2, comparison functions can now be used on
