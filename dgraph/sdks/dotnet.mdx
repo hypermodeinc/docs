@@ -7,15 +7,15 @@ This client follows the [Dgraph Go client](./go) closely.
 
 <Tip>
   The official C# client [can be found
-  here](https://github.com/dgraph-io/dgraph.net). Follow the [install
-  instructions](https://github.com/dgraph-io/dgraph.net#install) to get it up
+  here](https://github.com/hypermodeinc/dgraph.net). Follow the [install
+  instructions](https://github.com/hypermodeinc/dgraph.net#install) to get it up
   and running.
 </Tip>
 
 ## Supported Versions
 
 More details on the supported versions can be found at
-[this link](https://github.com/dgraph-io/dgraph.net#supported-versions).
+[this link](https://github.com/hypermodeinc/dgraph.net#supported-versions).
 
 ## Using a Client
 
@@ -29,8 +29,9 @@ var client = new DgraphClient(new Channel("127.0.0.1:9080", ChannelCredentials.I
 
 ### Multi-tenancy
 
-In [multi-tenancy](./multitenancy) environments, Dgraph provides a new method
-`LoginRequest()`, which will allow the users to login to a specific namespace.
+In [multi-tenancy](/dgraph/enterprise/multitenancy) environments, Dgraph
+provides a new method `LoginRequest()`, which will allow the users to login to a
+specific namespace.
 
 In order to create a Dgraph client, and make the client login into namespace
 `123`:

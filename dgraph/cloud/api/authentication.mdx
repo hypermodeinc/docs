@@ -39,7 +39,7 @@ future API calls as a bearer token in the `Authorization` header.
 
 <CodeGroup>
 
-```bash
+```sh
 curl 'https://cerebro.cloud.dgraph.io/graphql' \
   -H 'Content-Type: application/json' \
   --data-binary '{"query":"query Login($email: String!, $password: String!) {\n  login(email: $email, password: $password) {    \n    token\n  }\n}","variables":{"email":"<your-email>","password":"<your-password>"}}' \

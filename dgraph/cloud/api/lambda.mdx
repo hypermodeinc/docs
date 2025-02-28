@@ -52,7 +52,7 @@ None
 
 <CodeGroup>
 
-```bash
+```sh
 #!/usr/bin/env bash
 
 CEREBRO_JWT="<cerebro-jwt-from-login-query>"
@@ -94,7 +94,7 @@ a Base64 encoded string.
 In order to decode the Base64 encoded string into the actual lambda code, please
 use the command as shown below.
 
-```bash
+```sh
 $ echo "Ly8gWW91IGNhbiB0eXBlL3Bhc3RlIHlvdXIgc2NyaXB0IGhlcmUKY29uc3QgTmFtZVJlc29sdmVyID0gKHtwYXJlbnQ6IHtuYW1lfX0pID0+IGBNeSBuYW1lIGlzICR7bmFtZX0uYAoKc2VsZi5hZGRHcmFwaFFMUmVzb2x2ZXJzKHsKICAgICJQZXJzb24ubmFtZSI6IE5hbWVSZXNvbHZlcgp9KQ==" | base64 -d
 ```
 
@@ -141,7 +141,7 @@ query GetLambdaLogs($lambdaLogsInput: LambdaLogsInput!) {
 
 <CodeGroup>
 
-```bash
+```sh
 #!/usr/bin/env bash
 
 CEREBRO_JWT="<cerebro-jwt-from-login-query>"
@@ -214,7 +214,7 @@ mutation updateLambda($input: UpdateLambdaInput!) {
 
 2. Base64 encode your script
 
-```bash
+```sh
 $ echo "//your lambda resolver" | base64
 
 Ly95b3VyIGxhbWJkYSByZXNvbHZlcgo=
@@ -224,7 +224,7 @@ Ly95b3VyIGxhbWJkYSByZXNvbHZlcgo=
 
 <CodeGroup>
 
-```bash
+```sh
 #!/usr/bin/env bash
 
 CEREBRO_JWT="<cerebro-jwt-from-login-query>"

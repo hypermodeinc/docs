@@ -10,8 +10,7 @@ reasons, including:
 
 To support these scenarios, Dgraph includes a `decrypt` command that decrypts
 encrypted RDF and schema files. To learn how to export RDF and schema files from
-Dgraph, see:
-[Dgraph Administration: Export database](./dgraph-administration.md#export-database).
+Dgraph, see [export database](/dgraph/admin/export).
 
 The `decrypt` command supports a variety of symmetric key lengths, which
 determine the AES cypher used for encryption and decryption, as follows:
@@ -47,7 +46,7 @@ command:
 
 To learn more about the `--vault` superflag and its options that have replaced
 the `--vault_*` options in release v20.11 and earlier, see
-[Dgraph CLI Command Reference](./deploy/cli-command-reference).
+[Dgraph CLI Command Reference](/dgraph/cli/command-reference).
 
 ## Data decryption examples
 
@@ -55,7 +54,7 @@ For example, you could use the following command with an encrypted RDF file
 (**encrypted.rdf.gz**) and an encryption key file (**enc_key_file**), to create
 a decrypted RDF file:
 
-```bash
+```sh
 # Encryption Key from the file path
 dgraph decrypt --file "encrypted.rdf.gz" --out "decrypted_rdf.gz" --encryption key-file="enc-key-file"
 
@@ -66,7 +65,7 @@ dgraph decrypt --file "encrypted.rdf.gz" --out "decrypted_rdf.gz" \
 
 You can use similar syntax to create a decrypted schema file:
 
-```bash
+```sh
 # Encryption Key from the file path
 dgraph decrypt --file "encrypted.schema.gz" --out "decrypted_schema.gz" --encryption key-file="enc-key-file"
 

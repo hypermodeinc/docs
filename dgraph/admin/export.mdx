@@ -34,7 +34,8 @@ endpoint of any Alpha node.
   disk, the entire export process is considered failed and an error is returned.
 
 - Make a note of the export directories of the Alpha server nodes. For more
-  information about configuring the Dgraph Alpha server, see [Config](./config).
+  information about configuring the Dgraph Alpha server, see
+  [Configuration](./config).
 
 This mutation triggers the export from each of the Alpha leader for a group.
 Depending on the Dgraph configuration several files are exported. It is
@@ -196,7 +197,7 @@ You can access Azure Blob Storage locally using one of these methods:
   [MinIO Azure Gateway](https://docs.min.io/docs/minio-gateway-for-azure.html)
   with the MinIO Binary
 
-  ```bash
+  ```sh
   export MINIO_ACCESS_KEY="<AccountName>"
   export MINIO_SECRET_KEY="<AccountKey>"
   minio gateway azure
@@ -206,7 +207,7 @@ You can access Azure Blob Storage locally using one of these methods:
   [MinIO Azure Gateway](https://docs.min.io/docs/minio-gateway-for-azure.html)
   with Docker
 
-  ```bash
+  ```sh
   docker run --detach --rm --name gateway \
    --publish 9000:9000 \
    --env MINIO_ACCESS_KEY="<AccountName>" \
@@ -218,7 +219,7 @@ You can access Azure Blob Storage locally using one of these methods:
   [MinIO Azure Gateway](https://docs.min.io/docs/minio-gateway-for-azure.html)
   with the [MinIO Helm chart](https://github.com/minio/charts) for Kubernetes:
 
-  ```bash
+  ```sh
   helm repo add minio https://helm.min.io/
   helm install my-gateway minio/minio \
     --set accessKey="<AccountName>",secretKey="<AccountKey>" \
@@ -248,7 +249,7 @@ these methods:
 - Using [MinIO GCS Gateway](https://docs.min.io/docs/minio-gateway-for-gcs.html)
   with the MinIO Binary
 
-  ```bash
+  ```sh
   export GOOGLE_APPLICATION_CREDENTIALS="/path/to/credentials.json"
   export MINIO_ACCESS_KEY="<minio-access-key>"
   export MINIO_SECRET_KEY="<minio-secret-key>"
@@ -258,7 +259,7 @@ these methods:
 - Using [MinIO GCS Gateway](https://docs.min.io/docs/minio-gateway-for-gcs.html)
   with Docker
 
-  ```bash
+  ```sh
   docker run --detach --rm --name gateway \
     --publish 9000:9000  \
     --volume "</path/to/credentials.json>":/credentials.json \
@@ -271,7 +272,7 @@ these methods:
 - Using [MinIO GCS Gateway](https://docs.min.io/docs/minio-gateway-for-gcs.html)
   with the [MinIO Helm chart](https://github.com/minio/charts) for Kubernetes:
 
-  ```bash
+  ```sh
   ## create MinIO Helm config
   cat <<-EOF > myvalues.yaml
   accessKey: <minio-access-key>
@@ -356,7 +357,7 @@ This is an example of how you can use `curl` to trigger an export.
 
 1. Create GraphQL file for the desired mutation:
 
-   ```bash
+   ```sh
    cat <<-EOF > export.graphql
    mutation {
      export(input: {
@@ -375,7 +376,7 @@ This is an example of how you can use `curl` to trigger an export.
 
 2. Trigger an export with `curl`
 
-   ```bash
+   ```sh
    curl http://localhost:8080/admin --silent --request POST \
      --header "Content-Type: application/graphql" \
      --upload-file export.graphql

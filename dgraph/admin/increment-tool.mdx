@@ -2,14 +2,14 @@
 title: Increment Tool
 ---
 
-The `dgraph increment` tool increments a counter value transactionally. The
+The `dgraph increment` tool increments a counter value via transactions. The
 increment tool can be used as a health check that an Alpha is able to service
 transactions for both queries and mutations.
 
-## Example Usage
+## Example
 
 Increment the default predicate (`counter.val`) once. If the predicate doesn't
-yet exist, then it will be created starting at counter 0.
+yet exist, then it is created starting at counter 0.
 
 ```sh
 dgraph increment
@@ -28,14 +28,14 @@ Increment the counter predicate specified by `--pred` (default: `counter.val`):
 dgraph increment --pred=counter.val.healthcheck
 ```
 
-Run a read-only query for the counter predicate and does not run a mutation to
+Run a read-only query for the counter predicate and doesn't run a mutation to
 increment it:
 
 ```sh
 dgraph increment --ro
 ```
 
-Run a best-effort query for the counter predicate and does not run a mutation to
+Run a best-effort query for the counter predicate and doesn't run a mutation to
 increment it:
 
 ```sh
@@ -48,7 +48,7 @@ Run the increment tool 1000 times every 1 second:
 dgraph increment --num=1000 --wait=1s
 ```
 
-## Increment Tool Output
+## Increment tool output
 
 ```sh
  Run increment a few times

@@ -84,14 +84,20 @@ WASM
 
 # Dgraph terms
 Alpha
+ACLs
 Bulk Loader
 dgo
 dgraph4j
 gzip
+Grafana
+Jaeger
+Live Loader
 MinIO
+pprof
 pydgraph
 Ratel
 [Ss]harding
+[Ss]harded
 S3
 subgraph
 tablet
@@ -101,6 +107,7 @@ Zero
 
 # General
 admin
+CSV
 Docker Compose
 Helm
 JWT

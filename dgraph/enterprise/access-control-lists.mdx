@@ -21,7 +21,7 @@ access the data permitted by the ACL rules.
 
 1. Generate a data encryption key that is 32 bytes long:
 
-   ```bash
+   ```sh
    tr -dc 'a-zA-Z0-9' < /dev/urandom | dd bs=1 count=32 of=enc_key_file
    ```
 
@@ -32,7 +32,7 @@ access the data permitted by the ACL rules.
    generated `<SECRET KEY VALUE>` in it. The secret key is used by Dgraph Alpha
    nodes to sign JSON Web Tokens (JWT).
 
-   ```bash
+   ```sh
    echo '<SECRET KEY VALUE>' > hmac_secret_file
    ```
 
@@ -41,7 +41,7 @@ access the data permitted by the ACL rules.
    secret key file created in Step 1. Alternatively, you can
    [store the secret in HashiCorp Vault](#storing-acl-secret-in-hashicorp-vault).
 
-   ```bash
+   ```sh
    dgraph alpha --acl "secret-file=/path/to/secret" --security "whitelist=<permitted-ip-addresses>"
    ```
 
@@ -62,7 +62,7 @@ Here is an example that starts a Dgraph Zero node and a Dgraph Alpha node with
 the ACL feature turned on. You can run these commands in a separate terminal
 tab:
 
-```bash
+```sh
 ## Create ACL secret key file with 32 ASCII characters
 echo '<SECRET KEY VALUE>' > hmac_secret_file
 
@@ -102,7 +102,7 @@ services:
 
 You can run this with:
 
-```bash
+```sh
 ## Create ACL secret key file with 32 ASCII characters
 echo '<SECRET KEY VALUE>' > hmac_secret_file
 
@@ -118,7 +118,7 @@ the ACL feature using the
 
 The first step is to encode the secret with base64:
 
-```bash
+```sh
 ## encode a secret without newline character and copy to the clipboard
 printf '<SECRET KEY VALUE>' | base64
 ```
@@ -144,7 +144,7 @@ alpha:
 
 Now with the Helm chart config values created, we can deploy Dgraph:
 
-```bash
+```sh
 helm repo add "dgraph" https://charts.dgraph.io
 helm install "my-release" --values ./dgraph_values.yaml dgraph/dgraph
 ```
@@ -210,7 +210,7 @@ Do the following to set up on the
 Here is an example of using Dgraph with a Vault server that holds the secret
 key:
 
-```bash
+```sh
 ## Start Dgraph Zero in different terminal tab or window
 dgraph zero --my=localhost:5080 --replicas 1 --raft "idx=1"
 
@@ -390,7 +390,7 @@ Here are some code samples using a client:
 If you are using `curl` from the command line, you can use the following with
 the above [login mutation](#logging-in) saved to `login.graphql`:
 
-```bash
+```sh
 ## Login and save results
 JSON_RESULT=$(curl http://localhost:8080/admin --silent --request POST \
   --header "Content-Type: application/graphql" \

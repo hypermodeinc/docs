@@ -10,7 +10,7 @@ Before you can run `dgraph alpha`, you must run at least one `dgraph zero` node.
 You can see the options available for `dgraph zero` by using the following
 command:
 
-```bash
+```sh
 dgraph zero --help
 ```
 
@@ -263,7 +263,7 @@ shown with their node name and HTTP port number:
     cluster to be able to query the latest data in the DB.
 - `maxRaftId`
   - The number of Zeros available to serve as a leader node. Used by the
-    [Raft](/design-concepts/raft/) consensus algorithm.
+    [Raft](/dgraph/concepts/raft) consensus algorithm.
 - `CID`
   - This is a unique UUID representing the _cluster-ID_ for this cluster. It is
     generated during the initial DB startup and is retained across restarts.

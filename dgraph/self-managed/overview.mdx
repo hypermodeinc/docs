@@ -12,7 +12,7 @@ deployment scenarios, including:
 This section focuses exclusively on deployment and management for these
 self-managed scenarios. To learn about fully managed options that let you focus
 on building apps and websites, rather than managing infrastructure, see the
-[Dgraph cloud services docs](https://dgraph.io/docs/cloud/), or
+[Dgraph cloud services docs](/dgraph/cloud/overview), or
 [Try Dgraph Cloud](https://cloud.dgraph.io/).
 
 ## Overview
@@ -31,7 +31,7 @@ A Dgraph cluster consists of the following:
 You need at least one node of each type to run Dgraph. You need three nodes of
 each type to run Dgraph in a high-availability (HA) cluster configuration. To
 learn more about 2-node and 6-node deployment options, see the
-[Production Checklist](./installation/production-checklist).
+[Production Checklist](./production-checklist).
 
 Each Dgraph Alpha exposes various administrative (admin) endpoints both over
 HTTP and GraphQL, for example endpoints to export data and to perform a clean
@@ -122,7 +122,7 @@ This would allow admin operations from hosts with hostnames `admin-bastion` and
 
 By default, you can perform mutation operations for any predicate. If the
 predicate in mutation doesn't exist in the schema, the predicate gets added to
-the schema with an appropriate [Dgraph Type](./dql-schema).
+the schema with an appropriate [Dgraph Type](/dgraph/dql/schema).
 
 You can use `--limit "mutations=disallow"` to disable all mutations, which is
 set to `allow` by default.
@@ -187,7 +187,7 @@ As an `Administrator` you might want to export data from Dgraph to:
 - share your data
 
 For more information about exporting your database, see
-[Export data](./howto/exportdata/about-export)
+[Export data](/dgraph/admin/export)
 
 ## Shut down database
 
@@ -221,7 +221,7 @@ To drop all data, you could send a `DropAll` request via `/alter` endpoint.
 
 Alternatively, you could:
 
-- [Shutdown Dgraph](./#shut-down-database) and wait for all writes to complete,
+- [Shutdown Dgraph](#shut-down-database) and wait for all writes to complete,
 - Delete (maybe do an export first) the `p` and `w` directories, then
 - Restart Dgraph.
 
@@ -231,13 +231,13 @@ Doing periodic exports is always a good idea. This is particularly useful if you
 wish to upgrade Dgraph or reconfigure the sharding of a cluster. The following
 are the right steps to safely export and restart.
 
-1. Start an [export](./#export-database)
+1. Start an [export](#export-database)
 2. Ensure it's successful
-3. [Shutdown Dgraph](./#shut-down-database) and wait for all writes to complete
+3. [Shutdown Dgraph](#shut-down-database) and wait for all writes to complete
 4. Start a new Dgraph cluster using new data directories (this can be done by
    passing empty directories to the options `-p` and `-w` for Alphas and `-w`
    for Zeros)
-5. Reload the data via [bulk loader](./bulk-loader)
+5. Reload the data via [bulk loader](/dgraph/admin/bulk-loader)
 6. Verify the correctness of the new Dgraph cluster. If all looks good, you can
    delete the old directories (export serves as an insurance)
 
@@ -259,5 +259,4 @@ shutdown the old cluster.
 ## Post Installation
 
 Now that Dgraph is up and running, to understand how to add and query data to
-Dgraph, follow [Query Language Spec](/query-language). Also, have a look at
-[Frequently asked questions](/faq).
+Dgraph, follow [Query Language Spec](/dgraph/dql/schema).

@@ -70,9 +70,9 @@ To facilitate debugging, [debug mode](#debug-mode) can be enabled for a client.
 
 ### Multi-tenancy
 
-In [multi-tenancy](./multitenancy) environments, `dgraph-js` provides a new
-method `loginIntoNamespace()`, which allows the users to login to a specific
-namespace.
+In [multi-tenancy](/dgraph/enterprise/multitenancy) environments, `dgraph-js`
+provides a new method `loginIntoNamespace()`, which allows the users to login to
+a specific namespace.
 
 In order to create a JavaScript client, and make the client login into namespace
 `123`:
@@ -118,7 +118,7 @@ await dgraphClient.alter(op)
 Starting Dgraph version 20.03.0, indexes can be computed in the background. You
 can set `setRunInBackground` field of the `Operation` object to `true` before
 passing it to the `DgraphClient#alter(Operation)` method. You can find more
-details [here](./dql-schema.md#indexes-in-background).
+details [here](/dgraph/admin/update-types#indexes-in-background).
 
 ```js
 const schema = "name: string @index(exact) ."
@@ -327,7 +327,8 @@ The upsert block allows specifying a conditional mutation block using an `@if`
 directive. The mutation is executed only when the specified condition is true.
 If the condition is false, the mutation is silently ignored.
 
-See more about Conditional Upsert [Here](./dql-mutation.md#conditional-upsert).
+See more about Conditional Upsert
+[Here](/dgraph/dql/mutation#conditional-upsert).
 
 ```js
 const query = `

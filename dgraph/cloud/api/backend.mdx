@@ -44,7 +44,7 @@ https://cerebro.cloud.dgraph.io/graphql
 
 <CodeGroup>
 
-```bash
+```sh
 #!/usr/bin/env bash
 
 CEREBRO_JWT="<cerebro-jwt>"
@@ -125,7 +125,7 @@ mutation CreateDeployment($newDeployment: NewDeployment!) {
 
 <CodeGroup>
 
-```bash
+```sh
 #!/usr/bin/env bash
 
 CEREBRO_JWT="<cerebro-jwt>"
@@ -188,7 +188,7 @@ mutation UpdateDeployment($updateDeploymentInput: UpdateDeploymentInput!) {
 
 <CodeGroup>
 
-```bash
+```sh
 #!/usr/bin/env bash
 
 CEREBRO_JWT="<cerebro-jwt>"
@@ -245,7 +245,7 @@ mutation DeleteDeployment($deploymentID: String!) {
 
 <CodeGroup>
 
-```bash
+```sh
 #!/usr/bin/env bash
 
 CEREBRO_JWT="<cerebro-jwt>"
@@ -273,7 +273,7 @@ Restore into a backend by source backend ID.
 
 ### Cloud Endpoint
 
-```bash
+```sh
 https://${DEPLOYMENT_URL}/admin/slash
 ```
 
@@ -304,7 +304,7 @@ mutation ($uid: String!, $backupFolder: String, $backupNum: Int) {
 
 <CodeGroup>
 
-```bash
+```sh
 #!/usr/bin/env bash
 
 DEPLOYMENT_URL="polished-violet.us-east-1.aws.cloud.dgraph.io"
@@ -339,7 +339,7 @@ Retrieve the status of a restore operation.
 
 ### Cloud Endpoint
 
-```bash
+```sh
 https://${DEPLOYMENT_URL}/admin/slash
 ```
 
@@ -365,7 +365,7 @@ query ($restoreId: Int!) {
 
 <CodeGroup>
 
-```bash
+```sh
 #!/usr/bin/env bash
 
 DEPLOYMENT_URL="polished-violet.us-east-1.aws.cloud.dgraph.io"
@@ -399,7 +399,7 @@ Drop (i.e., delete) all data in your backend.
 
 ### Cloud Endpoint
 
-```bash
+```sh
 https://${DEPLOYMENT_URL}/admin/slash
 ```
 
@@ -469,7 +469,7 @@ mutation ($fields: [String!]) {
 
 <CodeGroup>
 
-```bash
+```sh
 #!/usr/bin/env bash
 
 DEPLOYMENT_URL="polished-violet.us-east-1.aws.cloud.dgraph.io"

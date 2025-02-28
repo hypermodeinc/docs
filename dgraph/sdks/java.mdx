@@ -2,21 +2,21 @@
 title: Java
 ---
 
-A minimal implementation for a Dgraph client for Java 1.8 and above, using
+A minimal implementation for a Dgraph client for Java 1.11 and above, using
 [gRPC](https://grpc.io/). This client follows the [Dgraph Go client](./go)
 closely.
 
 <Tip>
   The official Java client [can be found
-  here](https://github.com/dgraph-io/dgraph4j). Follow the [install
-  instructions](https://github.com/dgraph-io/dgraph4j#download) to get it up and
-  running.
+  here](https://github.com/hypermodeinc/dgraph4j). Follow the [install
+  instructions](https://github.com/hypermodeinc/dgraph4j#download) to get it up
+  and running.
 </Tip>
 
 ## Supported Versions
 
 More details on the supported versions can be found at
-[this link](https://github.com/dgraph-io/dgraph4j#supported-versions).
+[this link](https://github.com/hypermodeinc/dgraph4j#supported-versions).
 
 ## Quickstart
 
@@ -73,8 +73,8 @@ DgraphClient dgraphClient = new DgraphClient(stub1, stub2, stub3);
 
 ### Login using ACL
 
-If [ACL](./access-control-lists) is enabled then you can log-in to the default
-namespace (`0`) with the following method:
+If [ACL](/dgraph/enterprise/access-control-lists) is enabled then you can log-in
+to the default namespace (`0`) with the following method:
 
 ```java
 dgraphClient.login(USER_ID, USER_PASSWORD);
@@ -82,9 +82,9 @@ dgraphClient.login(USER_ID, USER_PASSWORD);
 
 ### Multi-tenancy
 
-If [multi-tenancy](./multitenancy) is enabled, by default the login method on
-client will login into the namespace `0`. In order to login into some other
-namespace, use the `loginIntoNamespace` method on the client:
+If [multi-tenancy](/dgraph/enterprise/multitenancy) is enabled, by default the
+login method on client will login into the namespace `0`. In order to login into
+some other namespace, use the `loginIntoNamespace` method on the client:
 
 ```java
 dgraphClient.loginIntoNamespace(USER_ID, USER_PASSWORD, NAMESPACE);
@@ -93,7 +93,7 @@ dgraphClient.loginIntoNamespace(USER_ID, USER_PASSWORD, NAMESPACE);
 Once logged-in, the `dgraphClient` object can be used to do any further
 operations.
 
-### Creating a Client for Dgraph Cloud Endpoint
+### Creating a client for Dgraph Cloud endpoint
 
 If you want to connect to Dgraph running on your
 [Dgraph Cloud](https://cloud.dgraph.io) instance, then all you need is the URL
@@ -105,20 +105,14 @@ DgraphStub stub = DgraphClient.clientStubFromCloudEndpoint("https://civic-wine.u
 DgraphClient dgraphClient = new DgraphClient(stub);
 ```
 
-<Note>
-  The `DgraphClient.clientStubFromSlashEndpoint()` method has been deprecated
-  and will be removed in v21.07. Please use
-  `DgraphClient.clientStubFromCloudEndpoint()` instead.
-</Note>
-
-### Creating a Secure Client using TLS
+### Creating a secure client using TLS
 
 To setup a client using TLS, you could use the following code snippet. The
 server needs to be setup using the instructions provided
-[here](./tls-configuration).
+[here](/dgraph/self-managed/tls-configuration).
 
 If you are doing client verification, you need to convert the client key from
-PKCS#1 format to PKCS#8 format. By default, grpc doesn't support reading PKCS#1
+PKCS#1 format to PKCS#8 format. By default, g doesn't support reading PKCS#1
 format keys. To convert the format, you could use the `openssl` tool.
 
 First, let's install the `openssl` tool:
@@ -163,7 +157,7 @@ Checking the version, before doing anything else can be used as a test to find
 out if the client is able to communicate with the Dgraph server. This will also
 help reduce the latency of the first query/mutation which results from some
 dynamic library loading and linking that happens in JVM (see
-[this issue](https://github.com/dgraph-io/dgraph4j/issues/108) for more
+[this issue](https://github.com/hypermodeinc/dgraph4j/issues/108) for more
 details).
 
 ### Altering the Database
@@ -180,7 +174,7 @@ dgraphClient.alter(operation);
 Starting Dgraph version 20.03.0, indexes can be computed in the background. You
 can call the function `setRunInBackground(true)` as shown below before calling
 `alter`. You can find more details
-[here](./dql-schema.md#indexes-in-background).
+[here](/dgraph/admin/update-types#indexes-in-background).
 
 ```java
 String schema = "name: string @index(exact) .";
@@ -393,10 +387,12 @@ txn.doRequest(request);
 ### Running a Query with RDF response
 
 You can get query results as an RDF response by calling either `queryRDF()` or
-`queryRDFWithVars()`. The response contains the `getRdf()` method, which will
-provide the RDF encoded output.
+`queryRDFWithVars()`. The response contains the `getRdf()` method, which
+provides the RDF encoded output.
 
-**Note**: If you are querying for `uid` values only, use a JSON format response
+<Note>
+  If you are querying for `uid` values only, use a JSON format response.
+</Note>
 
 ```java
 // Query
@@ -415,7 +411,7 @@ This should print (assuming Alice's `uid` is `0x2`):
 <0x2> <name> "Alice" .
 ```
 
-### Running an Upsert: Query + Mutation
+### Running an upsert: query + mutation
 
 The `txn.doRequest` function allows you to run upserts consisting of one query
 and one mutation. Variables can be defined in the query and used in the
@@ -437,13 +433,14 @@ Request request = Request.newBuilder()
 txn.doRequest(request);
 ```
 
-### Running a Conditional Upsert
+### Running a conditional upsert
 
 The upsert block also allows specifying a conditional mutation block using an
 `@if` directive. The mutation is executed only when the specified condition is
 true. If the condition is false, the mutation is silently ignored.
 
-See more about Conditional Upsert [Here](./dql-mutation.md#conditional-upsert).
+See more about Conditional Upsert
+[Here](/dgraph/dql/mutation#conditional-upsert).
 
 ```java
 String query = "query {\n" +
@@ -461,7 +458,7 @@ Request request = Request.newBuilder()
 txn.doRequest(request);
 ```
 
-### Setting Deadlines
+### Setting deadlines
 
 It is recommended that you always set a deadline for each client call, after
 which the client terminates. This is in line with the recommendation for any
@@ -484,7 +481,7 @@ DgraphClient dgraphClient = new DgraphClient(stub);
 [deadline-post]:
   https://discuss.dgraph.io/t/dgraph-java-client-setting-deadlines-per-call/3056
 
-### Setting Metadata Headers
+### Setting metadata headers
 
 Certain headers such as authentication tokens need to be set globally for all
 subsequent calls. Below is an example of setting a header with the name
@@ -509,12 +506,12 @@ DgraphClient dgraphClient = new DgraphClient(stub);
 dgraphClient.alter(Operation.newBuilder().setDropAll(true).build());
 ```
 
-### Helper Methods
+### Helper methods
 
 #### Delete multiple edges
 
 The example below uses the helper method `Helpers#deleteEdges` to delete
-multiple edges corresponding to predicates on a node with the given uid. The
+multiple edges corresponding to predicates on a node with the given UID. The
 helper method takes an existing mutation, and returns a new mutation with the
 deletions applied.
 
@@ -524,7 +521,7 @@ mu = Helpers.deleteEdges(mu, uid, "friends", "loc");
 dgraphClient.newTransaction().mutate(mu);
 ```
 
-### Closing the DB Connection
+### Closing the database connection
 
 To disconnect from Dgraph, call `ManagedChannel#shutdown` on the gRPC channel
 object created when [creating a Dgraph client](#creating-a-client).
@@ -533,7 +530,7 @@ object created when [creating a Dgraph client](#creating-a-client).
 channel.shutdown();
 ```
 
-## Using the Asynchronous Client
+## Using the asynchronous client
 
 Dgraph Client for Java also bundles an asynchronous API, which can be used by
 instantiating the `DgraphAsyncClient` class. The usage is almost exactly the
@@ -598,7 +595,7 @@ Latency latency = assignedIds.getLatency();
 
 This how-to guide provides an example on how to handle concurrent modifications
 using a multi-threaded Java Program. The example demonstrates
-[transaction](./clients#transactions) conflicts in Dgraph.
+[transaction](./overview#transactions) conflicts in Dgraph.
 
 Steps to run this example are as follows.
 
@@ -609,7 +606,7 @@ docker run -it -p 8080:8080 -p 9080:9080 dgraph/standalone:%VERSION_HERE
 ```
 
 Step 2: check out the source code from the 'samples' directory in
-[dgraph4j repository](https://github.com/dgraph-io/dgraph4j). This particular
+[dgraph4j repo](https://github.com/hypermodeinc/dgraph4j). This particular
 example can found at the path `samples/concurrent-modification`. In order to run
 this example, execute the following maven command from the
 'concurrent-modification' folder.
@@ -634,7 +631,7 @@ program sleeps for 1 second on receiving a concurrent modification exception
 (“TxnConflictException”), and then retries.
 
 The logs below show that two threads are increasing clickCount for the same user
-named Alice (note the same uid). Thread #1 succeeds immediately, and Dgraph
+named Alice (note the same UID). Thread #1 succeeds immediately, and Dgraph
 throws a concurrent modification conflict on Thread 2. Thread 2 sleeps for 1
 second and retries, and this time succeeds.
 
@@ -681,7 +678,7 @@ Response:
 
 Concurrent modifications to the same predicate causes the "TxnConflictException"
 exception. When several transactions hit the same node's predicate at the same
-time, the first one succeeds, while the other will get the
+time, the first one succeeds, while the other receives the
 “TxnConflictException”. Upon constantly retrying, the transactions begin to
 succeed one after another, and given enough retries, correctly completes its
 work.

@@ -4,7 +4,7 @@ title: HTTP Client
 
 A Dgraph client implementation for JavaScript using HTTP. It supports both
 browser and Node.js environments. This client follows the
-[Dgraph JavaScript gRPC client](./grpc) closely.
+[Dgraph JavaScript gRPC client](./javascript) closely.
 
 <Tip>
   The official JavaScript HTTP client [can be found
@@ -13,7 +13,7 @@ browser and Node.js environments. This client follows the
   up and running.
 </Tip>
 
-## Supported Versions
+## Supported versions
 
 More details on the supported versions can be found at
 [this link](https://github.com/dgraph-io/dgraph-js-http#supported-versions).
@@ -22,7 +22,7 @@ More details on the supported versions can be found at
 
 Build and run the
 [simple project](https://github.com/dgraph-io/dgraph-js-http/tree/master/examples/simple),
-which contains an end-to-end example of using the Dgraph javascript HTTP client.
+which contains an end-to-end example of using the Dgraph JavaScript HTTP client.
 Follow the instructions in the
 [README](https://github.com/dgraph-io/dgraph-js-http/tree/master/examples/simple/README.md)
 of that project.
@@ -39,8 +39,8 @@ of that project.
 ### Create a client
 
 A `DgraphClient` object can be initialized by passing it a list of
-`DgraphClientStub` clients as variadic arguments. Connecting to multiple Dgraph
-servers in the same cluster allows for better distribution of workload.
+`DgraphClientStub` clients as arguments. Connecting to multiple Dgraph servers
+in the same cluster allows for better distribution of workload.
 
 The following code snippet shows just one connection.
 
@@ -111,8 +111,8 @@ await clientStub.login()
 Some Dgraph configurations require extra access tokens.
 
 1. Alpha servers can be configured with
-   [Secure Alter Operations](/dgraph-administration). In this case the token
-   needs to be set on the client instance:
+   [Secure Alter Operations](/dgraph/self-managed/overview#secure-alter-operations).
+   In this case the token needs to be set on the client instance:
 
    ```js
    dgraphClient.setAlphaAuthToken("My secret token value")
@@ -126,7 +126,7 @@ Some Dgraph configurations require extra access tokens.
 
 ### Create https connection
 
-If your cluster is using tls/mtls you can pass a node `https.Agent` configured
+If your cluster is using TLS/mTLS you can pass a node `https.Agent` configured
 with you certificates as follows:
 
 ```js
@@ -162,7 +162,7 @@ await dgraphClient.alter({ schema: schema })
 ```
 
 > NOTE: Many of the examples here use the `await` keyword which requires
-> `async/await` support which is not available in all javascript environments.
+> `async/await` support which isn't available in all javascript environments.
 > For unsupported environments, the expressions following `await` can be used
 > just like normal `Promise` instances.
 

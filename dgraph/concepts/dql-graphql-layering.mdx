@@ -2,7 +2,7 @@
 title: DQL and GraphQL
 ---
 
-## Dgraph Schemas
+## Dgraph schemas
 
 Dgraph natively supports GraphQL, including `GraphQL Schema`s. GraphQL schemas
 "sit on top of" DQL schemas, in the sense that when a GraphQL schema is added to
@@ -10,15 +10,14 @@ Dgraph, a corresponding `DQL Schema` is automatically created.
 
 Refer to [GraphQL-DQL interoperability](./graphql-dql) section for details.
 
-## Dgraph Queries, Mutations and Upserts
+## Dgraph queries, mutations and upserts
 
 Similarly, GraphQL mutations are implemented on top of DQL in the sense that a
 GraphQL query is converted internally into a DQL query, which is then executed.
-This translation is not particularly complex, since DQL is based on GraphQL,
-with some syntax changes and some extensions.
+This translation isn't particularly complex, since DQL is based on GraphQL, with
+some syntax changes and some extensions.
 
-This is generally transaparent to all callers, however users should be aware
-that
+This is generally transparent to all callers, however users should be aware that
 
 1. Anything done in GraphQL can also be done in DQL if needed. Some small
    exceptions include the enforcement of non-null constraints and other checks

@@ -75,10 +75,9 @@ This JSON structure succinctly represents rich data:
 - **Facet** metadata: the Address relation is qualified with a property
   specifying the Address relationship started on February 20, 2022. \*/}
 
-Dgraph supports [JSON](/dgraph/dql/json-mutation-format) data as both a return
-structure and an insert/update format. In Dgraph JSON nesting represents
-relations among nodes, so
-`{ "name":"Bob", "homeAddress": { "Street":"123 Main st" } }` efficiently and
+Dgraph supports [JSON](/dgraph/dql/json) data as both a return structure and an
+insert/update format. In Dgraph JSON nesting represents relations among nodes,
+so `{ "name":"Bob", "homeAddress": { "Street":"123 Main st" } }` efficiently and
 intuitively represents a Person node, an Address node, and a relation (called
 "homeAddress") between them.
 
@@ -178,6 +177,6 @@ databases are expanded in two ways.
 ## What's next
 
 - **Get Started** with a [free database instance](https://cloud.dgraph.io)
-- Get familiar with some terms in our [Glossary](/dgraph-glossary)
+- Get familiar with some terms in our [Glossary](./glossary)
 - Take the [Dgraph tour](https://dgraph.io/tour/)
-- Go through some [tutorials](./learn)
+- Go through some [tutorials](./guides)

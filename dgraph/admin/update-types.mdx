@@ -14,7 +14,7 @@ You modify Dgraph types (node types and predicates types) by
 
 ### Notes about predicate type change
 
-If data is already stored, existing values are not checked to conform to the
+If data is already stored, existing values aren't checked to conform to the
 updated predicate type.
 
 On query, Dgraph tries to convert existing values to the new predicate type and
@@ -23,7 +23,7 @@ ignores any that fail conversion.
 If data exists and new indexes are specified, any old index not in the updated
 schema is dropped. New indexes are created.
 
-## Indexes in Background
+## Indexes in background
 
 Indexes may take long time to compute depending upon the size of the data.
 
@@ -55,20 +55,20 @@ err = dg.Alter(context.Background(), op)
 ### Notes
 
 If executed before the indexing finishes, queries that require the new indices
-will fail with an error notifying that a given predicate is not indexed or
-doesn't have reverse edges.
+fail with an error notifying that a given predicate isn't indexed or doesn't
+have reverse edges.
 
-In a multi-node cluster, it's possible that the alphas will finish computing
-indexes at different times. Alphas may return different schema in such a case
-until all the indexes are done computing on all the Alphas.
+In a multi-node cluster, it's possible that the alphas finish computing indexes
+at different times. Alphas may return different schema in such a case until all
+the indexes are done computing on all the Alphas.
 
 You can check the background indexing status using the
 [Health](./dgraph-alpha#querying-health) query on the `/admin` endpoint.
 
-An alter operation will fail if one is already in progress with an error
+An alter operation fails if one is already in progress with an error
 `schema is already being modified. Please retry`.
 
-Dgraph will report the indexes in the schema only when the indexes are done
+Dgraph reports the indexes in the schema only when the indexes are done
 computing.
 
 ## Deleting a node type

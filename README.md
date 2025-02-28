@@ -49,7 +49,7 @@ The following components are useful when developing locally:
 
 See live changes as you write and edit.
 
-```bash
+```sh
 npm i -g mintlify
 ```
 
@@ -57,7 +57,7 @@ npm i -g mintlify
 
 Format and lint changes for easy merging.
 
-```bash
+```sh
 npm i -g @trunkio/launcher
 ```
 
@@ -70,7 +70,7 @@ to make it easier to build easy-to-consume documentation.
 To spin up a local server, run the following command at the root of the docs
 repo:
 
-```bash
+```sh
 mintlify dev
 ```
 
@@ -102,13 +102,13 @@ types. It is implemented within CI/CD, but also executable locally.
 Formatting should run automatically on save. To trigger a manual formatting of
 the repo, run:
 
-```bash
+```sh
 trunk fmt
 ```
 
 To run lint checks, run:
 
-```bash
+```sh
 trunk check # appending --all runs checks beyond changes on the current branch
 ```
 

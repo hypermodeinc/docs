@@ -10,7 +10,7 @@ The Go client communicates with the server on the gRPC port (default value
 The client can be obtained in the usual way via `go get`:
 
 ```sh
- Requires at least Go 1.11
+ Requires at least Go 1.23
 export GO111MODULE=on
 go get -u -v github.com/dgraph-io/dgo/v210
 ```
@@ -19,7 +19,7 @@ The full [GoDoc](https://godoc.org/github.com/dgraph-io/dgo) contains
 documentation for the client API along with examples showing how to use it.
 
 More details on the supported versions can be found at
-[this link](https://github.com/dgraph-io/dgo#supported-versions).
+[this link](https://github.com/hypermodeinc/dgo#supported-versions).
 
 ## Create the client
 
@@ -66,9 +66,9 @@ func newClient() *dgo.Dgraph {
 
 ### Multi-tenancy
 
-In [multi-tenancy](./multitenancy) environments, Dgraph provides a new method
-`LoginIntoNamespace()`, which will allow the users to login to a specific
-namespace.
+In [multi-tenancy](/dgraph/enterprise/multitenancy) environments, Dgraph
+provides a new method `LoginIntoNamespace()`, which will allow the users to
+login to a specific namespace.
 
 In order to create a dgo client, and make the client login into namespace `123`:
 

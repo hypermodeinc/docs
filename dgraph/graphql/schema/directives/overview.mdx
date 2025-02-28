@@ -15,7 +15,7 @@ Reference: [Auth directive](./auth)
 
 `@cascade` allows you to filter out certain nodes within a query.
 
-Reference: [Cascade](/graphql/queries/cascade)
+Reference: [Cascade](/dgraph/graphql/query/cascade)
 
 ### @custom
 
@@ -105,21 +105,21 @@ Reference: [Search](./search)
 `@secret` directive is used to store secret information, it gets encrypted and
 then stored in Dgraph.
 
-Reference: [Password Type](./types.md#password-type)
+Reference: [Password Type](/dgraph/graphql/schema/types#password-type)
 
 ### @skip
 
 The `@skip` directive can be used to fetch a field based on the value of a
 user-defined GraphQL variable.
 
-Reference: [Skip directive](./skip-include)
+Reference: [Skip directive](/dgraph/grapqhql/query/skip-include)
 
 ### @withSubscription
 
 `@withSubscription` directive when applied on a type, generates subscription
 queries for it.
 
-Reference: [Subscriptions](./subscriptions)
+Reference: [Subscriptions](/dgraph/graphql/subscriptions)
 
 ### @lambdaOnMutate
 
@@ -128,4 +128,4 @@ events(`add`/`update`/`delete`). Depending on the defined events and the
 occurrence of a mutation event, `@lambdaOnMutate` triggers the appropriate
 lambda function implemented on a given lambda server.
 
-Reference: [LambdaOnMutate directive](./webhook)
+Reference: [LambdaOnMutate directive](/dgraph/graphql/lambda/webhook)

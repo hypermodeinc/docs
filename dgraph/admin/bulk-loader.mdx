@@ -12,15 +12,15 @@ Only one or more Dgraph Zeros should be running for bulk loading. Dgraph Alphas
 are started later.
 
 You can [read the technical details](https://dgraph.io/blog/post/bulkloader/)
-about the bulk loader on the blog.
+about the Bulk Loader on the blog.
 
 <Warning>
-  Don't use the Bulk loader once the Dgraph cluster is up and running. Use it to
+  Don't use the Bulk Loader once the Dgraph cluster is up and running. Use it to
   import your existing data to a new cluster.
 </Warning>
 
 <Tip>
-  It is crucial to tune the bulk loader's flags to get good performance. See the
+  It is crucial to tune the Bulk Loader's flags to get good performance. See the
   next section for details.
 </Tip>
 
@@ -54,7 +54,7 @@ $ dgraph bulk -f <file1.rdf, file2.rdf> ...
   `--reduce_shards` should be set to 2.
 
 - **Map shards**: The `--map_shards` option must be set to at least what's set
-  for `--reduce_shards`. A higher number helps the bulk loader evenly distribute
+  for `--reduce_shards`. A higher number helps the Bulk Loader evenly distribute
   predicates between the reduce shards.
 
 For example:
@@ -176,7 +176,7 @@ You can further configure Bulk Loader using the following options:
   UIDs in data files. This is useful to avoid overriding the data in a DB
   already in operation.
 
-- `-f`, `--files`: Location of `*.rdf(.gz)` or `*.json(.gz)` file(s) to load. It
+- `-f`, `--files`: Location of `*.rdf(.gz)` or `*.json(.gz)` files to load. It
   can load multiple files in a given path. If the path is a directory, then all
   files ending in `.rdf`, `.rdf.gz`, `.json`, and `.json.gz` are loaded.
 
@@ -189,7 +189,7 @@ You can further configure Bulk Loader using the following options:
 
 - `--xidmap` (default: `disabled`. Need a path): Store xid to uid mapping to a
   directory. Dgraph saves all identifiers used in the load for later use in
-  other data ingest operations. The mapping is saved in the path you provide and
+  other data import operations. The mapping is saved in the path you provide and
   you must indicate that same path in the next load. It is recommended to use
   this flag if you have full control over your identifiers (Blank-nodes).
   Because the identifier is mapped to a specific UID.
@@ -258,9 +258,9 @@ _The following procedure is particularly relevant for Clusters that have
 
 ### For small datasets
 
-In case your dataset is small (a few GBs) it would be convenient to start by
-initializing just one Alpha node and then let the snapshot be streamed among the
-other Alpha replicas. You can follow these steps:
+In case your dataset is small (a few gigabytes) it would be convenient to start
+by initializing just one Alpha node and then let the snapshot be streamed among
+the other Alpha replicas. You can follow these steps:
 
 1. Run Bulk Loader only on one server
 
@@ -358,7 +358,7 @@ Another option, `--encrypted`, indicates whether the input `rdf`/`json` data and
 schema files are encrypted or not. With this switch, we support the use case of
 migrating data from unencrypted exports to encrypted import.
 
-So, with the preceding two options we have 4 cases:
+So, with the preceding two options there are four cases:
 
 1. `--encrypted=true` and no `encryption key-file=value`.
 
@@ -385,7 +385,7 @@ You can also use Bulk Loader, to turn off encryption. This generates a new
 unencrypted `p` that's used by the Alpha process. In this, case you need to pass
 `--encryption key-file`, `--encrypted` and `--encrypted_out` flags.
 
-```bash
+```sh
 # Encryption Key from the file path
 dgraph bulk --files "<path-to-gzipped-RDF-or-JSON-file>" --schema "<path-to-schema>" --zero "<dgraph-zero-address:grpc_port>" \
   --encrypted="true" --encrypted_out="false" \

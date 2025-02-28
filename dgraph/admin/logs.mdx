@@ -16,7 +16,7 @@ as follows:
 Lmmdd hh:mm:ss.uuuuuu threadid file:line] msg...
 ```
 
-The fields shown above are defined as follows:
+The fields are defined as follows:
 
 | Field             | Definition                                                            |
 | ----------------- | --------------------------------------------------------------------- |
@@ -31,9 +31,8 @@ The fields shown above are defined as follows:
 
 ## Log verbosity
 
-To increase log verbosity, set the flag `-v=3` (or `-v=2`) which will enable
-verbose logging for everything. You can set this flag on both Zero and Alpha
-nodes.
+To increase log verbosity, set the flag `-v=3` (or `-v=2`) which enables verbose
+logging for everything. You can set this flag on both Zero and Alpha nodes.
 
 <Note>Changing log verbosity requires a restart of the node.</Note>
 
@@ -42,7 +41,7 @@ nodes.
 Request logging, sometimes called _query logging_, lets you log queries and
 mutations. You can dynamically turn request logging on or off. To toggle request
 logging on, send the following GraphQL mutation to the `/admin` endpoint of an
-Alpha node (e.g. `localhost:8080/admin`):
+Alpha node (for example `localhost:8080/admin`):
 
 ```graphql
 mutation {
@@ -55,7 +54,7 @@ mutation {
 }
 ```
 
-Note this input flag was named logRequest until Dgraph version v23.
+<Note>This input flag was named `logRequest` in versions prior to v23.</Note>
 
 The response should look like the following:
 
@@ -80,19 +79,20 @@ The response should look like the following:
 }
 ```
 
-Also, the Alpha node will print the following INFO message to confirm that the
-mutation has been applied:
+The Alpha node prints the following `INFO` message to confirm that the mutation
+has been applied:
 
 ```sh
 I1207 14:53:28.240516   20143 config.go:39] Got config update through GraphQL admin API
 ```
 
 When enabling request logging this prints the requests that Dgraph Alpha
-receives from Ratel or other clients. In this case, the Alpha log will print
+receives from Ratel or other clients. In this case, the Alpha log prints
 something similar to:
 
 ```sh
-I1201 13:06:26.686466   10905 server.go:908] Got a query: query:"{\n  query(func: allofterms(name@en, \"Marc Caro\")) {\n  uid\n  name@en\n  director.film\n  }\n}"
+I1201 13:06:26.686466   10905 server.go:908] Got a query: query:"{\n  query(func: allofterms(name@en, \"Marc Caro\"))
+{\n  uid\n  name@en\n  director.film\n  }\n}"
 ```
 
 As you can see, we got the query that Alpha received. To read it in the original

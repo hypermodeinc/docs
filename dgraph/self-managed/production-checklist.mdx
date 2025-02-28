@@ -30,11 +30,11 @@ Dgraph client.
 Dgraph provides official clients for Go, Java, Python, and JavaScript, and C#,
 and the JavaScript client supports both gRPC and HTTP to run more easily in a
 browser. Community-developed Dgraph clients for other languages are also
-available. The full list of clients can be found in [Clients](./clients) page.
-One particular client, Dgraph Ratel, is a more sophisticated UI tool used to
-visualize queries, run mutations, and manage schemas in both GraphQL and DQL.
-Note that clients are not part of a database cluster, and simply connect to one
-or more Dgraph Alpha instances.
+available. The full list of clients can be found in
+[Clients](/dgraph/sdks/overview) page. One particular client, Dgraph Ratel, is a
+more sophisticated UI tool used to visualize queries, run mutations, and manage
+schemas in both GraphQL and DQL. Note that clients are not part of a database
+cluster, and simply connect to one or more Dgraph Alpha instances.
 
 ### Cluster Requirements
 
@@ -72,7 +72,7 @@ availability in the event of machine failures.
 ### Operating System
 
 Dgraph is designed to run on Linux. To run Dgraph on Windows and macOS, use the
-[standalone Docker image](./dgraph-overview#to-run-dgraph-using-the-standalone-docker-image).
+standalone Docker image.
 
 ### CPU and Memory
 
@@ -139,7 +139,7 @@ port is only necessary for database administrators. For example, it can be used
 to inspect the cluster metadata (/state), allocate UIDs or set txn timestamps
 (/assign), move data shards (/moveTablet), or remove cluster nodes
 (/removeNode). The full docs about Zero's administrative tasks are in
-[More About Dgraph Zero](./deploy/dgraph-zero).
+[More About Dgraph Zero](/dgraph/self-managed/dgraph-zero).
 
 <Note>
   Developers using Dgraph Live Loader or Dgraph Bulk Loader require access to
@@ -166,7 +166,7 @@ account for cluster growth over time.
 
 A Dgraph instance is run as a single process from a single static binary. It
 does not require any additional dependencies or separate services in order to
-run (see the [Supplementary Services](./#supplementary-services) section for
+run (see the [Supplementary Services](#supplementary-services) section for
 third-party services that work alongside Dgraph). A Dgraph cluster is set up by
 running multiple Dgraph processes networked together.
 
@@ -178,10 +178,9 @@ recoverability in the event of accidental data deletion, data corruption, or a
 system outage.
 
 For Dgraph, backups are created using the
-[backups enterprise feature](.//enterprise-features/binary-backups). You can
-also create full exports of your data and schema using
-[data exports](./dgraph-administration.md#exporting-database) available as an
-open source feature.
+[backups enterprise feature](/dgraph/enterprise/binary-backups). You can also
+create full exports of your data and schema using
+[data exports](/dgraph/admin/export) available as an open source feature.
 
 We **strongly** recommend that you have a backup policy in place before moving
 your app to the production phase, and we also suggest that you have a backup
@@ -191,8 +190,8 @@ running in development, staging, QA or pre-production clusters.
 We suggest that your policy include frequent full and incremental backups.
 Accordingly, we suggest the following backup policy for your production apps:
 
-- [full backup](https://dgraph.io/docs/enterprise-features/binary-backups/#forcing-a-full-backup)
-  every 24hrs
+- [full backup](/dgraph/enterprise/binary-backups#forcing-a-full-backup) every
+  24hrs
 - incremental backup every 2/4hrs
 
 ### Supplementary Services
@@ -200,6 +199,5 @@ Accordingly, we suggest the following backup policy for your production apps:
 These services aren't required for a Dgraph cluster to function but are
 recommended for better insight when operating a Dgraph cluster.
 
-- [Metrics](./metrics) and [monitoring](./monitoring) with Prometheus and
-  Grafana.
-- [Distributed tracing](./traces) with Jaeger.
+- [Metrics](/dgraph/admin/metrics) with Prometheus and Grafana.
+- [Distributed tracing](/dgraph/admin/traces) with Jaeger.

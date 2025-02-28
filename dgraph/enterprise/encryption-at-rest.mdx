@@ -36,7 +36,7 @@ encryption ,i.e. AES-128, AES-192, and AES-256, respectively.
 You can use the following command to create the encryption key file (set _count_
 to the desired key size):
 
-```bash
+```sh
 tr -dc 'a-zA-Z0-9' < /dev/urandom | dd bs=1 count=32 of=enc_key_file
 ```
 
@@ -52,7 +52,7 @@ enable encryption, as
 Here is an example that starts one Zero server and one Alpha server with the
 encryption feature turned on:
 
-```bash
+```sh
 dgraph zero --my="localhost:5080" --replicas 1 --raft "idx=1"
 dgraph alpha --encryption key-file="./enc_key_file" --my="localhost:7080" --zero="localhost:5080"
 ```
@@ -122,7 +122,7 @@ prerequisites for the Vault Server.
 The following example shows how to use Dgraph with a Vault server that holds the
 encryption key:
 
-```bash
+```sh
 ## Start Dgraph Zero in different terminal tab or window
 dgraph zero --my=localhost:5080 --replicas 1 --raft "idx=1"
 

@@ -162,7 +162,7 @@ Storage locally using one of these methods:
 - Run
   [MinIO Azure Gateway](https://docs.min.io/docs/minio-gateway-for-azure.html)
   using Docker
-  ```bash
+  ```sh
   docker run --publish 9000:9000 --name gateway \
     --env "MINIO_ACCESS_KEY=<AccountName>" \
     --env "MINIO_SECRET_KEY=<AccountKey>" \
@@ -171,7 +171,7 @@ Storage locally using one of these methods:
 - Run
   [MinIO Azure Gateway](https://docs.min.io/docs/minio-gateway-for-azure.html)
   using the MinIO Binary
-  ```bash
+  ```sh
   export MINIO_ACCESS_KEY="<AccountName>"
   export MINIO_SECRET_KEY="<AccountKey>"
   minio gateway azure
@@ -192,7 +192,7 @@ these methods:
 
 - Run [MinIO GCS Gateway](https://docs.min.io/docs/minio-gateway-for-gcs.html)
   using Docker
-  ```bash
+  ```sh
   docker run --publish 9000:9000 --name gateway \
     --volume /path/to/credentials.json:/credentials.json \
     --env "GOOGLE_APPLICATION_CREDENTIALS=/credentials.json" \
@@ -202,7 +202,7 @@ these methods:
   ```
 - Run [MinIO GCS Gateway](https://docs.min.io/docs/minio-gateway-for-gcs.html)
   using the MinIO Binary
-  ```bash
+  ```sh
   export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
   export MINIO_ACCESS_KEY=minioaccesskey
   export MINIO_SECRET_KEY=miniosecretkey

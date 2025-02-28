@@ -2,7 +2,7 @@
 title: Monitoring the Cluster
 ---
 
-## Monitoring the Kubernetes Cluster
+## Monitoring the Kubernetes cluster
 
 Dgraph exposes Prometheus metrics to monitor the state of various components
 involved in the cluster, including Dgraph Alpha and Zero nodes. You can setup
@@ -22,7 +22,8 @@ This Helm chart also installs [Grafana](http://grafana.com/),
 
 ### Before you begin
 
-- Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
+- Install the
+  [Kubernetes command line tool](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
 - Ensure that you have a production-ready Kubernetes cluster with at least three
   worker nodes running in a cloud provider of your choice.
 - Install [Helm](https://helm.sh/docs/intro/install/)
@@ -33,7 +34,7 @@ This Helm chart also installs [Grafana](http://grafana.com/),
    values as appropriate for adding endpoints, adding alert rules, adjusting
    alert manager configuration, adding Grafana dashboard, and others. For more
    information see,
-   [Dgraph helm chart values](https://github.com/hypermodeinc/dgraph/tree/main/contrib/config/monitoring/prometheus/chart-values).
+   [Dgraph Helm chart values](https://github.com/hypermodeinc/dgraph/tree/main/contrib/config/monitoring/prometheus/chart-values).
 
    ```yaml
    prometheusOperator:
@@ -120,7 +121,7 @@ This Helm chart also installs [Grafana](http://grafana.com/),
              monitor: alpha-dgraph-io
    ```
 
-1. Create a `YAML` file named `secrets.yaml` that has the credentials for
+2. Create a `YAML` file named `secrets.yaml` that has the credentials for
    Grafana.
 
    ```yaml
@@ -128,19 +129,19 @@ This Helm chart also installs [Grafana](http://grafana.com/),
      adminPassword: <GRAFANA-PASSWORD>
    ```
 
-1. Add the `prometheus-operator` Helm chart:
+3. Add the `prometheus-operator` Helm chart:
 
-   ```bash
+   ```sh
    helm repo add stable https://charts.helm.sh/stable
    helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
    helm repo update
    ```
 
-1. Install
+4. Install
    [kube-prometheus-stack](https://github.com/prometheus-operator/kube-prometheus)
-   with the `<MY-RELEASE-NAME>` in the namescape named `monitoring`:
+   with the `<MY-RELEASE-NAME>` in the namespace named `monitoring`:
 
-   ```bash
+   ```sh
    helm install <MY-RELEASE-NAME>\
      --values dgraph-prometheus-operator.yaml \
      --values secrets.yaml \
@@ -149,7 +150,7 @@ This Helm chart also installs [Grafana](http://grafana.com/),
 
    An output similar to the following appears:
 
-   ```bash
+   ```sh
    NAME: dgraph-prometheus-release
    LAST DEPLOYED: Sun Feb  5 21:35:45 2023
    NAMESPACE: monitoring
@@ -162,10 +163,10 @@ This Helm chart also installs [Grafana](http://grafana.com/),
    Visit https://github.com/prometheus-operator/kube-prometheus instructions on how to create & configure Alertmanager and Prometheus instances using the Operator.
    ```
 
-1. Check the list of services in the `monitoring` namespace using
+5. Check the list of services in the `monitoring` namespace using
    `kubectl get svc -n monitoring`:
 
-   ```bash
+   ```sh
    NAME                                                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
    alertmanager-operated                                ClusterIP   None             <none>        9093/TCP,9094/TCP,9094/UDP   29s
    dgraph-prometheus-release-alertmanager               ClusterIP   10.128.239.240   <none>        9093/TCP                     32s
@@ -178,34 +179,34 @@ This Helm chart also installs [Grafana](http://grafana.com/),
 
    ```
 
-1. Use
+6. Use
    `kubectl port-forward svc/dgraph-prometheus-release-prometheus -n monitoring 9090`
    to access Prometheus at `localhost:9090`.
-1. Use `kubectl --namespace monitoring port-forward svc/grafana 3000:80` to
+7. Use `kubectl --namespace monitoring port-forward svc/grafana 3000:80` to
    access Grafana at `localhost:3000`.
-1. Log in to Grafna using the password that you had set in the `secrets.yaml`
+8. Log in to Grafana using the password that you had set in the `secrets.yaml`
    file.
-1. In the **Dashboards** menu of Grafana, select **Import**.
-1. In the **Dashboards/Import dashboard** page copy the contents of the
-   [dgraph-kubernetes-grafana-dashboard.json](https://github.com/hypermodeinc/dgraph/blob/main/contrib/config/monitoring/grafana/dgraph-kubernetes-grafana-dashboard.json)
-   file in **Import via panel json** and click **Load**.
+9. In the **Dashboards** menu of Grafana, select **Import**.
+10. In the **Dashboards/Import dashboard** page copy the contents of the
+    [`dgraph-kubernetes-grafana-dashboard.json`](https://github.com/hypermodeinc/dgraph/blob/main/contrib/config/monitoring/grafana/dgraph-kubernetes-grafana-dashboard.json)
+    file in **Import via panel JSON** and click **Load**.
 
-   You can visualize all Dgraph Alpha and Zero Kubernetes Pods, using the regex
-   pattern `"/dgraph-.*-[0-9]*$/`. You can change this in the dashboard
-   configuration and select the variable Pod. For example, if you have multiple
-   releases, and only want to visualize the current release named
-   `my-release-3`, change the regex pattern to
-   `"/my-release-3.*dgraph-.*-[0-9]*$/"` in the Pod variable of the dashboard
-   configuration. By default, the Prometheus that you installed is configured as
-   the `Datasource` in Grafana.
+    You can visualize all Dgraph Alpha and Zero Kubernetes Pods, using the
+    regular expression pattern `"/dgraph-.*-[0-9]*$/`. You can change this in
+    the dashboard configuration and select the variable Pod. For example, if you
+    have multiple releases, and only want to visualize the current release named
+    `my-release-3`, change the regular expression pattern to
+    `"/my-release-3.*dgraph-.*-[0-9]*$/"` in the Pod variable of the dashboard
+    configuration. By default, the Prometheus that you installed is configured
+    as the `Datasource` in Grafana.
 
-## Kubernetes Storage
+## Kubernetes storage
 
 The Kubernetes configurations in the previous sections were configured to run
 Dgraph with any storage type (`storage-class: anything`). On the common cloud
-environments like AWS, GCP, and Azure, the default storage type are slow disks
-like hard disks or low IOPS SSDs. We highly recommend using faster disks for
-ideal performance when running Dgraph.
+environments like AWS, Google Cloud, and Azure, the default storage type are
+slow disks like hard disks or low IOPS SSDs. We highly recommend using faster
+disks for ideal performance when running Dgraph.
 
 ### Local storage
 
@@ -231,7 +232,7 @@ provisioner: kubernetes.io/no-provisioner
 volumeBindingMode: WaitForFirstConsumer
 ```
 
-Currently, Kubernetes does not allow automatic provisioning of local storage. So
+Currently, Kubernetes doesn't allow automatic provisioning of local storage. So
 a PersistentVolume with a specific mount path should be created:
 
 ```yaml
@@ -282,15 +283,15 @@ storage.
 
 ### Non-local persistent disks
 
-EBS volumes on AWS and PDs on GCP are persistent disks that can be configured
-with Dgraph. The disk performance is much lower than locally attached storage
-but can be sufficient for your workload such as testing environments.
+EBS volumes on AWS and PDs on Google Cloud are persistent disks that can be
+configured with Dgraph. The disk performance is much lower than locally attached
+storage but can be sufficient for your workload such as testing environments.
 
 When using EBS volumes on AWS, we recommend using Provisioned IOPS SSD EBS
 volumes (the io1 disk type) which provide consistent IOPS. The available IOPS
 for AWS EBS volumes is based on the total disk size. With Kubernetes, you can
-request io1 disks to be provisioned with this config with 50 IOPS/GB using the
-`iopsPerGB` parameter:
+request io1 disks to be provisioned with this configuration with 50 IOPS/GB
+using the `iopsPerGB` parameter:
 
 ```yaml
 kind: StorageClass
@@ -304,28 +305,28 @@ parameters:
   fsType: ext4
 ```
 
-Example: Requesting a disk size of 250Gi with this storage class would provide
+Example: requesting a disk size of 250Gi with this storage class would provide
 12.5K IOPS.
 
-## Removing a Dgraph Pod
+## Removing a Dgraph pod
 
-In the event that you need to completely remove a Pod (e.g., its disk got
-corrupted and data cannot be recovered), you can use the `/removeNode` API to
-remove the node from the cluster. With a Kubernetes StatefulSet, you'll need to
-remove the node in this order:
+In the event that you need to completely remove a Pod (for example, the disk
+became corrupted and data can't be recovered), you can use the `/removeNode` API
+to remove the node from the cluster. With a Kubernetes StatefulSet, you'll need
+to remove the node in this order:
 
 1. On the Zero leader, call `/removeNode` to remove the Dgraph instance from the
-   cluster (see [More about Dgraph Zero](.//deploy/dgraph-zero)). The removed
-   instance will immediately stop running. Any further attempts to join the
-   cluster will fail for that instance since it has been removed.
+   cluster (see [More about Dgraph Zero](/dgraph/self-managed/dgraph-zero)). The
+   removed instance will immediately stop running. Any further attempts to join
+   the cluster fails for that instance since it has been removed.
 2. Remove the PersistentVolumeClaim associated with the Pod to delete its data.
    This prepares the Pod to join with a clean state.
-3. Restart the Pod. This will create a new PersistentVolumeClaim to create new
-   data directories.
+3. Restart the Pod. This creates a new PersistentVolumeClaim to create new data
+   directories.
 
-When an Alpha Pod restarts in a replicated cluster, it will join as a new member
-of the cluster, be assigned a group and an unused index from Zero, and receive
-the latest snapshot from the Alpha leader of the group.
+When an Alpha Pod restarts in a replicated cluster, it joins as a new member of
+the cluster, be assigned a group and an unused index from Zero, and receive the
+latest snapshot from the Alpha leader of the group.
 
 When a Zero Pod restarts, it must join the existing group with an unused index
 ID. You set the index ID with the `--raft` superflag's `idx` option. This might
@@ -334,7 +335,7 @@ require you to update the StatefulSet configuration.
 ## Kubernetes and Bulk Loader
 
 You may want to initialize a new cluster with an existing data set such as data
-from the [Dgraph Bulk Loader](./bulk-loader). You can use
+from the [Dgraph Bulk Loader](/dgraph/admin/bulk-loader). You can use
 [Init Containers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
 to copy the data to the Pod volume before the Alpha process runs.
 

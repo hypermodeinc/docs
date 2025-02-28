@@ -18,7 +18,7 @@ each predicate. Dgraph follows two simple rules for converting the schema:
    `posts.OwnerUserId.`, simply have the type `[uid]`, meaning following the
    predicate leads us to a set of other objects.
 
-### Using the Migration tool
+### Using the migration tool
 
 You can run the Dgraph migrate tool using this command:
 
@@ -27,7 +27,7 @@ dgraph migrate [flags]
 ```
 
 1. Create a `config.properties` file that has the following settings and values
-   should not be in quotes:
+   shouldn't be in quotes:
 
    ```txt
    user = <SQL_DB_USERNAME>
@@ -50,9 +50,10 @@ dgraph migrate [flags]
    ```
 
 <Note>
-  If you are connecting to a remote DB hosted on AWS, GCP, and others, you need
-  to pass the flags `--host`, and `--port`. For description of the various flags
-  in the migration tool, see [command line options](./about-data-migration).
+  If you are connecting to a remote DB hosted on AWS, Google Cloud, and others,
+  you need to pass the flags `--host`, and `--port`. For description of the
+  various flags in the migration tool, see [command line
+  options](./about-data-migration).
 </Note>
 
 After the migration is complete, two new files are available:

@@ -11,12 +11,7 @@ on a single host using Docker, Docker Compose, or Dgraph command line.
 
 Dgraph cluster can be setup running as containers on a single host.
 
-<Note>
-  To evaluate Dgraph on Windows and macOS use the [standalone Docker
-  image](./dgraph-overview#to-run-dgraph-using-the-standalone-docker-image).
-</Note>
-
-#### Before you begin
+## Before you begin
 
 Ensure that you have installed:
 
@@ -24,7 +19,7 @@ Ensure that you have installed:
   mac)
 - Docker [Engine](https://docs.docker.com/engine/install/)
 
-#### Launch a Dgraph standalone cluster using Docker
+## Launch a Dgraph standalone cluster using Docker
 
 1. Select a name `<CONTAINER_NAME>` for you Docker container and create a
    directory `<GRAPH_DATA_PATH>` that for Dgraph data on your local file system.
@@ -34,8 +29,8 @@ Ensure that you have installed:
       docker run --name <CONTAINER_NAME> -d -p "8080:8080" -p "9080:9080" -v <DGRAPH_DATA_PATH>:/dgraph dgraph/standalone:latest
    ```
 
-3. Optionally launch [Ratel](./ratel/overview) using the `dgraph/ratel` docker
-   image:
+3. Optionally launch [Ratel](dgraph/ratel/overview) using the `dgraph/ratel`
+   docker image:
 
    ```sh
    docker run --name ratel  -d -p "8000:8000"  dgraph/ratel:latest
@@ -44,7 +39,7 @@ Ensure that you have installed:
    You can now use Ratel UI on your browser at localhost:8000 and connect to you
    Dgraph cluster at localhost:8080
 
-#### Setup a Dgraph cluster on a single host using Docker
+## Setup a Dgraph cluster on a single host using Docker
 
 1. Get the `<IP_ADDRESS>` of the host using:
 
@@ -101,7 +96,7 @@ Ensure that you have installed:
    To override the default ports for the second Alpha use `-o`.
 
 8. Connect the Dgraph cluster that are running using https://play.dgraph.io/.
-   For information about connecting, see [Ratel UI](/ratel/connection).
+   For information about connecting, see [Ratel UI](/dgraph/ratel/connection).
 
 </TabItem>
 
@@ -109,14 +104,14 @@ Ensure that you have installed:
 
 You can run Dgraph directly on a single Linux host.
 
-#### Before you begin
+## Before you begin
 
 Ensure that you have:
 
 - Installed [Dgraph](./download) on the Linux host.
 - Made a note of the `<IP_ADDRESS>` of the host.
 
-#### Using Dgraph Command Line
+## Using Dgraph Command Line
 
 You can start Dgraph on a single host using the dgraph command line.
 
@@ -138,13 +133,13 @@ You can start Dgraph on a single host using the dgraph command line.
    ```
 
    Dgraph Alpha nodes use two directories to persist data and
-   [WAL logs](/consistency-model), and these directories must be different for
-   each Alpha if they're running on the same host. You can use `-p` and `-w` to
-   change the location of the data and WAL directories.To learn more about other
-   flags, run `dgraph alpha --help`.
+   [WAL logs](/dgraph/concepts/consistency-model), and these directories must be
+   different for each Alpha if they're running on the same host. You can use
+   `-p` and `-w` to change the location of the data and WAL directories.To learn
+   more about other flags, run `dgraph alpha --help`.
 
 1. Connect the Dgraph cluster that are running using https://play.dgraph.io/.
-   For information about connecting, see [Ratel UI](/ratel/connection).
+   For information about connecting, see [Ratel UI](/dgraph/ratel/connection).
 
 </TabItem>
 
@@ -153,14 +148,14 @@ You can start Dgraph on a single host using the dgraph command line.
 You can install Dgraph using the Docker Compose on a system hosted on any of the
 cloud provider.
 
-#### Before you begin
+## Before you begin
 
 - Ensure that you have installed Docker
   [Compose](https://docs.docker.com/compose/).
 - IP address of the system on cloud `<CLOUD_IP_ADDRESS>`.
 - IP address of the local host `<IP_ADDRESS>`.
 
-#### Using Docker Compose
+## Using Docker Compose
 
 1. Download the Dgraph `docker-compose.yml` file:
 
@@ -227,7 +222,7 @@ cloud provider.
 
    An output similar to the following appears:
 
-   ```bash
+   ```sh
    CONTAINER ID   IMAGE                  COMMAND                  CREATED
    4b67157933b6   dgraph/dgraph:latest   "dgraph zero --my=ze—"   2 days ago
    3faf9bba3a5b   dgraph/ratel:latest    "/usr/local/bin/dgra—"   2 days ago

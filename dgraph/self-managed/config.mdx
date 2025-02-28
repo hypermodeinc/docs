@@ -35,7 +35,7 @@ syntax for superflags is as follows:
 The following example shows how to use superflags when running the
 `dgraph alpha` command.
 
-```bash
+```sh
 dgraph alpha --my=alpha.example.com:7080 --zero=zero.example.com:5080 \
   --badger "compression=zstd:1" \
   --block_rate "10" \
@@ -59,7 +59,7 @@ So, the environment variable syntax for a superflag
 
 The following is an example of environment variables for `dgraph alpha`:
 
-```bash
+```sh
 DGRAPH_ALPHA_BADGER="compression=zstd:1"
 DGRAPH_ALPHA_BLOCK_RATE="10"
 DGRAPH_ALPHA_TRACE="jaeger=http://jaeger:14268"

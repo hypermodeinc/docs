@@ -25,19 +25,19 @@ using:
 - Ensure that you have a production-ready Kubernetes cluster with at least three
   worker nodes running in a cloud provider of your choice.
 - (Optional) To run Dgraph Alpha with TLS, see
-  [TLS Configuration](/tls-configuration).
+  [TLS Configuration](./tls-configuration).
 
 #### Installing a highly available Dgraph cluster
 
 1. Verify that you are able to access the nodes in the Kubernetes cluster:
 
-   ```bash
+   ```sh
    kubectl get nodes
    ```
 
    An output similar to this appears:
 
-   ```bash
+   ```sh
      NAME                                          STATUS   ROLES    AGE   VERSION
     <aws-ip-hostname>.<region>.compute.internal   Ready    <none>   1m   v1.15.11-eks-af3caf
     <aws-ip-hostname>.<region>.compute.internal   Ready    <none>   1m   v1.15.11-eks-af3caf
@@ -50,13 +50,13 @@ using:
 
 2. Start a StatefulSet that creates Pods with `Zero`, `Alpha`, and `Ratel UI`:
 
-   ```bash
+   ```sh
    kubectl create --filename https://raw.githubusercontent.com/hypermodeinc/dgraph/main/contrib/config/kubernetes/dgraph-ha/dgraph-ha.yaml
    ```
 
    An output similar to this appears:
 
-   ```bash
+   ```sh
    service/dgraph-zero-public created
    service/dgraph-alpha-public created
    service/dgraph-ratel-public created
@@ -69,13 +69,13 @@ using:
 
 3. Confirm that the Pods were created successfully.
 
-   ```bash
+   ```sh
    kubectl get pods
    ```
 
    An output similar to this appears:
 
-   ```bash
+   ```sh
     NAME                  READY   STATUS    RESTARTS   AGE
    dgraph-alpha-0        1/1     Running   0          6m24s
    dgraph-alpha-1        1/1     Running   0          5m42s
@@ -90,7 +90,7 @@ using:
 
 4. Port forward from your local machine to the Pod:
 
-   ```bash
+   ```sh
       kubectl port-forward service/dgraph-alpha-public 8080:8080
       kubectl port-forward service/dgraph-ratel-public 8000:8000
    ```
@@ -121,19 +121,19 @@ kubectl delete persistentvolumeclaims --selector app=dgraph-alpha
   worker nodes running in a cloud provider of your choice.
 - Install [Helm](https://helm.sh/docs/intro/install/).
 - (Optional) To run Dgraph Alpha with TLS, see
-  [TLS Configuration](/tls-configuration).
+  [TLS Configuration](./tls-configuration).
 
 #### Installing a highly available Dgraph cluster using Helm
 
 1. Verify that you are able to access the nodes in the Kubernetes cluster:
 
-   ```bash
+   ```sh
    kubectl get nodes
    ```
 
    An output similar to this appears:
 
-   ```bash
+   ```sh
      NAME                                          STATUS   ROLES    AGE   VERSION
     <aws-ip-hostname>.<region>.compute.internal   Ready    <none>   1m   v1.15.11-eks-af3caf
     <aws-ip-hostname>.<region>.compute.internal   Ready    <none>   1m   v1.15.11-eks-af3caf
@@ -230,9 +230,9 @@ kubectl delete persistentvolumeclaims --selector app=dgraph-alpha
 
 ### Dgraph configuration files
 
-You can create a Dgraph [configuration](./deploy/config) files for Alpha server
-and Zero server with Helm chart configuration values, `<MY-CONFIG-VALUES>`. For
-more information about the values, see the latest
+You can create a Dgraph [configuration](./config) files for Alpha server and
+Zero server with Helm chart configuration values, `<MY-CONFIG-VALUES>`. For more
+information about the values, see the latest
 [configuration settings](https://github.com/dgraph-io/charts/blob/master/charts/dgraph/README.md#configuration).
 
 1. Open an editor of your choice and create a configuration file named

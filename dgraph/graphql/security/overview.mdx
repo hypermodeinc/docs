@@ -18,7 +18,7 @@ Dgraph's GraphQL authorization features let you specify :
   API.
 - **RBAC rules** (Role Based Access Control) at operation level based on the
   claims included in the client JWT token.
-- **ABAC rules** (Attribute Based Access COntrol) at data level using graph
+- **ABAC rules** (Attribute Based Access Control) at data level using graph
   traversal queries.
 
 <Note>
@@ -33,7 +33,7 @@ Refer to the following documentation to set your `/graphql` endpoint security :
 
 - [Handle JWT token](./jwt)
 
-- [RBAC rules](./RBAC-rules.md)
+- [RBAC rules](./rbac-rules.md)
 
 - [ABAC rules](./graphtraversal-rules.md)
 
@@ -64,8 +64,8 @@ token (Auth0, Cognito, Firebase, etc...) including Dgraph login mechanism.
 ### ACL
 
 Note that another token may be needed to access the system if ACL security is
-also enabled. See the [ACLs](./access-control-lists.md) section for details. The
-ACLs are a separate security mechanism.
+also enabled. See the [ACLs](/dgraph/enterprise/access-control-lists) section
+for details. The ACLs are a separate security mechanism.
 
 ### JWT Claims
 

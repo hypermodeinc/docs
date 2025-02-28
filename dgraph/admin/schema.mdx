@@ -15,18 +15,18 @@ node types by:
 
 When using a query, the request body is
 
-```
+```dql
 schema {}
 ```
 
 <Note>
-  Unlike regular queries, the schema query is not surrounded by curly braces.
-  Also, schema queries and regular queries cannot be combined.
+  Unlike regular queries, the schema query isn't surrounded by curly braces.
+  Also, schema queries and regular queries can't be combined.
 </Note>
 
 You can query for particular schema fields in the query body.
 
-```
+```dql
 schema {
   type
   index
@@ -41,7 +41,7 @@ schema {
 
 You can also query for particular predicates:
 
-```
+```dql
 schema(pred: [name, friend]) {
   type
   index
@@ -55,16 +55,16 @@ schema(pred: [name, friend]) {
 ```
 
 <Note>
-  If ACL is enabled, then the schema query returns only the predicates for which
-  the logged-in ACL user has read access.
+  If Access Control Lists (ACL) is enabled, then the schema query returns only
+  the predicates for which the logged-in ACL user has read access.
 </Note>
 
 Types can also be queried. Below are some example queries.
 
-```
+```dql
 schema(type: Movie) {}
 schema(type: [Person, Animal]) {}
 ```
 
-Note that type queries do not contain anything between the curly braces. The
-output will be the entire definition of the requested types.
+Note that type queries don't contain anything between the curly braces. The
+output is the entire definition of the requested types.

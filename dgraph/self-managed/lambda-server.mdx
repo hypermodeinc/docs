@@ -23,7 +23,7 @@ or review the implementation in the
 
 To run a Dgraph Lambda server with Docker:
 
-```bash
+```sh
 docker run -it --rm -p 8686:8686 -v /path/to/script.js:/app/script/script.js -e DGRAPH_URL=http://host.docker.internal:8080 dgraph/dgraph-lambda
 ```
 
@@ -51,13 +51,13 @@ given lambda server.
 
 For example:
 
-```bash
+```sh
 dgraph alpha --graphql lambda-url=http://localhost:8686/graphql-worker
 ```
 
 Then test it out with the following `curl` command:
 
-```bash
+```sh
 curl localhost:8686/graphql-worker -H "Content-Type: application/json" -d '{"resolver":"MyType.customField","parent":[{"customField":"Dgraph Labs"}]}'
 ```
 

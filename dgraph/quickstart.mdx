@@ -2,9 +2,8 @@
 title: Quickstart
 ---
 
-This is a quick start guide to run [DQL](./dgraph-glossary.md#RDF) queries and
-mutations. For an interactive experience, take the
-[tour](https://dgraph.io/tour/).
+This is a quick start guide to run [DQL](./glossary#RDF) queries and mutations.
+For an interactive experience, take the [tour](https://dgraph.io/tour/).
 
 This guide helps you:
 
@@ -66,16 +65,16 @@ Ratel makes it easier to run queries and mutations.
    }
    ```
 
-   The input data is in JSON Format. Dgraph also supports
-   [RDF](./dgraph-glossary.md#RDF) notation.
+   The input data is in JSON Format. Dgraph also supports [RDF](./glossary#RDF)
+   notation.
 
    The sample JSON data is an array of two movies with some attributes. These
-   are stored as [Nodes](./dgraph-glossary.md#node) in Dgraph.
+   are stored as [Nodes](./glossary#node) in Dgraph.
 
    The "Star Wars" movie has a `director` field which is an JSON object and a
    `starring` field which is an array of JSON objects. Each object is also
    stored as a Node in Dgraph . The `director` and `starring` are stored as
-   [relations](./dgraph-glossary.md#relation).
+   [relations](./glossary#relation).
 
 3. Click **Run** to execute the mutation.
 
@@ -98,8 +97,8 @@ Ratel makes it easier to run queries and mutations.
      }, ...
    ```
 
-Dgraph displays the universal identifiers ([UID](./dgraph-glossary.md#uid)) of
-the nodes that were created.
+Dgraph displays the universal identifiers ([UID](/dgraph/glossary#uid)) of the
+nodes that were created.
 
 ## Step 3: First query
 
@@ -130,8 +129,8 @@ matching, filtering, and sorting.
 
 1. In the **Schema** page, select **Predicates**. Dgraph creates and displays
    the predicates `name`, `release-date`,`director` and `starring`. A
-   [predicate](./dgraph-glossary.md#predicate) is Dgraph internal representation
-   of a node attribute or a relation.
+   [predicate](/dgraph/glossary#predicate) is Dgraph internal representation of
+   a node attribute or a relation.
 2. Select the `name` predicate. Ratel displays details about the predicate type
    and indexes.
 3. Select **index** and select **term** for `name` predicate.
@@ -183,8 +182,9 @@ graph, added indexes and queried the data .
 - Take the [Tour](https://dgraph.io/tour/) for a guided tour of how to write
   queries in Dgraph.
 - A wider range of queries can also be found in the
-  [Query Language](/query-language/index) reference.
-- Go to [Clients](/clients) to see how to communicate with Dgraph from your app.
+  [Query Language](/dgraph/dql/query) reference.
+- Go to [Clients](/dgraph/sdks/overview) to see how to communicate with Dgraph
+  from your app.
 
 ## Need help
 
