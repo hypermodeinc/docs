@@ -81,3 +81,35 @@ urql
 UUID
 Warnf
 WASM
+
+# Dgraph terms
+Alpha
+ACLs
+Bulk Loader
+dgo
+dgraph4j
+gzip
+Grafana
+Jaeger
+Live Loader
+MinIO
+pprof
+pydgraph
+Ratel
+[Ss]harding
+[Ss]harded
+S3
+subgraph
+tablet
+UID|UIDs
+[Uu]psert|[Uu]pserts
+Zero
+
+# General
+admin
+CPU
+CSV
+Docker Compose
+Helm
+JWT
+vCPU|vCPUs
