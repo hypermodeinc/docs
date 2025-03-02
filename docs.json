@@ -129,7 +129,7 @@
             "pages": ["dgraph/overview", "dgraph/quickstart", "dgraph/guides"]
           },
           {
-            "group": "SDKs",
+            "group": "Connecting",
             "pages": [
               "dgraph/sdks/overview",
               "dgraph/sdks/go",

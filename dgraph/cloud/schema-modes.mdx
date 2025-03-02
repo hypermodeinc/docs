@@ -40,10 +40,9 @@ queries and mutations must be valid for the applied schema.
 <Note>
   In **Strict** mode, before executing a mutation on a predicate that doesn’t
   exist in the schema, you need add that predicate to the schema. To add a
-  predicate, perform an [`alter`
-  operation](/dgraph/sdks/http#alter-the-dql-schema) with that predicate and its
-  schema type (dedicated instances only), or [update your schema](./schema) to
-  include that predicate and its schema type.
+  predicate, perform an [`alter` operation](/dgraph/http#alter-the-dql-schema)
+  with that predicate and its schema type (dedicated instances only), or [update
+  your schema](./schema) to include that predicate and its schema type.
 </Note>
 
 ### Flexible mode
@@ -53,7 +52,7 @@ removes global restrictions on schemas and mutations, and also provides access
 to advanced Dgraph features like the following:
 
 - Directly altering the schema with the
-  [`alter`](/dgraph/sdks/http/#alter-the-database) HTTP and gRPC endpoints
+  [`alter`](/dgraph/http/#alter-the-database) HTTP and gRPC endpoints
 - Support for access control lists
   ([ACLs](/dgraph/enterprise/access-control-lists/))
 
