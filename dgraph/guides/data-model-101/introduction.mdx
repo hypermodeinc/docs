@@ -17,18 +17,18 @@ the advantages of using a graph database to power your app. If you aren't
 familiar with graph data models or graph databases, this tutorial was written
 for you.
 
-## Learning Goals
+## Learning goals
 
-In this tutorial, you will learn about graphs, and how a graph database is
-different from a database built on a relational data model. You will not find
-any code or syntax in this tutorial, but rather a comparison of graphs and
-relational data models. By the end of this tutorial, you will be able to answer
-the following questions:
+In this tutorial, you'll learn about graphs, and how a graph database is
+different from a database built on a relational data model. This tutorial
+doesn't include any code or syntax, but rather a comparison of graphs and
+relational data models. By the end of this tutorial, you should be able to
+answer the following questions:
 
-- What is a graph?
+- What's a graph?
 - How are graphs different from relational models?
-- How is data modeled in a graph?
-- How is data queried from a graph?
+- How's data modeled in a graph?
+- How's data queried from a graph?
 
 Along the way, you might find that a graph is the right fit for the data model
 used by your app. Any data model that tracks lots of different relationships (or
@@ -36,22 +36,17 @@ _edges_) between various data types is a good candidate for a graph model.
 
 Whether this is the first time you are learning about graphs or looking to
 deepen your understanding of graphs with some concrete examples, this tutorial
-will help you along your journey.
+should help you along your journey.
 
 If you are already familiar with graphs, you can jump right into our coding
-example for [React](/courses/messageboardapp/react/overview/introduction/).
+example for [React](/dgraph/guides/message-board-app/introduction).
 
-If you are a SQL user and you'd like to learn how common SQL syntax maps to
-similar GraphQL syntax so you can use your SQL knowledge to jump-start your
-GraphQL learning journey, see
-[Introduction to Dgraph for SQL Users](/courses/datamodel/sql-to-dgraph/overview/introduction).
-
-## Graphs and Natural Data Modeling
+## Graphs and natural data modeling
 
 Graphs provide an alternative to tabular data structures, allowing for a more
 natural way to store and retrieve data.
 
-For example, you could imagine that we are modeling a conversation within a
+For example, you could imagine that we're modeling a conversation within a
 family:
 
 - A `father`, who starts a conversation about going to get ice cream.
@@ -61,11 +56,11 @@ family:
 This conversation could easily occur in the context of a modern social media or
 messaging app, so you can imagine the data model for such an app as follows:
 
-![A graph diagram for a social media app's data model](/images/data-model/evolution-3.png)
+![A graph diagram for a social media app's data model](/images/dgraph/guides/data-model-101/evolution-3.png)
 
-For the remainder of this module, we will use this as our example app: a basic
-social media or messaging app, with a data model that includes `people`,
-`posts`, `comments`, and `reactions`.
+For the remainder of this guide, we use this as our example app: a basic social
+media or messaging app, with a data model that includes `people`, `posts`,
+`comments`, and `reactions`.
 
 A graph data model is different from a relational model. A graph focuses on the
 relationships between information, whereas a relational model focuses on storing

@@ -5,15 +5,15 @@ description:
   this step in the GraphQL tutorial walks you through schema design.
 ---
 
-Let's start with listing down the entities that are involved in a basic todo
+Let's start with listing down the entities that are involved in a basic to do
 app.
 
 - Task
 - User
 
-![Todo Graph](/images/graphql/tutorial/todo/todo-graph.png)
+![To do Graph](/images/dgraph/guides/to-do-app/todo-graph.png)
 
-Equivalent GraphQL schema for the graph above would be as follow:
+Equivalent GraphQL schema for this graph is be as follow:
 
 ```graphql
 type Task {
@@ -27,18 +27,19 @@ type User {
 
 What are the fields that these two simple entities contain?
 
-We have a title and a status to check if it was completed or not in the `Task`
+There is a title and a status to check if it was completed or not in the `Task`
 type. Then the `User` type has a username (unique identifier), name and the
 tasks.
 
 So each user can have many tasks.
 
-![Todo Graph complete](/images/graphql/tutorial/todo/todo-graph-2.png) \*Note -
-' \* ' signifies one-to-many relationship
+![To do Graph complete](/images/dgraph/guides/to-do-app/todo-graph-2.png)
+
+<Note>' \* ' signifies one-to-many relationship</Note>
 
 Now let's add `@id` directive to `username` which makes it the unique key & also
-add `@hasInverse` directive to enable the above relationship between tasks and
-user. We represent that in the GraphQL schema shown below:
+add `@hasInverse` directive to enable the relationship between tasks and user.
+We represent that in the GraphQL schema shown below:
 
 ```graphql
 type Task {
@@ -64,13 +65,13 @@ Before we begin, make sure that you have
 
 Let's begin by starting Dgraph standalone by running the command below:
 
-```
+```sh
 docker run -it -p 8080:8080 dgraph/standalone:%VERSION_HERE
 ```
 
 Let's load up the GraphQL schema file to Dgraph:
 
-```
+```sh
 curl -X POST localhost:8080/admin/schema --data-binary '@schema.graphql'
 ```
 
@@ -81,9 +82,9 @@ Set up any of them and point it at `http://localhost:8080/graphql`. If you know
 lots about GraphQL, you might want to explore the schema, queries and mutations
 that were generated from the schema.
 
-## Mutating Data
+## Mutating data
 
-Let's add a user and some todos in our Todo App.
+Let's add a user and some to dos in our To Do app.
 
 ```graphql
 mutation {
@@ -113,9 +114,9 @@ mutation {
 }
 ```
 
-## Querying Data
+## Querying data
 
-Let's fetch the todos to list in our Todo App:
+Let's fetch the to dos to list in our To Do app:
 
 ```graphql
 query {
@@ -130,7 +131,7 @@ query {
 }
 ```
 
-Running the query above should return JSON response as shown below:
+Running this query should return JSON response as shown below:
 
 ```json
 {
@@ -173,12 +174,12 @@ Running the query above should return JSON response as shown below:
 }
 ```
 
-## Querying Data with Filters
+## Querying data with filters
 
-Before we get into querying data with filters, we will be required to define
-search indexes to the specific fields.
+Before we get into querying data with filters, we're required to define search
+indexes to the specific fields.
 
-Let's say we have to run a query on the _completed_ field, for which we add
+Let's say we want to run a query on the `completed` field, for which we add
 `@search` directive to the field, as shown in the schema below:
 
 ```graphql
@@ -195,11 +196,11 @@ The `@search` directive is added to support the native search indexes of
 
 Resubmit the updated schema -
 
-```
+```sh
 curl -X POST localhost:8080/admin/schema --data-binary '@schema.graphql'
 ```
 
-Now, let's fetch all todos which are completed :
+Now, let's fetch all to dos which are completed:
 
 ```graphql
 query {
@@ -210,7 +211,7 @@ query {
 }
 ```
 
-Next, let's say we have to run a query on the _title_ field, for which we add
+Next, let's say we want to run a query on the `title` field, for which we add
 another `@search` directive to the field, as shown in the schema below:
 
 ```graphql
@@ -228,11 +229,11 @@ stopwords.
 
 Resubmit the updated schema -
 
-```
+```sh
 curl -X POST localhost:8080/admin/schema --data-binary '@schema.graphql'
 ```
 
-Now, let's try to fetch todos whose title has the word _"avoid"_ :
+Now, let's try to fetch to dos whose title has the word "avoid":
 
 ```graphql
 query {
