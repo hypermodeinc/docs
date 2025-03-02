@@ -2,6 +2,10 @@
 title: Raft
 ---
 
+import DgraphWIP from "/snippets/dgraph-wip.mdx"
+
+<DgraphWIP />
+
 Dgraph uses Raft whenever consensus among a distributed set of servers is
 required, such as ensuring that a transaction has been properly committed, or
 determining the proper timestamp for a read or write. Each zero or alpha `group`

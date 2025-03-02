@@ -2,6 +2,10 @@
 title: HTTP
 ---
 
+import DgraphWIP from "/snippets/dgraph-wip.mdx"
+
+<DgraphWIP />
+
 It is also possible to interact with Dgraph directly via its HTTP endpoints.
 This allows clients to be built for languages that don't have access to a
 working gRPC implementation.
@@ -16,10 +20,10 @@ implementation of the Go client.
 
 Similar to the Go client example, we use a bank account transfer example.
 
-## Create the Client
+## Create the client
 
-A client built on top of the HTTP API will need to track three pieces of state
-for each transaction.
+A client built on top of the HTTP API needs to track three pieces of state for
+each transaction.
 
 1. A start timestamp (`start_ts`). This uniquely identifies a transaction, and
    doesn't change over the transaction lifecycle.
@@ -34,11 +38,11 @@ for each transaction.
 3. The set of predicates modified by the transaction (`preds`). This aids in
    predicate move detection.
 
-   Every mutation would send back a new set of preds. The client must merge them
-   with the existing set. Optionally, a client can de-dup these keys while
+   Every mutation would send back a new set of predicates. The client must merge
+   them with the existing set. Optionally, a client can de-dup these keys while
    merging.
 
-## Alter the DQL Schema
+## Alter the DQL schema
 
 You may need to alter the DQL schema to declare predicate types, to add
 predicate search indexes and to declare the predicates expected in entities of
@@ -140,13 +144,6 @@ To query the database, the `/query` endpoint is used. Remember to set the
 `Content-Type` header to `application/dql` to ensure that the body of the
 request is parsed correctly.
 
-<Note>
-  GraphQL+- has been renamed to Dgraph Query Language (DQL). While
-  `application/dql` is the preferred value for the `Content-Type` header, we
-  will continue to support `Content-Type: application/graphql+-` to avoid making
-  breaking changes.
-</Note>
-
 To get the balances for both accounts:
 
 ```sh
@@ -204,7 +201,7 @@ should become part of the transaction state.
 
 Mutations can be done over HTTP by making a `POST` request to an Alpha's
 `/mutate` endpoint. We need to send a mutation to Dgraph with the updated
-balances. If Bob transfers $10 to Alice, then the RDFs to send are:
+balances. If Bob transfers $10 to Alice, then the RDF triples to send are:
 
 ```txt
 <0x1> <balance> "110" .
@@ -274,8 +271,8 @@ transaction instead of just one, then the keys and predicates provided during
 the commit would be the union of all keys and predicates returned in the
 responses from the `/mutate` endpoint.
 
-The `preds` field is used to abort the transaction in cases where some of the
-predicates are moved. This field is not required and the `/commit` endpoint also
+The `preds` field is used to cancel the transaction in cases where some of the
+predicates are moved. This field isn't required and the `/commit` endpoint also
 accepts the old format, which was a single array of keys.
 
 ```sh
@@ -312,7 +309,7 @@ The transaction is now complete.
 
 If another client were to perform another transaction concurrently affecting the
 same keys, then it's possible that the transaction would _not_ be successful.
-This is indicated in the response when the commit's attempted.
+This is indicated in the response when the commit is attempted.
 
 ```json
 {
@@ -328,9 +325,9 @@ This is indicated in the response when the commit's attempted.
 In this case, it should be up to the user of the client to decide if they wish
 to retry the transaction.
 
-## Aborting the transaction
+## Cancelling the transaction
 
-To abort a transaction, use the same `/commit` endpoint with the `abort=true`
+To cancel a transaction, use the same `/commit` endpoint with the `abort=true`
 parameter while specifying the `startTs` value for the transaction.
 
 ```sh
@@ -380,11 +377,11 @@ $ curl -H "Content-Type: application/dql" -X POST "localhost:8080/query?be=true"
 Dgraph supports gzip-compressed requests to and from Dgraph Alphas for `/query`,
 `/mutate`, and `/alter`.
 
-Compressed requests: To send compressed requests, set the HTTP request header
+Compressed requests: to send compressed requests, set the HTTP request header
 `Content-Encoding: gzip` along with the gzip-compressed payload.
 
-Compressed responses: To receive gzipped responses, set the HTTP request header
-`Accept-Encoding: gzip` and Alpha will return gzipped responses.
+Compressed responses: to receive compressed responses, set the HTTP request
+header `Accept-Encoding: gzip`.
 
 Example of a compressed request via curl:
 

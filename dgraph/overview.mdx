@@ -3,6 +3,10 @@ title: Overview
 description: Dgraph is a horizontally-scalable and distributed graph database.
 ---
 
+import DgraphWIP from "/snippets/dgraph-wip.mdx"
+
+<DgraphWIP />
+
 ## Dgraph
 
 Designed from day one to be distributed for scale and speed, **Dgraph** is the
@@ -18,14 +22,15 @@ Dgraph is different from other graph databases in a number of ways, including:
   standards-compliant. Unlike most GraphQL solutions, no resolvers are needed -
   Dgraph resolves queries automatically through graph navigation.
 
-- **Fully Transactional and ACID Compliant**: Dgraph satisfies demanding OLTP
-  workloads that require frequent inserts and updates.
+- **Fully Transactional and ACID-compliant**: Dgraph satisfies demanding
+  transactional workloads that require frequent inserts and updates, with
+  guarantees for atomicity, consistency, isolation, and durability (ACID)
 
 - **Language support & Text Search**: Full-text searching is included and
   strings can be expressed in multiple languages.
 
-- **Geo data and geo queries**: Dgraph supports points and shapes data and
-  queries can use near, within, contains, or intersects geo functions.
+- **Geolocation data and queries**: Dgraph supports points and shapes data, and
+  queries can use near, within, contains, or intersects functions.
 
 - **True Free Open Source Software (FOSS)**: Dgraph is free to use, and
   [available on github](https://github.com/hypermodeinc/dgraph).
@@ -77,9 +82,14 @@ This JSON structure succinctly represents rich data:
 
 Dgraph supports [JSON](/dgraph/dql/json) data as both a return structure and an
 insert/update format. In Dgraph JSON nesting represents relations among nodes,
-so `{ "name":"Bob", "homeAddress": { "Street":"123 Main st" } }` efficiently and
-intuitively represents a Person node, an Address node, and a relation (called
-"homeAddress") between them.
+so
+
+```json
+{ "name": "Bob", "homeAddress": { "Street": "123 Main st" } }
+```
+
+efficiently and intuitively represents a Person node, an Address node, and a
+relation (called `homeAddress`) between them.
 
 In addition, Dgraph supports [RDF triples](/dgraph/dql/rdf) as an input and
 output format.

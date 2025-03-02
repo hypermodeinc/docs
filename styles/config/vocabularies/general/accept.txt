@@ -84,7 +84,9 @@ WASM
 # Dgraph terms
 Alpha
 ACLs
+ACID
 Bulk Loader
+CloudWatch
 dateTime
 dgo
 [Dd]graph
@@ -111,13 +113,17 @@ Zero
 
 # Badger terms
 Badger
+SSTables
 
 # General
 [Aa]dmin
 CPU
 CSV
 Docker Compose
+func
+goroutine|goroutines
 Helm
 JWT
 nullable
+prefetch|prefetches
 vCPU|vCPUs

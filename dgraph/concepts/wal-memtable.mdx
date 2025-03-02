@@ -2,6 +2,10 @@
 title: WAL and Memtable
 ---
 
+import DgraphWIP from "/snippets/dgraph-wip.mdx"
+
+<DgraphWIP />
+
 Per the Raft (and MVCC) approach, transactions write data to a `Write-Ahead Log`
 (WAL) to ensure it's durably stored. Soon after commit, data is also updated in
 the `memtables` which are memory buffers holding recently-updated data. The

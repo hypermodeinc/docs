@@ -137,7 +137,7 @@
               "dgraph/sdks/java",
               "dgraph/sdks/javascript",
               "dgraph/sdks/dotnet",
-              "dgraph/sdks/http"
+              "dgraph/http"
             ]
           },
           {

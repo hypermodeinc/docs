@@ -66,7 +66,7 @@ func main() {
 By default, Badger ensures all data persists to disk. It also supports a pure
 in-memory mode. When Badger is running in this mode, all data remains in memory
 only. Reads and writes are much faster, but Badger loses all stored data in the
-case of a crash or close. To open badger in in-memory mode, set the `InMemory`
+case of a crash or close. To open Badger in in-memory mode, set the `InMemory`
 option.
 
 ```go
@@ -288,8 +288,8 @@ for {
 
 Badger provides support for ordered merge operations. You can define a func of
 type `MergeFunc` which takes in an existing value, and a value to be _merged_
-with it. It returns a new value which is the result of the _merge_ operation.
-All values are specified in byte arrays. For e.g., here is a merge function
+with it. It returns a new value which is the result of the merge operation. All
+values are specified in byte arrays. For example, this is a merge function
 (`add`) which appends a `[]byte` value to an existing `[]byte` value.
 
 ```go
@@ -354,7 +354,7 @@ m.Add(uint64ToBytes(3))
 res, _ := m.Get() // res should have value 6 encoded
 ```
 
-## Setting time to live (TTL) and user metadata on keys
+## Setting time to live and user metadata on keys
 
 Badger allows setting an optional Time to Live (TTL) value on keys. Once the TTL
 has elapsed, the key is no longer retrievable and is eligible for garbage
@@ -461,13 +461,13 @@ blog post key might look like:`feed:userUuid:timestamp:postUuid`. Here, the
 `timestamp` part of the key is treated as an attribute, and items are stored in
 the corresponding order:
 
-| Order ASC | Key                                                           |
-| :-------: | :------------------------------------------------------------ |
-|     1     | feed:tQpnEDVRoCxTFQDvyQEzdo:1733127889:tQpnEDVRoCxTFQDvyQEzdo |
-|     2     | feed:tQpnEDVRoCxTFQDvyQEzdo:1733127533:1Mryrou1xoekEaxzrFiHwL |
-|     3     | feed:tQpnEDVRoCxTFQDvyQEzdo:1733127486:pprRrNL2WP4yfVXsSNBSx6 |
+| Order Ascending | Key                                                           |
+| :-------------: | :------------------------------------------------------------ |
+|        1        | feed:tQpnEDVRoCxTFQDvyQEzdo:1733127889:tQpnEDVRoCxTFQDvyQEzdo |
+|        2        | feed:tQpnEDVRoCxTFQDvyQEzdo:1733127533:1Mryrou1xoekEaxzrFiHwL |
+|        3        | feed:tQpnEDVRoCxTFQDvyQEzdo:1733127486:pprRrNL2WP4yfVXsSNBSx6 |
 
-It's important to properly configure keys for lexicographical sorting to avoid
+It is important to properly configure keys for lexicographical sorting to avoid
 incorrect ordering.
 
 A **prefix scan** through the preceding keys can be achieved using the prefix
@@ -540,12 +540,13 @@ return nextCursor, err
 
 ### Key-only iteration
 
-Badger supports a unique mode of iteration called _key-only_ iteration. It's
+Badger supports a unique mode of iteration called _key-only_ iteration. It is
 several order of magnitudes faster than regular iteration, because it involves
-access to the LSM-tree only, which is usually resident entirely in RAM. To
-enable key-only iteration, you need to set the `IteratorOptions.PrefetchValues`
-field to `false`. This can also be used to do sparse reads for selected keys
-during an iteration, by calling `item.Value()` only when required.
+access to the Log-structured merge (LSM)-tree only, which is usually resident
+entirely in RAM. To enable key-only iteration, you need to set the
+`IteratorOptions.PrefetchValues` field to `false`. This can also be used to do
+sparse reads for selected keys during an iteration, by calling `item.Value()`
+only when required.
 
 ```go
 err := db.View(func(txn *badger.Txn) error {
@@ -570,16 +571,16 @@ serially to be sent over network, written to disk, or even written back to
 Badger. This is a lot faster way to iterate over Badger than using a single
 Iterator. Stream supports Badger in both managed and normal mode.
 
-Stream uses the natural boundaries created by SSTables within the LSM tree, to
-quickly generate key ranges. Each goroutine then picks a range and runs an
-iterator to iterate over it. Each iterator iterates over all versions of values
-and is created from the same transaction, thus working over a snapshot of the
-DB. Every time a new key is encountered, it calls `ChooseKey(item)`, followed by
-`KeyToList(key, itr)`. This allows a user to select or reject that key, and if
-selected, convert the value versions into custom key-values. The goroutine
-batches up 4 MB worth of key-values, before sending it over to a channel.
-Another goroutine further batches up data from this channel using _smart
-batching_ algorithm and calls `Send` serially.
+Stream uses the natural boundaries created by SSTables within the Log-structure
+merge (LSM)-tree, to quickly generate key ranges. Each goroutine then picks a
+range and runs an iterator to iterate over it. Each iterator iterates over all
+versions of values and is created from the same transaction, thus working over a
+snapshot of the DB. Every time a new key is encountered, it calls
+`ChooseKey(item)`, followed by `KeyToList(key, itr)`. This allows a user to
+select or reject that key, and if selected, convert the value versions into
+custom key-values. The goroutine batches up 4 MB worth of key-values, before
+sending it over to a channel. Another goroutine further batches up data from
+this channel using _smart batching_ algorithm and calls `Send` serially.
 
 This framework is designed for high throughput key-value iteration, spreading
 the work of iteration across many goroutines. `DB.Backup` uses this framework to
@@ -624,9 +625,9 @@ if err := stream.Orchestrate(context.Background()); err != nil {
 
 Badger values need to be garbage collected, because of two reasons:
 
-- Badger keeps values separately from the LSM tree. This means that the
-  compaction operations that clean up the LSM tree do not touch the values at
-  all. Values need to be cleaned up separately.
+- Badger keeps values separately from the Log-structure merge (LSM)-tree. This
+  means that the compaction operations that clean up the LSM tree do not touch
+  the values at all. Values need to be cleaned up separately.
 
 - Concurrent read/write transactions could leave behind multiple values for a
   single key, because they're stored with different versions. These could
@@ -639,9 +640,9 @@ appropriate time:
 
 - `DB.RunValueLogGC()`: This method is designed to do garbage collection while
   Badger is online. Along with randomly picking a file, it uses statistics
-  generated by the LSM-tree compactions to pick files that are likely to lead to
-  maximum space reclamation. It's recommended to be called during periods of low
-  activity in your system, or periodically. One call would only result in
+  generated by the LSM tree compactions to pick files that are likely to lead to
+  maximum space reclamation. It is recommended to be called during periods of
+  low activity in your system, or periodically. One call would only result in
   removal of at max one log file. As an optimization, you could also immediately
   re-run it whenever it returns nil error (indicating a successful value log
   GC), as shown below.
