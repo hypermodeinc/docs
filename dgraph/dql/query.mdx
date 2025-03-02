@@ -3,8 +3,7 @@ title: Query Structure
 ---
 
 Fetching data with Dgraph Query Language (DQL), is done through **DQL Queries**.
-Adding, modifying or deleting data is done through
-[DQL Mutations](./dql-mutation).
+Adding, modifying or deleting data is done through [DQL Mutations](./mutation).
 
 This overview explains the structure of DQL Queries and provides links to the
 appropriate DQL reference documentation.
@@ -90,9 +89,8 @@ A nested block
 
 - may specify filters to apply on the related nodes
 - may specify criteria on the relationships attributes using
-  [filtering on facets](./query-language/facets.md#filtering-on-facets))
-- provides the list of relationship attributes
-  ([facets](/query-language/facets))) to fetch.
+  [filtering on facets](./facets.md#filtering-on-facets))
+- provides the list of relationship attributes ([facets](./facets))) to fetch.
 - provides the list of attributes and relationships to fetch for the related
   nodes.
 
@@ -228,8 +226,8 @@ You can flatten the response structure at any level using
 
 Entering the list of all the attributes you want to fetch could be fastidious
 for large queries or repeating blocks : you may take advantage of
-[fragments](./query-language/fragments) and the
-[expand function](./query-language/expand-predicates).
+[fragments](./fragments) and the
+[expand function](./expand).
 
 ### Node criteria (used by root function or by filter)
 
@@ -285,18 +283,18 @@ other blocks.
 ### Summarizing functions
 
 When dealing with array attributes or with relationships to many node, the query
-may use summary functions [count](./query-language/count) ,
-[min](./query-language/aggregation.md#min),
-[max](./query-language/aggregation.md#max),
-[avg](./query-language/aggregation.md#sum-and-avg) or
-[sum](./query-language/aggregation.md#sum-and-avg).
+may use summary functions [count](./count) ,
+[min](./aggregation#min),
+[max](./aggregation#max),
+[avg](./aggregation#sum-and-avg) or
+[sum](./aggregation#sum-and-avg).
 
 The query may also contain
-[mathematical functions](./query-language/math-on-value-variables) on value
+[mathematical functions](./math-on-value-variables) on value
 variables.
 
 Summary functions can be used in conjunction with
-[@grouby](./query-language/groupby) directive to create aggregated value
+[@grouby](./groupby) directive to create aggregated value
 variables.
 
 The query may contain **anonymous block** to return computed values. **Anonymous
@@ -308,14 +306,14 @@ only to returned computed values.
 When you specify nested blocks and filters you basically describe a way to
 traverse the graph.
 
-[@recurse](./query-language/recurse-query) and
-[@ignorereflex](./query-language/ignorereflex-directive) are directives used to
+[@recurse](./recurse) and
+[@ignorereflex](./ignorereflex) are directives used to
 optionally configure the graph traversal.
 
 ### Pattern matching
 
 Queries with nested blocks with filters may be turned into pattern matching
-using [@cascade](./query-language/cascade-directive) directive : nodes that
+using [@cascade](./cascade) directive : nodes that
 don’t have all attributes and all relationships specified in the query at any
 sub level are not considered in the result. So only nodes "matching" the
 complete query structure are returned.
@@ -324,7 +322,7 @@ complete query structure are returned.
 
 The query can ask for the shortest path between a source (from) node and
 destination (to) node using the
-[shortest](./query-language/kshortest-path-queries) query block.
+[shortest](./shortest) query block.
 
 ### Comments
 

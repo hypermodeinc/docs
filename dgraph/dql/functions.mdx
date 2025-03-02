@@ -3,12 +3,12 @@ title: Functions
 ---
 
 Functions allow filtering based on properties of nodes or
-[variables](./query-language/value-variables.md). Functions can be applied in
-the query root or in filters.
+[variables](./variables#value-variables.md). Functions can be applied in the
+query root or in filters.
 
 Comparison functions (`eq`, `ge`, `gt`, `le`, `lt`) in the query root (`func:`)
-can only be applied on [indexed predicates](./dql-schema.md#indexing). Since
-v1.2, comparison functions can now be used on
+can only be applied on [indexed predicates](./schema#indexing). Since v1.2,
+comparison functions can now be used on
 [@filter](./query-language/graphql-fundamentals.md#applying-filters) directives
 even on predicates that haven't been indexed. Filtering on non-indexed
 predicates can be slow for large datasets, as they require iterating over all of
@@ -83,9 +83,8 @@ insensitive.
 
 Query Example: All nodes that have a `name` containing either `poison` or
 `peacock`. Many of the returned nodes are movies, but people like Joan Peacock
-also meet the search terms because without a
-[cascade directive](./query-language/cascade-directive.md) the query doesn't
-require a genre.
+also meet the search terms because without a [cascade directive](./cascade) the
+query doesn't require a genre.
 
 ```json
 {
@@ -419,8 +418,8 @@ more than `100` actors.
 
 Query Example: A movie in each genre that has over 30000 movies. Because there
 is no order specified on genres, the order will be by UID. The
-[count index](/dql-schema.md#count-index) records the number of edges out of
-nodes and makes such queries more.
+[count index](/schema#count-index) records the number of edges out of nodes and
+makes such queries more.
 
 ```json
 {

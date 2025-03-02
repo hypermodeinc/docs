@@ -2,11 +2,11 @@
 title: Indexes
 ---
 
-Filtering on a predicate by applying a [function](./query-language/functions)
-requires an index.
+Filtering on a predicate by applying a [function](./functions) requires an
+index.
 
-Indices are defined in the [Dgraph types schema](./dql/dql-schema) using
-`@index` directive.
+Indices are defined in the [Dgraph types schema](./schema) using `@index`
+directive.
 
 Here are some examples:
 
@@ -53,8 +53,6 @@ The indices available for `float32vector` are as follows.
 | Dgraph function | Required index / tokenizer | Notes                                                   |
 | :-------------- | :------------------------- | :------------------------------------------------------ |
 | `similar_to`    | `hnsw`                     | HNSW index supports parameters `metric` and `exponent`. |
-
-#
 
 `hnsw` (**Hierarchical Navigable Small World**) index supports the following
 parameters
@@ -147,7 +145,7 @@ score: [int] .
 - A delete operation deletes the value from the list.
 - Querying for these predicates would return the list in an array.
 - Indexes can be applied on predicates which have a list type and you can use
-  [Functions](./query-language/functions.md) on them.
+  [Functions](./functions) on them.
 - Sorting is not allowed using these predicates.
 - These lists are like an unordered set. For example: `["e1", "e1", "e2"]` may
   get stored as `["e2", "e1"]`, i.e., duplicate values will not be stored and

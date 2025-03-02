@@ -65,10 +65,10 @@ predicates.
 
 ## Sort edge by nested node values
 
-Dgraph [sorting](./query-language/sorting) is based on a single level of the
-subgraph. To sort a level by the values of a deeper level, use
-[query variables](./query-language/query-variables) to bring nested values up to
-the level of the edge to be sorted.
+Dgraph [sorting](./sorting) is based on a single level of the subgraph. To sort
+a level by the values of a deeper level, use
+[query variables](./variables#query-variables) to bring nested values up to the
+level of the edge to be sorted.
 
 Example: get all actors from a Steven Spielberg movie sorted alphabetically. The
 actor's name isn't accessed from a single traversal from the `starring` edge.

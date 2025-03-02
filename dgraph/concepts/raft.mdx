@@ -147,7 +147,7 @@ synced to disk, the logs can be discarded.
 Snapshots are taken by default after 10000 Raft entries, with a frequency of 30
 minutes. The frequency indicates the time between two subsequent snapshots.
 These numbers can be adjusted using the `--raft`
-[superflag](./deploy/cli-command-reference)'s `snapshot-after-entries` and
+[superflag](/dgraph/cli/command-reference)'s `snapshot-after-entries` and
 `snapshot-after-duration` options respectively. Snapshots are created only when
 conditions set by both of these options have been met.
 

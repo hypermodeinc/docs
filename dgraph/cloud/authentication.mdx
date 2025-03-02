@@ -24,9 +24,9 @@ Client apps accessing the Dgraph Cloud cluster endpoint
 
 - `/graphql`
 
-with [anonymous access](dgraph/reference/graphql/security/anonymous-access) not
-set on the requested operation, must present a valid **client** or **admin API
-key** in the `Dg-Auth` or `X-Auth-Token` header of every HTTP request.
+with [anonymous access](dgraph/graphql/security/anonymous-access) not set on the
+requested operation, must present a valid **client** or **admin API key** in the
+`Dg-Auth` or `X-Auth-Token` header of every HTTP request.
 
 **Client API keys** can only be used to perform query, mutation, and commit
 operations.
