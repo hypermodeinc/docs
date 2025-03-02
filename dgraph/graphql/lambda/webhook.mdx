@@ -17,8 +17,8 @@ using the `@lambdaOnMutate` directive along with the mutation events
 
 <Note>
   Lambda webhooks only listen for events from the root mutation. You can create
-  a schema that is capable of creating deeply nested objects, but only the
-  parent level webhooks will be evoked for the mutation.
+  a schema that's capable of creating deeply nested objects, but only the parent
+  level webhooks are invoked for the mutation.
 </Note>
 
 For example, to define a lambda webhook for all mutation events
@@ -47,10 +47,10 @@ as resolvers in your JS source code. To add the resolvers you should use the
 #### Event object
 
 You also have access to the `event` object within the resolver. Depending on the
-value of `operation` field, only one of the fields (`add`/`update`/`delete`)
-will be part of the `event` object. The definition of `event` is as follows:
+value of `operation` field, only one of the fields (`add`/`update`/`delete`) is
+part of the `event` object. The definition of `event` is as follows:
 
-```
+```json
 "event": {
     "__typename": "<Typename>",
     "operation": "<one-of: add/update/delete>",
@@ -100,7 +100,7 @@ self.addWebHookResolvers({
 ### Example
 
 Finally, if you execute an `addAuthor` mutation, the `add` operation mapped to
-the `addAuthorWebhook` resolver will be triggered:
+the `addAuthorWebhook` resolver is triggered:
 
 ```graphql
 mutation {

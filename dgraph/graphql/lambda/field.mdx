@@ -65,14 +65,14 @@ either the `addGraphQLResolvers` or `addMultiParentGraphQLResolvers` methods.
   using `graphql` in the [Lambda mutations article](./mutation).
 </Tip>
 
-For example, to define JavaScript lambda functions for...
+For example, to define JavaScript lambda functions for
 
-- `Author`,
-- `Character`,
-- `Human`, and
+- `Author`
+- `Character`
+- `Human`
 - `Droid`
 
-...and add them as resolvers, do the following:
+and add them as resolvers, do the following
 
 ```javascript
 const authorBio = ({ parent: { name, dob } }) =>
@@ -149,7 +149,7 @@ query {
 }
 ```
 
-...you should see a response such as the following:
+You should see a response such as the following:
 
 ```json
 {
@@ -176,7 +176,7 @@ query {
 }
 ```
 
-...you should see a response such as the following:
+You should see a response such as the following:
 
 ```json
 {
@@ -194,7 +194,7 @@ query {
 ```
 
 <Note>
-  The `Human` and `Droid` types will inherit the `bio` lambda field from the
+  The `Human` and `Droid` types inherit the `bio` lambda field from the
   `Character` interface.
 </Note>
 
