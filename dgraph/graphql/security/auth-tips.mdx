@@ -9,7 +9,7 @@ import DgraphWIP from "/snippets/dgraph-wip.mdx"
 
 <DgraphWIP />
 
-## Public Data
+## Public data
 
 Many apps have data that can be accessed by anyone, logged in or not. That also
 works nicely with Dgraph auth rules.
@@ -20,7 +20,7 @@ Dgraph auth rules, if a type doesn't have, for example, a `query` auth rule or
 the auth rule doesn't depend on a JWT value, then the data can be accessed
 without a signed JWT.
 
-For example, the todo app might allow anyone, logged in or not, to view any
+For example, the to do app might allow anyone, logged in or not, to view any
 author, but not make any mutations unless logged in as the author or an admin.
 That would be achieved by rules like the following.
 
@@ -36,7 +36,7 @@ type User @auth(
 }
 ```
 
-Maybe some todos can be marked as public and users you aren't logged in can see
+Maybe some to dos can be marked as public and users you aren't logged in can see
 those.
 
 ```graphql
@@ -74,7 +74,7 @@ type User @auth(query: { rule: "{$isAuthenticated: { eq: \"true\" } }" }) {
 
 specifies that only authenticated users can query other users.
 
-### blocking an operation of everyone
+### Blocking an operation for everyone
 
 If the `ROLE` claim isn't present in a JWT, any rule that relies on `ROLE`
 simply evaluates to false.
@@ -92,4 +92,4 @@ type User @auth(
 }
 ```
 
-will block the delete operation for everyone.
+block the delete operation for everyone.

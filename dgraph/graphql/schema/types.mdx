@@ -17,19 +17,19 @@ Dgraph database.
 
 Dgraph's GraphQL implementation comes with the standard GraphQL scalar types:
 `Int`, `Float`, `String`, `Boolean` and `ID`. There's also an `Int64` scalar,
-and a `DateTime` scalar type that is represented as a string in RFC3339 format.
+and a `DateTime` scalar types represented as a string in RFC3339 format.
 
-Scalar types, including `Int`, `Int64`, `Float`, `String` and `DateTime`; can be
+Scalar types, including `Int`, `Int64`, `Float`, `String` and `DateTime`, can be
 used in lists. Lists behave like an unordered set in Dgraph. For example:
-`["e1", "e1", "e2"]` may get stored as `["e2", "e1"]`, so duplicate values will
-not be stored and order might not be preserved. All scalars may be nullable or
+`["e1", "e1", "e2"]` may get stored as `["e2", "e1"]`, so duplicate values are
+not stored and order might not be preserved. All scalars may be nullable or
 non-nullable.
 
 <Note>
   The `Int64` type introduced in release v20.11 represents a signed integer
   ranging between `-(2^63)` and `(2^63 -1)`. Signed `Int64` values in this range
-  will be parsed correctly by Dgraph as long as the client can serialize the
-  number correctly in JSON. For example, a JavaScript client might need to use a
+  are parsed correctly by Dgraph as long as the client can serialize the number
+  correctly in JSON. For example, a JavaScript client might need to use a
   serialization library such as
   [`json-bigint`](https://www.npmjs.com/package/json-bigint) to correctly write
   an `Int64` value in JSON.
@@ -37,14 +37,14 @@ non-nullable.
 
 The `ID` type is special. IDs are auto-generated, immutable, and can be treated
 as strings. Fields of type `ID` can be listed as nullable in a schema, but
-Dgraph will never return null.
+Dgraph never returns null.
 
-- _Schema rule_: `ID` lists aren't allowed - e.g. `tags: [String]` is valid, but
-  `ids: [ID]` is not.
-- _Schema rule_: Each type you define can have at most one field with type `ID`.
+- Schema rule: `ID` lists aren't allowed. For example, `tags: [String]` is
+  valid, but `ids: [ID]` isn't valid.
+- Schema rule: Each type you define can have at most one field with type `ID`.
   That includes IDs implemented through interfaces.
 
-It is not possible to define further scalars - you'll receive an error if the
+It isn't possible to define further scalars - you'll receive an error if the
 input schema contains the definition of a new scalar.
 
 For example, the following GraphQL type uses all of the available scalars.
@@ -70,7 +70,7 @@ A Float array can be used as a vector using `@embedding` directive. It denotes a
 vector of floating point numbers, i.e an ordered array of float32. A type can
 contain more than one vector predicate.
 
-Vectors are normaly used to store embeddings obtained from an ML model.
+Vectors are normally used to store embeddings obtained from a language model.
 
 When a Float vector is indexed, the GraphQL `querySimilar<type name>ByEmbedding`
 and `querySimilar<type name>ById` functions can be used for
@@ -167,10 +167,10 @@ type Author {
 }
 ```
 
-- _Schema rule_: Lists of lists aren't accepted. For example:
+- Schema rule: Lists of lists aren't accepted. For example:
   `multiTags: [[Tag!]]` isn't valid.
-- _Schema rule_: Fields with arguments are not accepted in the input schema
-  unless the field is implemented using the `@custom` directive.
+- Schema rule: Fields with arguments aren't accepted in the input schema unless
+  the field is implemented using the `@custom` directive.
 
 ### Interfaces
 
@@ -179,13 +179,13 @@ follow. When a type implements an interface, that means it has all fields of the
 interface and some extras.
 
 According to GraphQL specifications, you can have the same fields in
-implementing types as the interface. In such cases, the GraphQL layer will
-generate the correct Dgraph schema without duplicate fields.
+implementing types as the interface. In such cases, the GraphQL layer generates
+the correct Dgraph schema without duplicate fields.
 
 If you repeat a field name in a type, it must be of the same type (including
 list or scalar types), and it must have the same nullable condition as the
 interface's field. Note that if the interface's field has a directive like
-`@search` then it will be inherited by the implementing type's field.
+`@search` then it is inherited by the implementing type's field.
 
 For example:
 
@@ -208,12 +208,12 @@ type Banana implements Fruit {
 ```
 
 <Tip>
-  GraphQL will generate the correct Dgraph schema where fields occur only once.
+  GraphQL generates the correct Dgraph schema where fields occur only once.
 </Tip>
 
 The following example defines the schema for posts with comment threads. As
-mentioned, Dgraph will fill in the `Question` and `Comment` types to make the
-full GraphQL types.
+mentioned, Dgraph fills in the `Question` and `Comment` types to make the full
+GraphQL types.
 
 ```graphql
 interface Post {
@@ -230,7 +230,7 @@ type Comment implements Post {
 }
 ```
 
-The generated schema will contain the full types, for example, `Question` and
+The generated schema contains the full types, for example, `Question` and
 `Comment` get expanded as:
 
 ```graphql
@@ -255,9 +255,9 @@ type Comment implements Post {
 </Note>
 
 Dgraph currently allows this behavior for `ID` type fields since the `ID` type
-field is not a predicate. Note that in both interfaces and the implementing
-type, the nullable condition and type (list or scalar) for the `ID` field should
-be the same. For example:
+field isn't a predicate. Note that in both interfaces and the implementing type,
+the nullable condition and type (list or scalar) for the `ID` field should be
+the same. For example:
 
 ```graphql
 interface Shape {
@@ -342,8 +342,8 @@ type Home {
 }
 ```
 
-So, when you want to query members in a `Home`, you will be able to do a GraphQL
-query like this:
+So, when you want to query members in a `Home`, you can submit a GraphQL query
+like this:
 
 ```graphql
 query {
@@ -367,7 +367,7 @@ query {
 }
 ```
 
-And the results of the GraphQL query will look like the following:
+And the results of the GraphQL query looks like the following:
 
 ```json
 {
@@ -395,9 +395,9 @@ And the results of the GraphQL query will look like the following:
 ### Password type
 
 A password for an entity is set with setting the schema for the node type with
-`@secret` directive. Passwords cannot be queried directly, only checked for a
+`@secret` directive. Passwords can't be queried directly, only checked for a
 match using the `checkTypePassword` function where `Type` is the node type. The
-passwords are encrypted using [Bcrypt](https://en.wikipedia.org/wiki/Bcrypt).
+passwords are encrypted using [`Bcrypt`](https://en.wikipedia.org/wiki/Bcrypt).
 
 <Note>
   For security reasons, Dgraph enforces a minimum password length of 6
@@ -471,7 +471,7 @@ output:
 }
 ```
 
-If the password is wrong you will get the following response:
+If the password is wrong you receive the following response:
 
 ```json
 {

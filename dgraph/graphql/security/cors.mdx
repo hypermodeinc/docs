@@ -14,9 +14,9 @@ To restrict origins of HTTP requests:
    [schema update](/dgraph/graphql/api#using-updategqlschema-to-add-or-modify-a-schema)
    or via the Cloud console's [Schema](https://cloud.dgraph.io/_/schema) page.
 
-For example, the following will restrict all origins except the ones specified.
+For example, the following restricts all origins except the ones specified.
 
-```
+```sh
 # Dgraph.Allow-Origin "https://example.com"
 # Dgraph.Allow-Origin "https://www.example.com"
 ```
@@ -27,6 +27,6 @@ Cloud console, continues to work.
 <Note>CORS restrictions only apply to browsers.</Note>
 
 <Note>
-  By default, `/graphql` endpoint does not limit the request origin
+  By default, the `/graphql` endpoint doesn't limit the request origin
   (`Access-Control-Allow-Origin: *`).
 </Note>

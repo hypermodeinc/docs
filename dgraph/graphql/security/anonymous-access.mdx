@@ -14,7 +14,7 @@ import DgraphWIP from "/snippets/dgraph-wip.mdx"
   Dgraph Cloud.
 </Note>
 
-## Turn Anonymous Access On and Off
+## Configure anonymous access
 
 To turn `/graphql` endpoint anonymous access off
 
@@ -27,28 +27,28 @@ With **Anonymous Access** turned `off`, any client accessing the `/graphql`
 endpoint must pass a valid client or admin
 [API Key](/dgraph/cloud/authentication) in `DG-Auth` or `X-Auth-Token` header.
 
-With **Anonymous Access** turned `on` (Default configuration), you need to
-further define the permission per `type` defined in your GraphQL Schema.
+With anonymous access turned `on` (Default configuration), you need to further
+define the permission per `type` defined in your GraphQL Schema.
 
 ## Edit GraphQL type operations access permissions
 
-have a button to "Edit Permissions" When **Anonymous Access** is `on`, any newly
-deployed type will have `read` and `write` permissions for anonymous users.
+have a button to "Edit Permissions" When anonymous access is `on`, any newly
+deployed type has `read` and `write` permissions for anonymous users.
 
 To control the anonymous access to operations :
 
 1. Open the [Access](https://cloud.dgraph.io/_/schema?tab=anon-access) tab in
    the [Schema](https://cloud.dgraph.io/_/schema) section.
 2. Click on `Edit Permission`
-3. For every Type defined in your GraphQL schema, Edit Permissions will show
-   check boxes to enable Anonymous Access to Read and Write. -- Check `Read` to
-   allow anonymous clients to access the `get<Type>` and `query<Type>`
-   operations. -- Check `Write` to allow anonymous clients to access the
-   `add<Type>`, `update<Type>`, and `delete<Type>` operations.
+3. For every Type defined in your GraphQL schema, Edit Permissions shows check
+   boxes to enable Anonymous Access to Read and Write. -- Check `Read` to allow
+   anonymous clients to access the `get<Type>` and `query<Type>` operations. --
+   Check `Write` to allow anonymous clients to access the `add<Type>`,
+   `update<Type>`, and `delete<Type>` operations.
 
 <Note>
-  Anonymous Access works as an access control security one level above the [RBAC
-  (Role Based Access Control)](/dgraph/graphql/schema/directives/auth).
+  Anonymous access works as an access control security one level higher than
+  [Role-based Access Control (RBAC)](/dgraph/graphql/schema/directives/auth).
 </Note>
 
 Permission settings only applies to the parent type operations: it's still

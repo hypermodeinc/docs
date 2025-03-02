@@ -42,9 +42,11 @@ You'll be able to traverse the graph from a Post to its author, but not able to
 traverse from an author to all their posts. Sometimes that's the right choice,
 but mostly, you'll want two way relationships.
 
-Note: Dgraph won't store the reverse direction, so if you change your schema to
-include a `@hasInverse`, you'll need to migrate the data to add the reverse
-edges.
+<Note>
+  Dgraph won't store the reverse direction, so if you change your schema to
+  include a `@hasInverse`, you'll need to migrate the data to add the reverse
+  edges.
+</Note>
 
 ### Two-way relationship
 
@@ -68,21 +70,21 @@ graph. For example, adding a new post with
 ```graphql
 mutation {
     addPost(input: [
-        { ..., author: { username: "diggy" }}
+        { ..., author: { username: "Alice" }}
     ]) {
         ...
     }
 }
 ```
 
-will automatically add it to Diggy's list of `posts`. Deleting the post will
-remove it from Diggy's `posts`. Similarly, using an update mutation on an author
-to insert a new post will automatically add Diggy as the author
+automatically adds it to Alice's list of `posts`. Deleting the post removes it
+from Alice's `posts`. Similarly, using an update mutation on an author to insert
+a new post automatically adds Alice as the author.
 
 ```graphql
 mutation {
     updateAuthor(input: {
-        filter: { username: { eq: "diggy "}},
+        filter: { username: { eq: "Alice" }},
         set: { posts: [ {... new post ...}]}
     }) {
         ...
@@ -92,11 +94,10 @@ mutation {
 
 ### Many edges
 
-It is not really possible to auto-detect what a schema designer meant for
-two-way edges. There's not even only one possible relationship between two
-types. Consider, for example, if an app recorded the posts an `Author` had
-recently liked (so it can suggest interesting material) and just a tally of all
-likes on a post.
+It isn't possible to determine what a schema designer meant for two-way edges.
+There's not even a single possible relationship between two types. Consider, for
+example, if an app recorded the posts an `Author` had recently liked (so it can
+suggest interesting material) and just a tally of all likes on a post.
 
 ```graphql
 type Author {
@@ -112,9 +113,9 @@ type Post {
 }
 ```
 
-It is not possible to detect what is meant here as a one-way edge, or which
-edges are linked as a two-way connection. That's why `@hasInverse` is needed -
-so you can enforce the semantics your app needs.
+It isn't possible to detect what's meant here as a one-way edge, or which edges
+are linked as a two-way connection. That's why `@hasInverse` is needed - so you
+can enforce the semantics your app needs.
 
 ```graphql
 type Author {
@@ -130,6 +131,5 @@ type Post {
 }
 ```
 
-Now, Dgraph will manage the connection between posts and authors and you can get
-on with concentrating on what your app needs to to - suggesting them interesting
-content.
+Now, Dgraph manages the connection between posts and authors and you can get on
+with concentrating on your app.
