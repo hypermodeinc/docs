@@ -5,44 +5,44 @@ title: Dgraph Cloud Overview
 ## Dgraph
 
 Designed from day one to be distributed for scale and speed, **Dgraph** is the
-native Graph database with native GraphQL support. It is open-source, scalable,
-distributed, highly-available, and lightning fast.
+native Graph database with native GraphQL support. It is open source, scalable,
+distributed, highly available, and lightning fast.
 
 Dgraph is different from other graph databases in a number of ways, including:
 
-- **Distributed Scale**: &emsp; _Built from day 1 to be distributed, to handle
-  larger data sets._
+- **Distributed Scale**: Built from day 1 to be distributed, to handle larger
+  data sets.
 
-- **GraphQL Support**: &emsp; _GraphQL is built in to make data access simple
-  and standards-compliant. Unlike most GraphQL solutions, no resolvers are
-  needed - Dgraph resolves queries automatically through graph navigation._
+- **GraphQL Support**: GraphQL is built in to make data access simple and
+  standards-compliant. Unlike most GraphQL solutions, no resolvers are needed -
+  Dgraph resolves queries automatically through graph navigation.
 
-- **Fully Transactional and ACID Compliant**: &emsp; _Dgraph satisfies demanding
-  OLTP workloads that require frequent inserts and updates._
+- **Fully Transactional and ACID Compliant**: Dgraph satisfies demanding OLTP
+  workloads that require frequent inserts and updates.
 
-- **Language support & Text Search**: &emsp; _Full-text searching is included
-  and strings can be expressed in multiple languages_
+- **Language support & Text Search**: Full-text searching is included and
+  strings can be expressed in multiple languages
 
-- **Gelocation data and geo querie**: &emsp; _Dgraph can store Points and Shapes
-  and queries can use near, within, contains, intersects geo functions_
+- **Gelocation data and geo queries**: Dgraph can store Points and Shapes and
+  queries can use near, within, contains, intersects geo functions
 
-More details at [Dgraph Database Overview](./dgraph-overview)
+More details at [Dgraph Database Overview](/dgraph/overview)
 
 ## Dgraph Cloud
 
 Dgraph Cloud gives you the power of Dgraph database including performance,
-high-availability, horizontally-scalability and the support of GraphQL for rapid
-app development in a hosted and fully-managed environment. Dgraph Cloud lets you
+high-availability, horizontally scalability and the support of GraphQL for rapid
+app development in a hosted and fully managed environment. Dgraph Cloud lets you
 focus on building apps, not managing infrastructure.
 
-### Dgraph Cloud Cluster Types
+### Cloud cluster types
 
 - **Shared Instance**: Dgraph Cloud with
   [shared instances](https://cloud.dgraph.io/pricing?type=shared) is a fast and
-  easy way to get started with GraphQL, and does not require any graph database
+  easy way to get started with GraphQL, and doesn't require any graph database
   knowledge to start and run. Shared instances run in a common database using
-  Dgraph multi-tenancy. Your data is protected but you share resources and will
-  have limited scale.
+  Dgraph multi-tenancy. Your data is protected but you share resources and have
+  limited scale.
 
 - **Dedicated instances** run on their own dedicated hardware to ensure
   consistent performance. This option extends the capabilities of the lower-cost
@@ -60,7 +60,7 @@ focus on building apps, not managing infrastructure.
 | Power your app with native GraphQL support                | Dgraph is built for graph data, so you don’t need to configure and maintain a cumbersome GraphQL layer over a traditional relational database.                                                                                                           |
 | Evolve your schema without downtime                       | When it comes time to deploy a new schema, you can do that in seconds, not hours.                                                                                                                                                                        |
 | GraphQL-based authorization and management                | GraphQL is used throughout Dgraph Cloud, so you don’t need to use another tool or learn another syntax to handle user authorization or database administration tasks such as schema changes and data exports.                                            |
-| Work with the Open Source ecosystem                       | Because Dgraph is open-source, your app relies on a codebase that you can contribute to, not an opaque “black box”.                                                                                                                                      |
+| Work with the Open Source ecosystem                       | Because Dgraph is open source, your app relies on a codebase that you can contribute to, not an opaque “black box”.                                                                                                                                      |
 
 ## Next steps
 
@@ -69,31 +69,29 @@ trial account at [Dgraph Cloud](https://cloud.dgraph.io) and try the
 [Introduction to GraphQL](https://dgraph.io/tour/graphqlintro/2/) tutorial to
 define a GraphQL schema, insert and query data in just a few minutes.
 
-## Recommended Reading
+## Recommended reading
 
 Please see the following topics to learn more about how to use Dgraph Cloud:
 
-- [Administering your Backend](./admin/_index) covers topics such as how to
-  programmatically set your schema, and import or export your data
-  - [Authentication](./admin/authentication) will guide you in creating a API
-    token. Since all admin APIs require an auth token, this is a good place to
-    start.
-  - [Schema](./admin/schema) describes how to programmatically query and update
-    your GraphQL schema.
-  - [Import and Exporting Data](./admin/import-export) is a guide for exporting
-    your data from a Dgraph Cloud backend, and how to import it into another
-    cluster
-  - [Dropping Data](./admin/drop-data) will guide you through dropping all data
-    from your Dgraph Cloud backend.
-  - [Switching Schema Modes](./admin/schema-modes) will guide you through
-    changing Dgraph Cloud schema mode.
-- [Dgraph Cloud API](./cloud-api/overview) Dgraph Cloud now includes a API so
-  you can programmatically manage your backends
-- [Schema](./cloud-api/schema) lists commands related to schema.
+- Administering your backend covers topics such as how to programmatically set
+  your schema, and import or export your data
+  - [Authentication](./authentication) guides you in creating a API token. Since
+    all admin APIs require an auth token, this is a good place to start.
+  - [Schema](./schema) describes how to programmatically query and update your
+    GraphQL schema.
+  - [Import and Exporting Data](./import-export) is a guide for exporting your
+    data from a Dgraph Cloud backend, and how to import it into another cluster
+  - [Dropping Data](./drop-data) guides you through dropping all data from your
+    Dgraph Cloud backend.
+  - [Switching Schema Modes](./schema-modes) guides you through changing Dgraph
+    Cloud schema mode.
+- [Dgraph Cloud API](./api/overview) Dgraph Cloud now includes a API so you can
+  programmatically manage your backends
+- [Schema](./api/schema) lists commands related to schema.
 
 You might also be interested in:
 
-- [Dgraph GraphQL Schema Reference](./graphql/schema), which lists all the types
-  and directives supported by Dgraph
-- [Dgraph GraphQL API Reference](./graphql-clients), which serves as a guide to
-  using your new `/graphql` endpoint
+- [Dgraph GraphQL Schema Reference](/dgraph/graphql/schema/types), which lists
+  all the types and directives supported by Dgraph
+- [Dgraph GraphQL API Reference](/dgraph/graphql/connecting), which serves as a
+  guide to using your new `/graphql` endpoint

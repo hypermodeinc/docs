@@ -9,35 +9,35 @@ HTTP GET requests.
 
 ## Getting your GraphQL endpoint
 
-<TabGroup>
-<TabItem value="Dgraph Cloud">
+<Tabs>
+  <Tab title="Dgraph Cloud">
 
-- access the [Overview](https://cloud.dgraph.io/_/dashboard) panel of Dgraph
-  Cloud dashboard.
-- the `GraphQL Endpoint` is displayed at the bottom.
-- click on the link button to copy it.
+    - access the [Overview](https://cloud.dgraph.io/_/dashboard) panel of Dgraph
+      Cloud dashboard.
+    - the `GraphQL Endpoint` is displayed at the bottom.
+    - click on the link button to copy it.
 
-</TabItem>
-<TabItem value="On prem">
+  </Tab>
+  <Tab title="On prem">
 
-`/graphql` is served by the Alpha nodes of the Dgraph cluster on the
-HTTP-external-public port. Refer to
-[ports usage](/graphql/graphql-clients/ports-usage).
+    `/graphql` is served by the Alpha nodes of the Dgraph cluster on the
+    HTTP-external-public port. Refer to
+    [ports usage](/dgraph/self-managed/ports-usage).
 
-For a local install the graphql endpoint would be
+    For a local install the graphql endpoint would be
 
-```
-http://localhost:8080/graphql
-```
+    ```
+    http://localhost:8080/graphql
+    ```
 
-The URL depends on your configuration and specifically
+    The URL depends on your configuration and specifically
 
-- the port offest defined by `--port_offset` option of the dgraph alpha command.
-- the configuration of TLS for https.
-- the usage of a load balancer.
+    - the port offest defined by `--port_offset` option of the dgraph alpha command.
+    - the configuration of TLS for https.
+    - the usage of a load balancer.
 
-</TabItem>
-</TabGroup>
+  </Tab>
+</Tabs>
 
 ## IDEs
 
@@ -61,7 +61,7 @@ you can use your favorite GraphQL IDE.
 You are ready to write GraphQL queries and mutation and to run them against
 Dgraph cluster.
 
-When building an app in React, Vue, Svelte or any of you favorite framework,
+When building an app in React, Vue, Svelte, or any of you favorite framework,
 using a GraphQL client library is a must.
 
 As Dgraph serves a

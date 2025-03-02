@@ -18,7 +18,7 @@ between queries or mutations and subscriptions is that subscriptions are
 stateful and require maintaining the GraphQL document, variables, and context
 over the lifetime of the subscription.
 
-![Subscription](/images/graphql/subscription_flow.png "Subscription in GraphQL")
+![Subscription](/images/dgraph/graphql/subscription_flow.png "Subscription in GraphQL")
 
 ## Enable subscriptions in GraphQL
 
@@ -37,8 +37,8 @@ type Todo @withSubscription {
 
 ## @withSubscription with @auth
 
-You can use [@auth](./graphql/schema/directives/auth) access control rules in
-conjunction with `@withSubscription`.
+You can use [@auth](/dgraph/graphql/schema/directives/auth) access control rules
+in conjunction with `@withSubscription`.
 
 Consider following Schema that has both the `@withSubscription` and `@auth`
 directives defined on type `Todo`.
@@ -73,7 +73,8 @@ authorization rule enforces that only to-do tasks owned by `$USER` are returned.
 Dgraph uses the websocket subprotocol `subscription-transport-ws`.
 
 Clients must be instantiated using the WebSocket URL of the GraphQL API which is
-your [Dgraph GraphQL endpoint](./graphql/graphql-clients/endpoint/_index.md)
+your
+[Dgraph GraphQL endpoint](dgraph/graphql/connecting#getting-your-graphql-endpoint)
 with `https` replaced by `wss`.
 
 If your Dgraph endpoint is
@@ -129,7 +130,7 @@ const client = new Client({
 In this example,
 
 - **process.env.REACT_APP_DGRAPH_ENDPOINT** is your
-  [Dgraph GraphQL endpoint](./graphql/graphql-clients/endpoint/_index.md)
+  [Dgraph GraphQL endpoint](dgraph/graphql/connecting#getting-your-graphql-endpoint)
 - **process.env.REACT_APP_DGRAPH_WSS** is the WebSocket URL
 - **props.token** is the JWT token of the logged-in user.
 

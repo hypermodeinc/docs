@@ -2,8 +2,7 @@
 title: Quickstart
 ---
 
-This is a quick start guide to run [DQL](./glossary#RDF) queries and mutations.
-For an interactive experience, take the [tour](https://dgraph.io/tour/).
+This is a quick start guide to run [DQL](./glossary#DQL) queries and mutations.
 
 This guide helps you:
 
@@ -14,15 +13,13 @@ This guide helps you:
 ## Step 1: Run Dgraph
 
 The easiest way to get Dgraph up and running is using the
-[Dgraph Cloud](https://cloud.dgraph.io).  
-You can Login to Dgraph cloud using **Sign in with Google**, **Sign in with
-GitHub** or any other email account that you prefer to use.
+[Dgraph on Hypermode](https://hypermode.com/go).
 
-1. In the Dgraph cloud console, click **Launch new backend**.
-1. Select a plan, cloud provider, and region that meets your requirements.
-1. Type a name for your Dgraph cloud instance.
-1. Click **Launch**
-1. Click **Ratel** to access the UI that provides browser-based queries,
+1. In the Hypermode console, click **Launch new backend**
+2. Select a region that meets your requirements
+3. Type a name for your graph instance
+4. Click **Launch**
+5. Click **Ratel** to access the UI that provides browser-based queries,
    mutations and visualizations.
 
 ## Step 2: Run mutation
@@ -120,7 +117,7 @@ nodes that were created.
 
 2. In the response panel, select **Graph**, to view a Graph output:
 
-   ![Query result](/images/dql-quickstart/img1.png)
+   ![Query result](/images/dgraph/quickstart-graph.png)
 
 ## Step 4: Alter schema
 
@@ -136,7 +133,7 @@ matching, filtering, and sorting.
 3. Select **index** and select **term** for `name` predicate.
 4. Click **Update** to apply the index.
 
-![Adding an index](/images/dql-quickstart/predicate-name.png)
+![Adding an index](/images/dgraph/quickstart-predicate.png)
 
 Set the index for the `release_date`:
 

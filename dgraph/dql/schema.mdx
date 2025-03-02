@@ -42,8 +42,8 @@ to another entity:
   predicate value is the string "Alice".
 - when we store that Alice knows Bob, we may use a predicate `knows` with the
   node representing Alice. The value of this predicate would be the
-  [uid](./dgraph-glossary.md#uid) of the node representing Bob. In that case,
-  `knows` is a [relationship](#relationship).
+  [UID](./dgraph-glossary.md#uid) of the node representing Bob. In that case,
+  `knows` is a relationship.
 
 Dgraph maintains a list of all predicates names and their type in the **Dgraph
 types schema**.
@@ -71,7 +71,7 @@ approaches.
 For example, you can run the following mutation (using the [RDF](./dql-rdf)
 notation):
 
-```graphql
+```dql
 {
   set {
     <_:jedi1> <character_name> "Luke Skywalker" .
@@ -83,11 +83,11 @@ notation):
 }
 ```
 
-In `strict` mode, the mutation will return an error if the predicates are not
-present in the Dgraph types schema.
+In `strict` mode, the mutation returns an error if the predicates aren't present
+in the Dgraph types schema.
 
-In `flexible` mode, Dgraph will execute the mutation and adds the predicates
-“character_name” and “has_for_child” to the Dgraph types.
+In `flexible` mode, Dgraph executes the mutation and adds the predicates
+`character_name` and `has_for_child` to the Dgraph types.
 
 ## Predicate types
 
@@ -102,7 +102,7 @@ A predicate type is either created
 - by altering the Dgraph types schema (See
   [Update Dgraph types](./update-dgraph-types.md) ) or
 - during a mutation, if the Dgraph Cluster [schema mode](./schema-modes) is
-  `flexible` and the predicate used is not yet declared.
+  `flexible` and the predicate used isn't yet declared.
 
   If a predicate type isn't declared in the schema, then the type is inferred
   from the first mutation and added to the schema.
@@ -115,7 +115,7 @@ A predicate type is either created
 A predicate can hold a literal value ([Scalar type](#scalar-types)) or a
 relation to another entity ([UID type](#uid-type)).
 
-### Scalar Types
+### Scalar types
 
 For all triples with a predicate of scalar types the object is a literal.
 
@@ -137,21 +137,21 @@ For all triples with a predicate of scalar types the object is a literal.
   to Dgraph.
 </Note>
 
-### Vector Type
+### Vector type
 
 The `float32vector` type denotes a vector of floating point numbers, i.e an
 ordered array of float32. A node type can contain more than one vector
 predicate.
 
-Vectors are normaly used to store embeddings obtained from other information
+Vectors are normally used to store embeddings obtained from other information
 through an ML model. When a `float32vector` is
 [indexed](./dql/predicate-indexing.md), the DQL
-[similar_to](./query-language/functions#vector-similarity-search) function can
+[`similar_to`](./query-language/functions#vector-similarity-search) function can
 be used for similarity search.
 
-### UID Type
+### UID type
 
-The `uid` type denotes a relationship; internally each node is identified by
+The `uid` type denotes a relationship. Internally each node is identified by
 it's UID which is a `uint64`.
 
 ### Predicate name rules
@@ -172,16 +172,17 @@ supports
 Following characters are accepted if prefixed/suffixed with alphanumeric
 characters.
 
-```
+```txt
 ][&*()_-+=!#$%
 ```
 
-_Note: You are not restricted to use @ suffix, but the suffix character gets
-ignored._
+<Note>
+  You aren't restricted to use @ suffix, but the suffix character gets ignored.
+</Note>
 
-The special characters below are not accepted.
+The special characters below aren't accepted.
 
-```
+```txt
 ^}|{`\~
 ```
 
@@ -196,7 +197,7 @@ with angle brackets `<>` when executing the schema mutation.
 
 Schema syntax:
 
-```
+```dql
 <职业>: string @index(exact) .
 <年龄>: int @index(int) .
 <地点>: geo @index(geo) .
@@ -209,13 +210,13 @@ need to use the `@lang` directive and enter values using your language tag.
 
 Schema:
 
-```
+```dql
 <公司>: string @index(fulltext) @lang .
 ```
 
 Mutation:
 
-```
+```dql
 {
   set {
     _:a <公司> "Dgraph Labs Inc"@en .
@@ -227,7 +228,7 @@ Mutation:
 
 Query:
 
-```
+```dql
 {
   q(func: alloftext(<公司>@zh, "夏新科技有限责任公司")) {
     uid
@@ -236,15 +237,15 @@ Query:
 }
 ```
 
-### Unique Directive
+### Unique directive
 
 The unique constraint enables us to guarantee that all values of a predicate are
 distinct. To implement the @unique directive for a predicate, you should define
 it in the schema and create an index on the predicate based on its type. If a
-user does not add the proper index to the predicate, then Dgraph will return an
+user doesn't add the proper index to the predicate, then Dgraph returns an
 error.
 
-Dgraph will automatically include the @upsert directive for the predicate. To
+Dgraph automatically includes the @upsert directive for the predicate. To
 enforce this uniqueness constraint, a predicate must have an index, as explained
 below. Currently, we only support the @unique directive on newly created
 predicates with the data types string and integer.
@@ -256,7 +257,7 @@ predicates with the data types string and integer.
 
 This is how you define the unique directive for a predicate.
 
-```
+```dql
 email: string @unique @index(exact)  .
 ```
 
@@ -271,11 +272,11 @@ constraints when running concurrent upserts.
 
 This is how you specify the upsert directive for a predicate.
 
-```
+```dql
 email: string @index(exact) @upsert .
 ```
 
-### Noconflict directive
+### NoConflict directive
 
 The NoConflict directive prevents conflict detection at the predicate level.
 This is an experimental feature and not a recommended directive but exists to
@@ -285,7 +286,7 @@ count index.
 
 This is how you specify the `@noconflict` directive for a predicate.
 
-```
+```dql
 email: string @index(exact) @noconflict .
 ```
 
@@ -296,13 +297,12 @@ a schema type for storage. Dgraph supports a number of [RDF](./dql-rdf) types.
 
 If a predicate has a schema type and a mutation has an RDF type with a different
 underlying Dgraph type, the convertibility to schema type is checked, and an
-error is thrown if they are incompatible, but the value is stored in the RDF
-type's corresponding Dgraph type. Query results are always returned in schema
-type.
+error is thrown if incompatible, but the value is stored in the RDF type's
+corresponding Dgraph type. Query results are always returned in schema type.
 
 For example, if no schema is set for the `age` predicate. Given the mutation
 
-```
+```dql
 {
  set {
   _:a <age> "15"^^<xs:int> .
@@ -325,17 +325,17 @@ Dgraph:
 ### Password type
 
 A password for an entity is set with setting the schema for the attribute to be
-of type `password`. Passwords cannot be queried directly, only checked for a
+of type `password`. Passwords can't be queried directly, only checked for a
 match using the `checkpwd` function. The passwords are encrypted using
-[bcrypt](https://en.wikipedia.org/wiki/Bcrypt).
+[`bcrypt`](https://en.wikipedia.org/wiki/Bcrypt).
 
 For example: to set a password, first set schema, then the password:
 
-```
+```dql
 pass: password .
 ```
 
-```
+```dql
 {
   set {
     <0x123> <name> "Password Example" .
@@ -346,7 +346,7 @@ pass: password .
 
 to check a password:
 
-```
+```dql
 {
   check(func: uid(0x123)) {
     name
@@ -357,7 +357,7 @@ to check a password:
 
 output:
 
-```
+```dql
 {
   "data": {
     "check": [
@@ -372,7 +372,7 @@ output:
 
 You can also use alias with password type.
 
-```
+```dql
 {
   check(func: uid(0x123)) {
     name
@@ -383,7 +383,7 @@ You can also use alias with password type.
 
 output:
 
-```
+```dql
 {
   "data": {
     "check": [
@@ -414,7 +414,7 @@ Node types are optional.
 Node type declares the list of predicates that could be present in a Node of
 this type. Node type are defined using the following syntax:
 
-```
+```dql
 name: string @index(term) .
 dob: datetime .
 home_address: string .
@@ -439,9 +439,9 @@ type Student {
 
 Reverse predicates can also be included inside a type definition. For example,
 the following schema, declares that a node of type Child may have a `~children`
-inverse relationhsip. .
+inverse relationship.
 
-```
+```dql
 children: [uid] @reverse .
 name: string @index(term) .
 type Parent {
@@ -452,10 +452,8 @@ type Child {
   name
   <~children>
 }
-```
-
-<Tip> Predicates with special caracter are enclosed with angle
 brackets `<>` </Tip>
+```
 
 ### Node type attribution
 
@@ -465,15 +463,13 @@ name.
 A node may be given many types, `dgraph.type` is an array of strings.
 
 <Note>
-  DQL types is only declarative are not enforced by Dgraph. In DQL, - you can
-  always add node without a `dgraph.type` predicate, that is without a type. -
-  you can always add a predicate to a node that is not declared in the predicate
-  list of the node type.
+  DQL types are only declarative and aren't enforced by Dgraph. In DQL, you can
+  always add node without a `dgraph.type` predicate.
 </Note>
 
 Here's an example of mutation to set the types of a node:
 
-```
+```dql
 {
   set {
     _:a <name> "Garfield" .
@@ -494,9 +490,9 @@ list of potential predicates of a node is necessary:
   [expand(_all_)](./query-language/expand-predicates) feature of DQL.
 
 The Dgraph node types are used in those 2 use cases: when executing the
-`delete all predicates` mutation or the `expand all` query, Dgraph will check if
-the node has a `dgraph.type` predicate. If so, the engine is using the declared
-type to find the list of predicates and apply the delete or the expand on all of
+`delete all predicates` mutation or the `expand all` query, Dgraph checks if the
+node has a `dgraph.type` predicate. If so, the engine is using the declared type
+to find the list of predicates and apply the delete or the expand on all of
 them.
 
 When nodes have a type (i.e have a `dgraph.type` predicate), then you can use

@@ -2,36 +2,25 @@
 title: Advanced Queries with DQL
 ---
 
-_You can now
-[embed DQL queries inside your GraphQL schema](https://dgraph.io/docs/graphql/custom/graphqlpm),
-which is recommended for most use cases. The rest of this document covers how to
-connect to your Dgraph Cloud backend with existing Dgraph clients._
-
 In addition to GraphQL support, Dgraph Cloud also supports running advanced
 queries using Dgraph Query Language (DQL) (previously named GraphQL+-). DQL is
 based on GraphQL, but adds and removes features to better support graph database
 operations. Advanced users can use DQL to send queries and mutations to Dgraph
 Cloud's HTTP or gRPC endpoints using the Dgraph client libraries. To learn more
 about the Dgraph client libraries, see the
-[client library documentation](https://dgraph.io/docs/clients/). To learn more
-about DQL, see
-[DQL Fundamentals](https://dgraph.io/docs/query-language/graphql-fundamentals/)..
-
-If you are getting started with Dgraph Cloud, you should probably start out by
-using Dgraph's [GraphQL API](https://dgraph.io/docs/graphql/overview) instead.
-Dgraph's GraphQL API lets you quickly use Dgraph Cloud before moving on to the
-advanced features available using DQL.
+[client library documentation](/dgraph/sdks/overview). To learn more about DQL,
+see [DQL Schema](/dgraph/dql/schema).
 
 <Note>
-  Dgraph Cloud's [schema modes](/admin/schema-modes/) let you configure whether
-  and how schema changes are allowed. To alter your schema using the `/alter`
-  HTTP and gRPC endpoints, you'll need to use **Flexible Mode**.
+  Dgraph Cloud's [schema modes](./schema-modes) let you configure whether and
+  how schema changes are allowed. To alter your schema using the `/alter` HTTP
+  and gRPC endpoints, you'll need to use **Flexible Mode**.
 </Note>
 
 ## Authentication
 
 The APIs documented here all require an API token for access. To learn how to
-create an API token, please see [Authentication](/admin/authentication).
+create an API token, please see [Authentication](./authentication).
 
 ### HTTP
 
@@ -41,8 +30,8 @@ an example, if your GraphQL endpoint is
 endpoint for the schema is
 `https://frozen-mango.us-west-2.aws.cloud.dgraph.io/query`.
 
-You can also access the [`/mutate`](https://dgraph.io/docs/mutations/) and
-`/commit` endpoints.
+You can also access the [`/mutate`](/dgraph/dql/mutation) and `/commit`
+endpoints.
 
 For example, let's say you have the following GraphQL schema:
 
@@ -56,7 +45,7 @@ type Person {
 
 Here is an example of a cURL command with the `/mutate` endpoint:
 
-```
+```sh
 curl -H "Content-Type: application/rdf" -H "x-auth-token: <api-key>" -X POST "<graphql-endpoint>/mutate?commitNow=true" -d $'
 {
  set {
@@ -69,7 +58,7 @@ curl -H "Content-Type: application/rdf" -H "x-auth-token: <api-key>" -X POST "<g
 
 Here is an example of a cURL command with the `/query` endpoint:
 
-```
+```sh
 curl -H "Content-Type: application/dql" -H "x-auth-token: <api-key>" -XPOST "<graphql-endpoint>/query" -d '{
    queryPerson(func: type(Person))  {
      Person.name
@@ -132,12 +121,12 @@ finally:
   txn.discard()
 ```
 
-#### Connecting from Dgraph Clients
+#### Connecting from Dgraph clients
 
 Below are snippets to connect to your Dgraph Cloud backend from various Dgraph
 clients.
 
-**Python**
+### Python
 
 ```python
 import pydgraph
@@ -146,7 +135,7 @@ client_stub = pydgraph.DgraphClientStub.from_slash_endpoint("https://frozen-mang
 client = pydgraph.DgraphClient(client_stub)
 ```
 
-**JavaScript**
+### JavaScript
 
 ```javascript
 const dgraph = require("dgraph-js")
@@ -158,7 +147,7 @@ const clientStub = dgraph.clientStubFromSlashGraphQLEndpoint(
 const dgraphClient = new dgraph.DgraphClient(clientStub)
 ```
 
-**Go**
+### Go
 
 ```golang
 // This example uses dgo
@@ -170,7 +159,7 @@ defer conn.Close()
 dgraphClient := dgo.NewDgraphClient(api.NewDgraphClient(conn))
 ```
 
-**Java**
+### Java
 
 ```java
 // This example uses dgraph4j
@@ -178,7 +167,7 @@ DgraphStub stub = DgraphClient.clientStubFromSlashEndpoint("https://frozen-mango
 DgraphClient dgraphClient = new DgraphClient(stub);
 ```
 
-**C# / .NET**
+### .NET
 
 ```c#
 var client = new DgraphClient(SlashChannel.Create("frozen-mango.eu-central-1.aws.cloud.dgraph.io:443", "<api-key>"));
@@ -194,27 +183,26 @@ To configure Ratel:
 
 1. Click the Dgraph logo in the top left to bring up the connection screen (by
    default, it has the caption: play.dgraph.io)
-2. Enter your backend's host in the Dgraph Server URL field. This is obtained by
-   removing `/graphql` from the end of your `/graphql` endpoint URL. For
-   example, if your `/graphql` endpoint is
+2. Enter your host in the Dgraph Server URL field. This is obtained by removing
+   `/graphql` from the end of your `/graphql` endpoint URL. For example, if your
+   `/graphql` endpoint is
    `https://frozen-mango.us-west-2.aws.cloud.dgraph.io/graphql`, then the host
    for Ratel is `https://frozen-mango.us-west-2.aws.cloud.dgraph.io`
 3. Click the **Connect** button. You should see a green check mark next to the
    word **Connected**.
 4. Click on the **Extra Settings** tab, and then enter your API token into the
    **API Key** field. To create a new API token, see
-   [Authentication](/admin/authentication).
+   [Authentication](./authentication).
 5. Click on the **Continue** button.
 
 You can now run queries and mutations using Ratel, and see visualizations of
 your data.
 
-Ratel has certain limitations; it doesn't support backups, modifying ACL or
-attempting to remove nodes from the cluster.
+Ratel has certain limitations, such as not supporting backups, modifying Access
+Control Lists (ACL), or attempting to remove nodes from the cluster.
 
-### Switching Schema Modes
+### Switching schema modes
 
 If you want to use DQL as your primary mode of interaction with the Dgraph Cloud
 backend (instead of primarily using the GraphQL API), you can switch your
-backend to flexible mode. To learn more, see
-[Schema Modes](/admin/schema-modes).
+backend to flexible mode. To learn more, see [Schema Modes](./schema-modes).

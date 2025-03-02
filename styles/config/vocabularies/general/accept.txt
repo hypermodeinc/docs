@@ -48,7 +48,6 @@ CLI|cli
 const
 CRUD
 Debugf
-Dgraph|dgraph
 DQL
 embeddable
 Errorf
@@ -86,13 +85,18 @@ WASM
 Alpha
 ACLs
 Bulk Loader
+dateTime
 dgo
+[Dd]graph
+Dgraph Cloud
 dgraph4j
+enum|enums
 gzip
 Grafana
 Jaeger
 Live Loader
 MinIO
+NoConflict
 pprof
 pydgraph
 Ratel
@@ -106,7 +110,7 @@ UID|UIDs
 Zero
 
 # General
-admin
+[Aa]dmin
 CPU
 CSV
 Docker Compose

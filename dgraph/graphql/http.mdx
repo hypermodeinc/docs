@@ -5,7 +5,7 @@ description:
   compression for them, and configuration options for extensions
 ---
 
-## POST Request
+## POST request
 
 ### Headers
 
@@ -15,12 +15,12 @@ description:
 | Content-Encoding                        | optional                                 | `gzip` to send compressed data                                                               |
 | Accept-Encoding                         | optional                                 | `gzip` to enabled data compression on response                                               |
 | X-Dgraph-AccessToken                    | if `ACL` is enabled                      | pass the access token you got in the login response to access predicates protected by an ACL |
-| X-Auth-Token                            | if `anonymous access` is disabled        | Admin Key or Client key                                                                      |
+| X-Auth-Token                            | if `anonymous access` is turned off      | admin key or client key                                                                      |
 | header as set in `Dgraph.Authorization` | if GraphQL `Dgraph.Authorization` is set | valid JWT used by @auth directives                                                           |
 
 <Note>
-  Refer to GraphQL [security](./graphql/security) settings for explanations
-  about `anonymous access` and `Dgraph.Authorization`.
+  Refer to GraphQL [security](/dgraph/graphql/security/overview) settings for
+  explanations about `anonymous access` and `Dgraph.Authorization`.
 </Note>
 
 ### Payload format
@@ -58,7 +58,7 @@ GraphQL requests can contain one or more operations. Operations include `query`,
 `mutation`, or `subscription`. If a request only has one operation, then it can
 be unnamed like the following:
 
-### Single Operation
+### Single operation
 
 The most basic request contains a single anonymous (unnamed) operation. Each
 operation can have one or more queries within in. For example, the following
@@ -97,7 +97,7 @@ Response:
 You can optionally name the operation as well, though it's not required if the
 request only has one operation as it's clear what needs to be executed.
 
-#### Query Shorthand
+#### Query shorthand
 
 If a request only has a single query operation, then you can use the short-hand
 form of omitting the "query" keyword:
@@ -116,14 +116,13 @@ form of omitting the "query" keyword:
 ```
 
 This simplifies queries when a query doesn't require an operation name or
-[variables](/graphql/api/variables).
+[variables](/dgraph/graphql/query/variables).
 
-### Multiple Operations
+### Multiple operations
 
 If a request has two or more operations, then each operation must have a name. A
 request can only execute one operation, so you must also include the operation
-name to execute in the request (see the "operations" field for
-[requests](/graphql/api/requests)). Every operation name in a request must be
+name to execute in the request. Every operation name in a request must be
 unique.
 
 For example, in the following request has the operation names "getTaskAndUser"
@@ -154,9 +153,23 @@ When executing the following request (as an HTTP POST request in JSON format),
 specifying the "getTaskAndUser" operation executes the first query:
 
 ```json
-{
-  "query": "query getTaskAndUser { getTask(id: \"0x3\") { id title completed } queryUser(filter: {username: {eq: \"dgraphlabs\"}}) { username name }\n}\n\nquery completedTasks { queryTask(filter: {completed: true}) { title completed }}",
-  "operationName": "getTaskAndUser"
+query getTaskAndUser {
+  getTask(id: "0x3") {
+    id
+    title
+    completed
+  }
+  queryUser(filter: { username: { eq: "dgraphlabs" } }) {
+    username
+    name
+  }
+}
+
+query completedTasks {
+  queryTask(filter: { completed: true }) {
+    title
+    completed
+  }
 }
 ```
 
@@ -204,7 +217,7 @@ And specifying the "completedTasks" operation executes the second query:
 }
 ```
 
-#### multiple queries execution
+#### Multiple queries execution
 
 When an operation contains multiple queries, they are run concurrently and
 independently in a Dgraph readonly transaction per query.

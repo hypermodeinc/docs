@@ -2,7 +2,7 @@
 title: Backend
 ---
 
-## List Backends
+## List backends
 
 List backends that you have access to.
 
@@ -12,13 +12,13 @@ List backends that you have access to.
   JWT token to the API.
 </Note>
 
-### Cloud Endpoint
+### Cloud endpoint
 
-```
+```txt
 https://cerebro.cloud.dgraph.io/graphql
 ```
 
-### API Command
+### API command
 
 ```graphql
 {
@@ -39,7 +39,7 @@ https://cerebro.cloud.dgraph.io/graphql
 ### Example
 
 - `<cerebro-jwt>` is the JWT returned from [Authentication](./authentication).
-- `<lambda-token>` is a base64 string that will be non-empty if you have saved
+- `<lambda-token>` is a base64 string that's non-empty if you have saved
   [Lambdas](./lambda) on your backend
 
 <CodeGroup>
@@ -79,11 +79,11 @@ curl 'https://cerebro.cloud.dgraph.io/graphql' \
 </CodeGroup>
 
 <Note> For any `/admin` or `/admin/slash` requests to
-`https://<deployment.url>`, you **must use the `<deployment-jwt>` returned above
+`https://<deployment.url>`, you **must use the `<deployment-jwt>`
 in the `X-Auth-Token` header.** The Cerebro JWT is only used in the
 `Authorization` header for requests to `https://cerebro.cloud.dgraph.io/graphql`. </Note>
 
-## Deploy Backend
+## Deploy backend
 
 Launch a new backend.
 
@@ -93,13 +93,13 @@ Launch a new backend.
   JWT to the API.
 </Note>
 
-### Cloud Endpoint
+### Cloud endpoint
 
-```
+```txt
 https://cerebro.cloud.dgraph.io/graphql
 ```
 
-### API Command
+### API command
 
 ```graphql
 mutation CreateDeployment($newDeployment: NewDeployment!) {
@@ -112,7 +112,7 @@ mutation CreateDeployment($newDeployment: NewDeployment!) {
 }
 ```
 
-**Arguments**
+#### Arguments
 
 - `newDeployment`: parameter object for new deployment
 - `newDeployment.name`: name of the deployment

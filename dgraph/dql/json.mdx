@@ -21,7 +21,7 @@ For example, if you run this mutation:
  }
 ```
 
-You will see that Dgraph responds with
+You see that Dgraph responds with
 
 ```json
 {
@@ -43,8 +43,8 @@ for this node is `0xfffd8d72745f0650`.
 You can control the identifier name by specifying a `uid` field in your JSON
 data and using the notation: `"uid" : "_:<your-identifier>"`
 
-In this mutation, there are two JSON objects and because they are referring to
-the same identifier, Dgraph creates only one node:
+In this mutation, there are two JSON objects and because they refer to the same
+identifier, Dgraph creates only one node:
 
 ```dql
    {
@@ -101,7 +101,7 @@ Adds the `specie` information to the node that was created earlier.
 
 ## Language support
 
-To set a string value for a specific lnguage, append the language tag to the
+To set a string value for a specific language, append the language tag to the
 field name. In case, `specie` predicate has the @lang directive, the JSON
 mutation
 
@@ -243,7 +243,7 @@ To delete all predicates of a given node:
 
 - make sure the node has a `dgraph.type` predicate
 - the type is defined in the [Dgraph types schema](./dql-schema)
-- run a delete mutation specifying only the uid field
+- run a delete mutation specifying only the UID field
 
 ```JSON
 {
@@ -288,7 +288,7 @@ To remove one value from the list:
 }
 ```
 
-To remove multiple multiple values:
+To remove multiple values:
 
 ```JSON
 {
@@ -312,7 +312,7 @@ To add a value:
 }
 ```
 
-## Adding Facets
+## Adding facets
 
 Facets can be created by using the `|` character to separate the predicate and
 facet key in a JSON object field name. This is the same encoding schema used to
@@ -331,22 +331,21 @@ show facets in query results. E.g.
 }
 ```
 
-Facets do not contain type information but Dgraph will try to guess a type from
-the input. If the value of a facet can be parsed to a number, it will be
-converted to either a float or an int. If it can be parsed as a Boolean, it will
-be stored as a Boolean. If the value is a string, it will be stored as a
-datetime if the string matches one of the time formats that Dgraph recognizes
-(YYYY, MM-YYYY, DD-MM-YYYY, RFC339, etc.) and as a double-quoted string
-otherwise. If you do not want to risk the chance of your facet data being
-misinterpreted as a time value, it's best to store numeric data as either an int
-or a float.
+Facets don't contain type information but Dgraph tries to guess a type from the
+input. If the value of a facet can be parsed to a number, it is converted to
+either a float or an int. If it can be parsed as a Boolean, it is stored as a
+Boolean. If the value is a string, it is stored as a datetime if the string
+matches one of the time formats that Dgraph recognizes (`YYYY`, `MM-YYYY`,
+`DD-MM-YYYY`, RFC339, etc.) and as a double-quoted string otherwise. If you do
+not want to risk the chance of your facet data being misinterpreted as a time
+value, it's best to store numeric data as either an int or a float.
 
-## Deleting Facets
+## Deleting facets
 
 To delete a `Facet`, overwrite it. When you run a mutation for the same entity
 without a `Facet`, the existing `Facet` is deleted automatically.
 
-## Facets in List
+## Facets in list
 
 Schema:
 
@@ -358,8 +357,8 @@ Schema:
 To create a List-type predicate you need to specify all value in a single list.
 Facets for all predicate values should be specified together. It is done in map
 format with index of predicate values inside list being map key and their
-respective facets value as map values. Predicate values which does not have
-facets values will be missing from facets map. E.g.
+respective facets value as map values. Predicate values that don't have facets
+values are excluded from the facets map.
 
 ```JSON
 {
@@ -378,7 +377,7 @@ facets values will be missing from facets map. E.g.
 }
 ```
 
-Above you see that we have three values ​​to enter the list with their
+Above you see that there are three values ​​to enter the list with their
 respective facets. You can run this query to check the list with facets:
 
 ```graphql
@@ -433,4 +432,4 @@ And the final result is:
 
 ## Reserved values
 
-The string values `uid(...)`, `val(...)` are not accepted.
+The string values `uid(...)`, `val(...)` aren't accepted.

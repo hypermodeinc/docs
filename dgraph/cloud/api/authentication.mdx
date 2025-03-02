@@ -4,20 +4,19 @@ title: Authentication
 
 ## Login
 
-Login will generate a JWT token that can be used to access other Dgraph Cloud
-APIs.
+Login generates a JWT token that can be used to access other Dgraph Cloud APIs.
 
 This API requires an email address and password. If you have signed up with a
 social media provider, you may create a new password by selecting
 `Forgot Password` on the login page.
 
-### Cloud Endpoint
+### Cloud endpoint
 
-```
+```txt
 https://cerebro.cloud.dgraph.io/graphql
 ```
 
-### API Command
+### API command
 
 ```graphql
 query Login($email: String!, $password: String!) {
@@ -27,7 +26,7 @@ query Login($email: String!, $password: String!) {
 }
 ```
 
-**Arguments**
+#### Arguments
 
 - `email`: your email address
 - `password`: your password

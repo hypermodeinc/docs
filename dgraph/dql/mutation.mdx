@@ -5,20 +5,20 @@ title: Mutation
 Dgraph Query Language (DQL) is Dgraph's proprietary language to add, modify,
 delete and fetch data.
 
-Fetching data is done through [DQL Queries](./dql-query). Adding, modifying or
+Fetching data is done through [DQL Queries](./query). Adding, modifying, or
 deleting data is done through **_DQL Mutations_**.
 
 This overview explains the structure of DQL Mutations and provides links to the
 appropriate DQL reference documentation.
 
-DQL mutations support JSON or [RDF](./dql-rdf) format.
+DQL mutations support JSON or [RDF](./rdf) format.
 
-## set block
+## Set block
 
 In DQL, you add data using a set mutation, identified by the `set` keyword.
 
-<TabGroup>
-<TabItem value="JSON">
+<Tabs>
+<Tab title="JSON">
 
 ```dql
    {
@@ -50,10 +50,10 @@ In DQL, you add data using a set mutation, identified by the `set` keyword.
  }
 ```
 
-</TabItem>
-<TabItem value="RDF">
+</Tab>
+<Tab title="RDF">
 
-```
+```dql
 {
   set {
     # triples in here
@@ -66,14 +66,14 @@ In DQL, you add data using a set mutation, identified by the `set` keyword.
 }
 ```
 
-triples are in [RDF](./dql-rdf) format.
+triples are in [RDF](./rdf) format.
 
 ### Node reference
 
 A mutation can include a blank nodes as an identifier for the subject or object,
 or a known UID.
 
-```
+```dql
 {
   set {
     # triples in here
@@ -82,12 +82,11 @@ or a known UID.
 }
 ```
 
-will add the `release_date` information to the node identified by UID
-`0x632ea2`.
+adds the `release_date` information to the node identified by UID `0x632ea2`.
 
-### language support
+### Language support
 
-```
+```dql
 {
   set {
     # triples in here
@@ -96,13 +95,13 @@ will add the `release_date` information to the node identified by UID
 }
 ```
 
-</TabItem>
-</TabGroup>
+</Tab>
+</Tabs>
 
-## delete block
+## Delete block
 
-A delete mutation, identified by the `delete` keyword, removes
-[triples](/dql-rdf) from the store.
+A delete mutation, identified by the `delete` keyword, removes [triples](/rdf)
+from the store.
 
 For example, if the store contained the following:
 
@@ -125,9 +124,9 @@ removes it from any indexes:
 
 ### Wildcard delete
 
-In many cases you will need to delete multiple types of data for a predicate.
-For a particular node `N`, all data for predicate `P` (and all corresponding
-indexing) is removed with the pattern `S P *`.
+In many cases you need to delete multiple types of data for a predicate. For a
+particular node `N`, all data for predicate `P` (and all corresponding indexing)
+is removed with the pattern `S P *`.
 
 ```sh
 {
@@ -143,8 +142,8 @@ corresponding to the removed edges, and any indexing for the removed data.
 <Note>
   For mutations that fit the `S * *` pattern, only predicates that are among the
   types associated with a given node (using `dgraph.type`) are deleted. Any
-  predicates that don't match one of the node's types will remain after an `S *
-  *` delete mutation.
+  predicates that don't match one of the node's types remains after an `S * *`
+  delete mutation.
 </Note>
 
 ```sh
@@ -157,11 +156,11 @@ corresponding to the removed edges, and any indexing for the removed data.
 
 If the node `S` in the delete pattern `S * *` has only a few predicates with a
 type defined by `dgraph.type`, then only those triples with typed predicates are
-deleted. A node that contains untyped predicates will still exist after a
-`S * *` delete mutation.
+deleted. A node that contains un-typed predicates still exists after a `S * *`
+delete mutation.
 
 <Note>
-  The patterns `* P O` and `* * O` are not supported because it's inefficient to
+  The patterns `* P O` and `* * O` aren't supported because it's inefficient to
   store and find all the incoming edges.
 </Note>
 
@@ -172,14 +171,13 @@ done in two ways.
 
 - Using the [wildcard delete](#wildcard-delete) (star notation) mentioned in the
   last section.
-- Setting the object to a specific value. If the value passed is not the current
-  value, the mutation will succeed but will have no effect. If the value passed
-  is the current value, the mutation will succeed and will delete the non-list
-  predicate.
+- Setting the object to a specific value. If the value passed isn't the current
+  value, the mutation succeeds but has no effect. If the value passed is the
+  current value, the mutation succeeds and deletes the non-list predicate.
 
 For language-tagged values, the following special syntax is supported:
 
-```
+```dql
 {
   delete {
     <0x12345> <name@es> * .
@@ -187,10 +185,10 @@ For language-tagged values, the following special syntax is supported:
 }
 ```
 
-In this example, the value of the `name` field that is tagged with the language
+In this example, the value of the `name` field that's tagged with the language
 tag `es` is deleted. Other tagged values are left untouched.
 
-## upsert block
+## Upsert block
 
 Upsert is an operation where:
 
@@ -204,7 +202,7 @@ The upsert block contains one query block and mutation blocks.
 
 The structure of the upsert block is as follows:
 
-```
+```dql
 upsert {
   query <query block>
   mutation <mutation block 1>
@@ -218,16 +216,17 @@ the state of the database _before mutation was executed_. To get the latest
 result, you have to execute another query after the transaction is committed.
 
 Variables defined in the query block can be used in the mutation blocks using
-the [uid](./uid-upsert) and [val](./val-upsert) functions.
+the [UID](./upsert#uid-function-in-upsert) and
+[val](./upsert#val-function-in-upsert) functions.
 
-## conditional upsert
+## Conditional upsert
 
 The upsert block also allows specifying conditional mutation blocks using an
 `@if` directive. The mutation is executed only when the specified condition is
 true. If the condition is false, the mutation is silently ignored. The general
 structure of Conditional Upsert looks like as follows:
 
-```
+```dql
 upsert {
   query <query block>
   [fragment <fragment block>]
@@ -240,7 +239,7 @@ upsert {
 The `@if` directive accepts a condition on variables defined in the query block
 and can be connected using `AND`, `OR` and `NOT`.
 
-## Example of Conditional Upsert
+## Example of conditional Upsert
 
 Let's say in our previous example, we know the `company1` has less than 100
 employees. For safety, we want the mutation to execute only when the variable

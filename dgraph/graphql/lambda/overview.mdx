@@ -16,17 +16,17 @@ steps:
 3. Define lambda resolvers for them in a JavaScript file
 
 This also simplifies the job of developers, as they can build a complex backend
-that is rich with business logic, without setting up multiple different
-services. Also, you can build your backend in JavaScript, which means you can
-build both your frontend and backend using the same language.
+that's rich with business logic, without setting up multiple different services.
+Also, you can build your backend in JavaScript, which means you can build both
+your frontend and backend using the same language.
 
 Dgraph doesn't execute your custom logic itself. It makes external HTTP requests
-to a user-defined lambda server. [Dgraph Cloud](https://dgraph.io/cloud) will do
+to a user-defined lambda server. [Dgraph Cloud](https://dgraph.io/cloud) does
 all of this for you.
 
 <Tip>
   If you want to deploy your own lambda server, you can find the implementation
-  of Dgraph Lambda in our [open-source
+  of Dgraph Lambda in our [open source
   repository](https://github.com/dgraph-io/dgraph-lambda). Please refer to the
   documentation on [setting up a lambda server](/graphql/lambda/server) for more
   details.
@@ -220,7 +220,7 @@ function addMultiParentGraphQLResolvers(resolvers: {
 ```
 
 <Note>
-  This method should not be used for lambda queries or lambda mutations.
+  This method shouldn't be used for lambda queries or lambda mutations.
 </Note>
 
 Each resolver function should return data as a list of the return type of
@@ -259,8 +259,8 @@ self.addMultiParentGraphQLResolvers({
 ```
 
 <Note>
-  Scripts containing import packages (such as the example above) require
-  compilation using Webpack.
+  Scripts containing import packages (such as this example) require compilation
+  using Webpack.
 </Note>
 
 The following example resolver uses a `dql` call:
@@ -328,7 +328,7 @@ query {
 }
 ```
 
-...you should see a response such as the following:
+You should see a response such as the following:
 
 ```json
 {
@@ -344,7 +344,7 @@ query {
 
 To learn more about the `@lambda` directive, see:
 
-- [Lambda fields](/graphql/lambda/field)
-- [Lambda queries](/graphql/lambda/query)
-- [Lambda mutations](/graphql/lambda/mutation)
-- [Lambda server setup](/graphql/lambda/server)
+- [Lambda fields](./field)
+- [Lambda queries](./query)
+- [Lambda mutations](./mutation)
+- [Lambda webhook](./webhook)

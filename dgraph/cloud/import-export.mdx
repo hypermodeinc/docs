@@ -6,13 +6,10 @@ title: Importing and Exporting data from Dgraph Cloud
 
 You can export your data as an Administrator from one Dgraph Cloud backend, and
 then import this data back into another Dgraph instance or Dgraph Cloud backend.
-For more information about how to export data in Dgraph Cloud, see
-[Export data](./howto/exportdata/export-data-cloud). You can also export data
-from Dgraph Cloud programatically using the Dgraph Cloud API. For more
-information, see [Cloud API documentation](./cloud/cloud-api/backup).
+You can also export data from Dgraph Cloud using the Dgraph Cloud API. For more
+information, see [Cloud API documentation](./api/backup).
 
-To import data to Dgraph Cloud, see
-[live loader](./howto/importdata/live-loader).
+To import data to Dgraph Cloud, see [Live Loader](/dgraph/admin/live-loader).
 
 As an `Administrator` you can export data from a Dgraph Cloud shared instance or
 dedicated instance. On a dedicated instance with multi-tenancy feature enabled
@@ -22,9 +19,9 @@ type of administrative privileges you have.
 ### Exporting data from Dgraph Cloud using the console
 
 1. In the `Admin` section of the Dgraph Cloud console, go to `Settings`.
-1. In the `Exports` tab, click `Create Export`.
-1. In the `New export` dialog, select the format you want to export.
-1. Click `Create`.
+2. In the `Exports` tab, click `Create Export`.
+3. In the `New export` dialog, select the format you want to export.
+4. Click `Create`.
 
 Depending on the format that you chose to create an export, three files are
 generated.
@@ -123,7 +120,7 @@ You can trigger two types of exports:
 
 ### Cluster-wide exports
 
-This can only be done by the _Guardian of Galaxy_ users (AKA Super Admin), the
+This can only be done by the **Guardian of Galaxy** users (super admin), the
 steps are:
 
 1. Get the `accessJWT` token for the _Guardian of Galaxy_ user. Send the
@@ -192,8 +189,8 @@ replace the namespace value from `-1` to the namespace you want to export. It is
 important that you get the `accessJWT` token for the _Guardian of Galaxy_ user
 and pass it in the `X-Dgraph-AccessToken` header.
 
-E.g. if you want to export the namespace `0x123` your GraphQL request sent to
-the `/admin/slash` endpoint would look like:
+For example, if you want to export the namespace `0x123` your GraphQL request
+sent to the `/admin/slash` endpoint would look like:
 
 ```graphql
 mutation {

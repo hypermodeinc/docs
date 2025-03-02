@@ -7,7 +7,7 @@ description:
 
 In every app's development lifecycle, there's a point where the underlying
 schema doesn't fit the requirements and must be changed for good. That requires
-a migration for both schema and the underlying data. This article will guide you
+a migration for both schema and the underlying data. This article guides you
 through common migration scenarios you can encounter with Dgraph and help you
 avoid any pitfalls around them.
 
@@ -67,7 +67,7 @@ So, no downtime required. Migration is done by just updating your schema. Fast,
 easy, and simple.
 
 Note that, irrespective of what option you choose for migration on Dgraph side,
-you will still need to migrate your GraphQL clients to use the new name in
+you still need to migrate your GraphQL clients to use the new name in
 queries/mutations. For example, the query `getUser` would now be renamed to
 `getAppUser`. So, your downstream clients need to update that bit in the code.
 
@@ -103,7 +103,7 @@ type User {
 ```
 
 Again, note that, irrespective of what option you choose for migration on Dgraph
-side, you will still need to migrate your GraphQL clients to use the new name in
+side, you still need to migrate your GraphQL clients to use the new name in
 queries/mutations. For example, the following query:
 
 ```graphql
@@ -156,7 +156,7 @@ type Owner {
 }
 ```
 
-and later you decided that you want an owner to have only one todo at a time.
+and later you decided that you want an owner to have only one to do at a time.
 So, you want to make your schema look like this:
 
 ```graphql
@@ -175,10 +175,13 @@ type Owner {
 If you try updating your schema, you may end up getting an error like this:
 
 ```txt
-resolving updateGQLSchema failed because succeeded in saving GraphQL schema but failed to alter Dgraph schema - GraphQL layer may exhibit unexpected behavior, reapplying the old GraphQL schema may prevent any issues: Schema change not allowed from [uid] => uid without deleting pred: owner.todo
+resolving updateGQLSchema failed because succeeded in saving GraphQL schema but failed to
+alter Dgraph schema - GraphQL layer may exhibit unexpected behavior, reapplying the old
+GraphQL schema may prevent any issues: Schema change not allowed from [uid] => uid without
+deleting pred: owner.todo
 ```
 
-That is a red flag. As the error message says, you should revert to the old
+This is a red flag. As the error message says, you should revert to the old
 schema to make your clients work correctly. In such cases, you should have
 migrated your data to fit the new schema _before_ applying the new schema. The
 steps for such a data migration varies from case to case, and so can't all be
@@ -229,7 +232,7 @@ So, while making such a schema change, you need to make sure that the underlying
 data really honors the uniqueness constraint on the username field. If not, you
 need to do a data migration to honor such constraints.
 
-### unused fields
+### Unused fields
 
 For example, let's assume that you have deployed the following schema:
 
@@ -255,13 +258,13 @@ type TestDataMigration {
 The data you have previously created is still in the graph database !
 
 Moreover if you delete the `TestDataMigration` object using its `id`, the
-GraphQL API delete operation will be successful.
+GraphQL API delete operation is successful.
 
 If you followed the [GraphQL - DQL Schema mapping](./graphql-dql-schema), you
-understand that Dgraph has used the list the known list of predicates (id,
-someInfo) and removed them. In fact, Dgraph also removed the `dgraph.type`
-predicate and so this `TestDataMigration` node is not visible anymore to the
-GraphQL API.
+understand that Dgraph has used the list the known list of predicates (`id`,
+`someInfo`) and removed them. In fact, Dgraph also removed the
+`dgraph.type`predicate and so this`TestDataMigration` node isn't visible anymore
+to the GraphQL API.
 
 The point is that a node with this `uid` exists and has a predicate
 `someOtherInfo`. This is because this data has been created initially and
@@ -271,19 +274,19 @@ operation by ID instructed Dgraph to delete this predicate.
 You end up with a node without type (i.e without a `dgraph.type` predicate) and
 with an old predicate value which is 'invisible' to your GraphQL API!
 
-When doing a GraphQL schema deployement, you must take care of the data cleaning
+When doing a GraphQL schema deployment, you must take care of the data cleaning
 and data migration. The good news is that DQL offers you the tools to identify
 (search) potential issues and to correct the data (mutations).
 
 In the previous case, you can alter the database and completely delete the
-predicate or you can write an 'upsert' DQL query that will search the nodes of
+predicate or you can write an 'upsert' DQL query that searches the nodes of
 interest and delete the unused predicate for those nodes.
 
-### new non-nullable field
+### New non-nullable field
 
 Another obvious example appears if you deploy a new version containing a new
 non-nullable field for an existing type. The existing 'nodes' of the same type
-in the graph do not have this predicate. A Gra[hQL query reaching those nodes
-will return a list of errors. You can easily write an 'upsert' DQL mutation to
-find all node of this type not having the new predicate and update them with a
+in the graph don't have this predicate. A GraphQL query reaching those nodes
+returns a list of errors. You can easily write an 'upsert' DQL mutation to find
+all node of this type not having the new predicate and update them with a
 default value.

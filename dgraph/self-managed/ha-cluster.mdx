@@ -14,9 +14,9 @@ using:
 
 ### Install a highly available Dgraph cluster using YAML or Helm
 
-<TabGroup>
+<Tabs>
 
-<TabItem value="YAML">
+<Tab title="YAML">
 
 #### Before you begin
 
@@ -109,9 +109,9 @@ kubectl delete persistentvolumeclaims --selector app=dgraph-zero
 kubectl delete persistentvolumeclaims --selector app=dgraph-alpha
 ```
 
-</TabItem>
+</Tab>
 
-<TabItem value="Helm">
+<Tab title="Helm">
 
 #### Before you begin
 
@@ -224,9 +224,9 @@ kubectl delete persistentvolumeclaims --selector app=dgraph-alpha
    kubectl delete pvc --selector release=my-release
    ```
 
-</TabItem>
+</Tab>
 
-</TabGroup>
+</Tabs>
 
 ### Dgraph configuration files
 
@@ -272,9 +272,9 @@ cluster as Kubernetes service type `ClusterIP`.
 In order to expose the Alpha service and Ratel service publicly you can use
 Kubernetes service type `LoadBalancer` or an Ingress resource.
 
-<TabGroup>
+<Tabs>
 
-<TabItem value="LoadBalancer">
+<Tab title="LoadBalancer">
 
 #### Public Internet
 
@@ -335,9 +335,9 @@ As an example, using Amazon [EKS](https://aws.amazon.com/eks/) as the provider.
    helm install <RELEASE-NAME> dgraph/dgraph --values <MY-CONFIG-VALUES>.yaml
    ```
 
-</TabItem>
+</Tab>
 
-<TabItem value="Ingress Resource">
+<Tab title="Ingress Resource">
 
 You can expose Alpha and Ratel using an
 [ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/)
@@ -386,9 +386,9 @@ their hostname, such as `http://alpha.<my-domain-name>` and
   for further information.
 </Tip>
 
-</TabItem>
+</Tab>
 
-</TabGroup>
+</Tabs>
 
 ### Upgrading the Helm chart
 

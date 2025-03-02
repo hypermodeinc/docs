@@ -46,7 +46,7 @@ type AddPostPayload {
 }
 ```
 
-**Example**: Add mutation on single type with embedded value
+**Example**: add mutation on single type with embedded value
 
 ```graphql
 mutation {
@@ -59,7 +59,7 @@ mutation {
 }
 ```
 
-**Example**: Add mutation on single type using variables
+**Example**: add mutation on single type using variables
 
 ```graphql
 mutation addAuthor($author: [AddAuthorInput!]!) {
@@ -81,7 +81,7 @@ Variables:
 <Note>
   You can convert an `add` mutation to an `upsert` mutation by setting the value
   of the input variable `upsert` to `true`. For more information, see [Upsert
-  Mutations](/graphql/mutations/upsert).
+  Mutations](./upsert).
 </Note>
 
 ## Examples
