@@ -52,7 +52,7 @@ In addition to command line flags
 using a configuration file (`config.yaml`, `config.json`). You can also use
 environment variables such as `DGRAPH_ALPHA_ACL="secret-file=</path/to/secret>"`
 and `DGRAPH_ALPHA_SECURITY="whitelist=<permitted-ip-addresses>"`. See
-[Config](./deploy/config) for more information in general about configuring
+[Config](/dgraph/self-managed/config) for more information in general about configuring
 Dgraph.
 </Tip>
 
@@ -149,15 +149,15 @@ helm repo add "dgraph" https://charts.dgraph.io
 helm install "my-release" --values ./dgraph_values.yaml dgraph/dgraph
 ```
 
-## Storing ACL secret in Hashicorp Vault
+## Storing ACL secret in HashiCorp Vault
 
-You can save the ACL secret on [Hashicorp Vault](https://www.vaultproject.io/)
+You can save the ACL secret on [HashiCorp Vault](https://www.vaultproject.io/)
 server instead of saving the secret on the local file system.
 
-### Configuring a Hashicorp Vault Server
+### Configuring a HashiCorp Vault server
 
 Do the following to set up on the
-[Hashicorp Vault](https://www.vaultproject.io/) server for use with Dgraph:
+[HashiCorp Vault](https://www.vaultproject.io/) server for use with Dgraph:
 
 1. Ensure that the Vault server is accessible from Dgraph Alpha and configured
    using URL `http://fqdn[ip]:port`.
@@ -205,7 +205,7 @@ Do the following to set up on the
   with the values `base64` (default) or `raw`.
 </Note>
 
-### Example using Dgraph CLI with Hashicorp Vault configuration
+### Example using Dgraph CLI with HashiCorp Vault configuration
 
 Here is an example of using Dgraph with a Vault server that holds the secret
 key:
@@ -221,7 +221,7 @@ dgraph alpha \
 
 ```
 
-### Example using Docker Compose with Hashicorp Vault configuration
+### Example using Docker Compose with HashiCorp Vault configuration
 
 If you are using [Docker Compose](https://docs.docker.com/compose/), you can set
 up a sample Dgraph cluster using this `docker-compose.yaml` configuration:
@@ -248,16 +248,16 @@ services:
 ```
 
 In this example, you will also need to configure a
-[Hashicorp Vault](https://www.vaultproject.io/) service named `vault` in the
+[HashiCorp Vault](https://www.vaultproject.io/) service named `vault` in the
 above `docker-compose.yaml`, and then run through this sequence:
 
 1. Launch `vault` service: `docker-compose up --detach vault`
 2. Unseal and Configure `vault` with the required prerequisites (see
-   [Configuring a Hashicorp Vault Server](#configuring-a-hashicorp-vault-server)).
+   [Configuring a HashiCorp Vault Server](#configuring-a-hashicorp-vault-server)).
 3. Save role-id and secret-id as `./role_id` and `secret_id`
 4. Launch Dgraph Zero and Alpha: `docker-compose up --detach`
 
-### Example using Kubernetes Helm Chart with Hashicorp Vault configuration
+### Example using Kubernetes Helm Chart with HashiCorp Vault configuration
 
 If you deploy Dgraph on [Kubernetes](https://kubernetes.io/), you can configure
 the ACL feature using the
@@ -282,9 +282,9 @@ alpha:
         whitelist: 10.0.0.0/8,172.0.0.0/8,192.168.0.0/16‘
 ```
 
-To set up this chart, the [Hashicorp Vault](https://www.vaultproject.io/)
+To set up this chart, the [HashiCorp Vault](https://www.vaultproject.io/)
 service must be installed and available. You can use the
-[Hashicorp Vault Helm Chart](https://www.vaultproject.io/docs/platform/k8s/helm)
+[HashiCorp Vault Helm Chart](https://www.vaultproject.io/docs/platform/k8s/helm)
 and configure it to
 [auto unseal](https://learn.hashicorp.com/collections/vault/auto-unseal) so that
 the service is immediately available after deployment.
@@ -596,8 +596,8 @@ mutation {
 }
 ```
 
-In case you have [reverse edges](./schema#reverse-edges), they have to be given
-the permission to the group as well
+In case you have [reverse edges](/dgraph/dql/schema#reverse-edges), they have to
+be given the permission to the group as well
 
 ```graphql
 mutation {

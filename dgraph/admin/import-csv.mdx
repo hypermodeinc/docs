@@ -55,15 +55,14 @@ Ratel.
    ]
    ```
 
-   This JSON file follows the [JSON Mutation Format](/json-mutation-format), it
-   can be loaded into Dgraph using
-   [Dgraph Live Loader](/dgraph/admin/live-loader) ,
-   [Dgraph Bulk Loader](/bulk-loader) or the programmatic clients.
+   This JSON file follows the [JSON Mutation Format](/dgraph/dql/json), it can
+   be loaded into Dgraph using [Dgraph Live Loader](./live-loader) ,
+   [Dgraph Bulk Loader](./bulk-loader) or the programmatic clients.
 
 4. To load the data to Ratel and HTTP clients. The JSON data has to be stored
    within the `"set"`
-   [key](/json-mutation-format.md#json-syntax-using-raw-http-or-ratel-ui"). You
-   can use `jq` to transform the JSON into the correct format:
+   [key](/dgraph/dql/json#json-syntax-using-raw-http-or-ratel-ui"). You can use
+   `jq` to transform the JSON into the correct format:
 
    ```sh
    cat names.json | jq '{ set: . }'

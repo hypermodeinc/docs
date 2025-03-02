@@ -60,12 +60,10 @@ Dgraph types must be declared before allowing mutations or not:
   without declaring the predicate in the DQL Schema.
 
 <Note>
-  When you deploy a [GraphQL API schema](./graphql), Dgraph generates all the underlying Dgraph types.
-
-Refer to [GraphQL and DQL schemas](./graphql-dql-schema) in the
-[GraphQL - DQL interoperability](./graphql-dql) section for use cases using both
-approaches.
-
+  When you deploy a [GraphQL API schema](/dgraph/graphql/schema/overview),
+  Dgraph generates all the underlying Dgraph types. Refer to [GraphQL and DQL
+  schemas](/dgraph/graphql/schema/graphql-dql) for use cases using both
+  approaches.
 </Note>
 
 For example, you can run the following mutation (using the [RDF](./rdf)
@@ -100,9 +98,10 @@ declare if Dgraph needs to maintain different languages for a string predicate.
 A predicate type is either created
 
 - by altering the Dgraph types schema (See
-  [Update Dgraph types](./update-dgraph-types.md) ) or
-- during a mutation, if the Dgraph Cluster [schema mode](./schema-modes) is
-  `flexible` and the predicate used isn't yet declared.
+  [Update Dgraph types](/dgraph/admin/update-types) ) or
+- during a mutation, if the Dgraph Cluster
+  [schema mode](/dgraph/cloud/schema-modes) is `flexible` and the predicate used
+  isn't yet declared.
 
   If a predicate type isn't declared in the schema, then the type is inferred
   from the first mutation and added to the schema.
@@ -144,10 +143,9 @@ ordered array of float32. A node type can contain more than one vector
 predicate.
 
 Vectors are normally used to store embeddings obtained from other information
-through an ML model. When a `float32vector` is
-[indexed](./dql/predicate-indexing.md), the DQL
-[`similar_to`](./functions#vector-similarity-search) function can be used for
-similarity search.
+through an ML model. When a `float32vector` is [indexed](#predicate-indexing),
+the DQL [`similar_to`](./functions#vector-similarity-search) function can be
+used for similarity search.
 
 ### UID type
 
@@ -263,8 +261,8 @@ email: string @unique @index(exact)  .
 
 ### Upsert directive
 
-To use [upsert operations](./howto/upserts.md) on a predicate, specify the
-`@upsert` directive in the schema.
+To use [upsert operations](./upsert) on a predicate, specify the `@upsert`
+directive in the schema.
 
 When committing transactions involving predicates with the `@upsert` directive,
 Dgraph checks index keys for conflicts, helping to enforce uniqueness
@@ -398,8 +396,8 @@ output:
 
 ## Predicate indexing
 
-The schema is also used to set [predicates indexes](#predicate-indexing) which
-are required to apply [filtering functions](./functions) in DQL queries.
+The schema is also used to set predicates indexes, which are required to apply
+[filtering functions](./functions) in DQL queries.
 
 ## Node types
 
@@ -504,3 +502,57 @@ in queries.
   DQL mutation on this node: the node may still exist after the operation if it
   holds predicates not declared in the node type.
 </Warning>
+
+## Sample schema
+
+The following pages are the language reference for DQL.
+
+They contain examples that you can run interactively using a database of 21
+million triples about movies and actors.
+
+The queries are executed on an instance of Dgraph running at
+https://play.dgraph.io/.
+
+The example movie database uses the following schema:
+
+```dql
+# Define Directives and index
+
+director.film: [uid] @reverse .
+actor.film: [uid] @count .
+genre: [uid] @reverse .
+initial_release_date: dateTime @index(year) .
+name: string @index(exact, term) @lang .
+starring: [uid] .
+performance.film: [uid] .
+performance.character_note: string .
+performance.character: [uid] .
+performance.actor: [uid] .
+performance.special_performance_type: [uid] .
+type: [uid] .
+
+# Define Types
+
+type Person {
+    name
+    director.film
+    actor.film
+}
+
+type Movie {
+    name
+    initial_release_date
+    genre
+    starring
+}
+
+type Genre {
+    name
+}
+
+type Performance {
+    performance.film
+    performance.character
+    performance.actor
+}
+```

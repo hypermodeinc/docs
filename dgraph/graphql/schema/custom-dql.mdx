@@ -5,8 +5,8 @@ description:
   query you want to execute and the Dgraph GraphQL API will execute it
 ---
 
-Dgraph Query Language ([DQL](./dql)) lets you build custom resolvers logic that
-goes beyond what is possible with the current GraphQL CRUD API.
+Dgraph Query Language ([DQL](/dgraph/dql/schema)) lets you build custom
+resolvers logic that goes beyond what's possible with the GraphQL CRUD API.
 
 To define a DQL custom query, use the notation:
 
@@ -18,7 +18,7 @@ To define a DQL custom query, use the notation:
 
 <Tip>
   Since v21.03, you can also [subscribe to custom
-  DQL](/graphql/subscriptions/#subscriptions-to-custom-dql) queries.
+  DQL](/dgraph/graphql/subscriptions/#subscriptions-to-custom-dql) queries.
 </Tip>
 
 For example, lets say you had following schema:
@@ -38,7 +38,7 @@ type User {
 ```
 
 and you wanted to query tweets containing some particular text sorted by the
-number of followers their author has. Then, this is not possible with the
+number of followers their author has. Then, this isn't possible with the
 automatically generated CRUD API. Similarly, let's say you have a table sort of
 UI component in your app which displays only a user's name and the number of
 tweets done by that user. Doing this with the auto-generated CRUD API would
@@ -124,17 +124,18 @@ custom resolvers:
 - If you are using variables in DQL queries, their names should be same as the
   name of the arguments for the GraphQL query.
 - For variables, only scalar GraphQL arguments like `Boolean`, `Int`, `Float`,
-  etc are allowed. Lists and Object types are not allowed to be used as
-  variables with DQL queries.
+  etc are allowed. Lists and Object types aren't allowed to be used as variables
+  with DQL queries.
 - You would be able to query only those many levels with GraphQL which you have
-  mapped with the DQL query. For instance, in the first custom query above, we
-  haven't mapped an author's tweets to GraphQL alias, so, we won't be able to
-  fetch author's tweets using that query.
+  mapped with the DQL query. For instance, in the first custom query in this
+  example, we haven't mapped an author's tweets to GraphQL alias, so, we won't
+  be able to fetch author's tweets using that query.
 - If the custom GraphQL query returns an interface, and you want to use
   `__typename` in GraphQL query, then you should add `dgraph.type` as a field in
-  DQL query without any alias. This is not required for types, only for
+  DQL query without any alias. This isn't required for types, only for
   interfaces.
 - to subscribe to a custom DQL query, use the `@withSubscription` directive. See
-  the [Subscriptions article](/graphql/subscriptions/) for more information.
+  the [Subscriptions article](/dgraph/graphql/subscriptions) for more
+  information.
 
 ---

@@ -9,19 +9,19 @@ The list of all directives supported by Dgraph.
 `@auth` allows you to define how to apply authorization rules on the
 queries/mutation for a type.
 
-Reference: [Auth directive](./auth)
+Reference: [auth directive](./auth)
 
 ### @cascade
 
 `@cascade` allows you to filter out certain nodes within a query.
 
-Reference: [Cascade](/dgraph/graphql/query/cascade)
+Reference: [cascade](/dgraph/graphql/query/cascade)
 
 ### @custom
 
-`@custom` directive is used to define custom queries, mutations and fields.
+`@custom` directive is used to define custom queries, mutations, and fields.
 
-Reference: [Custom directive](./graphql/custom/directive)
+Reference: [custom directive](./custom)
 
 ### @deprecated
 
@@ -29,34 +29,34 @@ The `@deprecated` directive lets you mark the schema definition of a field or
 `enum` value as deprecated, and also lets you provide an optional reason for the
 deprecation.
 
-Reference: [Deprecation](./deprecated)
+Reference: [deprecation](./deprecated)
 
 ### @dgraph
 
 `@dgraph` directive tells us how to map fields within a type to existing
 predicates inside Dgraph.
 
-Reference: [@dgraph directive](./directive-dgraph)
+Reference: [@dgraph directive](./dgraph)
 
 ### @embedding
 
 `@embedding` directive designates one or more fields as vector embeddings.
 
-Reference: [@embedding directive](./embedding)
+Reference: [@embedding directive](./search#vector-embedding)
 
 ### @generate
 
 The `@generate` directive is used to specify which GraphQL APIs are generated
 for a type.
 
-Reference: [Generate directive](./generate)
+Reference: [generate directive](./generate)
 
 ### @hasInverse
 
 `@hasInverse` is used to setup up two way edges such that adding a edge in one
 direction automatically adds the one in the inverse direction.
 
-Reference: [Linking nodes in the graph](./graph-links)
+Reference: [linking nodes in the graph](/dgraph/graphql/schema/relationships)
 
 ### @id
 
@@ -70,7 +70,7 @@ Reference: [Identity]((./ids)
 The `@include` directive can be used to include a field based on the value of an
 `if` argument.
 
-Reference: [Include directive](./skip-include)
+Reference: [include directive](/dgraph/graphql/query/skip-include)
 
 ### @lambda
 
@@ -78,48 +78,44 @@ The `@lambda` directive allows you to call custom JavaScript resolvers. The
 `@lambda` queries, mutations, and fields are resolved through the lambda
 functions implemented on a given lambda server.
 
-Reference: [Lambda directive](./lambda-overview)
+Reference: [lambda directive](/dgraph/graphql/lambda/overview)
 
 ### @remote
 
-`@remote` directive is used to annotate types for which data is not stored in
+`@remote` directive is used to annotate types for which data isn't stored in
 Dgraph. These types are typically used with custom queries and mutations.
-
-Reference: [Remote directive](./directive.md#remote-types)
 
 ### @remoteResponse
 
 The `@remoteResponse` directive allows you to annotate the fields of a `@remote`
-type in order to map a custom query's JSON key response to a GraphQL field.
-
-Reference: [Remote directive](./directive.md##remote-response)
+type to map a custom query's JSON key response to a GraphQL field.
 
 ### @search
 
 `@search` allows you to perform filtering on a field while querying for nodes.
 
-Reference: [Search](./search)
+Reference: [search](./search)
 
 ### @secret
 
 `@secret` directive is used to store secret information, it gets encrypted and
 then stored in Dgraph.
 
-Reference: [Password Type](/dgraph/graphql/schema/types#password-type)
+Reference: [password type](/dgraph/graphql/schema/types#password-type)
 
 ### @skip
 
 The `@skip` directive can be used to fetch a field based on the value of a
 user-defined GraphQL variable.
 
-Reference: [Skip directive](/dgraph/grapqhql/query/skip-include)
+Reference: [skip directive](/dgraph/graphql/query/skip-include)
 
 ### @withSubscription
 
 `@withSubscription` directive when applied on a type, generates subscription
 queries for it.
 
-Reference: [Subscriptions](/dgraph/graphql/subscriptions)
+Reference: [subscriptions](/dgraph/graphql/subscriptions)
 
 ### @lambdaOnMutate
 
@@ -128,4 +124,4 @@ events(`add`/`update`/`delete`). Depending on the defined events and the
 occurrence of a mutation event, `@lambdaOnMutate` triggers the appropriate
 lambda function implemented on a given lambda server.
 
-Reference: [LambdaOnMutate directive](/dgraph/graphql/lambda/webhook)
+Reference: [lambdaOnMutate directive](/dgraph/graphql/lambda/webhook)

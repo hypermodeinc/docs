@@ -8,18 +8,18 @@ title: Binary Backups
 </Note>
 
 Binary backups are full backups of Dgraph that are backed up directly to cloud
-storage such as Amazon S3 or any Minio storage backend. Backups can also be
+storage such as Amazon S3 or any MinIO storage backend. Backups can also be
 saved to an on-premise network file system shared by all Alpha servers. These
 backups can be used to restore a new Dgraph cluster to the previous state from
-the backup. Unlike [exports](./dgraph-administration.md#exporting-database),
-binary backups are Dgraph-specific and can be used to restore a cluster quickly.
+the backup. Unlike [exports](/dgraph/admin/export), binary backups are
+Dgraph-specific and can be used to restore a cluster quickly.
 
-## Configure Backup
+## Configure backup
 
 Backup is only enabled when a valid license file is supplied to a Zero server OR
 within the thirty (30) day trial period, no exceptions.
 
-### Configure Amazon S3 Credentials
+### Configure Amazon S3 credentials
 
 To backup to Amazon S3, the Alpha server must have the following AWS credentials
 set via environment variables:
@@ -51,28 +51,28 @@ In AWS, you can accomplish this by doing the following:
      to associate the IAM Role to a
      [Kubernetes Service Account](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/).
 
-### Configure Minio Credentials
+### Configure MinIO credentials
 
-To backup to Minio, the Alpha server must have the following Minio credentials
+To backup to MinIO, the Alpha server must have the following MinIO credentials
 set via environment variables:
 
 | Environment Variable | Description                                                           |
 | -------------------- | --------------------------------------------------------------------- |
-| `MINIO_ACCESS_KEY`   | Minio access key with permissions to write to the destination bucket. |
-| `MINIO_SECRET_KEY`   | Minio secret key with permissions to write to the destination bucket. |
+| `MINIO_ACCESS_KEY`   | MinIO access key with permissions to write to the destination bucket. |
+| `MINIO_SECRET_KEY`   | MinIO secret key with permissions to write to the destination bucket. |
 
-## Create a Backup
+## Create a backup
 
 To create a backup, make an HTTP POST request to `/admin` to a Dgraph Alpha HTTP
 address and port (default, "localhost:8080"). Like with all `/admin` endpoints,
 this is only accessible on the same machine as the Alpha server unless
-[whitelisted for admin operations](./dgraph-administration.md#whitelisting-admin-operations).
+[whitelisted for admin operations](/dgraph/self-managed/overview#whitelisting-admin-operations).
 You can look at `BackupInput` given below for all the possible options.
 
 ```graphql
 input BackupInput {
   """
-  Destination for the backup: e.g. Minio or S3 bucket.
+  Destination for the backup: e.g. MinIO or S3 bucket.
   """
   destination: String!
 
@@ -92,7 +92,7 @@ input BackupInput {
   sessionToken: String
 
   """
-  Set to true to allow backing up to S3 or Minio bucket that requires no credentials.
+  Set to true to allow backing up to S3 or MinIO bucket that requires no credentials.
   """
   anonymous: Boolean
 
@@ -122,7 +122,7 @@ mutation {
 }
 ```
 
-### Backup to Minio
+### Backup to MinIO
 
 ```graphql
 mutation {
@@ -162,15 +162,18 @@ Storage locally using one of these methods:
 - Run
   [MinIO Azure Gateway](https://docs.min.io/docs/minio-gateway-for-azure.html)
   using Docker
+
   ```sh
   docker run --publish 9000:9000 --name gateway \
     --env "MINIO_ACCESS_KEY=<AccountName>" \
     --env "MINIO_SECRET_KEY=<AccountKey>" \
     minio/minio gateway azure
   ```
+
 - Run
   [MinIO Azure Gateway](https://docs.min.io/docs/minio-gateway-for-azure.html)
   using the MinIO Binary
+
   ```sh
   export MINIO_ACCESS_KEY="<AccountName>"
   export MINIO_SECRET_KEY="<AccountKey>"
@@ -192,6 +195,7 @@ these methods:
 
 - Run [MinIO GCS Gateway](https://docs.min.io/docs/minio-gateway-for-gcs.html)
   using Docker
+
   ```sh
   docker run --publish 9000:9000 --name gateway \
     --volume /path/to/credentials.json:/credentials.json \
@@ -200,8 +204,10 @@ these methods:
     --env "MINIO_SECRET_KEY=minioaccountkey" \
     minio/minio gateway gcs <project-id>
   ```
+
 - Run [MinIO GCS Gateway](https://docs.min.io/docs/minio-gateway-for-gcs.html)
   using the MinIO Binary
+
   ```sh
   export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
   export MINIO_ACCESS_KEY=minioaccesskey
@@ -209,7 +215,7 @@ these methods:
   minio gateway gcs <project-id>
   ```
 
-#### Test Using MinIO Browser
+#### Test using MinIO browser
 
 MinIO Gateway comes with an embedded web-based object browser. After using one
 of the aforementioned methods to run the MinIO Gateway, you can test that MinIO
@@ -217,10 +223,10 @@ Gateway is running, open a web browser, navigate to http://127.0.0.1:9000, and
 ensure that the object browser is displayed and can access the remote object
 storage.
 
-### Disabling HTTPS for S3 and Minio backups
+### Disabling HTTPS for S3 and MinIO backups
 
-By default, Dgraph assumes the destination bucket is using HTTPS. If that is not
-the case, the backup will fail. To send a backup to a bucket using HTTP
+By default, Dgraph assumes the destination bucket is using HTTPS. The backup
+fails when that's not the case. To send a backup to a bucket using HTTP
 (insecure), set the query parameter `secure=false` with the destination endpoint
 in the `destination` field:
 
@@ -238,11 +244,11 @@ mutation {
 }
 ```
 
-### Overriding Credentials
+### Overriding credentials
 
 The `accessKey`, `secretKey`, and `sessionToken` parameters can be used to
 override the default credentials. Please note that unless HTTPS is used, the
-credentials will be transmitted in plain text so use these parameters with
+credentials is transmitted in plain text so use these parameters with
 discretion. The environment variables should be used by default but these
 options are there to allow for greater flexibility.
 
@@ -318,7 +324,7 @@ field is required.
 ```
 input ListBackupsInput {
   """
-  Destination for the backup: e.g. Minio or S3 bucket.
+  Destination for the backup: e.g. MinIO or S3 bucket.
   """
   location: String!
 
@@ -518,7 +524,7 @@ and `v1.2.3` and allow you to encrypt your backups and restore them. This
 documentation describes how to implement encryption into your binary backups.
 
 Starting with` v20.07.0`, we also added support for Encrypted Backups using
-encryption keys sitting on [Hashicorp Vault](https://www.vaultproject.io/).
+encryption keys sitting on [HashiCorp Vault](https://www.vaultproject.io/).
 
 ### New `Encrypted` flag in manifest.json
 
@@ -548,7 +554,7 @@ Backup is an online tool, meaning it's available when Dgraph Alpha server is
 running. For encrypted backups, the Dgraph Alpha server must be configured with
 the `--encryption key-file=value`. Starting with v20.07.0, the Dgraph Alpha
 server can alternatively be configured to interface with a
-[Hashicorp Vault](https://www.vaultproject.io/) server to obtain keys.
+[HashiCorp Vault](https://www.vaultproject.io/) server to obtain keys.
 
 <Note>
   `encryption key-file=value` flag or `vault` superflag was used for
@@ -588,14 +594,14 @@ is being restored.
   encryption key from that cluster is needed for the restore process.
 </Note>
 
-Online restore can be performed from Amazon S3 / Minio or from a local
+Online restore can be performed from Amazon S3 / MinIO or from a local
 directory. Below is the documentation for the fields inside `RestoreInput` that
 can be passed into the mutation.
 
 ```graphql
 input RestoreInput {
   """
-  Destination for the backup: e.g. Minio or S3 bucket.
+  Destination for the backup: e.g. MinIO or S3 bucket.
   """
   location: String!
 
@@ -665,7 +671,7 @@ input RestoreInput {
   sessionToken: String
 
   """
-  Set to true to allow backing up to S3 or Minio bucket that requires no credentials.
+  Set to true to allow backing up to S3 or MinIO bucket that requires no credentials.
   """
   anonymous: Boolean
 
@@ -799,8 +805,8 @@ You use the `--encryption key-file=value` flag in cases where you took the
 backup in an encrypted cluster. The string for this flag must point to the
 location of the same key file used to run the cluster.
 
-You use the `--vault` [superflag](./deploy/cli-command-reference) to specify the
-[Hashicorp Vault](https://www.vaultproject.io/) server address (`addr`), role id
+You use the `--vault` [superflag](/dgraph/cli/command-reference) to specify the
+[HashiCorp Vault](https://www.vaultproject.io/) server address (`addr`), role id
 (`role-id-file`), secret id (`secret-id-file`) and the field that contains the
 encryption key (`enc-field`) that was used to encrypt the backup.
 

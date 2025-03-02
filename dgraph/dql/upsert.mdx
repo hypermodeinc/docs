@@ -10,24 +10,24 @@ Upsert-style operations are operations where:
    - Creating a new node with those attributes.
 
 The upsert has to be an atomic operation such that either a new node is created,
-or an existing node is modified. It is not allowed that two concurrent upserts
-both create a new node.
+or an existing node is modified. Two concurrent upserts can't both create a new
+node.
 
 There are many examples where upserts are useful. Most examples involve the
-creation of a 1 to 1 mapping between two different entities. E.g. associating
-email addresses with user accounts.
+creation of a 1 to 1 mapping between two different entities. For example,
+associating email addresses with user accounts.
 
 Upserts are common in both traditional RDBMSs and newer NoSQL databases. Dgraph
 is no exception.
 
-## Upsert Procedure
+## Upsert procedure
 
 In Dgraph, upsert-style behavior can be implemented by users on top of
 transactions. The steps are as follows:
 
 1. Create a new transaction.
 
-2. Query for the node. This will usually be as simple as
+2. Query for the node. This usually is as simple as
    `{ q(func: eq(email,    "bob@example.com")) { uid }}`. If a `uid` result is
    returned, then that's the `uid` for the existing node. If no results are
    returned, then the user account doesn't exist.
@@ -45,11 +45,11 @@ transactions. The steps are as follows:
 ## Upserts in DQL and GraphQL
 
 You can also use the `Upsert Block` in DQL to achieve the upsert procedure in a
-single mutation. The request will contain both the query and the mutation as
+single mutation. The request contains both the query and the mutation as
 explained [here](./dql-mutation.md#Update data with upsert block).
 
 In GraphQL, you can use the `upsert` input variable in an `add` mutation, as
-explained [here](./graphql/mutations/upsert.md).
+explained [here](/dgraph/graphql/mutation/upsert).
 
 ## Conflicts
 
@@ -247,9 +247,9 @@ curl -H "Content-Type: application/json" -X POST localhost:8080/mutate?commitNow
 ```
 
 If we want to execute the mutation only when the user exists, we could use
-[Conditional Upsert](./dql-mutation.md#conditional-upsert).
+[Conditional Upsert](./mutation#conditional-upsert).
 
-### Example: bulk delete
+### Example: Bulk delete
 
 Let's say we want to delete all the users of `company1` from the database. This
 can be achieved in just one query using the upsert block as follows:

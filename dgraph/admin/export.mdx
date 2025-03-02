@@ -5,10 +5,9 @@ title: Export Data
 ## Export
 
 As an `Administrator` you can export data from
-[Dgraph Cloud](./howto/exportdata/export-data-cloud), using the Cloud console, a
-GraphQL Client, or the Cloud API. You can also export data from your self-hosted
-[Dgraph instance](./howto/exportdata/export-data) to NFS or a file path or to an
-object store.
+[Dgraph Cloud](/dgraph/cloud/import-export), using the Cloud console, a GraphQL
+Client, or the Cloud API. You can also export data from your self-hosted Dgraph
+instance to NFS or a file path or to an object store.
 
 When you export data, typically three files are generated:
 
@@ -35,7 +34,7 @@ endpoint of any Alpha node.
 
 - Make a note of the export directories of the Alpha server nodes. For more
   information about configuring the Dgraph Alpha server, see
-  [Configuration](./config).
+  [Configuration](/dgraph/self-managed/config).
 
 This mutation triggers the export from each of the Alpha leader for a group.
 Depending on the Dgraph configuration several files are exported. It is
@@ -226,8 +225,7 @@ You can access Azure Blob Storage locally using one of these methods:
     --set azuregateway.enabled=true
   ```
 
-  You can use the
-  [MinIO GraphQL mutation](.//howto/exportdata/export-data.md#example-mutation-to-export-to-minio)
+  You can use the [MinIO GraphQL mutation](#example-mutation-to-export-to-minio)
   with MinIO configured as a gateway.
 
 ### Google Cloud Storage
@@ -291,8 +289,7 @@ these methods:
     --values myvalues.yaml
   ```
 
-  You can use the
-  [MinIO GraphQL mutation](.//howto/exportdata/export-data.md#example-mutation-to-export-to-minio)
+  You can use the [MinIO GraphQL mutation](#example-mutation-to-export-to-minio)
   with MinIO configured as a gateway.
 
 ## Disable HTTPS for exports to S3 and MinIO
@@ -347,7 +344,7 @@ Alpha must be configured with the `--encryption key-file=value`.
 
 <Note>
   The `--encryption key-file` used for [Encryption at
-  Rest](./enterprise-features/encryption-at-rest) and is also used for encrypted
+  Rest](/dgraph/enterprise/encryption-at-rest) and is also used for encrypted
   exports.
 </Note>
 

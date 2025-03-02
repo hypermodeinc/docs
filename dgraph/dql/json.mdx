@@ -2,9 +2,9 @@
 title: JSON Data Format
 ---
 
-Dgraph supports [Mutations](./dql-mutation) in JSON or [RDF](./dql-rdf) format.
-When using JSON format Dgraph creates nodes and relationships from the JSON
-structure and assigns UIDs to nodes.
+Dgraph supports [Mutations](./mutation) in JSON or [RDF](./rdf) format. When
+using JSON format Dgraph creates nodes and relationships from the JSON structure
+and assigns UIDs to nodes.
 
 ## Specifying node UIDs
 
@@ -242,7 +242,7 @@ deletes only one `food` relationship.
 To delete all predicates of a given node:
 
 - make sure the node has a `dgraph.type` predicate
-- the type is defined in the [Dgraph types schema](./dql-schema)
+- the type is defined in the [Dgraph types schema](./schema)
 - run a delete mutation specifying only the UID field
 
 ```JSON

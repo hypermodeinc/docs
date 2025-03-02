@@ -87,16 +87,10 @@ query {
 }
 ```
 
-<Note>
-  The `get` API on interfaces containing fields with the `@id` directive is
-  being deprecated and will be removed in v21.11. Users are advised to use the
-  `query` API instead.
-</Note>
-
 ### Query a list of objects
 
 You can query a list of objects using GraphQL. For example, the following query
-fetches the `title`, `text` and and `datePublished` for all posts:
+fetches the `title`, `text` and `datePublished` for all posts:
 
 ```graphql
 query {
@@ -125,13 +119,13 @@ query {
 ### Query that filters objects by predicate
 
 Before filtering an object by a predicate, you need to add a `@search` directive
-to the field that will be used to filter the results.
+to the field that's used to filter the results.
 
 For example, if you wanted to query events between two dates, or events that
 fall within a certain radius of a point, you could have an `Event` schema, as
 follows:
 
-```
+```graphql
 type Event {
   id: ID!
   date: DateTime! @search
@@ -142,9 +136,11 @@ type Event {
 The search directive would let you filter events that fall within a date range,
 as follows:
 
-```
+```graphql
 query {
-  queryEvent (filter: { date: { between: { min: "2020-01-01", max: "2020-02-01" } } }) {
+  queryEvent(
+    filter: { date: { between: { min: "2020-01-01", max: "2020-02-01" } } }
+  ) {
     id
   }
 }
@@ -153,9 +149,18 @@ query {
 You can also filter events that have a location near a certain point with the
 following query:
 
-```
+```graphql
 query {
-  queryEvent (filter: { location: { near: { coordinate: { latitude: 37.771935, longitude: -122.469829 }, distance: 1000 } } }) {
+  queryEvent(
+    filter: {
+      location: {
+        near: {
+          coordinate: { latitude: 37.771935, longitude: -122.469829 }
+          distance: 1000
+        }
+      }
+    }
+  ) {
     id
   }
 }
@@ -207,8 +212,8 @@ You can filter query results within an inclusive range of indexed and typed
 scalar values using the `between` keyword.
 
 <Tip>
-  This keyword is also supported for DQL; to learn more, see [DQL Functions:
-  `between`](/query-language/functions/#between).
+  This keyword is also supported for DQL. To learn more, see [DQL Functions:
+  `between`](/dgraph/dql/functions#between).
 </Tip>
 
 For example, you might start with the following example schema used to track
@@ -284,7 +289,7 @@ field using the `has` keyword. The `has` keyword can only check whether a field
 returns a non-null value, not for specific field values.
 
 For example, your schema might define a `Student` type that has basic
-information about each student; such as their ID number, age, name, and email
+information about each student such as their ID number, age, name, and email
 address:
 
 ```graphql

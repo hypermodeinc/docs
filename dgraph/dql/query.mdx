@@ -26,7 +26,7 @@ A DQL query has
 - optional var blocks
 - a closing curly bracket
 
-![DQL Query with parameterization](/images/dql-syntax/query-syntax-1.png)
+![DQL Query with parameterization](/images/dgraph/query-syntax-1.png)
 
 ## Query parameterization
 
@@ -56,16 +56,16 @@ with errors if
 The query parameterization is optional. If you don't use parameters you can omit
 it and send only the query blocks.
 
-![DQL Query without parameters](/images/dql-syntax/query-syntax-2.png)
+![DQL Query without parameters](/images/dgraph/query-syntax-2.png)
 
 <Note>
   The current documentation is usually using example of queries without
   parameters.
 </Note>
 
-If you execute this query in our [Movies demo database](./graphql-fundamentals)
+If you execute this query in our [Movies demo database](./schema#sample-schema)
 you can see that Dgraph will return a JSON structure similar to the request :
-![DQL response structure](/images/dql-syntax/query-syntax-3.png)
+![DQL response structure](/images/dgraph/query-syntax-3.png)
 
 ## Query block
 
@@ -80,8 +80,8 @@ A query block
 - must provide the list of attributes and relationships to fetch for each node
   matching the root nodes.
 
-Refer to [pagination](./pagination), [ordering](./sorting),
-[connecting filters](./connecting-filters) for more information.
+Refer to [pagination](./pagination) and [ordering](./sorting) for more
+information.
 
 For each relationships to fetch, the query is using a nested block.
 
@@ -206,9 +206,6 @@ the films block, as follows:
 The root `uid` function unions the `uid`s from `var` `A` and `B`, so you need a
 filter to intersect the `uid`s from `var` `A` and `B`.
 
-```
-
-
 ### Escape characters in predicate names
 
 If your predicate has special characters, wrap it with angular brackets `< >` in
@@ -222,12 +219,11 @@ Dgraph returns the attributes and relationships that you specified in the query.
 You can specify an alternate name for the result by using [
 
 You can flatten the response structure at any level using
-[@normalize](/query-language/normalize-directive) directive.
+[@normalize](./normalize) directive.
 
 Entering the list of all the attributes you want to fetch could be fastidious
 for large queries or repeating blocks : you may take advantage of
-[fragments](./fragments) and the
-[expand function](./expand).
+[fragments](./fragment) and the [expand function](./expand).
 
 ### Node criteria (used by root function or by filter)
 
@@ -269,9 +265,9 @@ Variable blocks (`var` blocks) start with the keyword `var` instead of a block
 name.
 
 var blocks are not reflected in the query result. They are used to compute
-[query-variables](./query-variables) which are lists of node UIDs, or
-[value-variables](./value-variables) which are maps from node UIDs to the
-corresponding scalar values.
+[query-variables](./variables#query-variables) which are lists of node UIDs, or
+[value-variables](./variables#value-variables) which are maps from node UIDs to
+the corresponding scalar values.
 
 Note that query-variables and value-variables can also be computed in query
 blocks. In that case, the query block is used to fetch and return data, and to
@@ -283,19 +279,16 @@ other blocks.
 ### Summarizing functions
 
 When dealing with array attributes or with relationships to many node, the query
-may use summary functions [count](./count) ,
-[min](./aggregation#min),
-[max](./aggregation#max),
-[avg](./aggregation#sum-and-avg) or
+may use summary functions [count](./count) , [min](./aggregation#min),
+[max](./aggregation#max), [avg](./aggregation#sum-and-avg) or
 [sum](./aggregation#sum-and-avg).
 
 The query may also contain
-[mathematical functions](./math-on-value-variables) on value
+[mathematical functions](./variables#math-on-value-variables) on value
 variables.
 
-Summary functions can be used in conjunction with
-[@grouby](./groupby) directive to create aggregated value
-variables.
+Summary functions can be used in conjunction with [@grouby](./groupby) directive
+to create aggregated value variables.
 
 The query may contain **anonymous block** to return computed values. **Anonymous
 block** don't have a root criteria as they are not used to search for nodes but
@@ -306,25 +299,25 @@ only to returned computed values.
 When you specify nested blocks and filters you basically describe a way to
 traverse the graph.
 
-[@recurse](./recurse) and
-[@ignorereflex](./ignorereflex) are directives used to
+[@recurse](./recurse) and [@ignorereflex](./ignorereflex) are directives used to
 optionally configure the graph traversal.
 
 ### Pattern matching
 
 Queries with nested blocks with filters may be turned into pattern matching
-using [@cascade](./cascade) directive : nodes that
-don’t have all attributes and all relationships specified in the query at any
-sub level are not considered in the result. So only nodes "matching" the
-complete query structure are returned.
+using [@cascade](./cascade) directive : nodes that don’t have all attributes and
+all relationships specified in the query at any sub level are not considered in
+the result. So only nodes "matching" the complete query structure are returned.
 
 ### Graph algorithms
 
 The query can ask for the shortest path between a source (from) node and
-destination (to) node using the
-[shortest](./shortest) query block.
+destination (to) node using the [shortest](./shortest) query block.
 
 ### Comments
 
 Anything on a line following a `#` is a comment
+
+```
+
 ```

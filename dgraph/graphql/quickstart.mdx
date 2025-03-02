@@ -11,21 +11,21 @@ a relational database, you know that GraphQL issues many queries to translate
 the REST/relational data into something that looks like a graph. You also have
 to be familiar with the GraphQL types, fields, and resolvers. However, with
 Dgraph you can generate a running GraphQL API with the associated graph backend
-just by deploying the GraphQL schema of your API; Dgraph does the rest.
+just by deploying the GraphQL schema of your API. Dgraph does the rest!
 
 ## Step 1: Run Dgraph
 
 The easiest way to get Dgraph up and running is using the
 [Dgraph Cloud](https://cloud.dgraph.io).  
-You can log in to Dgraph cloud using **Sign in with Google**, **Sign in with
+You can log in to Dgraph Cloud using **Sign in with Google**, **Sign in with
 GitHub** or any other email account that you prefer to use.
 
-1. In the Dgraph cloud console, click **Launch new backend**.
-1. Select a plan, cloud provider, and region that meets your requirements.
-1. Type a name for your Dgraph cloud instance.
-1. Click **Launch**
-1. A new Dgraph cloud backend is created for you. The URL listed in **GraphQL
-   Endpoint** is the URL at which Dgraph cloud serves data to your app. You can
+1. In the Dgraph Cloud console, click **Launch new backend**.
+2. Select a plan, cloud provider, and region that meets your requirements.
+3. Type a name for your Dgraph Cloud instance.
+4. Click **Launch**.
+5. A new Dgraph Cloud backend is created for you. The URL listed in **GraphQL
+   Endpoint** is the URL at which Dgraph Cloud serves data to your app. You can
    copy it at any time to use in a GraphQL client app.
 
 ## Step 2: Deploy a GraphQL Schema
@@ -61,7 +61,7 @@ GitHub** or any other email account that you prefer to use.
 ## Step 3: Test your GraphQL API
 
 You can use the [API Explorer](https://cloud.dgraph.io/_/explorer) tab of your
-Dgraph cloud console, but you can access the `GraphQL endpoint` with any GraphQL
+Dgraph Cloud console, but you can access the `GraphQL endpoint` with any GraphQL
 clients such as
 [GraphQL Playground](https://github.com/prisma-labs/graphql-playground),
 [Insomnia](https://insomnia.rest/),
@@ -296,7 +296,4 @@ how you'd like to search that graph. Dgraph does the rest.
 
 ## What's next
 
-- Learn more about [GraphQL schema](./graphql/schema/_index) and Dgraph
-  directives.
-- Follow our [GraphQL tutorials](https://dgraph.io/learn/) to experience rapid
-  app development by building more advanced apps.
+Learn more about [GraphQL schema](./schema/overview) and Dgraph directives.

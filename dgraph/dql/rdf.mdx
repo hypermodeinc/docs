@@ -12,7 +12,7 @@ format of these statements is simple and in the form of triples.
 
 A triple has the form
 
-```
+```dql
 <subject> <predicate> <object> .
 ```
 
@@ -21,7 +21,7 @@ In RDF terminology, each triple represents one fact about a node.
 In Dgraph, the `<subject>` of a triple is always a node, and must be a numeric
 UID. The `<object>` of a triple may be another node or a literal value:
 
-```
+```dql
 <0x01> <name> "Alice" .
 <0x01> <knows> <0x02> .
 ```
@@ -30,7 +30,7 @@ The first triple specifies that a node has a name property of “Alice”. The
 subject is the UID of the first node, the predicate is `name`, and the object is
 the literal value string: `"Alice"`. The second triple specifies that Alice
 knows Bob. The subject is again the UID of a node (the "alice" node), the
-predicate is `knows`, and the object of this triple is the uid of the other node
+predicate is `knows`, and the object of this triple is the UID of the other node
 (the "bob" node). When the object is a UID, the triple represents a relationship
 in Dgraph.
 
@@ -39,15 +39,15 @@ Each triple representation in RDF ends with a period.
 ### Blank nodes in mutations
 
 When creating nodes in Dgraph, you often let Dgraph assign the node
-[UID](/dgraph/glossary#uid) by specifing a blank node starting with "_:". All
-references to the same blank node, such as `_:identifier123`, will identify the
-same node within a mutation. Dgraph creates a UID identifying each blank node.
+[UID](/dgraph/glossary#uid) by specifying a blank node starting with `_:`. All
+references to the same blank node, such as `_:identifier123`, identify the same
+node within a mutation. Dgraph creates a UID identifying each blank node.
 
 ### Language for string values
 
 Languages are written using `@lang`. For example
 
-```
+```dql
 <0x01> <name> "Adelaide"@en .
 <0x01> <name> "Аделаида"@ru .
 <0x01> <name> "Adélaïde"@fr .
@@ -55,21 +55,21 @@ Languages are written using `@lang`. For example
 ```
 
 See also
-[how language strings are handled in queries](./query-language/graphql-fundamentals.md#language-support).
+[how language strings are handled in queries](/dgraph/dql/language-support#language-support).
 
 ### Types
 
 Dgraph understands standard RDF types specified in RDF using the `^^` separator.
 For example
 
-```
+```dql
 <0x01> <age> "32"^^<xs:int> .
 <0x01> <birthdate> "1985-06-08"^^<xs:dateTime> .
 ```
 
 The supported
-[RDF datatypes](https://www.w3.org/TR/rdf11-concepts/#section-Datatypes) and the
-corresponding internal Dgraph type are as follows.
+[RDF data types](https://www.w3.org/TR/rdf11-concepts/#section-Datatypes) and
+the corresponding internal Dgraph type are as follows.
 
 | Storage Type                                                   | Dgraph type |
 | -------------------------------------------------------------- | :---------: |
@@ -97,7 +97,7 @@ corresponding internal Dgraph type are as follows.
 
 Dgraph is more expressive than RDF in that it allows properties to be stored on
 every relation. These properties are called Facets in Dgraph, and dgraph allows
-an extension to RDF where facet values are incuded in any triple.
+an extension to RDF where facet values are included in any triple.
 
 #### Creating a list with facets
 
@@ -159,15 +159,15 @@ Result:
 While most RDF data uses only triples (with three parts) an optional fourth part
 is allowed. This fourth component in RDF is called a graph label, and in Dgraph
 it must be the UID of the namespace that the data should go into as described in
-[Multi-tenancy](./cloud-multitenancy).
+[Multi-tenancy](/dgraph/cloud/multitenancy).
 
 ## Processing RDF to comply with Dgraph syntax for subjects
 
 While it's valid RDF to specify subjects that are IRI strings, Dgraph requires a
 numeric UID or a blank node as the subject. If a string IRI is required, Dgraph
-support them via [xid properties](./external-ids-upsert-block). When importing
-RDF from another source that does not use numeric UID subjects, it will be
-required to replace arbitrary subject IRIs with blank node IRIs.
+support them via [xid properties](./upsert#external-ids-and-upsert-block). When
+importing RDF from another source that does not use numeric UID subjects, it
+will be required to replace arbitrary subject IRIs with blank node IRIs.
 
 Typically this is done simply by prepending "\_:" to the start of the original
 IRI. So a triple such as:

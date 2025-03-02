@@ -7,7 +7,7 @@ distributed traces from the Dgraph cluster.
 
 Trace data is always collected within Dgraph. You can adjust the trace sampling
 rate for Dgraph queries using the `--trace`
-[superflag's](./deploy/cli-command-reference) `ratio` option when running Dgraph
+[superflag's](/dgraph/cli/command-reference) `ratio` option when running Dgraph
 Alpha nodes. By default, `--trace ratio` is set to 0.01 to trace 1% of queries.
 
 ## Examining traces with zPages
@@ -47,17 +47,17 @@ per environment.
 Once you have this configured, you can filter by tags in the Jaeger UI. Filter
 traces by tags matching `env=dev`:
 
-![Jaeger UI](/images/jaeger-ui.png)
+![Jaeger UI](/images/dgraph/jaeger-ui.png)
 
 Every trace has your custom tags set under the “Process” section of each span:
 
-![Jaeger Query](/images/jaeger-server-query.png)
+![Jaeger Query](/images/dgraph/jaeger-server-query.png)
 
 Filter traces by tags matching `env=qa`:
 
-![Jaeger JSON](/images/jaeger-json.png)
+![Jaeger JSON](/images/dgraph/jaeger-json.png)
 
-![Jaeger Query Result](/images/jaeger-server-query-2.png)
+![Jaeger Query Result](/images/dgraph/jaeger-server-query-2.png)
 
 To learn more about Jaeger, see
 [Jaeger's Deployment Guide](https://www.jaegertracing.io/docs/deployment/).
