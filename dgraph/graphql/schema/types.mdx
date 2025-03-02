@@ -70,7 +70,7 @@ Vectors are normaly used to store embeddings obtained from an ML model.
 
 When a Float vector is indexed, the GraphQL `querySimilar<type name>ByEmbedding`
 and `querySimilar<type name>ById` functions can be used for
-[similarity search](./vector-similarity.md).
+[similarity search](/dgraph/graphql/query/vector-similarity).
 
 A simple example of adding a vector embedding on `name` to `User` type is shown
 below.
@@ -86,8 +86,8 @@ type User {
 ```
 
 In this schema, the field `name_v` is an embedding on which the
-[@search](/graphql/schema/directives/search/#vector-embedding) directive for
-vector embeddings is used.
+[@search](/dgraph/graphql/schema/directives/search#vector-embedding) directive
+for vector embeddings is used.
 
 ### The `ID` type
 

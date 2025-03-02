@@ -14,10 +14,9 @@ graph traversal queries.
 
 To implement graph traversal rule on GraphQL API operations :
 
-1. Ensure your have configured the GraphQL schema to
-   [Handle JWT tokens](./jwt.md) using `# Dgraph.Authorization` This step is
-   important to be able to use the
-   [JWT claims](./graphql/security/_index.md#jwt-claims)
+1. Ensure your have configured the GraphQL schema to [Handle JWT tokens](./jwt)
+   using `# Dgraph.Authorization` This step is important to be able to use the
+   [JWT claims](./overview#jwt-claims)
 2. Annotate the Types in the GraphQL schema with the `@auth` directive and
    specify conditions to be met for `query`, `add`, `update` or `delete`
    operations.
