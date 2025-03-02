@@ -6,10 +6,10 @@ description:
 ---
 
 As a database administrator, you count on being able to audit access to your
-database. With a Dgraph [enterprise license](./enterprise-features/license), you
-can enable audit logging so that all requests are tracked and available for use
-in security audits. When audit logging is enabled, the following information is
-recorded about the queries and mutations (requests) sent to your database:
+database. With a Dgraph [enterprise license](./license), you can enable audit
+logging so that all requests are tracked and available for use in security
+audits. When audit logging is enabled, the following information is recorded
+about the queries and mutations (requests) sent to your database:
 
 - Endpoint
 - Logged-in User Name
@@ -35,7 +35,7 @@ The following aren't logged:
 
 - Responses to queries and mutations
 - HTTP requests to `/health`, `/state` and `/jemalloc` endpoints
-- gRPC requests to Raft endpoints (see [Raft](./design-concepts/raft))
+- gRPC requests to Raft endpoints (see [Raft](/dgraph/concepts/raft))
 - gRPC requests to health endpoints (`Check` and `Watch`)
 - gRPC requests to Dgraph Zero stream endpoints (`StreamMembership`,
   `UpdateMembership`, `Oracle`, `Timestamps`, `ShouldServe` and `Connect`)
@@ -120,8 +120,8 @@ dgraph alpha --audit "output=audit-log-dir;size=200;days=15"
 
 ### Enable audit logging with compression
 
-In many cases you will want to compress older audit logs to save storage space.
-You can do this with a command like the following:
+In many cases you want to compress older audit logs to save storage space. You
+can do this with a command like the following:
 
 ```sh
 dgraph alpha --audit "output=audit-log-dir;compress=true"
@@ -148,4 +148,5 @@ dgraph audit decrypt --encryption_key_file=/path/encrypt/key/file --in /path/to/
 
 ## Next steps
 
-To learn more about the logging features of Dgraph, see [Logging](./log-format).
+To learn more about the logging features of Dgraph, see
+[Logging](/dgraph/admin/logs).

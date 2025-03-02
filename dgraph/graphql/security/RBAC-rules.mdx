@@ -10,15 +10,14 @@ of your GraphQL schema based on JWT claims, using the `@auth` directive.
 
 To implement Role Based Access Control on GraphQL API operations :
 
-1. Ensure your have configured the GraphQL schema to
-   [Handle JWT tokens](./jwt.md) using `# Dgraph.Authorization` This step is
-   important to be able to use the
-   [JWT claims](./graphql/security/_index.md#jwt-claims)
+1. Ensure your have configured the GraphQL schema to [Handle JWT tokens](./jwt)
+   using `# Dgraph.Authorization` This step is important to be able to use the
+   [JWT claims](./overview#jwt-claims)
 2. Annotate the Types in the GraphQL schema with the `@auth` directive and
    specify conditions to be met for `query`, `add`, `update` or `delete`
    operations.
 3. Deploy the GraphQL schema either with a
-   [schema update](./graphql/admin.md#using-updategqlschema-to-add-or-modify-a-schema)
+   [schema update](/dgraph/graphql/api#using-updategqlschema-to-add-or-modify-a-schema)
    or via the Cloud console's [Schema](https://cloud.dgraph.io/_/schema) page.
 
 The generic format of RBAC rule is as follow
@@ -33,7 +32,7 @@ type User @auth(
 ```
 
 RBAC rule supports `eq` or `in` functions to test the value of a
-[JWT claim](./graphql/security/_index.md#jwt-claims) from the JWT token payload.
+[JWT claim](./overview#jwt-claims) from the JWT token payload.
 
 The claim value may be a string or array of strings.
 

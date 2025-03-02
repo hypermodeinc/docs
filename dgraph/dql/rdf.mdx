@@ -39,10 +39,9 @@ Each triple representation in RDF ends with a period.
 ### Blank nodes in mutations
 
 When creating nodes in Dgraph, you often let Dgraph assign the node
-[UID](./dgraph-glossary.md#uid) by specifing a blank node starting with "_:".
-All references to the same blank node, such as `_:identifier123`, will identify
-the same node within a mutation. Dgraph creates a UID identifying each blank
-node.
+[UID](/dgraph/glossary#uid) by specifing a blank node starting with "_:". All
+references to the same blank node, such as `_:identifier123`, will identify the
+same node within a mutation. Dgraph creates a UID identifying each blank node.
 
 ### Language for string values
 
@@ -181,5 +180,5 @@ may be rewritten as
 
 Dgraph will create a consistent UID for all references to the uniquely-named
 blank node. To maintain this uniqueness over multiple data loads, use the
-[dgraph live](./dgraph-glossary.md#uid) utility with the xid option, or use
-specific UIDs such as the hash of the IRI in the source RDF directly.
+[dgraph live](/dgraph/glossary#uid) utility with the xid option, or use specific
+UIDs such as the hash of the IRI in the source RDF directly.

@@ -43,8 +43,8 @@ to you. Then you are in a situation where you need migration.
 This can be handled in a couple of ways:
 
 1. Migrate all the data for type `User` to use the new name `AppUser`. OR,
-2. Just use the [`@dgraph(type: ...)`](/graphql/dgraph) directive to maintain
-   backward compatibility with the existing data.
+2. Just use the [`@dgraph(type: ...)`](./directives/dgraph) directive to
+   maintain backward compatibility with the existing data.
 
 Depending on your use-case, you might find option 1 or 2 better for you. For
 example, if you have accumulated very little data for the `User` type till now,
@@ -89,8 +89,8 @@ migration.
 You have the same two choices as before:
 
 1. Migrate all the data for the field `phone` to use the new name `tel`. OR,
-2. Just use the [`@dgraph(pred: ...)`](/graphql/dgraph) directive to maintain
-   backward compatibility with the existing data.
+2. Just use the [`@dgraph(pred: ...)`](./directives/dgraph) directive to
+   maintain backward compatibility with the existing data.
 
 Here's an example if you want to go with option #2:
 
@@ -260,7 +260,7 @@ The data you have previously created is still in the graph database !
 Moreover if you delete the `TestDataMigration` object using its `id`, the
 GraphQL API delete operation is successful.
 
-If you followed the [GraphQL - DQL Schema mapping](./graphql-dql-schema), you
+If you followed the [GraphQL - DQL Schema mapping](./graphql-dql), you
 understand that Dgraph has used the list the known list of predicates (`id`,
 `someInfo`) and removed them. In fact, Dgraph also removed the
 `dgraph.type`predicate and so this`TestDataMigration` node isn't visible anymore
