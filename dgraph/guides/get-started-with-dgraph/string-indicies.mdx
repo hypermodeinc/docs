@@ -110,7 +110,7 @@ mentioned.
 
 We have three types of nodes: `User`, `Tweet,` and `Hashtag`.
 
-![graph nodes](/images/tutorials/5/a-nodes.jpg)
+![graph nodes](/images/dgraph/guides/get-started-with-dgraph/a-nodes.jpg)
 
 Let's look at how these nodes might be related to each other and model their
 relationship as an edge between them.
@@ -132,7 +132,7 @@ Let's name the edge which represents this relationship as `mentioned`.
 A `mentioned` edge points from a `Tweet` node to a `User` node. These users are
 the ones who are mentioned in the tweet.
 
-![graph nodes](/images/tutorials/5/a-tweet-user.jpg)
+![graph nodes](/images/dgraph/guides/get-started-with-dgraph/a-tweet-user.jpg)
 
 **The tweet and the hashtag nodes**
 
@@ -142,7 +142,7 @@ this relationship as `tagged_with`.
 A `tagged_with` edge points from a `Tweet` node to a `Hashtag` node. These
 hashtag nodes correspond to the hashtags in the tweets.
 
-![graph nodes](/images/tutorials/5/a-tagged.jpg)
+![graph nodes](/images/dgraph/guides/get-started-with-dgraph/a-tagged.jpg)
 
 **The Author and hashtag nodes**
 
@@ -151,11 +151,11 @@ don't need a direct edge between them.
 
 Our graph model of a tweet is ready! Here's it's.
 
-![tweet model](/images/tutorials/5/a-graph-model.jpg)
+![tweet model](/images/dgraph/guides/get-started-with-dgraph/a-graph-model-2.jpg)
 
 Here is the graph of our sample tweet.
 
-![tweet model](/images/tutorials/5/c-tweet-model.jpg)
+![tweet model](/images/dgraph/guides/get-started-with-dgraph/c-tweet-model.jpg)
 
 Let's add a couple of tweets to the list.
 
@@ -283,7 +283,7 @@ and click Run.
 
 Here is the graph we built.
 
-![tweet graph](/images/tutorials/5/x-all-tweets.png)
+![tweet graph](/images/dgraph/guides/get-started-with-dgraph/x-all-tweets.png)
 
 Our graph has:
 
@@ -302,7 +302,7 @@ database.
 }
 ```
 
-![tweet model](/images/tutorials/5/j-users.png)
+![tweet model](/images/dgraph/guides/get-started-with-dgraph/j-users.png)
 
 _Note: If the query syntax above looks not so familiar to you, check out the
 [first tutorial](./tutorial-1/index)._
@@ -326,7 +326,7 @@ Now, let's find their tweets and hashtags too.
 }
 ```
 
-![tweet model](/images/tutorials/5/y-author-tweet.png)
+![tweet model](/images/dgraph/guides/get-started-with-dgraph/y-author-tweet.png)
 
 _Note: If the traversal query syntax in the above query is not familiar to you,
 [check out the third tutorial](./tutorial-3/index) of the series._
@@ -375,7 +375,7 @@ predicate. For a use case like this one, the `hash` index is recommended.
 
 Let's first add the `hash` index to the `user_handle` predicate.
 
-![tweet model](/images/tutorials/5/k-hash.png)
+![tweet model](/images/dgraph/guides/get-started-with-dgraph/k-hash.png)
 
 Now, let's use the `eq` comparator to find all the tweets of `hackintoshrao`.
 
@@ -392,7 +392,7 @@ Go to the query tab, type in the query, and click Run.
 }
 ```
 
-![tweet model](/images/tutorials/5/z-exact.png)
+![tweet model](/images/dgraph/guides/get-started-with-dgraph/z-exact.png)
 
 _Note: Refer to [the third tutorial](./tutorial-3/index), if you want to know
 about comparator functions like `eq` in detail._
@@ -416,7 +416,7 @@ Let's extend the last query also to fetch the hashtags and the mentions.
 }
 ```
 
-![tweet model](/images/tutorials/5/l-hash-query.png)
+![tweet model](/images/dgraph/guides/get-started-with-dgraph/l-hash-query.png)
 
 _Note: If the traversal query syntax in the above query is not familiar to you,
 [check out the third tutorial](./tutorial-3/index) of the series._
@@ -460,7 +460,7 @@ sorted order.
 }
 ```
 
-![tweet model](/images/tutorials/5/n-exact-error.png)
+![tweet model](/images/dgraph/guides/get-started-with-dgraph/n-exact-error.png)
 
 Oops, we have an error!
 
@@ -480,7 +480,7 @@ index would be a better option, as it's, in general, much more space-efficient.
 
 Let's see the `exact` index in action.
 
-![set exact](/images/tutorials/5/o-exact-conflict.png)
+![set exact](/images/dgraph/guides/get-started-with-dgraph/o-exact-conflict.png)
 
 We again have an error!
 
@@ -494,7 +494,7 @@ The `user_handle` predicate already has the `hash` index, so trying to set the
 Let's uncheck the `hash` index for the `user_handle` predicate, select the
 `exact` index, and click update.
 
-![set exact](/images/tutorials/5/p-set-exact.png)
+![set exact](/images/dgraph/guides/get-started-with-dgraph/p-set-exact.png)
 
 Though Dgraph allows you to change the index type of a predicate, do it only if
 it's necessary. When the indices are changed, the data needs to be re-indexed,
@@ -503,7 +503,7 @@ re-indexing operation is running, all mutations will be put on hold.
 
 Now, let's re-run the query.
 
-![tweet model](/images/tutorials/5/q-exact-gt.png)
+![tweet model](/images/dgraph/guides/get-started-with-dgraph/q-exact-gt.png)
 
 The result contains three twitter handles: `francesc`, `gopherpalooza`, and
 `hackintoshrao`.
@@ -530,7 +530,7 @@ set the `term` index on the tweets.
 
 Adding the `term` index is similar to adding any other string index.
 
-![term set](/images/tutorials/5/r-term-set.png)
+![term set](/images/dgraph/guides/get-started-with-dgraph/r-term-set.png)
 
 Dgraph provides two built-in functions specifically to search for terms:
 `allofterms` and `anyofterms`.
@@ -562,7 +562,7 @@ Here's the matched tweet from the query response:
 }
 ```
 
-![go graph set](/images/tutorials/5/s-go-graph.png)
+![go graph set](/images/dgraph/guides/get-started-with-dgraph/s-go-graph.png)
 
 _Note: Check out [the first tutorial](./tutorial-1/index) if the query syntax,
 in general, is not familiar to you_
@@ -594,7 +594,7 @@ Now, let's find tweets that have either of the terms `Go` or `GraphQL` in them.
 }
 ```
 
-![Go Graphql](/images/tutorials/5/t-go-graphql-all.png)
+![Go Graphql](/images/dgraph/guides/get-started-with-dgraph/t-go-graphql-all.png)
 
 Oh wow, we have all the three tweets in the result. This means, all of the three
 tweets have either of the terms `Go` or `GraphQL`.
@@ -610,7 +610,7 @@ them. We can do it by using the `allofterms` function.
 }
 ```
 
-![Go Graphql](/images/tutorials/5/u-allofterms.png)
+![Go Graphql](/images/dgraph/guides/get-started-with-dgraph/u-allofterms.png)
 
 We have an empty result. None of the tweets have both the terms `Go` and
 `GraphQL` in them.
@@ -620,7 +620,7 @@ Besides `Go` and `Graph`, I'm also a big fan of `GraphQL` and `GraphDB`.
 Let's find out tweets that contain both the keywords `GraphQL` and `GraphDB` in
 them.
 
-![Graphdb-GraphQL](/images/tutorials/5/v-graphdb-graphql.png)
+![Graphdb-GraphQL](/images/dgraph/guides/get-started-with-dgraph/v-graphdb-graphql.png)
 
 We have two tweets in a result which has both the terms `GraphQL` and `GraphDB`.
 

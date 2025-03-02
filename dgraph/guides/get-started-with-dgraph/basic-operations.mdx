@@ -8,7 +8,7 @@ In the [previous tutorial](./tutorial-1/index) of getting started, we learned
 some of the basics of Dgraph. Including how to run the database, add new nodes
 and predicates, and query them back.
 
-![Graph](/images/tutorials/2/graph-1.jpg)
+![Graph](/images/dgraph/guides/get-started-with-dgraph/graph-1.jpg)
 
 In this tutorial, we'll build the above Graph and learn more about operations
 using the UID (Universal Identifier) of the nodes. Specifically, we'll learn
@@ -56,7 +56,7 @@ Run.
 }
 ```
 
-![mutation-1](/images/tutorials/2/a-add-data.gif)
+![mutation-1](/images/dgraph/guides/get-started-with-dgraph/a-add-data.gif)
 
 ## Query using UIDs
 
@@ -86,7 +86,7 @@ Go to the query tab, type in the query below, and click Run.
 
 Now, from the result, copy the UID of Michael's node.
 
-![Get UID](/images/tutorials/2/b-get-uid-1.png)
+![Get UID](/images/dgraph/guides/get-started-with-dgraph/b-get-uid-1.png)
 
 In the query below, replace the placeholder `MICHAELS_UID` with the UID you just
 copied, and run the query.
@@ -101,7 +101,7 @@ copied, and run the query.
 }
 ```
 
-![Get node from UID](/images/tutorials/2/c-query-uid.png)
+![Get node from UID](/images/dgraph/guides/get-started-with-dgraph/c-query-uid.png)
 
 _Note: `MICHAELS_UID` appears as `0x8` in the images. The UID you get on your
 machine might have a different value._
@@ -146,7 +146,7 @@ You can see that Michael's age is updated to 41.
 }
 ```
 
-![update check](/images/tutorials/2/d-update-check.png)
+![update check](/images/dgraph/guides/get-started-with-dgraph/d-update-check.png)
 
 Similarly, you can also add new predicates to an existing node. Since the
 predicate `country` doesn't exist for the node for `Michael`, it creates a new
@@ -172,7 +172,7 @@ Let's say, `Leyla` starts to follow `Michael`.
 We know that this relationship between them has to represented by creating the
 `follows` edge between them.
 
-![Graph](/images/tutorials/2/graph-2.jpg)
+![Graph](/images/dgraph/guides/get-started-with-dgraph/graph-2.jpg)
 
 First, let's copy the UIDs of nodes for `Leyla` and `Michael` from Ratel.
 
@@ -217,7 +217,7 @@ Let's run a traversal query and then understand it in detail.
 
 Here's the result.
 
-![traversal-result](/images/tutorials/2/e-traversal.png)
+![traversal-result](/images/dgraph/guides/get-started-with-dgraph/e-traversal.png)
 
 The query has three parts:
 
@@ -244,7 +244,7 @@ These are `level-2` nodes. The root nodes constitute the nodes for `level-1`.
 Again, we need to specify which predicates you want to get back from `level-2`
 nodes.
 
-![Get node from UID](/images/tutorials/2/j-explain.JPG)
+![Get node from UID](/images/dgraph/guides/get-started-with-dgraph/j-explain.JPG)
 
 You can extend the query to make use of `level-2` nodes and traverse the Graph
 further and deeper. Let's explore that in the next section.
@@ -275,7 +275,7 @@ That's when we say that the query is deep!
 }
 ```
 
-![level-3-query](/images/tutorials/2/f-level-3-traverse.png)
+![level-3-query](/images/dgraph/guides/get-started-with-dgraph/f-level-3-traverse.png)
 
 Here is one more example from the extension of the last query.
 
@@ -300,7 +300,7 @@ Here is one more example from the extension of the last query.
 }
 ```
 
-![level 3](/images/tutorials/2/g-level-4-traversal.png)
+![level 3](/images/dgraph/guides/get-started-with-dgraph/g-level-4-traversal.png)
 
 This query is really long! The query is four levels deep. In other words, the
 depth of the query is four. If you ask, isn't there an in-built function that
@@ -334,7 +334,7 @@ parameter specifies the maximum depth the traversal query should consider.
 Let's run the recursive traversal query after replacing the placeholder with the
 UID of node for Michael.
 
-![recurse](/images/tutorials/2/h-recursive-traversal.png)
+![recurse](/images/dgraph/guides/get-started-with-dgraph/h-recursive-traversal.png)
 
 [Check out the docs](https://dgraph.io/docs/query-language/#recurse-query) for
 detailed instructions on using the `recurse` directive.
@@ -373,7 +373,7 @@ Using the mutation syntax, let's compose a delete mutation. Let's delete the
 }
 ```
 
-![recurse](/images/tutorials/2/i-delete.png)
+![recurse](/images/dgraph/guides/get-started-with-dgraph/i-delete.png)
 
 ## Wrapping up
 

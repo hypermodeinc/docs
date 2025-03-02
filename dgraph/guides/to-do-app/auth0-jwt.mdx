@@ -8,14 +8,14 @@ description:
 Let's start by going to our Auth0 dashboard where we can see the app which we
 have already created and used in our frontend-app.
 
-![Dashboard](/images/graphql/tutorial/todo/dashboard.png)
+![Dashboard](/images/dgraph/guides/to-do-app/dashboard.png)
 
 Now we want to use the JWT that Auth0 generates, but we also need to add custom
 claims to that token which will be used by our auth rules. So we can use
 something known as "Rules" (left sidebar on dashboard page under "Auth
 Pipeline") to add custom claims to a token. Let's create a new empty rule.
 
-![Rule](/images/graphql/tutorial/todo/rule.png)
+![Rule](/images/dgraph/guides/to-do-app/rule.png)
 
 Replace the content with the the following -
 
@@ -42,7 +42,7 @@ so let's make sure it's set to that and then copy the certificate which we will
 use to get the public key. Use the download certificate button there to get the
 certificate in `PEM`.
 
-![Certificate](/images/graphql/tutorial/todo/certificate.png)
+![Certificate](/images/dgraph/guides/to-do-app/certificate.png)
 
 Now let's run a command to get the public key from it, which we will add to our
 schema. Just change the `file_name` and run the command.
@@ -118,11 +118,11 @@ Now open a browser window, navigate to
 to the `network` tab and find a call called `token` to get your JWT from its
 response JSON (field `id_token`).
 
-![Token](/images/graphql/tutorial/todo/token.png)
+![Token](/images/dgraph/guides/to-do-app/token.png)
 
 Now go to [jwt.io](https://jwt.io) and paste your token there.
 
-![jwt](/images/graphql/tutorial/todo/jwt.png)
+![jwt](/images/dgraph/guides/to-do-app/jwt.png)
 
 The token also includes our custom claim like below.
 

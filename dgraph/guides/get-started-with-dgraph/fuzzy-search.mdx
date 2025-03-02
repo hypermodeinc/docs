@@ -22,7 +22,7 @@ The accompanying video of the tutorial will be out shortly, so stay tuned to
 Before we dive in, let's review of how we modeled the tweets in the previous two
 tutorials:
 
-![tweet model](/images/tutorials/5/a-graph-model.jpg)
+![tweet model](/images/dgraph/guides/get-started-with-dgraph/a-graph-model.jpg)
 
 We used three real-life example tweets as a sample dataset and stored them in
 Dgraph using the above graph as a model.
@@ -135,7 +135,7 @@ mutation, we highly recommend reading the
 Now you should have a graph with tweets, users, and hashtags, and it's ready for
 us to explore.
 
-![tweet graph](/images/tutorials/5/x-all-tweets.png)
+![tweet graph](/images/dgraph/guides/get-started-with-dgraph/x-all-tweets.png)
 
 _Note: If you're curious to know how we modeled the tweets in Dgraph, refer to
 [the fifth tutorial](./tutorial-5/index)._
@@ -204,7 +204,7 @@ stored in the database.
 }
 ```
 
-![tweet graph](/images/tutorials/7/e-names.png)
+![tweet graph](/images/dgraph/guides/get-started-with-dgraph/e-names.png)
 
 As you can see from the result, we have four user names: `Gopherpalooza`,
 `Karthic Rao`, `Francesc Campoy`, and `Dgraph Labs`.
@@ -226,7 +226,7 @@ Go to the query tab, paste the query below and click Run.
 }
 ```
 
-![first query](/images/tutorials/7/h-one.png)
+![first query](/images/dgraph/guides/get-started-with-dgraph/h-one.png)
 
 We got a positive match! Because the search string `graphLabs` is at a distance
 of two from the predicate value of `Dgraph Labs`, so we see it in the search
@@ -247,7 +247,7 @@ Let's run the above query again, but this time we will use the search string
 }
 ```
 
-![first query](/images/tutorials/7/i-two.png)
+![first query](/images/dgraph/guides/get-started-with-dgraph/i-two.png)
 
 We still got a positive match with the `user_name` predicate with the value
 `Dgraph Labs`! That's because the search string `graphLab` is at a distance of
@@ -268,7 +268,7 @@ keep the Levenshtein Distance at 3.
 }
 ```
 
-![first query](/images/tutorials/7/j-three.png)
+![first query](/images/dgraph/guides/get-started-with-dgraph/j-three.png)
 
 Now you no longer see Dgraph Labs appears in the search result because the
 distance between the word `Dgraph` and `Dgraph Labs` is larger than 3. But based

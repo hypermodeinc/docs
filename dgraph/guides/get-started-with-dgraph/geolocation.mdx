@@ -51,7 +51,7 @@ the Eiffel Tower in Paris. Point locations are useful for representing a precise
 location. For instance, your location when booking a cab or your delivery
 address.
 
-![model](/images/tutorials/8/b-paris.png)
+![model](/images/dgraph/guides/get-started-with-dgraph/b-paris.png)
 
 - **Polygonal location**
 
@@ -61,7 +61,7 @@ like a city, a lake, or a national park, you should use a polygonal location.
 
 Here is an example:
 
-![model](/images/tutorials/8/c-delhi.jpg)
+![model](/images/dgraph/guides/get-started-with-dgraph/c-delhi.jpg)
 
 The polygonal fence above represents the city of Delhi, India. This polygonal
 fence or the geo-fence is formed by connecting multiple straight-line
@@ -73,7 +73,7 @@ the geo-fence, and a polygonal fence can contain any number of lines.
 Let's start with building a simple San Francisco tourist graph, here's the graph
 model.
 
-![model](/images/tutorials/8/a-graph.jpg)
+![model](/images/dgraph/guides/get-started-with-dgraph/a-graph.jpg)
 
 The above graph has three entities represented by the nodes:
 
@@ -651,7 +651,7 @@ more about traversal queries like the above one._
 
 Here's our graph!
 
-![full graph](/images/tutorials/8/d-full-graph.png)
+![full graph](/images/dgraph/guides/get-started-with-dgraph/d-full-graph.png)
 
 Our graph has:
 
@@ -665,7 +665,7 @@ You can also see that Dgraph has auto-detected the data types of the predicates
 from the schema tab, and the location predicate has been auto-assigned `geo`
 type.
 
-![type detection](/images/tutorials/8/e-schema.png)
+![type detection](/images/dgraph/guides/get-started-with-dgraph/e-schema.png)
 
 _Note: Check out the [previous tutorial](./tutorial-3/index.md) to know more
 about data types in Dgraph._
@@ -696,7 +696,7 @@ you have to set the `geo` index first.
 
 Go to the Schema tab and set the index on the `location` predicate.
 
-![geo-index](/images/tutorials/8/f-index.png)
+![geo-index](/images/dgraph/guides/get-started-with-dgraph/f-index.png)
 
 After setting the `geo` index on the `location` predicate, you can use Dgraph's
 built-in function `near` to find the hotels near the Golden gate bridge.
@@ -723,7 +723,7 @@ Go to the query tab, paste the query below and click Run.
 }
 ```
 
-![geo-index](/images/tutorials/8/g-near-1.png)
+![geo-index](/images/dgraph/guides/get-started-with-dgraph/g-near-1.png)
 
 Wait! The search returns not just the hotels, but also all other locations
 within 7 Km from the point coordinate on the `Golden Gate Bridge`.
@@ -745,13 +745,13 @@ series to refresh our previous discussions around using the `@filter` directive.
 
 Oops, we forgot to add an index while using the `eq` comparator in the filter.
 
-![geo-index](/images/tutorials/8/h-near-2.png)
+![geo-index](/images/dgraph/guides/get-started-with-dgraph/h-near-2.png)
 
 Let's add a `hash` index to the `loc_type` and re-run the query.
 
-![geo-index](/images/tutorials/8/i-near-3.png)
+![geo-index](/images/dgraph/guides/get-started-with-dgraph/i-near-3.png)
 
-![geo-index](/images/tutorials/8/j-near-4.png)
+![geo-index](/images/dgraph/guides/get-started-with-dgraph/j-near-4.png)
 
 _Note: Refer to the [third tutorial](./tutorial-3/index.md) of the series to
 learn more about hash index and comparator functions in Dgraph._
@@ -787,7 +787,7 @@ the locations of `hotels` in our result.
 }
 ```
 
-![geo-index](/images/tutorials/8/k-near-5.png)
+![geo-index](/images/dgraph/guides/get-started-with-dgraph/k-near-5.png)
 
 Voila! You can see in the result that, after adding the `@cascade` directive in
 the query, only the locations with type `hotel` appear in the result.
@@ -803,7 +803,7 @@ level of the query, not at the level we traverse the location type nodes.
 Before you jump onto run the query, don't forget to add an index on the
 `price_per_night` predicate.
 
-![geo-index](/images/tutorials/8/l-float-index.png)
+![geo-index](/images/dgraph/guides/get-started-with-dgraph/l-float-index.png)
 
 ```graphql
 {
@@ -818,7 +818,7 @@ Before you jump onto run the query, don't forget to add an index on the
 
 ```
 
-![geo-index](/images/tutorials/8/m-final-result.png)
+![geo-index](/images/dgraph/guides/get-started-with-dgraph/m-final-result.png)
 
 Now we have a hotel well within the budget, and also close to the Golden Gate
 Bridge!

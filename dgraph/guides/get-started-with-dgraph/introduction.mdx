@@ -54,7 +54,7 @@ docker run --rm -it -p 8080:8080 -p 9080:9080 dgraph/standalone:latest
 The mental picture of the use case may be a graph with 2 nodes representing the
 2 persons and an relationship representing the fact that "Ann" follows "Ben" :
 
-![A simple graph](/images/tutorials/1/gs-1.png)
+![A simple graph](/images/dgraph/guides/get-started-with-dgraph/gs-1.png)
 
 Dgraph is using those very same concepts, making it simple to store and
 manipulate your data.
@@ -78,11 +78,11 @@ docker run --rm -d -p 8000:8000 dgraph/ratel:latest
 Visit [http://localhost:8000](http://localhost:8000) from your browser, and you
 are able to access it.
 
-![Ratel](/images/tutorials/1/gs-2.png)
+![Ratel](/images/dgraph/guides/get-started-with-dgraph/gs-2.png)
 
 We'll be using the Console tab of Ratel.
 
-![Ratel console tab](/images/tutorials/1/gs-3.png)
+![Ratel console tab](/images/dgraph/guides/get-started-with-dgraph/gs-3.png)
 
 ### Mutations using Ratel
 
@@ -117,7 +117,7 @@ second entity has itself some predicates (`name` and `age`).
 
 Let's execute this mutation. Click Run!
 
-![Query-gif](/images/tutorials/1/mutate-example.gif)
+![Query-gif](/images/dgraph/guides/get-started-with-dgraph/mutate-example.gif)
 
 You can see in the response that two UIDs (Universal IDentifiers) have been
 created. The two values in the `"uids"` field of the response correspond to the
@@ -141,7 +141,7 @@ entities with a predicate `name` associated with them.
 Go to the `Query` tab this time and type in the query. Then, click `Run` on the
 top right of the screen.
 
-![query-1](/images/tutorials/1/query-1.png)
+![query-1](/images/dgraph/guides/get-started-with-dgraph/query-1.png)
 
 Ratel renders a graph visualization of the result.
 
@@ -150,11 +150,11 @@ ones, we saw in the mutation's response.
 
 You can also view the JSON results in the JSON tab on the right.
 
-![query-2](/images/tutorials/1/query-2.png)
+![query-2](/images/dgraph/guides/get-started-with-dgraph/query-2.png)
 
 #### Understanding the query
 
-![Illustration with explanation](/images/tutorials/1/explain-query-2.JPG)
+![Illustration with explanation](/images/dgraph/guides/get-started-with-dgraph/explain-query-2.JPG)
 
 The first part of the query is the user-defined function name. In our query, we
 have named it as `people`. However, you could use any other name.
