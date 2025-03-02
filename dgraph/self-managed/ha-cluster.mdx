@@ -180,7 +180,7 @@ kubectl delete persistentvolumeclaims --selector app=dgraph-alpha
    1. You have just deployed Dgraph, version 'v21.12.0'.
 
        For further information:
-       * Documentation: https://dgraph.io/docs/
+       * Documentation: https://docs.hypermode.com/dgraph
        * Community and Issues: https://discuss.dgraph.io/
    2. Get the Dgraph Alpha HTTP/S endpoint by running these commands.
        export ALPHA_POD_NAME=$(kubectl get pods --namespace default --selector "statefulset.kubernetes.io/pod-name=<RELEASE-NAME>-dgraph-alpha-0,release=<RELEASE-NAME>-dgraph" --output jsonpath="{.items[0].metadata.name}")

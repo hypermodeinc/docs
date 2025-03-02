@@ -109,6 +109,9 @@ UID|UIDs
 [Uu]psert|[Uu]pserts
 Zero
 
+# Badger terms
+Badger
+
 # General
 [Aa]dmin
 CPU

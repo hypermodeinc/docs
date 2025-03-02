@@ -118,9 +118,8 @@ Here's the relationship between these nodes:
 <Note>
   Dgraph allows you to associate one or more types for the nodes using its type
   system feature, for now, we're using nodes without types, we'll learn about
-  type system for nodes in a future tutorial. Check [this page from the
-  documentation site](https://dgraph.io/docs/query-language/#type-system), if
-  you want to explore type system feature for nodes
+  type system for nodes in a future tutorial. Read more on the [DQL
+  schema](/dgraph/dql/schema) to explore type system feature for nodes
 </Note>
 
 Here is our sample dataset. Open Ratel, go to the mutate tab, paste the
@@ -703,7 +702,7 @@ built-in function `near` to find the hotels near the Golden gate bridge.
 Here is the syntax of the `near` function:
 `near(geo-predicate, [long, lat], distance)`.
 
-The [`near` function](https://dgraph.io/docs/query-language/#near) matches and
+The [`near` function](/dgraph/graphql/schema/directives/search#near) matches and
 returns all the geo-predicates stored in the database which are within
 `distance meters` of geojson coordinate `[long, lat]` provided by the user.
 
