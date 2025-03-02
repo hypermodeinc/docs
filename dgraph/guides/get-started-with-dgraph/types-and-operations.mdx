@@ -250,21 +250,21 @@ First, let's query for all the Authors and their ratings:
 Refer to the [first episode](./introduction) if you have any questions related
 to the structure of the query in general.
 
-We have 3 authors in total in our dataset. Now, let's find the best authors.
-Let's query for authors whose rating is 4.0 or more.
+There are three authors in total in our dataset. Now, let's find the best
+authors. Let's query for authors whose rating is 4.0 or more.
 
 In order to achieve our goal, we need a way to select nodes that meets certain
-criteria (e.g., rating > 4.0). You can do this by using Dgraph's built-in
+criteria (for example, rating > 4.0). You can do this by using Dgraph's built-in
 comparator functions. Here's the list of comparator functions available in
 Dgraph:
 
 | comparator function name | Full form                |
 | ------------------------ | ------------------------ |
-| eq                       | equals to                |
-| lt                       | less than                |
-| le                       | less than or equal to    |
-| gt                       | greater than             |
-| ge                       | greater than or equal to |
+| `eq`                     | equals to                |
+| `lt`                     | less than                |
+| `le`                     | less than or equal to    |
+| `gt`                     | greater than             |
+| `ge`                     | greater than or equal to |
 
 There are a total of five comparator functions in Dgraph. You can use any of
 them alongside the `func` keyword in your queries.
@@ -298,7 +298,7 @@ Let's try it out.
 
 ![index missing](/images/dgraph/guides/get-started-with-dgraph/b-index-missing.png)
 
-We got an error! The index for the `rating` predicate is missing. You cannot
+We got an error! The index for the `rating` predicate is missing. You can't
 query for the value of a predicate unless you've added an index for it.
 
 Let's learn more about indexes in Dgraph and also how to add them.
@@ -306,8 +306,8 @@ Let's learn more about indexes in Dgraph and also how to add them.
 ## Indexing in Dgraph
 
 Indexes are used to speed up your queries on predicates. They have to be
-explicitly added to a predicate when they are required. That is, only when you
-need to query for the value of a predicate.
+explicitly added to a predicate when required (only when you need to query for
+the value of a predicate).
 
 Also, there's no need to anticipate the indexes to be added right at the
 beginning. You can add them as you go along.
@@ -318,14 +318,14 @@ data type of the predicate.
 Here is the table containing data types and the set of indexes that can be
 applied to them.
 
-| Data type | Available index types                |
-| --------- | ------------------------------------ |
-| int       | int                                  |
-| float     | float                                |
-| string    | hash, exact, term, fulltext, trigram |
-| bool      | bool                                 |
-| geo       | geo                                  |
-| dateTime  | year, month, day, hour               |
+| Data type  | Available index types                          |
+| ---------- | ---------------------------------------------- |
+| `int`      | `int`                                          |
+| `float`    | `float`                                        |
+| `string`   | `hash`, `exact`, `term`, `fulltext`, `trigram` |
+| `bool`     | `bool`                                         |
+| `geo`      | `geo`                                          |
+| `dateTime` | `year`, `month`, `day`, `hour`                 |
 
 Only `string` and `dateTime` data types have an option for more than one index
 type.
@@ -396,10 +396,10 @@ posts.
 
 ![rating-blog-rating](/images/dgraph/guides/get-started-with-dgraph/m-four-blogs.png)
 
-_Note: Author nodes are in blue, blogs posts in green, and tags in pink._
+Note: author nodes are in blue, blogs posts in green, and tags in pink.
 
-We have two authors, four blog posts, and their tags in the result. If you take
-a closer look at the result, there's a blog post with 12 dislikes.
+There are two authors, four blog posts, and their tags in the result. If you
+take a closer look at the result, there's a blog post with 12 dislikes.
 
 ![Dislikes](/images/dgraph/guides/get-started-with-dgraph/i-dislikes-2.png)
 
@@ -463,7 +463,7 @@ Let's run the following query and find all the tags in the database.
 
 ![tags](/images/dgraph/guides/get-started-with-dgraph/o-tags.png)
 
-We got all the tags in the database. My favorite tag is `devrel`. What's yours?
+We got all the tags in the database.
 
 In our next section, let's find all the blog posts which are tagged `devrel`.
 
@@ -492,11 +492,11 @@ comparator functions.
 
 For example, only the `exact` index is compatible with the `le`, `ge`,`lt`, and
 `gt` built-in functions. If you set a string predicate with any other index and
-run the above comparators, the query fails.
+run the these comparators, the query fails.
 
 Although, any of the five string type indexes are compatible with the `eq`
-function, the `hash` index used with the `eq` comparator would normally be the
-most performant.
+function, the `hash` index used with the `eq` comparator would normally yield
+the best performance.
 
 Let's add the `hash` index to the `tag_name` predicate.
 
@@ -592,9 +592,9 @@ Let's re-run the reverse edge traversal.
 }
 ```
 
-![uid index](/images/dgraph/guides/get-started-with-dgraph/s-devrel-blogs.png)
+![UID index](/images/dgraph/guides/get-started-with-dgraph/s-devrel-blogs.png)
 
-![uid index](/images/dgraph/guides/get-started-with-dgraph/s-devrel-blogs-2.png)
+![UID index](/images/dgraph/guides/get-started-with-dgraph/s-devrel-blogs-2.png)
 
 Phew! Now we got all the blog posts that are tagged `devrel`.
 
@@ -603,7 +603,7 @@ posts. It requires you to reverse traverse the `published` predicate.
 
 Let's add the reverse index to the `published` edge.
 
-![uid index](/images/dgraph/guides/get-started-with-dgraph/t-reverse-published.png)
+![UID index](/images/dgraph/guides/get-started-with-dgraph/t-reverse-published.png)
 
 Now, let's run the following query.
 
@@ -624,9 +624,9 @@ Now, let's run the following query.
 }
 ```
 
-![uid index](/images/dgraph/guides/get-started-with-dgraph/u-author-reverse-1.png)
+![UID index](/images/dgraph/guides/get-started-with-dgraph/u-author-reverse-1.png)
 
-![uid index](/images/dgraph/guides/get-started-with-dgraph/u-author-reverse-2.png)
+![UID index](/images/dgraph/guides/get-started-with-dgraph/u-author-reverse-2.png)
 
 With our previous query, we traversed the entire graph in reverse order.
 Starting from the tag nodes, we traversed up to the author nodes.
