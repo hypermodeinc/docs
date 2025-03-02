@@ -4,9 +4,9 @@ title: Get Started with Dgraph - Geolocation
 
 **Welcome to the eight tutorial of getting started with Dgraph.**
 
-In the [previous tutorial](./tutorial-7/index.md), we learned about building a
+In the [previous tutorial](./fuzzy-search), we learned about building a
 twitter-like user-search feature using
-[Dgraph's fuzzy search](./query-language/functions.md#fuzzy-matching).
+[Dgraph's fuzzy search](dgraph/dql/functions#fuzzy-matching).
 
 In this tutorial, we'll build a graph of tourist locations around San Francisco
 and help our Zoologist friend, Mary, and her team in their mission to conserve
@@ -627,8 +627,7 @@ mutation, and click Run.
 ```
 
 _Note: If this mutation syntax is new to you, refer to the
-[first tutorial](/tutorial-1/index.md) to learn the basics of mutations in
-Dgraph._
+[first tutorial](/introduction.md) to learn the basics of mutations in Dgraph._
 
 Run the query below to fetch the entire graph:
 
@@ -646,7 +645,7 @@ Run the query below to fetch the entire graph:
 }
 ```
 
-_Note: Check the [second tutorial](./tutorial-2/index.md) if you want to learn
+_Note: Check the [second tutorial](./basic-operations.md) if you want to learn
 more about traversal queries like the above one._
 
 Here's our graph!
@@ -667,7 +666,7 @@ type.
 
 ![type detection](/images/dgraph/guides/get-started-with-dgraph/e-schema.png)
 
-_Note: Check out the [previous tutorial](./tutorial-3/index.md) to know more
+_Note: Check out the [previous tutorial](./types-and-operations.md) to know more
 about data types in Dgraph._
 
 Before we start, please say Hello to `Mary`, a zoologist who has dedicated her
@@ -729,7 +728,7 @@ Wait! The search returns not just the hotels, but also all other locations
 within 7 Km from the point coordinate on the `Golden Gate Bridge`.
 
 Let's use the `@filter` function to filter for search results containing only
-the hotels. You can visit our [third tutorial](./tutorial-3/index.md) of the
+the hotels. You can visit our [third tutorial](./types-and-operations.md) of the
 series to refresh our previous discussions around using the `@filter` directive.
 
 ```graphql
@@ -753,7 +752,7 @@ Let's add a `hash` index to the `loc_type` and re-run the query.
 
 ![geo-index](/images/dgraph/guides/get-started-with-dgraph/j-near-4.png)
 
-_Note: Refer to the [third tutorial](./tutorial-3/index.md) of the series to
+_Note: Refer to the [third tutorial](./types-and-operations.md) of the series to
 learn more about hash index and comparator functions in Dgraph._
 
 The search result still contains nodes representing locations which are not
@@ -836,17 +835,18 @@ See you all in the next tutorial. Till then, happy Graphing!
 Remember to click the "Join our community" button below and subscribe to our
 newsletter to get the latest tutorial right into your inbox.
 
-## What's Next?
+## What's next?
 
-- Go to [Clients](./clients) to see how to communicate with Dgraph from your
-  app.
+- Go to [Clients](/dgraph/sdks/overview) to see how to communicate with Dgraph
+  from your app.
 - Take the [Tour](https://dgraph.io/tour/) for a guided tour of how to write
   queries in Dgraph.
 - A wider range of queries can also be found in the
-  [Query Language](/query-language/_index) reference.
-- See [Deploy](./deploy/_index) if you wish to run Dgraph in a cluster.
+  [Query Language](/dgraph/dql/query) reference.
+- See [Deploy](/dgraph/self-managed/overview) if you wish to run Dgraph in a
+  cluster.
 
-## Need Help
+## Need help
 
 - Please use [discuss.dgraph.io](https://discuss.dgraph.io) for questions,
   feature requests, bugs, and discussions.

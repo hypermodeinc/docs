@@ -4,7 +4,7 @@ title: Get Started with Dgraph - Types and Operations
 
 **Welcome to the third tutorial of getting started with Dgraph.**
 
-In the [previous tutorial](./tutorial-2/index), we learned about CRUD operations
+In the [previous tutorial](./basic-operations), we learned about CRUD operations
 using UIDs. We also learned about traversals and recursive traversals.
 
 In this tutorial, we'll learn about Dgraph's basic types and how to query for
@@ -33,8 +33,8 @@ of our app:
 
 ![main graph model](/images/dgraph/guides/get-started-with-dgraph/a-main-graph.JPG)
 
-The above graph has three entities: Author, Blog posts, and Tags. The nodes in
-the graph represent these entities. For the rest of the tutorial, we'll call the
+This graph has three entities, Author, Blog posts, and Tags. The nodes in the
+graph represent these entities. For the rest of the tutorial, we'll call the
 nodes representing a blog as a `blog post` node and the node presenting a `tag`
 as a `tag node`, and so on.
 
@@ -52,8 +52,7 @@ a `blog post node` and point to a `tag node`.
 
 Let's build our graph.
 
-Go to Ratel, click on the mutate tab, paste the following mutation, and click
-Run.
+Go to Ratel, click the mutate tab, paste the following mutation, and click Run.
 
 ```json
 {
@@ -232,7 +231,7 @@ indexes in detail shortly.
 
 First, let's query for all the Authors and their ratings:
 
-```
+```dql
 {
   authors_and_ratings(func: has(author_name)) {
     uid
@@ -244,8 +243,8 @@ First, let's query for all the Authors and their ratings:
 
 ![authors](/images/dgraph/guides/get-started-with-dgraph/a-find-rating-2.png)
 
-Refer to the [first episode](./tutorial-1/index) if you have any questions
-related to the structure of the query in general.
+Refer to the [first episode](./introduction) if you have any questions related
+to the structure of the query in general.
 
 We have 3 authors in total in our dataset. Now, let's find the best authors.
 Let's query for authors whose rating is 4.0 or more.
@@ -367,7 +366,7 @@ need to traverse the `published` edge starting from the `author` nodes.
 
 ![rating-blog-rating](/images/dgraph/guides/get-started-with-dgraph/e-rating-blog.png)
 
-_Check out our [previous tutorial](./tutorial-2/index.md) if you have questions
+_Check out our [previous tutorial](./basic-operations) if you have questions
 around graph traversal queries._
 
 Similarly, let's extend our previous query to fetch the tags of these blog
@@ -641,9 +640,9 @@ geo-location querying capabilities?
 Sounds interesting?
 
 Check out our next tutorial of the getting started series
-[here](./tutorial-4/index).
+[here](./multi-language-strings).
 
-## Need Help
+## Need help
 
 - Please use [discuss.dgraph.io](https://discuss.dgraph.io) for questions,
   feature requests, bugs, and discussions.

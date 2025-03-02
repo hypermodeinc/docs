@@ -36,7 +36,7 @@ or delete namespaces and change passwords of users of other namespaces.
 - How access controls and policies are handled among different tenants?
 
   In previous versions of Dgraph, the
-  [Access Control Lists](/access-control-lists) (ACL) feature offered a unified
+  [Access Control Lists](./access-control-lists) (ACL) feature offered a unified
   control solution across the entire database. With the new multi-tenancy
   feature, the ACL policies are now scoped down to individual tenants in the
   database.
@@ -237,13 +237,13 @@ mutation {
 }
 ```
 
-## Drop Operations
+## Drop operations
 
 The `drop all` operations can be triggered only by a
 [Guardian of the Galaxy](#guardians-of-the-galaxy). They're executed at Cluster
 level and delete data across namespaces. All other `drop` operations run at
 namespace level and are namespace specific. For information about other drop
-operations, see [Alter the database](./raw-http.md#alter-the-database).
+operations, see [Alter the database](/dgraph/sdks/http#alter-the-database).
 
 <Note>
   `drop all` operation is executed at Cluster level and the operation deletes
@@ -254,7 +254,7 @@ operations, see [Alter the database](./raw-http.md#alter-the-database).
 
 For example:
 
-```
+```sh
 curl 'http://localhost:8080/alter' \
   -H 'X-Dgraph-AccessToken: <your-access-token>' \
   --data-raw '{"drop_op":"DATA"}' \
@@ -269,8 +269,8 @@ trigger a backup.
 
 ### Data import
 
-[Initial import](./bulk-loader) and [Live import](/live-loader) tools support
-multi-tenancy.
+[Initial import](/dgraph/admin/bulk-loader) and
+[Live import](/dgraph/admin/live-loader) tools support multi-tenancy.
 
 ## Exports
 

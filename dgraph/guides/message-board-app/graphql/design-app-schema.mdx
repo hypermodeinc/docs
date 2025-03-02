@@ -31,7 +31,7 @@ subgraph of data, a complete page might be built up of blocks that have
 different data requirements. For example, in a sketch of your app's UI you can
 already see these data requirements forming.
 
-![App UI requirements](/images/message-board/UI-components.gif)
+![App UI requirements](/images/dgraph/guides/message-board-app/UI-components.gif)
 
 You can start to see the building blocks of the UI and some of the entities
 (users, categories, and posts) that will form the data in your app.
@@ -56,7 +56,7 @@ might have a list of comments posted by users.
 
 So your schema is going to have these kinds of entities and relationships
 between them.
-![Graph schema sketch](/images/message-board/schema-inital-sketch.png)
+![Graph schema sketch](/images/dgraph/guides/message-board-app/schema-inital-sketch.png)
 
 I've borrowed some notation from other data modeling patterns here. That's
 pretty much the modeling capability GraphQL allows, so let's start sketching
@@ -71,16 +71,16 @@ How does that translate into the app data graph? Let's sketch out some examples.
 Let's start with a single user who's posted three posts into a couple of
 different categories. Your graph might start looking like this.
 
-![first-posts-in-graph](/images/message-board/first-posts-in-graph.png)
+![first-posts-in-graph](/images/dgraph/guides/message-board-app/first-posts-in-graph.png)
 
 Then another user joins and makes some posts. Your graph gets a bit bigger and
 more interesting, but the types of things in the graph and the links they can
 have follow what the schema sets out as the pattern --- for example you aren't
 linking users to categories.
-![more users and posts](/images/message-board/user2-posts-in-graph.png)
+![more users and posts](/images/dgraph/guides/message-board-app/user2-posts-in-graph.png)
 
 Next the users read some posts and start making and replying to comments.
-![users, posts and comments](/images/message-board/comments-in-graph.png)
+![users, posts and comments](/images/dgraph/guides/message-board-app/comments-in-graph.png)
 
 Each node in the graph has the data (a bit like a document) that the schema says
 it can have, such as a username for users and title, text and date published for
@@ -99,7 +99,7 @@ For example, to render a user's information, you might need only to find the
 user. So your use of the graph might be like in the following sketch --- you'll
 find the user as an entry point into the graph, perhaps from searching users by
 username, query some of their data, but not traverse any further.
-![query a user](/images/message-board/user1-search-in-graph.png)
+![query a user](/images/dgraph/guides/message-board-app/user1-search-in-graph.png)
 
 Often, though, even in just presenting a user's information, you need to present
 information like most recent activity or sum up interest in recent posts. So
@@ -108,7 +108,7 @@ then traversing some edges in the graph to explore a subgraph of interesting
 data. That might look like this traversal, starting at the user and then
 following edges to their posts.
 
-![query a user and their posts](/images/message-board/user1-post-search-in-graph.png)
+![query a user and their posts](/images/dgraph/guides/message-board-app/user1-post-search-in-graph.png)
 
 You can really start to see that traversal when it comes to rendering an
 individual post. You'll need to find the post, probably by its id when a user
@@ -116,7 +116,7 @@ navigates to a url like `/post/0x2`, then you'll follow edges to the post's
 author and category, but you'll also need to follow the edges to all the
 comments, and from there to the authors of the comments. That'll be a multi-step
 traversal like the following sketch.
-![query a post and follow edges](/images/message-board/post2-search-in-graph.png)
+![query a post and follow edges](/images/dgraph/guides/message-board-app/post2-search-in-graph.png)
 
 Graphs make these kinds of data traversals really clear, as compared to table
 joins or navigating your way through a RESTful API. It can also really help to
@@ -145,7 +145,7 @@ uploaded. They'll also need links to the author, category, and a list of
 comments.
 
 The next iteration of your schema might look like this sketch.
-![Graph schema sketch with data](/images/message-board/schema-sketch.png)
+![Graph schema sketch with data](/images/dgraph/guides/message-board-app/schema-sketch.png)
 
 That's your first cut at a schema --- the pattern your app data graph follows.
 
