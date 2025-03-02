@@ -89,7 +89,7 @@ A nested block
 
 - may specify filters to apply on the related nodes
 - may specify criteria on the relationships attributes using
-  [filtering on facets](./facets.md#filtering-on-facets))
+  [filtering on facets](./facets#filtering-on-facets))
 - provides the list of relationship attributes ([facets](./facets))) to fetch.
 - provides the list of attributes and relationships to fetch for the related
   nodes.
@@ -233,31 +233,31 @@ attributes or variables.
 Dgraph offers functions for
 
 - testing string attributes
-  - term matching : [allofterms](./functions.md#allofterms),
-    [anyofterms](./functions.md#anyofterms)
-  - regular Expression : [regexp](./functions.md#regular-expressions)
-  - fuzzy match : [match](./functions.md#fuzzy-matching)
-  - full-text search : [alloftext](./functions.md#full-text-search)
+  - term matching : [allofterms](./functions#allofterms),
+    [anyofterms](./functions#anyofterms)
+  - regular Expression : [regexp](./functions#regular-expressions)
+  - fuzzy match : [match](./functions#fuzzy-matching)
+  - full-text search : [alloftext](./functions#full-text-search)
 - testing attribute value
-  - equality : [eq](./functions.md#equal-to)
+  - equality : [eq](./functions#equal-to)
   - inequalities :
-    [le,lt,ge,gt](./functions.md#less-than-less-than-or-equal-to-greater-than-and-greater-than-or-equal-to)
-  - range : [between](./functions.md#between)
+    [le,lt,ge,gt](./functions#less-than-less-than-or-equal-to-greater-than-and-greater-than-or-equal-to)
+  - range : [between](./functions#between)
 - testing if a node
   - has a particular predicate (an attribute or a relation) :
-    [has](./functions.md#has)
-  - has a given UID : `[uid]`(./functions.md#uid)
-  - has a relationship to a given node : [uid_in](./functions.md#uid_in)
+    [has](./functions#has)
+  - has a given UID : `[uid]`(./functions#uid)
+  - has a relationship to a given node : [uid_in](./functions#uid_in)
   - is of a given type : type()
 - testing the number of node relationships
-  - equality : [eq](./functions.md#equal-to)
+  - equality : [eq](./functions#equal-to)
   - inequalities :
-    [le,lt,ge,gt](./functions.md#less-than-less-than-or-equal-to-greater-than-and-greater-than-or-equal-to)
+    [le,lt,ge,gt](./functions#less-than-less-than-or-equal-to-greater-than-and-greater-than-or-equal-to)
 - testing geolocation attributes
-  - if geo location is within distance : [near](./functions.md#near)
-  - if geo location lies within a given area : [within](./functions.md#within)
-  - if geo area contains a given location : [contains](./functions.md#contains)
-  - if geo area intersects a given are : [intersects](./functions.md#intersects)
+  - if geo location is within distance : [near](./functions#near)
+  - if geo location lies within a given area : [within](./functions#within)
+  - if geo area contains a given location : [contains](./functions#contains)
+  - if geo area intersects a given are : [intersects](./functions#intersects)
 
 ### Variable (`var`) block
 

@@ -626,7 +626,7 @@ mutation, and click Run.
 ```
 
 _Note: If this mutation syntax is new to you, refer to the
-[first tutorial](/introduction.md) to learn the basics of mutations in Dgraph._
+[first tutorial](/introduction) to learn the basics of mutations in Dgraph._
 
 Run the query below to fetch the entire graph:
 
@@ -644,8 +644,8 @@ Run the query below to fetch the entire graph:
 }
 ```
 
-_Note: Check the [second tutorial](./basic-operations.md) if you want to learn
-more about traversal queries like the above one._
+_Note: Check the [second tutorial](./basic-operations) if you want to learn more
+about traversal queries like the above one._
 
 Here's our graph!
 
@@ -665,7 +665,7 @@ type.
 
 ![type detection](/images/dgraph/guides/get-started-with-dgraph/e-schema.png)
 
-_Note: Check out the [previous tutorial](./types-and-operations.md) to know more
+_Note: Check out the [previous tutorial](./types-and-operations) to know more
 about data types in Dgraph._
 
 Before we start, please say Hello to `Mary`, a zoologist who has dedicated her
@@ -727,7 +727,7 @@ Wait! The search returns not just the hotels, but also all other locations
 within 7 Km from the point coordinate on the `Golden Gate Bridge`.
 
 Let's use the `@filter` function to filter for search results containing only
-the hotels. You can visit our [third tutorial](./types-and-operations.md) of the
+the hotels. You can visit our [third tutorial](./types-and-operations) of the
 series to refresh our previous discussions around using the `@filter` directive.
 
 ```graphql
@@ -751,7 +751,7 @@ Let's add a `hash` index to the `loc_type` and re-run the query.
 
 ![geo-index](/images/dgraph/guides/get-started-with-dgraph/j-near-4.png)
 
-_Note: Refer to the [third tutorial](./types-and-operations.md) of the series to
+_Note: Refer to the [third tutorial](./types-and-operations) of the series to
 learn more about hash index and comparator functions in Dgraph._
 
 The search result still contains nodes representing locations which are not
