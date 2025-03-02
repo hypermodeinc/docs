@@ -11,15 +11,15 @@ import DgraphWIP from "/snippets/dgraph-wip.mdx"
 
 Cached results can be used to serve read-heavy workloads with complex queries to
 improve performance. When cached results are enabled for a query, the stored
-results are served if queried within the defined time-to-live (TTL) of the
+results are served if queried within the defined Time to Live (TTL) of the
 cached query.
 
-When using cached results, Dgraph will add the appropriate HTTP headers so the
+When using cached results, Dgraph adds the appropriate HTTP headers so the
 caching can be done at the browser or content delivery network (CDN) level.
 
 <Note>
   Caching refers to external caching at the browser/CDN level. Internal caching
-  at the database layer is not currently supported.
+  at the database layer isn't currently supported.
 </Note>
 
 ### Enabling cached results
@@ -47,7 +47,7 @@ query @cacheControl(maxAge: 15) {
 
 Dgraph's returned HTTP headers:
 
-```
+```txt
 Cache-Control: public,max-age=15
 Vary: Accept-Encoding
 ```

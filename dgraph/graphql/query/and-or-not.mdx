@@ -15,7 +15,7 @@ c" is `a, or: { b, or: c }`, and "not" is a prefix (`not:`).
 The following example queries demonstrate the use of `and`, `or`, and `not`
 operators:
 
-Example: _"Posts that do not have "GraphQL" in the title"_
+Example: posts that don't have "GraphQL" in the title
 
 ```graphql
 queryPost(filter: { not: { title: { allofterms: "GraphQL"} } } ) { ... }
@@ -40,8 +40,8 @@ queryPost(filter: {
 ```
 
 The `and` operator is implicit for a single filter object, if the fields don't
-overlap. For example, above the `and` is required because `title` is in both
-filters; whereas below, `and` is not required.
+overlap. For example, the `and` is required because `title` is in both filters,
+whereas in the query below `and` isn't required.
 
 ```graphql
 queryPost(filter: {
@@ -83,7 +83,7 @@ single list.
 
 For example, the following complex query:
 
-```
+```graphql
 queryPost(filter: {
   or: [
     { or: [ { foo: { eq: "A" } }, { bar: { eq: "B" } } ] },
@@ -92,9 +92,9 @@ queryPost(filter: {
 } ) { ... }
 ```
 
-...can be simplified into the following simplified query syntax:
+Can be simplified into the following simplified query syntax:
 
-```
+```graphql
 queryPost(filter: {
   or: [
     { foo: { eq: "A" } },

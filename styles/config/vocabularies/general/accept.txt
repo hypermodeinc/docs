@@ -127,3 +127,4 @@ JWT
 nullable
 prefetch|prefetches
 vCPU|vCPUs
+WebSocket

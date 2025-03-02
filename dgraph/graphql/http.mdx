@@ -66,7 +66,7 @@ be unnamed like the following:
 
 The most basic request contains a single anonymous (unnamed) operation. Each
 operation can have one or more queries within in. For example, the following
-query has `query` operation running the queries "getTask" and "getUser":
+query has `query` operation running the queries `getTask` and `getUser`:
 
 ```graphql
 query {
@@ -129,8 +129,8 @@ request can only execute one operation, so you must also include the operation
 name to execute in the request. Every operation name in a request must be
 unique.
 
-For example, in the following request has the operation names "getTaskAndUser"
-and "completedTasks".
+For example, in the following request has the operation names `getTaskAndUser`
+and `completedTasks`.
 
 ```graphql
 query getTaskAndUser {
@@ -195,7 +195,7 @@ query completedTasks {
 }
 ```
 
-And specifying the "completedTasks" operation executes the second query:
+And specifying the `completedTasks` operation executes the second query:
 
 ```json
 {
@@ -223,13 +223,12 @@ And specifying the "completedTasks" operation executes the second query:
 
 #### Multiple queries execution
 
-When an operation contains multiple queries, they are run concurrently and
-independently in a Dgraph readonly transaction per query.
+When an operation contains multiple queries, they run concurrently and
+independently in a Dgraph read-only transaction per query.
 
-When an operation contains multiple mutations, they are run serially, in the
-order listed in the request, and in a transaction per mutation. If a mutation
-fails, the following mutations are not executed, and previous mutations are not
-rolled back.
+When an operation contains multiple mutations, they run serially, in the order
+listed in the request, with a transaction per mutation. If a mutation fails, the
+following mutations aren't executed and previous mutations aren't rolled back.
 
 ### Variables
 
@@ -240,7 +239,7 @@ or mutation, and another for variables.
 Variables can be declared after the `query` or `mutation` and are passed like
 arguments to a function and begin with `$`.
 
-#### Query Example
+#### Query example
 
 ```graphql
 query post($filter: PostFilter) {
@@ -254,8 +253,6 @@ query post($filter: PostFilter) {
 }
 ```
 
-**Variables**
-
 ```graphql
 {
   "filter": {
@@ -266,7 +263,7 @@ query post($filter: PostFilter) {
 }
 ```
 
-#### Mutation Example
+#### Mutation example
 
 ```graphql
 mutation addAuthor($author: AddAuthorInput!) {
@@ -281,8 +278,6 @@ mutation addAuthor($author: AddAuthorInput!) {
   }
 }
 ```
-
-**Variables**
 
 ```graphql
 {
@@ -402,7 +397,7 @@ be returned according to the type of object.
 }
 ```
 
-## GET Request
+## GET request
 
 GraphQL request may also be sent using an `HTTP GET` operation.
 
@@ -443,7 +438,7 @@ Queries that have errors are in the following format.
 }
 ```
 
-#### "data" field
+#### Data field
 
 The "data" field contains the result of your GraphQL request. The response has
 exactly the same shape as the result. For example, notice that for the following
@@ -483,7 +478,7 @@ Response:
 }
 ```
 
-#### "errors" field
+#### Errors field
 
 The "errors" field is a JSON list where each entry has a `"message"` field that
 describes the error and optionally has a `"locations"` array to list the
@@ -526,30 +521,30 @@ to apply GraphQL
 [value completion](https://graphql.github.io/graphql-spec/June2018/#sec-Value-Completion)
 and
 [error handling](https://graphql.github.io/graphql-spec/June2018/#sec-Errors-and-Non-Nullability).
-That is, `null` values for non-nullable fields, e.g. `String!`, cause error
-propagation to parent fields.
+As an example, `null` values for non-nullable fields (such as `String!`) cause
+error propagation to parent fields.
 
 In short, the GraphQL value completion and error propagation mean the following.
 
-- Fields marked as nullable (i.e. without `!`) can return `null` in the json
+- Fields marked as nullable (without `!`) can return `null` in the JSON
   response.
-- For fields marked as non-nullable (i.e. with `!`) Dgraph never returns null
-  for that field.
+- For fields marked as non-nullable (with `!`) Dgraph never returns null for
+  that field.
 - If an instance of type has a non-nullable field that has evaluated to null,
   the whole instance results in null.
 - Reducing an object to null might cause further error propagation. For example,
   querying for a post that has an author with a null name results in null: the
   null name (`name: String!`) causes the author to result in null, and a null
   author causes the post (`author: Author!`) to result in null.
-- Error propagation for lists with nullable elements, e.g. `friends [Author]`,
-  can result in nulls inside the result list.
+- Error propagation for lists with nullable elements (for example
+  `friends [Author]`), can result in nulls inside the result list.
 - Error propagation for lists with non-nullable elements results in null for
   `friends [Author!]` and would cause further error propagation for
   `friends [Author!]!`.
 
-Note that, a query that results in no values for a list will always return the
-empty list `[]`, not `null`, regardless of the nullability. For example, given a
-schema for an author with `posts: [Post!]!`, if an author has not posted
+Note that, a query that results in no values for a list always returns the empty
+list `[]`, not `null`, regardless of whether it is nullable. For example, given
+a schema for an author with `posts: [Post!]!`, if an author hasn't posted
 anything and we queried for that author, the result for the posts field would be
 `posts: []`.
 
@@ -559,7 +554,7 @@ has a list of posts. If one of those posts happened to have a null title (title
 is non-nullable `title: String!`), then that post would evaluate to null, the
 `posts` list can't contain nulls and so the list reduces to null.
 
-#### "extensions" field
+#### Extensions field
 
 The "extensions" field contains extra metadata for the request with metrics and
 trace information for the request.

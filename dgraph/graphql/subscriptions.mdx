@@ -39,7 +39,7 @@ type Todo @withSubscription {
 }
 ```
 
-## @withSubscription with @auth
+## `@withSubscription` with `@auth`
 
 You can use [@auth](/dgraph/graphql/schema/directives/auth) access control rules
 in conjunction with `@withSubscription`.
@@ -69,12 +69,12 @@ type Todo
 ```
 
 The generated GraphQL API expects a JWT token in the `X-Dgraph-AuthToken` header
-and uses the `USER` claim to apply a rule based access control (RBAC): the
+and uses the `USER` claim to apply a Role-based Access Control (RBAC). The
 authorization rule enforces that only to-do tasks owned by `$USER` are returned.
 
 ## WebSocket client
 
-Dgraph uses the websocket subprotocol `subscription-transport-ws`.
+Dgraph uses the WebSocket protocol `subscription-transport-ws`.
 
 Clients must be instantiated using the WebSocket URL of the GraphQL API which is
 your
@@ -91,17 +91,17 @@ terminates when the JWT expires.
 
 Here are some examples of frontend clients setup.
 
-### URQL client setup in a React app
+### Urql client setup in a React app
 
-In this scenario, we are using
+In this scenario, we're using the
 [urql client](https://formidable.com/open-source/urql/) and
 `subscriptions-transport-ws` modules.
 
 In order to use a GraphQL subscription query in a component, you need to
 
-- instantiate a subscriptionClient
-- instantiate a URQL client with a 'subscriptionExchange' using the
-  subscriptionClient
+- instantiate a `subscriptionClient`
+- instantiate a urql client with a `subscriptionExchange` using the
+  `ubscriptionClient`
 
 ```js
 import {
@@ -133,15 +133,15 @@ const client = new Client({
 
 In this example,
 
-- **process.env.REACT_APP_DGRAPH_ENDPOINT** is your
+- `process.env.REACT_APP_DGRAPH_ENDPOINT` is your
   [Dgraph GraphQL endpoint](dgraph/graphql/connecting#getting-your-graphql-endpoint)
-- **process.env.REACT_APP_DGRAPH_WSS** is the WebSocket URL
-- **props.token** is the JWT token of the logged-in user.
+- `process.env.REACT_APP_DGRAPH_WSS` is the WebSocket URL
+- `props.token` is the JWT token of the logged-in user.
 
-Note that we are passing the JWT token in the GraphQL client using
-'fetchOptions' and in the WebSocket client using 'connectionParams'.
+Note that we pass the JWT token in the GraphQL client using `fetchOptions` and
+in the WebSocket client using `connectionParams`.
 
-Assuming we are using graphql-codegen, we can define a subcription query:
+Assuming we use graphql-codegen, we can define a subscription query:
 
 ```js
 import { graphql } from "../gql"
@@ -172,7 +172,7 @@ const [messages] = useSubscription({ query: MyMessagesDocument});
 ```
 
 That's it, the react component is able to use `messages.data.queryTodo` to
-display the updated list of Todos.
+display the updated list of to dos.
 
 ### Apollo client setup
 
@@ -190,14 +190,14 @@ const wsLink = new WebSocketLink({
     connectionParams: {  "<header>": "<token>", },});
 ```
 
-Use the header expected by the Dgraph.Authorization configuration of your
+Use the header expected by the `Dgraph.Authorization` configuration of your
 GraphQL schema.
 
 ## Subscriptions to custom DQL
 
 You can also apply `@withSubscription` directive to custom DQL queries by
 specifying `@withSubscription` on individual DQL queries in `type Query`, and
-those queries will be added to `type subscription`.
+those queries are added to `type subscription`.
 
 For example, see the custom DQL query `queryUserTweetCounts` below:
 

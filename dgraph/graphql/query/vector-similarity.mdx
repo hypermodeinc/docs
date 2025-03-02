@@ -26,8 +26,8 @@ type User {
 }
 ```
 
-With the above schema, the auto-generated `querySimilar<Object>ByEmbedding`
-query allows us to run similarity search using the vector index specified in our
+With this schema, the auto-generated `querySimilar<Object>ByEmbedding` query
+allows us to run similarity search using the vector index specified in our
 schema.
 
 ```graphql
@@ -37,7 +37,7 @@ getSimilar<Object>ByEmbedding(
     vector: searchVector): [User]
 ```
 
-For example in order to find top 3 users with names similar to a given user name
+For example, to find top 3 users with names similar to a given user name
 embedding the following query function can be used.
 
 ```graphql
@@ -49,11 +49,11 @@ querySimilarUserByEmbedding(by: name_v, topK: 3, vector: [0.1, 0.2, 0.3, 0.4, 0.
 ```
 
 The results obtained for this query includes the 3 closest Users ordered by
-vector_distance. The vector_distance is the Euclidean distance between the
-name_v embedding vector and the input vector used in our query.
+`vector_distance`. The `vector_distance` is the Euclidean distance between the
+`name_v` embedding vector and the input vector used in our query.
 
-Note: you can omit vector_distance predicate in the query, the result will still
-be ordered by vector_distance.
+Note: you can omit `vector_distance` predicate in the query, the result is still
+ordered by `vector_distance`.
 
 The distance metric used is specified in the index creation.
 
@@ -69,7 +69,7 @@ getSimilar<Object>ById(
 ```
 
 For example the following query searches for top 3 users whose names are most
-similar to the name of the user with id "0xef7".
+similar to the name of the user with id `0xef7`.
 
 ```graphql
 querySimilarUserById(by: name_v, topK: 3, id: "0xef7") {

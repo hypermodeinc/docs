@@ -16,8 +16,8 @@ not have all the listed fields.
 
 For example, the query below only returns the authors which have both
 `reputation` and `posts`, where posts have `text`. Note that `@cascade` trickles
-down so if it's applied at the `queryAuthor` level, it will automatically be
-applied at the `posts` level too.
+down so if it's applied at the `queryAuthor` level, it is automatically applied
+at the `posts` level too.
 
 ```graphql
 {
@@ -127,7 +127,7 @@ For example, the query below ensures that an author has the `reputation` and
 
 #### Filtering
 
-Filters can be used with the `@cascade` directive if they are placed before it:
+Filters can be used with the `@cascade` directive if they're placed before it:
 
 ```graphql
 {
