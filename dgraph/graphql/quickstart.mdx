@@ -19,23 +19,12 @@ just by deploying the GraphQL schema of your API. Dgraph does the rest!
 
 ## Step 1: Run Dgraph
 
-The easiest way to get Dgraph up and running is using the
-[Dgraph Cloud](https://cloud.dgraph.io).  
-You can log in to Dgraph Cloud using **Sign in with Google**, **Sign in with
-GitHub** or any other email account that you prefer to use.
-
-1. In the Dgraph Cloud console, click **Launch new backend**.
-2. Select a plan, cloud provider, and region that meets your requirements.
-3. Type a name for your Dgraph Cloud instance.
-4. Click **Launch**.
-5. A new Dgraph Cloud backend is created for you. The URL listed in **GraphQL
-   Endpoint** is the URL at which Dgraph Cloud serves data to your app. You can
-   copy it at any time to use in a GraphQL client app.
+The easiest way to get Dgraph up and running is on Hypermode.
 
 ## Step 2: Deploy a GraphQL Schema
 
-1. In the [Schema](https://cloud.dgraph.io/_/schema) tab of the Dgraph Cloud
-   console, paste the following schema:
+1. In the [Schema](https://cloud.dgraph.io/_/schema) tab of the console, paste
+   the following schema:
 
    ```graphql
    type Product {
@@ -64,9 +53,7 @@ GitHub** or any other email account that you prefer to use.
 
 ## Step 3: Test your GraphQL API
 
-You can use the [API Explorer](https://cloud.dgraph.io/_/explorer) tab of your
-Dgraph Cloud console, but you can access the `GraphQL endpoint` with any GraphQL
-clients such as
+You can access the `GraphQL endpoint` with any GraphQL clients such as
 [GraphQL Playground](https://github.com/prisma-labs/graphql-playground),
 [Insomnia](https://insomnia.rest/),
 [GraphiQL](https://github.com/graphql/graphiql),

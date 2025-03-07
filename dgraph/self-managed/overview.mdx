@@ -9,15 +9,14 @@ import DgraphWIP from "/snippets/dgraph-wip.mdx"
 You can deploy and manage Dgraph database in a variety of self-managed
 deployment scenarios, including:
 
-- Running Dgraph on your on-premises infrastructure (bare-metal physical
-  servers)
+- Running Dgraph on your on-premises infrastructure (virtual or bare-metal
+  physical servers)
 - Running Dgraph on your cloud infrastructure (AWS, Google Cloud and Azure)
 
 This section focuses exclusively on deployment and management for these
 self-managed scenarios. To learn about fully managed options that let you focus
-on building apps and websites, rather than managing infrastructure, see the
-[Dgraph cloud services docs](/dgraph/cloud/overview), or
-[Try Dgraph Cloud](https://cloud.dgraph.io/).
+on building apps and websites, rather than managing infrastructure, or
+[Try Dgraph on Hypermode](https://hypermode.com/sign-up).
 
 ## Overview
 
@@ -186,8 +185,7 @@ curl -H 'X-Dgraph-AuthToken: <authtokenstring>' localhost:8080/alter -d '{ "drop
 As an `Administrator` you might want to export data from Dgraph to:
 
 - backup your data
-- move the data from Dgraph Cloud instance to another Dgraph instance, or Dgraph
-  Cloud instance
+- migrate your data from one instance to another
 - share your data
 
 For more information about exporting your database, see

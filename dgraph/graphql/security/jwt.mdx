@@ -15,17 +15,17 @@ the bottom of the schema file.
 
 ## Configure JWT token handling
 
-To configure how Dgraph should handle JWT token for `/graphql` endpoint :
+To configure how Dgraph should handle JWT token for `/graphql` endpoint add a
+line starting with `# Dgraph.Authorization` and with the following parameters at
+the very end of your GraphQL schema.
 
-1. Add a line starting with `# Dgraph.Authorization` and with the following
-   parameters at the very end of your GraphQL schema.  
-   The `Dgraph.Authorization` object uses the following syntax:
+The `Dgraph.Authorization` object uses the following syntax:
 
-```
+```graphql
 # Dgraph.Authorization {"VerificationKey":"<verification-key-here>","Header":"X-My-App-Auth","Namespace":"https://my.app.io/jwt/claims","Algo":"HS256","Audience":["aud1"],"ClosedByDefault":true}
 ```
 
-Dgraph.Authorization object contains the following parameters:
+`Dgraph.Authorization` object contains the following parameters:
 
 - `Header` name of the header field used by the client to send the token.
 
@@ -52,25 +52,21 @@ Dgraph.Authorization object contains the following parameters:
   certain providers to indicate the intended audience for the JWT. When doing
   authentication with `JWKURL`, this field is mandatory.
 - `ClosedByDefault`, if set to `true`, requires authorization for all requests
-  even if the GraphQL type does not specify rules. If omitted, the default
+  even if the GraphQL type doesn't specify rules. If omitted, the default
   setting is `false`.
 
-2. Deploy the GraphQL schema either with a
-   [schema update](/dgraph/graphql/api#using-updategqlschema-to-add-or-modify-a-schema)
-   or via the Cloud console's [Schema](https://cloud.dgraph.io/_/schema) page.
-
 When the `# Dgraph.Authorization` line is present in the GraphQL schema, Dgraph
-will use the settings in that line to
+uses the settings in that line to
 
 - read the specified header in each HTTP request sent on the /graphql endpoint,
-- decode that header as a JWT token using the specified algorithm (Algo)
+- decode that header as a JWT token using the specified algorithm
 - validate the token signature and the audience
 - extract the JWT claims present in the specified namespace and at the root
   level
 
-These claims will then be accessible to any @auth schema directives (a GraphQL
-schema directive specific to Dgraph) that are associated with GraphQL types in
-the schema file.
+These claims are accessible to any @auth schema directives (a GraphQL schema
+directive specific to Dgraph) that are associated with GraphQL types in the
+schema file.
 
 See the [RBAC rules](./rbac-rules) and [Graph traversal
 rules](./graphtraversal-rules for details on how to restrict data access using
@@ -82,9 +78,9 @@ To not only accept but to require the JWT token regardless of @auth directives
 in your GraphQL schema, set option "ClosedByDefault" to true in the
 `# Dgraph.Authorization` line.
 
-## Working with Authentication providers
+## Working with authentication providers
 
-Dgraph.Authorization is fully configurable to work with various authentication
+`Dgraph.Authorization` is fully configurable to work with various authentication
 providers. Authentication providers have options to configure how to generate
 JWT tokens.
 
@@ -101,9 +97,9 @@ the token is verified using JWKURL.
 Decide on a claim namespace and add the information you want to use in your RBAC
 rules.
 
-We are using 'https://dgraph.io/jwt/claims' namespace in this example and have
-decided to get the user current organization, role ( clerk has currently two
-roles 'admin' and 'basic_member') and email.
+This example uses the `https://dgraph.io/jwt/claims` namespace and is retrieving
+the user current organization, role (Clerk has currently two roles `admin` and
+`basic_member`) and email.
 
 This is our JWT Template in Clerk:
 
@@ -125,7 +121,7 @@ In the same configuration panel
 
 Configure your Dgraph GraphQL schema with the following authorization
 
-```
+```graphql
 # Dgraph.Authorization {"header":"X-Dgraph-AuthToken","namespace":"https://dgraph.io/jwt/claims","jwkurl":"https://<>.clerk.accounts.dev/.well-known/jwks.json","audience":["dgraph"],"closedbydefault":true}
 ```
 
@@ -143,27 +139,27 @@ pass CORS requirements.
 
 To use a single JWK URL:
 
-```
+```graphql
 # Dgraph.Authorization {"VerificationKey":"","Header":"X-My-App-Auth", "jwkurl":"https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com", "Namespace":"https://xyz.io/jwt/claims","Algo":"","Audience":["fir-project1-259e7", "HhaXkQVRBn5e0K3DmMp2zbjI8i1wcv2e"]}
 ```
 
 To use multiple JWK URL:
 
-```
+```graphql
 # Dgraph.Authorization {"VerificationKey":"","Header":"X-My-App-Auth","jwkurls":["https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com","https://dev-hr2kugfp.us.auth0.com/.well-known/jwks.json"], "Namespace":"https://xyz.io/jwt/claims","Algo":"","Audience":["fir-project1-259e7", "HhaXkQVRBn5e0K3DmMp2zbjI8i1wcv2e"]}
 ```
 
 Using HMAC-SHA256 token in `X-My-App-Auth` header and authorization claims in
 `https://my.app.io/jwt/claims` namespace:
 
-```
+```graphql
 # Dgraph.Authorization {"VerificationKey":"secretkey","Header":"X-My-App-Auth","Namespace":"https://my.app.io/jwt/claims","Algo":"HS256"}
 ```
 
 Using HMAC-SHA256 token in `X-My-App-Auth` header and authorization claims in
 `https://my.app.io/jwt/claims` namespace:
 
-```
+```graphql
 # Dgraph.Authorization {"VerificationKey":"-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----","Header":"X-My-App-Auth","Namespace":"https://my.app.io/jwt/claims","Algo":"RS256"}
 ```
 
@@ -174,14 +170,14 @@ The value of the JWT `header` is expected to be in one of the following forms:
 - Bare token.  
   For example:
 
-  ```
+  ```txt
   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJodHRwczovL215LmFwcC5pby9qd3QvY2xhaW1zIjp7fX0.Pjlxpf-3FhH61EtHBRo2g1amQPRi0pNwoLUooGbxIho
   ```
 
 - A Bearer token, e.g., a JWT prepended with `Bearer ` prefix (including
   space).  
   For example:
-  ```
+  ```txt
   Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJodHRwczovL215LmFwcC5pby9qd3QvY2xhaW1zIjp7fX0.Pjlxpf-3FhH61EtHBRo2g1amQPRi0pNwoLUooGbxIho
   ```
 
@@ -192,7 +188,7 @@ token does not include the proper audience information, or is not properly
 encoded, or is expired, Dgraph replies to requests on `/graphql` endpoint with
 an error message rejecting the operation similar to:
 
-```
+```graphql
 {
    "errors": [
        {

@@ -81,9 +81,7 @@ your
 [Dgraph GraphQL endpoint](dgraph/graphql/connecting#getting-your-graphql-endpoint)
 with `https` replaced by `wss`.
 
-If your Dgraph endpoint is
-`https://blue-surf-0033.us-east-1.aws.cloud.dgraph.io/graphql` the WebSocket URL
-is `wss://blue-surf-0033.us-east-1.aws.cloud.dgraph.io/graphql`
+If your Dgraph endpoint is `https://<path>` the WebSocket URL is `wss://<path>`
 
 If your GraphQL API is configured to expect a JWT token in a header, you must
 configure the WebSocket client to pass the token. Additionally, the subscription

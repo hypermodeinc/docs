@@ -6,32 +6,20 @@ import DgraphWIP from "/snippets/dgraph-wip.mdx"
 
 <DgraphWIP />
 
-It is possible to drop all data from your Dgraph Cloud backend, and start afresh
-while retaining the same endpoint.
+It is possible to drop all data from your Dgraph backend, and start fresh while
+retaining the same endpoint.
 
 Be careful, as this operation isn't reversible, and all data is lost. It is
 highly recommended that you [export](./export) your data before you drop your
 data.
-
-### Dropping data from the Cloud UI
-
-In order to drop all data while retaining the schema :
-
-- access the [Schema](https://cloud.dgraph.io/_/schema) panel
-- click the <kbd>Drop Data</kbd> button at the bottom of the schema.
-- select the options and confirm.
-
-_![Drop Data](/images/dgraph/cloud/drop-data.png)_
 
 ### Dropping data programmatically
 
 You can drop data by invoking the `dropData` mutation on `/admin/slash`
 endpoint.
 
-As an example, if your GraphQL endpoint is
-`https://frozen-mango.us-west-2.aws.cloud.dgraph.io/graphql`, then the admin
-endpoint for schema is at
-`https://frozen-mango.us-west-2.aws.cloud.dgraph.io/admin/slash`.
+As an example, if your GraphQL endpoint is `https://<domain>/graphql`, then the
+admin endpoint for schema is at `https://<domain>/admin/slash`.
 
 This endpoint requires [Authentication](/dgraph/cloud/authentication).
 

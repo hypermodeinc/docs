@@ -256,7 +256,6 @@
                 "group": "Security",
                 "pages": [
                   "dgraph/graphql/security/overview",
-                  "dgraph/graphql/security/anonymous-access",
                   "dgraph/graphql/security/auth-tips",
                   "dgraph/graphql/security/cors",
                   "dgraph/graphql/security/graphtraversal-rules",
@@ -408,6 +407,7 @@
                   "dgraph/cloud/overview",
                   "dgraph/cloud/provision-backend",
                   "dgraph/cloud/authentication",
+                  "dgraph/graphql/cloud/anonymous-access",
                   "dgraph/cloud/schema",
                   "dgraph/cloud/schema-modes",
                   "dgraph/cloud/advanced-queries",

@@ -6,7 +6,68 @@ import DgraphWIP from "/snippets/dgraph-wip.mdx"
 
 <DgraphWIP />
 
-## Exporting and importing data in Dgraph Cloud
+## Importing data into Dgraph Cloud
+
+1.  Obtain dgraph binary or the latest docker image by following the
+    [installation](/dgraph/self-managed/download) instructions. This is required
+    to run Dgraph CLI command `dgraph live`.
+
+2.  Obtain the `gRPC endpoint` of your Dgraph Cloud backend and a valid
+    `Client API key`.
+
+    An administrator gets those information with the following steps:
+
+    - Log into the Dgraph Cloud account, select the backend
+    - In the `Admin` section of the Dgraph Cloud console, go to `Settings` and
+      copy the value of the `gRPC Endpoint` from the `General` tab.
+    - Access the `API Keys` tab to generate an `Client API Key`.
+
+           <Note>
+
+      The gRPC endpoint is different from the `GraphQL endpoint`. The gRPC
+      endpoint looks like `<domain>:443`
+
+      </Note>
+
+3.  Run the Live Loader as follows:
+
+  <Tabs>
+    <Tab title="Docker">
+      ```sh
+      docker run -it --rm -v <local-path-to-data>:/tmp dgraph/dgraph:latest \
+      dgraph live --slash_grpc_endpoint <grpc-endpoint> -f /tmp/<data-file> -s /tmp/<schema-file> -t <api-key>
+      ```
+
+      Load multiple data files by using
+
+      ```sh
+      docker run -it --rm -v <local-path-to-data>:/tmp dgraph/dgraph:latest \
+        dgraph live --slash_grpc_endpoint <grpc-endpoint> -f /tmp -s /tmp/<schema-file> -t <api-key>
+      ```
+
+      When the path provided with `-f, --files` option is a directory, then all files
+      ending in .rdf, .rdf.gz, .json, and .json.gz will be loaded. Be sure that your
+      schema file has another extension (.txt or .schema for example).
+    </Tab>
+    <Tab title="Local">
+      ```sh
+      dgraph live --slash_grpc_endpoint <grpc-endpoint> -f <local-path-to-data>/<data-file> -s <local-path-to-data>/<schema-file> -t <api-key>
+      ```
+
+      Load multiple data files by using
+
+      ```sh
+      dgraph live --slash_grpc_endpoint <grpc-endpoint> -f /tmp -s /tmp/<schema-file> -t <api-key>
+      ```
+
+      When the path provided with `-f, --files` option is a directory, then all files
+      ending in .rdf, .rdf.gz, .json, and .json.gz will be loaded. Be sure that your
+      schema file has another extension (.txt or .schema for example).
+    </Tab>
+
+  </Tabs>
+
+## Exporting data from Dgraph Cloud
 
 You can export your data as an Administrator from one Dgraph Cloud backend, and
 then import this data back into another Dgraph instance or Dgraph Cloud backend.
@@ -38,13 +99,13 @@ generated.
 ### Exporting data from Dgraph Cloud using a GraphQL client
 
 1. Generate API Key for authentication.
-1. Make a note of the GraphQL endpoint for the instance from `Overview` in the
+2. Make a note of the GraphQL endpoint for the instance from `Overview` in the
    Dgraph Cloud console. Replace `/graphql` with `/admin/slash`in the GraphQL
    endpoint to get the `<ADMIN_ENDPOINT>`.
-1. Authenticate the `admin` API requests by adding the `<APIKEY>` as the
+3. Authenticate the `admin` API requests by adding the `<APIKEY>` as the
    `Dg-Auth` header to every HTTP request.
-1. To export data you need to send authenticated request to `<ADMIN_ENDPOINT>`.
-1. Export data in JSON or RDF `<FORMAT>` using this mutation:
+4. To export data you need to send authenticated request to `<ADMIN_ENDPOINT>`.
+5. Export data in JSON or RDF `<FORMAT>` using this mutation:
 
    ```graphql
    mutation {
@@ -74,9 +135,9 @@ generated.
    }
    ```
 
-1. Make a note of the `<EXPORT_ID>` and the `<TASK_ID>`.
+6. Make a note of the `<EXPORT_ID>` and the `<TASK_ID>`.
 
-1. To get the status of export and the signed URLs to download the exported
+7. To get the status of export and the signed URLs to download the exported
    files, use this mutation:
 
    ```graphql

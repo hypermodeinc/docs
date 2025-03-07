@@ -66,20 +66,6 @@ In the example above, the client logs into namespace `123` using username
 `groot` and password `password`. Once logged in, the client can perform all the
 operations allowed to the `groot` user of namespace `123`.
 
-### Creating a client for Dgraph Cloud endpoint
-
-If you want to connect to Dgraph running on your
-[Dgraph Cloud](https://cloud.dgraph.io) instance, then all you need is the URL
-of your Dgraph Cloud endpoint and the API key. You can get a client using them
-as follows:
-
-```python
-import pydgraph
-
-client_stub = pydgraph.DgraphClientStub.from_cloud("https://frozen-mango.eu-central-1.aws.cloud.dgraph.io/graphql", "<api-key>")
-client = pydgraph.DgraphClient(client_stub)
-```
-
 ### Altering the database
 
 To set the schema, create an `Operation` object, set the schema and pass it to
