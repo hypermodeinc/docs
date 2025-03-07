@@ -38,8 +38,8 @@ The design and hosting of our docs site is provided by
 [Mintlify](https://mintlify.com/). The vast majority of configuration is in code
 in `mint.json`.
 
-Changes will be deployed to [production](https://docs.hypermode.com)
-automatically after pushing to the `main` branch.
+Changes are deployed to [production](https://docs.hypermode.com) automatically
+after pushing to the `main` branch.
 
 ### Development Environment Setup
 
@@ -49,7 +49,7 @@ The following components are useful when developing locally:
 
 See live changes as you write and edit.
 
-```bash
+```sh
 npm i -g mintlify
 ```
 
@@ -57,7 +57,7 @@ npm i -g mintlify
 
 Format and lint changes for easy merging.
 
-```bash
+```sh
 npm i -g @trunkio/launcher
 ```
 
@@ -70,7 +70,7 @@ to make it easier to build easy-to-consume documentation.
 To spin up a local server, run the following command at the root of the docs
 repo:
 
-```bash
+```sh
 mintlify dev
 ```
 
@@ -102,14 +102,14 @@ types. It is implemented within CI/CD, but also executable locally.
 Formatting should run automatically on save. To trigger a manual formatting of
 the repo, run:
 
-```bash
+```sh
 trunk fmt
 ```
 
 To run lint checks, run:
 
-```bash
-trunk check # appending --all will run checks beyond changes on the current branch
+```sh
+trunk check # appending --all runs checks beyond changes on the current branch
 ```
 
 Note that Trunk also has a
@@ -118,7 +118,7 @@ you can install.
 
 However, when installing it please be aware of the `trunk.autoInit` setting,
 which is `true` (enabled) by default This controls whether to auto-initialize
-trunk in non-trunk repositories - meaning _any_ folder you open with VS Code
-will get configured with a `.trunk` subfolder, and will start using Trunk. You
-should probably set this to `false` in your VS Code user settings, to not
-interfere with other projects you may be working on.
+trunk in non-trunk repositories - meaning _any_ folder you open with VS Code is
+configured with a `.trunk` subfolder, and starts using Trunk. You should
+probably set this to `false` in your VS Code user settings, to not interfere
+with other projects you may be working on.

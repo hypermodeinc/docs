@@ -7,7 +7,7 @@ description: "Add natural language search to your app using AI embeddings"
 The Modus Collections API provides a robust way to store, retrieve, and search
 through data using both natural language and vector-based search methods. By
 leveraging embeddings, developers can enable semantic and similarity-based
-searches, improving the relevance of search results within their applications.
+searches, improving the relevance of search results within their apps.
 
 For example, with natural language similarity, if you search for a product
 description like 'sleek red sports car', the search method returns similar
@@ -141,7 +141,7 @@ import (
 )
 
 func Embed(text []string) ([][]float32, error) {
-  // "minilm" is the model name declared in the application manifest
+  // "minilm" is the model name declared in the app manifest
   model, err := models.GetModel[experimental.EmbeddingsModel]("minilm")
   if err != nil {
       return nil, err
@@ -165,7 +165,7 @@ import { models } from "@hypermode/modus-sdk-as"
 import { EmbeddingsModel } from "@hypermode/modus-sdk-as/models/experimental/embeddings"
 
 export function embed(texts: string[]): f32[][] {
-  // "minilm" is the model name declared in the application manifest
+  // "minilm" is the model name declared in the app manifest
   const model = models.getModel<EmbeddingsModel>("minilm")
   const input = model.createInput(texts)
   const output = model.invoke(input)
@@ -293,7 +293,7 @@ export function searchProducts(
   maxItems: i32,
 ): collections.CollectionSearchResult {
   const response = collections.search(
-    "myProducts", // collection name declared in the application manifest
+    "myProducts", // collection name declared in the app manifest
     "searchMethod1", // search method declared for this collection in the manifest
     product_description, // text to search for
     maxItems,

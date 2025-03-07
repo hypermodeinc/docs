@@ -1,0 +1,71 @@
+---
+title: Retrieve Schema
+---
+
+import DgraphWIP from "/snippets/dgraph-wip.mdx"
+
+<DgraphWIP />
+
+You can retrieve the Dgraph schema containing the list of predicates types and
+node types by:
+
+- issuing a query on /query endpoint using the
+  [HTTP Client](/dgraph/http#query-current-dql-schema)
+- issuing a query using any [DQL client library](/dgraph/sdks/overview)
+- using [Ratel UI](/dgraph/ratel/schema)
+
+When using a query, the request body is
+
+```dql
+schema {}
+```
+
+<Note>
+  Unlike regular queries, the schema query isn't surrounded by curly braces.
+  Also, schema queries and regular queries can't be combined.
+</Note>
+
+You can query for particular schema fields in the query body.
+
+```dql
+schema {
+  type
+  index
+  reverse
+  tokenizer
+  list
+  count
+  upsert
+  lang
+}
+```
+
+You can also query for particular predicates:
+
+```dql
+schema(pred: [name, friend]) {
+  type
+  index
+  reverse
+  tokenizer
+  list
+  count
+  upsert
+  lang
+}
+```
+
+<Note>
+  If Access Control Lists (ACL) is enabled, then the schema query returns only
+  the predicates for which the logged-in ACL user has read access.
+</Note>
+
+Types can also be queried. Below are some example queries.
+
+```dql
+schema(type: Movie) {}
+schema(type: [Person, Animal]) {}
+```
+
+Note that type queries don't contain anything between the curly braces. The
+output is the entire definition of the requested types.

@@ -104,13 +104,13 @@ abstract class Model<TInput, TOutput> {
 <ResponseField name="TInput" required>
   The type of the input data for the model. This can be any type, including a
   custom type defined in your project. It should match the shape of the data
-  expected by the model. It's usually a class.
+  expected by the model. Usually a class.
 </ResponseField>
 
 <ResponseField name="TOutput" required>
   The type of the output data from the model. This can be any type, including a
   custom type defined in your project. It should match the shape of the data
-  returned by the model. It's usually a class.
+  returned by the model. Usually a class.
 </ResponseField>
 
 <ResponseField name="debug" type="bool">
@@ -130,8 +130,8 @@ abstract class Model<TInput, TOutput> {
 
 #### ModelInfo
 
-Information about a model that's used to construct a `Model` instance. It's also
-available as a property on the `Model` class.
+Information about a model that's used to construct a `Model` instance. It is
+also available as a property on the `Model` class.
 
 <Info>
 
