@@ -18,20 +18,20 @@ runtimes:
 
 lint:
   enabled:
-    - renovate@39.166.1
-    - golangci-lint@1.63.4
-    - vale@3.9.5
+    - renovate@39.190.1
+    - golangci-lint@1.64.6
+    - vale@3.9.6
     - actionlint@1.7.7
-    - checkov@3.2.369
+    - checkov@3.2.382
     - git-diff-check
     - markdownlint@0.44.0
-    - oxipng@9.1.3
-    - prettier@3.5.0:
+    - oxipng@9.1.4
+    - prettier@3.5.3:
         packages:
           - "@mintlify/prettier-config@1.0.6"
     - svgo@3.3.2
-    - trivy@0.59.1
-    - trufflehog@3.88.6
+    - trivy@0.60.0
+    - trufflehog@3.88.15
     - yamllint@1.35.1
   ignore:
     - linters: [ALL]
