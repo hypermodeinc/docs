@@ -18,7 +18,7 @@ runtimes:
 
 lint:
   enabled:
-    - renovate@39.190.1
+    - renovate@39.192.0
     - golangci-lint@1.64.6
     - vale@3.9.6
     - actionlint@1.7.7
