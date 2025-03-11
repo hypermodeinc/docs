@@ -9,17 +9,17 @@ searches, improving the relevance of search results within their applications.
 
 Vector search is a powerful technique that transforms data (like text, images,
 or audio) into numerical representations called embeddings. These embeddings
-capture the semantic meaning of the content in a multi-dimensional space, where
-similar items are positioned closer together. When performing a search, the
-query is also converted into an embedding, and the system finds items whose
-embeddings are closest to the query embedding. This approach offers significant
-benefits over traditional keyword-based search, including improved relevance by
-capturing context and semantics, enhanced precision by understanding user
-intent, and the ability to handle complex queries with higher accuracy. Vector
-search is particularly effective for applications like semantic search,
-recommendation systems, and retrieval augmented generation (RAG), optimizing
-both efficiency and accuracy in finding and retrieving data based on meaningful
-similarity rather than exact matches.
+capture the semantic meaning of the content in a multi-dimensional space and
+position similar items closer together. When performing a search, the query is
+also converted into an embedding, and the system finds items whose embeddings
+are closest to the query embedding. This approach offers significant benefits
+over traditional keyword-based search, including improved relevance by capturing
+context and semantics, enhanced precision by understanding user intent, and the
+ability to handle complex queries with higher accuracy. Vector search is
+particularly effective for applications like semantic search, recommendation
+systems, and retrieval augmented generation (RAG), optimizing both efficiency
+and accuracy in finding and retrieving data based on meaningful similarity
+rather than exact matches.
 
 For example, with natural language similarity, if you search for a product
 description like 'sleek red sports car', the search method returns similar
@@ -30,14 +30,14 @@ sleek design'.
 
 Options for adding natural language search to your Modus app include:
 
-1. [**Using Dgraph's vector search functionality**](#natural-language-search-with-dgraph-and-modus)
+1. [**Using Dgraph's vector search feature**](#natural-language-search-with-dgraph-and-modus)
    Take advantage of Dgraph's HNSW index-backed vector search for highly
    scalable natural language search. This approach can also be used for more
    sophisticated retrieval approaches that combine vector search and graph
    traversals such as GraphRAG patterns.
 2. [**Using Modus's built-in Collection data structure**](#natural-language-search-with-modus-collections)
-   Modus Collections include functionality to automatically generate embeddings
-   for new data and are good for medium-sized data.
+   Modus Collections include capability to automatically generate embeddings for
+   new data and are good for medium-sized data.
 
 ## Natural language search with Dgraph and Modus
 
