@@ -30,21 +30,12 @@ sleek design'.
 
 Options for adding natural language search to your Modus app include:
 
-1. [Use the distilled `DeepSeek-R1` model hosted by Hypermode](#using-the-distilled-deepseek-model-hosted-by-hypermode)
-   Hypermode hosts and makes available the distilled DeepSeek model based on
-   `Llama-3.1-8B` enabling Modus apps to use it in both local development
-   environments and deployed applications.
-
-2. [Use the DeepSeek Platform API with your Modus app](#using-the-deepseek-platform-api-with-modus)
-   Access DeepSeek models hosted on the DeepSeek platform by configuring a
-   DeepSeek connection in your Modus app and using your DeepSeek API key
-
-3. [**Using Dgraph's vector search functionality**](#natural-language-search-with-dgraph-and-modus)
+1. [**Using Dgraph's vector search functionality**](#natural-language-search-with-dgraph-and-modus)
    Take advantage of Dgraph's HNSW index-backed vector search for highly
    scalable natural language search. This approach can also be used for more
    sophisticated retrieval approaches that combine vector search and graph
    traversals such as GraphRAG patterns.
-4. [**Using Modus's built-in Collection data structure**](#natural-language-search-with-modus-collections)
+2. [**Using Modus's built-in Collection data structure**](#natural-language-search-with-modus-collections)
    Modus Collections include functionality to automatically generate embeddings
    for new data and are good for medium-sized data.
 
@@ -59,17 +50,44 @@ The system stores, retrieves, updates, and deletes product information while
 enabling semantic similarity searches using text embeddings generated via
 machine learning models.
 
-### Setting up Dgraph connection
+### Declare Dgraph connection and Hypermode embedding model
 
-First, configure your Dgraph connection in the modus.json file:
+First, update the Modus app manifest file `modus.json` to define the connection
+to your Dgraph instance and the embedding model that will be used to
 
 ```json
 {
+  "$schema": "https://schema.hypermode.com/modus.json",
+  "endpoints": {
+    "default": {
+      "type": "graphql",
+      "path": "/graphql",
+      "auth": "bearer-token"
+    }
+  },
+  "models": {
+    "minilm": {
+      "sourceModel": "sentence-transformers/all-MiniLM-L6-v2",
+      "connection": "hypermode",
+      "provider": "hugging-face"
+    }
+  },
   "connections": {
-    "dgraph-grpc": { "type": "dgraph", "grpcTarget": "localhost:9080" }
+    "dgraph-grpc": {
+      "type": "dgraph",
+      "grpcTarget": "localhost:9080"
+    }
   }
 }
 ```
+
+<Note>
+  In order to use Hypermode hosted models in the local Modus development
+  environment you'll need to use the `hyp` CLI to connect your local environment
+  with your Hypermode account. See the [Using Hypermode-hosted
+  models](run-locally#using-hypermode-hosted-models) docs page for more
+  information.
+</Note>
 
 ### Data modeling
 
@@ -199,63 +217,16 @@ export function upsertProduct(product: Product): Map<string, string> | null {
 }
 ```
 
-Implement functions to retrieve, delete, and query products:
+### Define Dgraph schema
 
-```ts
-/**
- * Get a product info by its id
- */
-export function getProduct(id: string): Product | null {
-  const body = `
-    Product.id
-    Product.description
-    Product.title
-    Product.category {
-      Category.name
-    }`
-  return getEntityById<Product>(DGRAPH_CONNECTION, "Product.id", id, body)
-}
-/**
- * Delete a product by its id
- */
+While Dgraph can be used without defining a schema, in order to use the vector
+search functionality of Dgraph we must declare a schema in order to create an
+index on the `Product.embedding` property.
 
-export function deleteProduct(id: string): void {
-  deleteNodePredicates(DGRAPH_CONNECTION, `eq(Product.id, "${id}")`, [
-    "Product.id",
-    "Product.description",
-    "Product.category",
-  ])
-}
-
-/**
- * Get all products of a given category
- */
-export function getProductsByCategory(category: string): Product[] {
-  const query = new dgraph.Query(`{
-    list(func: eq(Category.name, "${category}")) {
-      list:~Product.category {
-        Product.id
-        Product.title
-        Product.description
-        Product.category {
-          Category.name
-        }
-      }
-    }
-  }`)
-  const response = dgraph.executeQuery(DGRAPH_CONNECTION, query)
-  const data = JSON.parse<ListOf<ListOf<Product>>>(response.Json)
-  if (data.list.length > 0) {
-    return data.list[0].list
-  }
-  return []
-}
-```
-
-### Dgraph schema setup
-
-Define your Dgraph schema with vector indexing support by adding the
-`@index(hnsw)` directive to the property storing the embedding value.
+To define your Dgraph schema with vector indexing support we add the
+`@index(hnsw)` directive to the property storing the embedding value, in this
+case `Product.embedding`. We also define the other property types and node
+labels.
 
 ```rdf
 <Category.name>: string @index(hash) .
@@ -265,12 +236,25 @@ Define your Dgraph schema with vector indexing support by adding the
 <Product.embedding>: float32vector @index(hnsw) .
 ```
 
-You can use Dgraph's Ratel UI to query your data. Here's an example of a vector
-similarity search query:
+To apply this schema to our Dgraph instance we can make a POST request to the
+`/alter` endpoint of our Dgraph instance:
+
+```bash
+curl -X POST localhost:8080/alter --silent --data-binary '@dqlschema.txt'
+```
+
+or use the schema tab of the Ratel interface to apply the schema.
+
+### Query Modus endpoint
 
 ```graphql
 TODO: GraphQL query
 ```
+
+### Resources
+
+- Video: https://www.youtube.com/watch?v=Z2fB-nBf4Wo
+- Code: https://github.com/hypermodeinc/modus-recipes/tree/main/dgraph-101
 
 ## Natural language search with Modus Collections
 
