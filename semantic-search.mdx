@@ -8,7 +8,8 @@ By leveraging embeddings and similarity search backed by a scalable vector index
 developers can enable semantic and similarity-based searches, improving the
 relevance of search results within their applications. This tutorial covers
 implementing semantic search using Modus, Dgraph, and Hypermode hosted AI models
-to add natural language or semantic search to your app.
+to add natural language or semantic search to your app using an example of
+ecommerce product data.
 
 <iframe
   src="https://www.youtube.com/embed/Z2fB-nBf4Wo"
@@ -51,8 +52,8 @@ retrieval patterns.
 - **Dgraph** is a scalable graph database capable of near real-time graph
   traversals and vector search.
 - **Modus** is the serverless API framework for building AI applications.
-- **Hypermode** is he platform for deploying AI applications, in this case we
-  leverage Hypermode's hosted models
+- **Hypermode** is the platform for deploying AI applications, including model
+  hosting.
 
 ## Prerequisites
 
@@ -65,14 +66,14 @@ This tutorial assumes you have:
 
 ## Natural language search with Dgraph and Modus
 
-The steps to implement natural language search with Dgraph include defining the
-Dgraph connection in your Modus app manifest, selecting and configuring an
-embedding model, declaring a vector index in the Dgraph DQL schema, and using
-the `similar_to` DQL function to search for similar text in vector space.
+The steps to implement natural language or semantic search with Dgraph include
+defining the Dgraph connection in your Modus app manifest, selecting and
+configuring an embedding model, declaring a vector index in the Dgraph DQL
+schema, and using the `similar_to` DQL function to search for similar text in
+vector space.
 
-The system stores, retrieves, updates, and deletes product information while
-enabling semantic similarity searches using text embeddings generated via
-machine learning models.
+Our example app uses ecommerce product data consisting of product details to
+enable semantic product search based on natural language terms.
 
 ## Declare Dgraph connection and Hypermode embedding model
 
@@ -198,7 +199,7 @@ or use the schema tab of the Ratel interface to apply the schema.
 
 ## Define Modus mutation function
 
-Now we're ready to create Modus functions that creates data in Dgraph. Here we
+Now we're ready to create a Modus function to create data in Dgraph. Here we
 create an upsert mutation that creates a product and related category in Dgraph,
 without creating duplicate nodes.
 
@@ -236,7 +237,8 @@ export function upsertProduct(product: Product): Map<string, string> | null {
 
 Next, we create a Modus function that uses Dgraph's `similar_to` query function
 that leverages the vector index to find semantically similar products by
-computing an embedding of the description of an input product.
+computing an embedding of the search term and searching for nearby product
+descriptions in vector space.
 
 ```ts
 /**
@@ -310,7 +312,8 @@ mutation ($product: ProductInput!) {
 }
 ```
 
-We'll use the following values for the `product`
+We'll use the following values for the `product` variable creating three product
+nodes ad their associated category nodes in Dgraph:
 
 | Product ID | Title                   | Description                                                                                        | Category           |
 | ---------- | ----------------------- | -------------------------------------------------------------------------------------------------- | ------------------ |
@@ -321,7 +324,7 @@ We'll use the following values for the `product`
 ![Creating products in Dgraph](images/tutorials/semantic-search/upsert.png)
 
 And then to search for semantically similar products based on a search string we
-can execute the following mutation, using the value of our search string for the
+can execute the following query, using the value of our search string for the
 `$search` variable.
 
 ```graphql
