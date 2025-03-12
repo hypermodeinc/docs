@@ -41,6 +41,7 @@ exceptions:
   - PDF
   - PHP
   - POST
+  - RAG
   - RAM
   - REPL
   - RSA

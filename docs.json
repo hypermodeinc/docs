@@ -28,6 +28,10 @@
             ]
           },
           {
+            "group": "Tutorials",
+            "pages": ["semantic-search"]
+          },
+          {
             "group": "Manage",
             "pages": [
               "create-project",
