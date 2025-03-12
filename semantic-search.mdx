@@ -337,12 +337,50 @@ query ($search: String!) {
 }
 ```
 
+For example, if we search using the search term "rain":
+
+```graphql
+query {
+  searchProducts(search: "rain") {
+    id
+    title
+    description
+    category {
+      name
+    }
+  }
+}
+```
+
+the product search results returns our solar powered umbrella.
+
+```json
+{
+  "data": {
+    "searchProducts": [
+      {
+        "id": "P001",
+        "title": "Solar-Powered Umbrella",
+        "description": "A stylish umbrella with solar panels that charge your devices while you walk.",
+        "category": {
+          "name": "Outdoor Gear"
+        }
+      }
+    ]
+  }
+}
+```
+
+Even though the description of the solar powered umbrella doesn't include the
+word "rain" thanks to the meaning encoded into the embedding our semantic search
+process understands the association between rain and umbrella.
+
 ## Next steps
 
 Now that we've implemented semantic search using Dgraph, Modus, and Hypermode
 hosted models using the local development experience we're ready to take the
-next step and deploy our project to Hypermode. See the Deploy Project section
-for a walk through of this process.
+next step and deploy our project to Hypermode. See the [Deploy Project](deploy)
+section for a walk through of this process.
 
 ## Resources
 
