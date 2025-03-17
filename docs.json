@@ -126,7 +126,12 @@
         "groups": [
           {
             "group": "Getting Started",
-            "pages": ["dgraph/overview", "dgraph/quickstart", "dgraph/guides"]
+            "pages": [
+              "dgraph/overview",
+              "dgraph/why-dgraph",
+              "dgraph/quickstart",
+              "dgraph/guides"
+            ]
           },
           {
             "group": "Connecting",
@@ -407,7 +412,7 @@
                   "dgraph/cloud/overview",
                   "dgraph/cloud/provision-backend",
                   "dgraph/cloud/authentication",
-                  "dgraph/graphql/cloud/anonymous-access",
+                  "dgraph/cloud/anonymous-access",
                   "dgraph/cloud/schema",
                   "dgraph/cloud/schema-modes",
                   "dgraph/cloud/advanced-queries",
@@ -461,23 +466,25 @@
   "navbar": {
     "links": [
       {
-        "label": "Company",
-        "href": "https://hypermode.com/home"
+        "label": "Status",
+        "href": "https://status.hypermode.com"
       },
       {
-        "label": "Start Now",
-        "href": "https://hypermode.com/sign-up"
+        "label": "Blog",
+        "href": "https://hypermode.com/blog"
       }
     ],
     "primary": {
-      "type": "github",
-      "href": "https://github.com/hypermodeinc/modus"
+      "type": "button",
+      "label": "Start free",
+      "href": "https://hypermode.com/sign-up"
     }
   },
   "footer": {
     "socials": {
       "discord": "https://discord.hypermode.com",
       "github": "https://github.com/hypermodeinc",
+      "youtube": "https://www.youtube.com/@hypermodeinc",
       "x": "https://x.com/hypermodeinc",
       "linkedin": "https://www.linkedin.com/company/hypermode"
     }
