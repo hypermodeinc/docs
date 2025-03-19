@@ -3,6 +3,7 @@ title: GraphQL Schema
 description:
   "How to Build a Message Board App in React. Step 2: GraphQL schema - translate
   the schema design to the GraphQL SDL (Schema Definition Language)."
+"og:title": "GraphQL Schema - Dgraph"
 ---
 
 import DgraphWIP from "/snippets/dgraph-wip.mdx"
@@ -260,3 +261,5 @@ iterations, such as adding a `@search` directive to comments, can be done by
 extending the schema. This will cause Dgraph Cloud to index the new data and
 then update the API. Very large iterations, such as extending the model to
 include a history of edits on a post, might require a data migration.
+
+Now, [deploy your schema](./load-schema-to-dgraph-cloud).

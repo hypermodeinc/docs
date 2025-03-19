@@ -3,6 +3,7 @@ title: GraphQL Mutations
 description:
   Before you can query, you need to add data. Use GraphQL Mutations to add a
   user, category, posts, and sample data.
+"og:title": "GraphQL Mutations - Dgraph"
 ---
 
 import DgraphWIP from "/snippets/dgraph-wip.mdx"
@@ -304,4 +305,4 @@ mutation updatePost($id: ID!, $post: PostPatch) {
 The `updatePost` mutation combines a search and mutation into one. The mutation
 first finds the posts to update (the `filter`) and then sets new values for the
 post's fields with the `set` argument. To learn how the `filter` works, let's
-look at how Dgraph Cloud handles queries.
+[look at how Dgraph Cloud handles queries](./react-graphql-queries).
