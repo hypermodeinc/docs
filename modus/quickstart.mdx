@@ -15,6 +15,24 @@ learn how to use the basic components of a Modus app and how to run it locally.
 - Text editor - we recommend [VS Code](https://code.visualstudio.com/)
 - Terminal - access Modus through a command-line interface (CLI)
 
+To create a Modus app in Go
+
+- Go version 1.19 through 1.23
+
+If you have a more recent version of Go installed, install Go 1.23.6 using
+
+```bash
+go install golang.org/dl/go1.23.6@latest
+go1.23.6 download
+```
+
+and invoke `modus build` or `modus dev` with GOTOOLCHAIN environment variable
+set to `go1.23.6`
+
+```
+GOTOOLCHAIN=go1.23.6 modus dev
+```
+
 ## Building your first Modus app
 
 <Steps>
