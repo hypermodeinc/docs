@@ -1,7 +1,10 @@
 ---
-title: Introduction
-description: "Build Intelligent APIs."
+title: Hypermode
+description:
+  An AI development platform that provides hosting and management capabilities
+  for agents and knowledge graphs
 mode: "wide"
+sidebarTitle: Introduction
 ---
 
 {/* vale Google.Contractions = NO */}
@@ -11,38 +14,52 @@ mode: "wide"
 {/* vale Google.Contractions = YES */}
 
 Hypermode is a managed service that provides the workbench and infrastructure to
-create **powerful, engaging, and secure AI assistants, APIs, and backend
-services**.
+create powerful, engaging, and secure agentic flows, AI features, and backend
+services.
 
-With every push to Git, Hypermode automatically builds and deploys your
-functions. It creates a live, scalable API for you to preview, test, and promote
-to production.
-
-## What's included with Hypermode?
-
-Hypermode provides a suite of tools and services to help you build and manage
-your intelligent APIs. Use one component or all of them together as the complete
-backend for your app.
+With a suite of tools and services, start with one Hypermode component or all of
+them together as your complete backend.
 
 <CardGroup cols={2}>
-  <Card title="Functions" icon="rectangle-code" href="/modus">
-    Modus is an open source, serverless framework for building functions and
-    APIs, powered by WebAssembly
+  <Card
+    title="Apps"
+    icon="rectangle-code"
+    href="https://hypermode.typeform.com/agentswaitlist"
+  >
+    Build and deploy agentic flows, agents, and AI-enabled services | Join our
+    waitlist →
   </Card>
-  <Card title="Model Hosting" icon="cube" href="/hosted-models">
-    Experiment rapidly with access to the most popular and newest models.
+  <Card title="Graphs" icon="chart-network" href="graphs/overview">
+    Organize your knowledge in a natural structure of nodes and relationships
   </Card>
-  <Card title="Graph Data Store" icon="chart-network" href="https://dgraph.io">
-    Dgraph is a distributed, transactional graph database optimized for
-    knowledge graph creation and management
+  <Card title="Models" icon="cube" href="/hosted-models">
+    Experiment rapidly with the most popular and newest open source models
   </Card>
-  <Card title="Integrated Console" icon="display" href="/observe-functions">
-    End-to-end observability and control for your functions, models, and data.
+  <Card title="Integrated Console" icon="display">
+    Understand and control the end-to-end flow of your agents, data, and
+    inferences
   </Card>
 </CardGroup>
 
-<img
-  className="block"
-  src="/images/console-screenshot.png"
-  alt="Hypermode's console showing project, model, and API management."
-/>
+## Built on open source
+
+Hypermode leads and builds on a strong foundation of open source projects:
+
+<CardGroup cols={4}>
+  <Card title="Modus" icon="" href="/modus">
+    An agent framework in Go with auto-generated AI APIs
+  </Card>
+  <Card title="Dgraph" icon="" href="/dgraph">
+    A graph database most commonly used for building knowledge graphs
+  </Card>
+  <Card title="Badger" icon="" href="/badger">
+    An embeddable key-value store in Go
+  </Card>
+  <Card
+    title="Ristretto"
+    icon=""
+    href="https://github.com/hypermodeinc/ristretto"
+  >
+    An embeddable memory-bound cache in Go
+  </Card>
+</CardGroup>
