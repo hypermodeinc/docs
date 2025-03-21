@@ -15,29 +15,17 @@
         "groups": [
           {
             "group": "Getting Started",
-            "pages": ["introduction", "quickstart"]
+            "pages": ["introduction", "semantic-search"]
           },
           {
-            "group": "Develop",
+            "group": "Graphs",
             "pages": [
-              "work-locally",
-              "deploy",
-              "configure-environment",
-              "integrate-api",
-              "observe-functions"
-            ]
-          },
-          {
-            "group": "Tutorials",
-            "pages": ["semantic-search"]
-          },
-          {
-            "group": "Manage",
-            "pages": [
-              "create-project",
-              "modify-project",
-              "modify-organization",
-              "user-management"
+              "graphs/overview",
+              "graphs/deploy",
+              "graphs/connect",
+              "graphs/manage-schema",
+              "graphs/manage-data",
+              "graphs/backups"
             ]
           },
           {
@@ -153,23 +141,25 @@
   "navbar": {
     "links": [
       {
-        "label": "Company",
-        "href": "https://hypermode.com/home"
+        "label": "Status",
+        "href": "https://status.hypermode.com"
       },
       {
-        "label": "Start Now",
-        "href": "https://hypermode.com/sign-up"
+        "label": "Blog",
+        "href": "https://hypermode.com/blog"
       }
     ],
     "primary": {
-      "type": "github",
-      "href": "https://github.com/hypermodeinc/modus"
+      "type": "button",
+      "label": "Start free",
+      "href": "https://hypermode.com/sign-up"
     }
   },
   "footer": {
     "socials": {
       "discord": "https://discord.hypermode.com",
       "github": "https://github.com/hypermodeinc",
+      "youtube": "https://www.youtube.com/@hypermodeinc",
       "x": "https://x.com/hypermodeinc",
       "linkedin": "https://www.linkedin.com/company/hypermode"
     }
