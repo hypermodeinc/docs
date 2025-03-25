@@ -15,29 +15,17 @@
         "groups": [
           {
             "group": "Getting Started",
-            "pages": ["introduction", "quickstart"]
+            "pages": ["introduction", "semantic-search"]
           },
           {
-            "group": "Develop",
+            "group": "Graphs",
             "pages": [
-              "work-locally",
-              "deploy",
-              "configure-environment",
-              "integrate-api",
-              "observe-functions"
-            ]
-          },
-          {
-            "group": "Tutorials",
-            "pages": ["semantic-search"]
-          },
-          {
-            "group": "Manage",
-            "pages": [
-              "create-project",
-              "modify-project",
-              "modify-organization",
-              "user-management"
+              "graphs/overview",
+              "graphs/deploy",
+              "graphs/connect",
+              "graphs/manage-schema",
+              "graphs/manage-data",
+              "graphs/manage-graph"
             ]
           },
           {

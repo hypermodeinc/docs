@@ -1,0 +1,43 @@
+---
+title: Manage Schema
+description: Load and update the schema of your graph
+---
+
+When working with Dgraph, defining a schema is optional! Start schema-less and
+layer on a DQL or GraphQL-based modeling approach when needed.
+
+## Schema-less default
+
+Graphs running in Hypermode use Dgraph's `flexible` schema mode. This mode
+allows you to run a mutation without declaring the predicate in your schema.
+
+When a mutation introduces a new predicate, Dgraph automatically adds it to the
+schema. This can be useful when you're in the early stages of a project and the
+schema is evolving frequently and for allowing AI agents to augment your
+knowledge graph.
+
+## Deploy a DQL schema
+
+To deploy a [DQL schema](/dgraph/dql/schema), place the schema in a file
+(`schema.dql` in this case) and make a POST request to the `/dgraph/alter`
+endpoint for your host.
+
+```sh
+curl -X POST https://<my-database>.hypermode.host/dgraph/alter \
+    --header "Authorization: Bearer $BEARER_TOKEN" \
+    --header "Content-Type: application/json"  \
+    --data-binary "@schema.dql"
+```
+
+## Deploy a GraphQL schema
+
+To deploy a [GraphQL schema](/dgraph/graphql/schema), place the schema in a file
+(`schema.graphql` in this case) and make a POST request to the
+`/dgraph/admin/schema` endpoint for your host.
+
+```sh
+curl -X POST https://<my-database>.hypermode.host/dgraph/admin/schema \
+    --header "Authorization: Bearer $BEARER_TOKEN" \
+    --header "Content-Type: application/json"  \
+    --data-binary "@schema.graphql"
+```

@@ -80,6 +80,7 @@ urql
 UUID
 Warnf
 WASM
+waitlist
 
 # Dgraph terms
 Alpha
@@ -109,7 +110,7 @@ subgraph
 tablet
 UID|UIDs
 [Uu]psert|[Uu]pserts
-Zero
+[Zz]ero
 
 # Badger terms
 Badger
@@ -117,6 +118,7 @@ SSTables
 
 # General
 [Aa]dmin
+[Aa]utoscaling
 CPU
 CSV
 Docker Compose
@@ -128,3 +130,6 @@ nullable
 prefetch|prefetches
 vCPU|vCPUs
 WebSocket
+USA
+
+[Gg]raphs
