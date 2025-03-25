@@ -1,0 +1,840 @@
+---
+title: Custom Resolvers Overview
+description:
+  Dgraph creates a GraphQL API from nothing more than GraphQL types. To
+  customize the behavior of your schema, you can implement custom resolvers.
+"og:title": "Custom Resolvers Overview - Dgraph"
+---
+
+import DgraphWIP from "/snippets/dgraph-wip.mdx"
+
+<DgraphWIP />
+
+Dgraph creates a GraphQL API from nothing more than GraphQL types. That's great,
+and gets you moving fast from an idea to a running app. However, at some point,
+as your app develops, you might want to customize the behavior of your schema.
+
+In Dgraph, you do that with code (in any language you like) that implements
+custom resolvers.
+
+Dgraph doesn't execute your custom logic itself. It makes external HTTP
+requests. That means, you can deploy your custom logic into the same Kubernetes
+cluster as your Dgraph instance, deploy and call, for example, AWS Lambda
+functions, or even make calls to existing HTTP and GraphQL endpoints.
+
+## The `@custom` directive
+
+There are three places you can use the `@custom` directive and thus tell Dgraph
+where to apply custom logic.
+
+1. You can add custom queries to the Query type
+
+   ```graphql
+   type Query {
+     myCustomQuery(...): QueryResultType @custom(...)
+   }
+   ```
+
+2. You can add custom mutations to the Mutation type
+
+   ```graphql
+   type Mutation {
+       myCustomMutation(...): MutationResult @custom(...)
+   }
+   ```
+
+3. You can add custom fields to your types
+
+   ```graphql
+   type MyType {
+        ...
+        customField: FieldType @custom(...)
+        ...
+   }
+   ```
+
+The `@custom` directive is used to define custom queries, mutations and fields.
+
+In all cases, the result type (of the query, mutation, or field) can be either:
+
+- a type that's stored in Dgraph (that's any type you've defined in your
+  schema), or
+- a type that's not stored in Dgraph and is marked with the `@remote` directive.
+
+Because the result types can be local or remote, you can call other HTTP
+endpoints, call remote GraphQL, or even call back to your Dgraph instance to add
+extra logic on top of Dgraph's graph search or mutations.
+
+Here's the GraphQL definition of the directives:
+
+```graphql
+directive @custom(http: CustomHTTP) on FIELD_DEFINITION
+directive @remote on OBJECT | INTERFACE
+
+input CustomHTTP {
+  url: String!
+  method: HTTPMethod!
+  body: String
+  graphql: String
+  mode: Mode
+  forwardHeaders: [String!]
+  secretHeaders: [String!]
+  introspectionHeaders: [String!]
+  skipIntrospection: Boolean
+}
+
+enum HTTPMethod {
+  GET
+  POST
+  PUT
+  PATCH
+  DELETE
+}
+enum Mode {
+  SINGLE
+  BATCH
+}
+```
+
+Each definition of custom logic must include:
+
+- the `url` where the custom logic is called. This can include a path and
+  parameters that depend on query/mutation arguments or other fields.
+- the HTTP `method` to use in the call. For example, when calling a REST
+  endpoint with `GET`, `POST`, etc.
+
+Optionally, the custom logic definition can also include:
+
+- a `body` definition that can be used to construct a HTTP body from arguments
+  or fields.
+- a list of `forwardHeaders` to take from the incoming request and add to the
+  outgoing HTTP call. Used, for example, if the incoming request contains an
+  auth token that must be passed to the custom logic.
+- a list of `secretHeaders` to take from the `Dgraph.Secret` defined in the
+  schema file and add to the outgoing HTTP call. Used, for example, for a server
+  side API key and other static value that must be passed to the custom logic.
+- the `graphql` query/mutation to call if the custom logic is a GraphQL server
+  and whether to introspect or not (`skipIntrospection`) the remote GraphQL
+  endpoint.
+- `mode` which is used for resolving fields by calling an external GraphQL
+  query/mutation. It can either be `BATCH` or `SINGLE`.
+- a list of `introspectionHeaders` to take from the `Dgraph.Secret`
+  [object](#dgraphsecret) defined in the schema file. They're added to the
+  introspection requests sent to the endpoint.
+
+The result type of custom queries and mutations can be any object type in your
+schema, including `@remote` types. For custom fields the type can be object
+types or scalar types.
+
+The `method` can be any of the HTTP methods: `GET`, `POST`, `PUT`, `PATCH`, or
+`DELETE`, and `forwardHeaders` is a list of headers that should be passed from
+the incoming request to the outgoing HTTP custom request. Let's look at each of
+the other `http` arguments in detail.
+
+## Dgraph.Secret
+
+Sometimes you might want to forward some static headers to your custom API which
+can't be exposed to the client. This could be an API key from a payment
+processor or an auth token for your organization on GitHub. These secrets can be
+specified as comments in the schema file and then can be used in `secretHeaders`
+and `introspectionHeaders` while defining the custom directive for a
+field/query.
+
+```graphql
+type Query {
+  getTopUsers(id: ID!): [User]
+    @custom(
+      http: {
+        url: "http://api.github.com/topUsers"
+        method: "POST"
+        introspectionHeaders: ["Github-Api-Token"]
+        secretHeaders: ["Authorization:Github-Api-Token"]
+        graphql: "..."
+      }
+    )
+}
+
+# Dgraph.Secret Github-Api-Token "long-token"
+```
+
+In the preceding request, `Github-Api-Token` would be sent as a header with
+value `long-token` for the introspection request. For the actual `/graphql`
+request, the `Authorization` header would be sent with the value `long-token`.
+
+<Note>
+  `Authorization:Github-Api-Token` syntax tells us to use the value for
+  `Github-Api-Token` from `Dgraph.Secret` and forward it to the custom API with
+  the header key as `Authorization`.
+</Note>
+
+## The URL and method
+
+The URL can be as simple as a fixed URL string, or include details drawn from
+the arguments or fields.
+
+A simple string might look like:
+
+```graphql
+type Query {
+  myCustomQuery: MyResult
+    @custom(http: { url: "https://my.api.com/theQuery", method: GET })
+}
+```
+
+While, in more complex cases, the arguments of the query/mutation can be used as
+a pattern for the URL:
+
+```graphql
+type Query {
+  myGetPerson(id: ID!): Person
+    @custom(http: { url: "https://my.api.com/person/$id", method: GET })
+
+  getPosts(authorID: ID!, numToFetch: Int!): [Post]
+    @custom(
+      http: {
+        url: "https://my.api.com/person/$authorID/posts?limit=$numToFetch"
+        method: GET
+      }
+    )
+}
+```
+
+In this case, a query like
+
+```graphql
+query {
+  getPosts(authorID: "auth123", numToFetch: 10) {
+    title
+  }
+}
+```
+
+gets transformed to an outgoing HTTP GET request to the URL
+`https://my.api.com/person/auth123/posts?limit=10`.
+
+When using custom logic on fields, the URL can draw from other fields in the
+type. For example:
+
+```graphql
+type User {
+    username: String! @id
+    ...
+    posts: [Post] @custom(http: {
+        url: "https://my.api.com/person/$username/posts",
+        method: GET
+    })
+}
+```
+
+Note that:
+
+- Fields or arguments used in the path of a URL, such as `username` or
+  `authorID` in the preceding examples, must be marked as non-nullable (have `!`
+  in their type); whereas, those used in parameters, such as `numToFetch`, can
+  be nullable.
+- Currently, only scalar fields or arguments are allowed to be used in URLs or
+  bodies; though, see body below, this doesn't restrict the objects you can
+  construct and pass to custom logic functions.
+- Currently, the body can only contain alphanumeric characters in the key and
+  other characters like `_` aren't yet supported.
+- Currently, constant values are also not allowed in the body template. This
+  would soon be supported.
+
+## The body
+
+Many HTTP requests, such as add and update operations on REST APIs, require a
+JSON formatted body to supply the data. In a similar way to how `url` allows
+specifying a url pattern to use in resolving the custom request, Dgraph allows a
+`body` pattern that's used to build HTTP request bodies.
+
+For example, this body can be structured JSON that relates a mutation's
+arguments to the JSON structure required by the remote endpoint.
+
+```graphql
+type Mutation {
+    newMovie(title: String!, desc: String, dir: ID, imdb: ID): Movie @custom(http: {
+            url: "http://myapi.com/movies",
+            method: "POST",
+            body: "{ title: $title, imdbID: $imdb, storyLine: $desc, director: { id: $dir }}",
+    })
+```
+
+A request with
+`newMovie(title: "...", desc: "...", dir: "dir123", imdb: "tt0120316")` is
+transformed into a `POST` request to `http://myapi.com/movies` with a JSON body
+of:
+
+```json
+{
+  "title": "...",
+  "imdbID": "tt0120316",
+  "storyLine": "...",
+  "director": {
+    "id": "dir123"
+  }
+}
+```
+
+`url` and `body` templates can be used together in a single custom definition.
+
+For both `url` and `body` templates, any non-null arguments or fields must be
+present to evaluate the custom logic. And the following rules are applied when
+building the request from the template for nullable arguments or fields.
+
+- If the value of a nullable argument is present, it's used in the template.
+- If a nullable argument is present, but null, then in a body `null` is
+  inserted, while in a url nothing is added. For example, if the `desc` argument
+  above is null then `{ ..., storyLine: null, ...}` is constructed for the body.
+  Whereas, in a URL pattern like `https://a.b.c/endpoint?arg=$gqlArg`, if
+  `gqlArg` is present, but null, the generated URL is
+  `https://a.b.c/endpoint?arg=`.
+- If a nullable argument is not present, nothing is added to the URL/body. That
+  would mean the constructed body would not contain `storyLine` if the `desc`
+  argument is missing, and in `https://a.b.c/endpoint?arg=$gqlArg` the result
+  would be `https://a.b.c/endpoint` if `gqlArg` weren't present in the request
+  arguments.
+
+## Calling GraphQL custom resolvers
+
+Custom queries, mutations, and fields can be implemented by custom GraphQL
+resolvers. In this case, use the `graphql` argument to specify which
+query/mutation on the remote server to call. The syntax includes if the call is
+a query or mutation, the arguments, and what query/mutation to use on the remote
+endpoint.
+
+For example, you can pass arguments to queries onward as arguments to remote
+GraphQL endpoints:
+
+```graphql
+type Query {
+  getPosts(authorID: ID!, numToFetch: Int!): [Post]
+    @custom(
+      http: {
+        url: "https://my.api.com/graphql"
+        method: POST
+        graphql: "query($authorID: ID!, $numToFetch: Int!) { posts(auth: $authorID, first: $numToFetch) }"
+      }
+    )
+}
+```
+
+You can also define your own inputs and pass those to the remote GraphQL
+endpoint.
+
+```graphql
+input NewMovieInput { ... }
+
+type Mutation {
+    newMovie(input: NewMovieInput!): Movie @custom(http: {
+        url: "http://movies.com/graphql",
+        method: "POST",
+        graphql: "mutation($input: NewMovieInput!) { addMovie(data: $input) }",
+    })
+```
+
+When a schema is uploaded, Dgraph introspects the remote GraphQL endpoints on
+any custom logic that uses the `graphql` argument. From the results of
+introspection, it tries to match up arguments and input and object types to
+ensure that the calls to and expected responses from the remote GraphQL make
+sense.
+
+If that introspection isn't possible, set `skipIntrospection: true` in the
+custom definition and Dgraph won't perform GraphQL schema introspection for this
+custom definition.
+
+## Remote types
+
+Any type annotated with the `@remote` directive isn't stored in Dgraph. This
+allows your Dgraph GraphQL instance to serve an API that includes both data
+stored locally and data stored or generated elsewhere. You can also use custom
+fields, for example, to join data from disparate datasets.
+
+Remote types can only be returned by custom resolvers and Dgraph won't generate
+any search or CRUD operations for remote types.
+
+The schema definition used to define your Dgraph GraphQL API must include
+definitions of all the types used. If a custom logic call returns a type not
+stored in Dgraph, then that type must be added to the Dgraph schema with the
+`@remote` directive.
+
+For example, your API might use custom logic to integrate with GitHub, using
+either `https://api.github.com` or the GitHub GraphQL API
+`https://api.github.com/graphql` and calling the `user` query. Either way, your
+GraphQL schema needs to include the type you expect back from that remote call.
+That could be linking a `User` as stored in your Dgraph instance with the
+`Repository` data from GitHub. With `@remote` types, that's as simple as adding
+the type and custom call to your schema.
+
+```graphql
+# GitHub's repository type
+type Repository @remote { ... }
+
+# Dgraph user type
+type User {
+    # local user name = GitHub id
+    username: String! @id
+
+    # ...
+    # other data stored in Dgraph
+    # ...
+
+    # join local data with remote
+    repositories: [Repository] @custom(http: {
+        url:  "https://api.github.com/users/$username/repos",
+        method: GET
+    })
+}
+```
+
+Just defining the connection is all it takes and then you can ask a single
+GraphQL query that performs a local query and joins with (potentially many)
+remote data sources.
+
+### RemoteResponse directive
+
+In combination with the `@remote` directive, in a GraphQL schema you can also
+use the `@remoteResponse` directive. You can define the `@remoteResponse`
+directive on the fields of a `@remote` type to map the JSON key response of a
+custom query to a GraphQL field.
+
+For example, in the given GraphQL schema there's a defined custom DQL query,
+whose JSON response contains the results of the `groupby` clause in the
+`@groupby` key. By using the `@remoteResponse` directive you'll map the
+`groupby` field in `GroupUserMapQ` type to the `@groupby` key in the JSON
+response:
+
+```graphql
+type User {
+  screen_name: String! @id
+  followers: Int @search
+  tweets: [Tweets] @hasInverse(field: user)
+}
+type UserTweetCount @remote {
+  screen_name: String
+  tweetCount: Int
+}
+type UserMap @remote {
+  followers: Int
+  count: Int
+}
+type GroupUserMapQ @remote {
+  groupby: [UserMap] @remoteResponse(name: "@groupby")
+}
+```
+
+it's possible to define the following `@custom` DQL query:
+
+```graphql
+queryUserKeyMap: [GroupUserMapQ] @custom(dql: """
+{
+  queryUserKeyMap(func: type(User)) @groupby(followers: User.followers) {
+    count(uid)
+  }
+}
+""")
+```
+
+## How Dgraph processes custom results
+
+Given types like
+
+```graphql
+type Post @remote {
+    id: ID!
+    title: String!
+    datePublished: DateTime
+    author: Author
+}
+
+type Author { ... }
+```
+
+and a custom query
+
+```graphql
+type Query {
+  getCustomPost(id: ID!): Post
+    @custom(http: { url: "https://my.api.com/post/$id", method: GET })
+
+  getPosts(authorID: ID!, numToFetch: Int!): [Post]
+    @custom(
+      http: {
+        url: "https://my.api.com/person/$authorID/posts?limit=$numToFetch"
+        method: GET
+      }
+    )
+}
+```
+
+Dgraph turns the `getCustomPost` query into a HTTP request to
+`https://my.api.com/post/$id` and expects a single JSON object with fields `id`,
+`title`, `datePublished` and `author` as result. Any additional fields are
+ignored, while if non-nullable fields (like `id` and `title`) are missing,
+GraphQL error propagation is triggered.
+
+For `getPosts`, Dgraph expects the HTTP call to
+`https://my.api.com/person/$authorID/posts?limit=$numToFetch` to return a JSON
+array of JSON objects, with each object matching the `Post` type as described
+above.
+
+If the custom resolvers are GraphQL calls, like:
+
+```graphql
+type Query {
+  getCustomPost(id: ID!): Post
+    @custom(
+      http: {
+        url: "https://my.api.com/graphql"
+        method: POST
+        graphql: "query(id: ID) { post(postID: $id) }"
+      }
+    )
+
+  getPosts(authorID: ID!, numToFetch: Int!): [Post]
+    @custom(
+      http: {
+        url: "https://my.api.com/graphql"
+        method: POST
+        graphql: "query(id: ID) { postByAuthor(authorID: $id, first: $numToFetch) }"
+      }
+    )
+}
+```
+
+then Dgraph expects a GraphQL call to `post` to return a valid GraphQL result
+like `{ "data": { "post": {...} } }` and will use the JSON object that is the
+value of `post` as the data resolved by the request.
+
+Similarly, Dgraph expects `postByAuthor` to return data like
+`{ "data": { "postByAuthor": [ {...}, ... ] } }` and will use the array value of
+`postByAuthor` to build its array of posts result.
+
+## How errors from custom endpoints are handled
+
+When a query returns an error while resolving from a custom HTTP endpoint, the
+error is added to the `errors` array and sent back to the user in the JSON
+response.
+
+When a field returns an error while resolving a custom HTTP endpoint, the
+field's value becomes `null` and the error is added to the `errors` JSON array.
+The rest of the fields are still resolved as required by the request.
+
+For example, a query from a custom HTTP endpoint will return an error in the
+following format:
+
+```json
+{
+  "errors": [
+    {
+      "message": "Rest API returns Error for myFavoriteMovies query",
+      "locations": [
+        {
+          "line": 5,
+          "column": 4
+        }
+      ],
+      "path": ["Movies", "name"]
+    }
+  ]
+}
+```
+
+## How custom fields are resolved
+
+When evaluating a request that includes custom fields, Dgraph might run multiple
+resolution stages to resolve all the fields. Dgraph must also ensure it requests
+enough data to forfull the custom fields. For example, given the `User` type
+defined as:
+
+```graphql
+type User {
+    username: String! @id
+    ...
+    posts: [Post] @custom(http: {
+        url: "https://my.api.com/person/$username/posts",
+        method: GET
+    })
+}
+```
+
+a query such as:
+
+```graphql
+query {
+  queryUser {
+    username
+    posts
+  }
+}
+```
+
+is executed by first querying in Dgraph for `username` and then using the result
+to resolve the custom field `posts` (which relies on `username`). For a request
+like:
+
+```graphql
+query {
+  queryUser {
+    posts
+  }
+}
+```
+
+Dgraph works out that it must first get `username` so it can run the custom
+field `posts`, even though `username` isn't part of the original query. So
+Dgraph retrieves enough data to satisfy the custom request, even if that
+involves data that isn't asked for in the query.
+
+There are currently a few limitations on custom fields:
+
+- each custom call must include either an `ID` or `@id` field
+- arguments are not allowed (soon custom field arguments will be allowed and
+  will be used in the `@custom` directive in the same manner as for custom
+  queries and mutations), and
+- a custom field can't depend on another custom field (longer term, we intend to
+  lift this restriction).
+
+## Restrictions / Roadmap
+
+Our custom logic is still in beta and we are improving it quickly. Here's a few
+points that we plan to work on soon:
+
+- adding arguments to custom fields
+- relaxing the restrictions on custom fields using id values
+- iterative evaluation of `@custom` and `@remote` - in the current version you
+  can't have `@custom` inside an `@remote` type once we add this, you'll be able
+  to extend remote types with custom fields, and
+- allowing fine tuning of the generated API, for example removing of customizing
+  the generated CRUD mutations.
+
+## Example: query
+
+Let's say we want to integrate our app with an existing external REST API.
+There's a few things we need to know:
+
+- The URL of the API, the path and any parameters required
+- The shape of the resulting JSON data
+- The method (GET, POST, etc.), and
+- What authorization we need to pass to the external endpoint
+
+The custom query can take any number of scalar arguments and use those to
+construct the path, parameters and body (we'll see an example of that in the
+custom mutation section) of the request that gets sent to the remote endpoint.
+
+In an app, you'd deploy an endpoint that does some custom work and returns data
+that's used in your UI, or you'd wrap some logic or call around an existing
+endpoint. So that we can walk through a whole example, let's use the Twitter
+API.
+
+To integrate a call that returns the data of Twitter user with our app, all we
+need to do is add the expected result type `TwitterUser` and set up a custom
+query:
+
+```graphql
+type TwitterUser @remote {
+    id: ID!
+    name: String
+    screen_name: String
+    location: String
+    description: String
+    followers_count: Int
+    ...
+}
+
+type Query{
+    getCustomTwitterUser(name: String!): TwitterUser @custom(http:{
+        url: "https://api.twitter.com/1.1/users/show.json?screen_name=$name"
+        method: "GET",
+        forwardHeaders: ["Authorization"]
+    })
+}
+```
+
+Dgraph will then be able to accept a GraphQL query like
+
+```graphql
+query {
+  getCustomTwitterUser(name: "dgraphlabs") {
+    location
+    description
+    followers_count
+  }
+}
+```
+
+construct a HTTP GET request to
+`https://api.twitter.com/1.1/users/show.json?screen_name=dgraphlabs`, attach
+header `Authorization` from the incoming GraphQL request to the outgoing HTTP,
+and make the call and return a GraphQL result.
+
+The result JSON of the actual HTTP call will contain the whole object from the
+REST endpoint (you can see how much is in the Twitter user object
+[here](https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/user-object)).
+But, the GraphQL query only asked for some of that, so Dgraph filters out any
+returned values that weren't asked for in the GraphQL query and builds a valid
+GraphQL response to the query and returns GraphQL.
+
+```json
+{
+    "data": {
+        "getCustomTwitterUser": { "location": ..., "description": ..., "followers_count": ... }
+    }
+}
+```
+
+Your version of the remote type doesn't have to be equal to the remote type. For
+example, if you don't want to allow users to query the full Twitter user, you
+include in the type definition only the fields that can be queried.
+
+All the usual options for custom queries are allowed; for example, you can have
+multiple queries in a single GraphQL request and a mix of custom and Dgraph
+generated queries, you can get the result compressed by setting
+`Accept-Encoding` to `gzip`, etc.
+
+## Example: mutation
+
+With custom mutations, you can use custom logic to define values for one or more
+fields in a mutation.
+
+Let's say we have an app about authors and posts. Logged in authors can add
+posts, but we want to do some input validation and add extra value when a post
+is added. The key types might be as follows.
+
+```graphql
+type Author { ... }
+
+type Post {
+    id: ID!
+    title: String
+    text: String
+    datePublished: DateTime
+    author: Author
+    ...
+}
+```
+
+Dgraph generates an `addPost` mutation from those types, but we want to do
+something extra. We don't want the `author` field to come in with the mutation,
+that should get filled in from the JWT of the logged in user. Also, the
+`datePublished` shouldn't be in the input; it should be set as the current time
+at point of mutation. Maybe we also have some community guidelines about what
+might constitute an offensive `title` or `text` in a post. Maybe users can only
+post if they have enough community credit.
+
+We'll need custom code to do all that, so we can write a custom function that
+takes in only the title and text of the new post. Internally, it can check that
+the title and text satisfy the guidelines and that this user has enough credit
+to make a post. If those checks pass, it then builds a full post object by
+adding the current time as the `datePublished` and adding the `author` from the
+JWT information it gets from the forward header. It can then call the `addPost`
+mutation constructed by Dgraph to add the post into Dgraph and returns the
+resulting post as its GraphQL output.
+
+So as well as the types above, we need a custom mutation:
+
+```graphql
+type Mutation {
+  newPost(title: String!, text: String): Post
+    @custom(
+      http: {
+        url: "https://my.api.com/addPost"
+        method: "POST"
+        body: "{ postText: $text, postTitle: $title }"
+        forwardHeaders: ["AuthHdr"]
+      }
+    )
+}
+```
+
+Find out more about how to turn off generated mutations and protecting mutations
+with authorization rules at:
+
+- [Remote Types - Turning off Generated Mutations with `@remote` Directive](./overview#remote-types)
+- [Securing Mutations with the `@auth` Directive](./auth)
+
+## Example: field
+
+Custom fields allow you to extend your types with custom logic as well as make
+joins between your local data and remote data.
+
+Let's say we are building an app for managing projects. Users will login with
+their GitHub id and we want to connect some data about their work stored in
+Dgraph with say their GitHub profile, issues, etc.
+
+Our first version of our users might start out with just their GitHub username
+and some data about what projects they are working on.
+
+```graphql
+type User {
+  username: String! @id
+  projects: [Project]
+  tickets: [Ticket]
+}
+```
+
+We can then add their GitHub repositories by just extending the definitions with
+the types and custom field needed to make the remote call.
+
+```graphql
+# GitHub's repository type
+type Repository @remote { ... }
+
+# Dgraph user type
+type User {
+    # local user name = GitHub id
+    username: String! @id
+
+    # join local data with remote
+    repositories: [Repository] @custom(http: {
+        url:  "https://api.github.com/users/$username/repos",
+        method: GET
+    })
+}
+```
+
+We could similarly join with say the GitHub user details, or open pull requests,
+to further fill out the join between GitHub and our local data. Instead of the
+REST API, let's use the GitHub GraphQL endpoint
+
+```graphql
+# GitHub's User type
+type GitHubUser @remote { ... }
+
+# Dgraph user type
+type User {
+    # local user name = GitHub id
+    username: String! @id
+
+    # join local data with remote
+    gitDetails: GitHubUser @custom(http: {
+        url:  "https://api.github.com/graphql",
+        method: POST,
+        graphql: "query(username: String!) { user(login: $username) }",
+        skipIntrospection: true
+    })
+}
+```
+
+Perhaps our app has some measure of their velocity that's calculated by a custom
+function that looks at both their GitHub commits and some other places where
+work is added. Soon we'll have a schema where we can render a user's home page,
+the projects they work on, their open tickets, their GitHub details, etc. in a
+single request that queries across multiple sources and can mix Dgraph filtering
+with external calls.
+
+```graphql
+query {
+    getUser(id: "aUser") {
+        username
+        projects(order: { asc: lastUpdate }, first: 10) {
+            projectName
+        }
+        tickets {
+            connectedGitIssue { ... }
+        }
+        velocityMeasure
+        gitDetails { ... }
+        repositories { ... }
+    }
+}
+```

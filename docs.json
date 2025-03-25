@@ -126,6 +126,295 @@
         ]
       },
       {
+        "tab": "Dgraph",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "dgraph/overview",
+              "dgraph/why-dgraph",
+              "dgraph/quickstart",
+              "dgraph/guides"
+            ]
+          },
+          {
+            "group": "Connecting",
+            "pages": [
+              "dgraph/sdks/overview",
+              "dgraph/sdks/go",
+              "dgraph/sdks/python",
+              "dgraph/sdks/java",
+              "dgraph/sdks/javascript",
+              "dgraph/sdks/dotnet",
+              "dgraph/http"
+            ]
+          },
+          {
+            "group": "Query Language",
+            "pages": [
+              "dgraph/dql/json",
+              "dgraph/dql/rdf",
+              "dgraph/dql/schema",
+              "dgraph/dql/indexes",
+              {
+                "group": "Query",
+                "pages": [
+                  "dgraph/dql/query",
+                  "dgraph/dql/alias",
+                  "dgraph/dql/aggregation",
+                  "dgraph/dql/functions",
+                  "dgraph/dql/language-support",
+                  "dgraph/dql/pagination",
+                  "dgraph/dql/sorting",
+                  "dgraph/dql/variables"
+                ]
+              },
+              "dgraph/dql/mutation",
+              "dgraph/dql/upsert",
+              "dgraph/dql/facets",
+              {
+                "group": "Keywords",
+                "pages": [
+                  "dgraph/dql/cascade",
+                  "dgraph/dql/count",
+                  "dgraph/dql/debug",
+                  "dgraph/dql/expand",
+                  "dgraph/dql/filter",
+                  "dgraph/dql/fragment",
+                  "dgraph/dql/groupby",
+                  "dgraph/dql/ignorereflex",
+                  "dgraph/dql/normalize",
+                  "dgraph/dql/recurse",
+                  "dgraph/dql/shortest"
+                ]
+              },
+              "dgraph/dql/tips"
+            ]
+          },
+          {
+            "group": "GraphQL-based Development",
+            "pages": [
+              "dgraph/graphql/overview",
+              "dgraph/graphql/quickstart",
+              {
+                "group": "Connecting",
+                "pages": [
+                  "dgraph/graphql/connecting",
+                  "dgraph/graphql/api",
+                  "dgraph/graphql/http"
+                ]
+              },
+              {
+                "group": "Schema",
+                "pages": [
+                  "dgraph/graphql/schema/overview",
+                  "dgraph/graphql/schema/types",
+                  "dgraph/graphql/schema/relationships",
+                  "dgraph/graphql/schema/custom-dql",
+                  {
+                    "group": "Directives",
+                    "pages": [
+                      "dgraph/graphql/schema/directives/overview",
+                      "dgraph/graphql/schema/directives/auth",
+                      "dgraph/graphql/schema/directives/custom",
+                      "dgraph/graphql/schema/directives/deprecated",
+                      "dgraph/graphql/schema/directives/dgraph",
+                      "dgraph/graphql/schema/directives/embedding",
+                      "dgraph/graphql/schema/directives/generate",
+                      "dgraph/graphql/schema/directives/ids",
+                      "dgraph/graphql/schema/directives/search",
+                      "dgraph/graphql/schema/directives/withsubscription"
+                    ]
+                  },
+                  "dgraph/graphql/schema/migration",
+                  "dgraph/graphql/schema/documentation",
+                  "dgraph/graphql/schema/reserved",
+                  "dgraph/graphql/schema/federation",
+                  "dgraph/graphql/schema/graphql-dql"
+                ]
+              },
+              {
+                "group": "Queries",
+                "pages": [
+                  "dgraph/graphql/query/overview",
+                  "dgraph/graphql/query/aggregate",
+                  "dgraph/graphql/query/and-or-not",
+                  "dgraph/graphql/query/cached-results",
+                  "dgraph/graphql/query/cascade",
+                  "dgraph/graphql/query/order-page",
+                  "dgraph/graphql/query/persistent-queries",
+                  "dgraph/graphql/query/search-filtering",
+                  "dgraph/graphql/query/skip-include",
+                  "dgraph/graphql/query/variables",
+                  "dgraph/graphql/query/vector-similarity"
+                ]
+              },
+              {
+                "group": "Mutations",
+                "pages": [
+                  "dgraph/graphql/mutation/overview",
+                  "dgraph/graphql/mutation/add",
+                  "dgraph/graphql/mutation/deep",
+                  "dgraph/graphql/mutation/delete",
+                  "dgraph/graphql/mutation/update",
+                  "dgraph/graphql/mutation/upsert"
+                ]
+              },
+              "dgraph/graphql/subscriptions",
+              {
+                "group": "Security",
+                "pages": [
+                  "dgraph/graphql/security/overview",
+                  "dgraph/graphql/security/auth-tips",
+                  "dgraph/graphql/security/cors",
+                  "dgraph/graphql/security/graphtraversal-rules",
+                  "dgraph/graphql/security/jwt",
+                  "dgraph/graphql/security/mutations",
+                  "dgraph/graphql/security/rbac-rules"
+                ]
+              },
+              {
+                "group": "Lambda",
+                "pages": [
+                  "dgraph/graphql/lambda/overview",
+                  "dgraph/graphql/lambda/query",
+                  "dgraph/graphql/lambda/mutation",
+                  "dgraph/graphql/lambda/field",
+                  "dgraph/graphql/lambda/webhook"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Administration",
+            "pages": [
+              "dgraph/admin/schema",
+              "dgraph/admin/update-types",
+              "dgraph/admin/drop-data",
+              {
+                "group": "Observability",
+                "pages": [
+                  "dgraph/admin/logs",
+                  "dgraph/admin/metrics",
+                  "dgraph/admin/traces",
+                  "dgraph/admin/increment-tool",
+                  "dgraph/admin/debug",
+                  "dgraph/admin/sentry"
+                ]
+              },
+              {
+                "group": "Data Migration",
+                "pages": [
+                  "dgraph/admin/import",
+                  "dgraph/admin/live-loader",
+                  "dgraph/admin/bulk-loader",
+                  "dgraph/admin/import-csv",
+                  "dgraph/admin/import-mysql",
+                  "dgraph/admin/export"
+                ]
+              },
+              {
+                "group": "Self-Managed Deployments",
+                "pages": [
+                  "dgraph/self-managed/overview",
+                  "dgraph/self-managed/data-compression",
+                  "dgraph/self-managed/download",
+                  "dgraph/self-managed/dgraph-alpha",
+                  "dgraph/self-managed/dgraph-zero",
+                  "dgraph/self-managed/config",
+                  "dgraph/self-managed/tls-configuration",
+                  "dgraph/self-managed/decrypt",
+                  "dgraph/self-managed/ports-usage",
+                  "dgraph/self-managed/monitoring",
+                  "dgraph/self-managed/single-host-setup",
+                  "dgraph/self-managed/cluster-setup",
+                  "dgraph/self-managed/cluster-types",
+                  "dgraph/self-managed/single-server-cluster",
+                  "dgraph/self-managed/ha-cluster",
+                  "dgraph/self-managed/monitoring-cluster",
+                  "dgraph/self-managed/cluster-checklist",
+                  "dgraph/self-managed/troubleshooting"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Tools",
+            "pages": [
+              {
+                "group": "Ratel",
+                "pages": [
+                  "dgraph/ratel/overview",
+                  "dgraph/ratel/console",
+                  "dgraph/ratel/connection",
+                  "dgraph/ratel/schema",
+                  "dgraph/ratel/cluster",
+                  "dgraph/ratel/backups"
+                ]
+              },
+              {
+                "group": "CLI",
+                "pages": [
+                  "dgraph/cli/command-reference",
+                  "dgraph/cli/completion"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Resources",
+            "pages": [
+              "dgraph/changelog",
+              "dgraph/glossary",
+              {
+                "group": "Concepts",
+                "pages": [
+                  "dgraph/concepts/acl",
+                  "dgraph/concepts/badger",
+                  "dgraph/concepts/clients",
+                  "dgraph/concepts/consistency-model",
+                  "dgraph/concepts/discovery",
+                  "dgraph/concepts/dql-graphql-layering",
+                  "dgraph/concepts/dql",
+                  "dgraph/concepts/facets",
+                  "dgraph/concepts/graphql",
+                  "dgraph/concepts/group",
+                  "dgraph/concepts/index-tokenize",
+                  "dgraph/concepts/lambda",
+                  "dgraph/concepts/minimizing-network-calls",
+                  "dgraph/concepts/namespace-tenant",
+                  "dgraph/concepts/posting-list",
+                  "dgraph/concepts/protocol-buffers",
+                  "dgraph/concepts/queries-process",
+                  "dgraph/concepts/raft",
+                  "dgraph/concepts/relationships",
+                  "dgraph/concepts/replication",
+                  "dgraph/concepts/transaction-mutation",
+                  "dgraph/concepts/transactions",
+                  "dgraph/concepts/wal-memtable",
+                  "dgraph/concepts/workers"
+                ]
+              },
+              {
+                "group": "Enterprise",
+                "pages": [
+                  "dgraph/enterprise/overview",
+                  "dgraph/enterprise/license",
+                  "dgraph/enterprise/access-control-lists",
+                  "dgraph/enterprise/audit-logs",
+                  "dgraph/enterprise/binary-backups",
+                  "dgraph/enterprise/lsbackup",
+                  "dgraph/enterprise/change-data-capture",
+                  "dgraph/enterprise/encryption-at-rest",
+                  "dgraph/enterprise/learner-nodes",
+                  "dgraph/enterprise/multitenancy"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
         "tab": "Badger",
         "groups": [
           {
@@ -153,23 +442,25 @@
   "navbar": {
     "links": [
       {
-        "label": "Company",
-        "href": "https://hypermode.com/home"
+        "label": "Status",
+        "href": "https://status.hypermode.com"
       },
       {
-        "label": "Start Now",
-        "href": "https://hypermode.com/sign-up"
+        "label": "Blog",
+        "href": "https://hypermode.com/blog"
       }
     ],
     "primary": {
-      "type": "github",
-      "href": "https://github.com/hypermodeinc/modus"
+      "type": "button",
+      "label": "Start free",
+      "href": "https://hypermode.com/sign-up"
     }
   },
   "footer": {
     "socials": {
       "discord": "https://discord.hypermode.com",
       "github": "https://github.com/hypermodeinc",
+      "youtube": "https://www.youtube.com/@hypermodeinc",
       "x": "https://x.com/hypermodeinc",
       "linkedin": "https://www.linkedin.com/company/hypermode"
     }

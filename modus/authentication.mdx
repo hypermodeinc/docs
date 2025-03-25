@@ -4,8 +4,9 @@ description: "Protect your API"
 "og:title": "Authentication - Modus"
 ---
 
-It's easy to secure your Modus app with authentication. Modus currently supports
-bearer token authentication, with additional authentication methods coming soon.
+It is easy to secure your Modus app with authentication. Modus currently
+supports bearer token authentication, with additional authentication methods
+coming soon.
 
 ## Bearer tokens
 
@@ -32,11 +33,11 @@ variable:
 
 <CodeGroup>
 
-```bash MODUS_PEMS
+```sh MODUS_PEMS
 export MODUS_PEMS='{\"key1\":\"-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwJ9z1z1z1z1z1z\\n-----END PUBLIC KEY-----\"}'
 ```
 
-```bash MODUS_JWKS_ENDPOINTS
+```sh MODUS_JWKS_ENDPOINTS
 export MODUS_JWKS_ENDPOINTS='{"my-auth-provider":"https://myauthprovider.com/application/o/myappname/.wellknown/jwks.json"}'
 ```
 

@@ -1,0 +1,26 @@
+---
+title: Restrict origins
+"og:title": "Restrict origins - Dgraph"
+---
+
+import DgraphWIP from "/snippets/dgraph-wip.mdx"
+
+<DgraphWIP />
+
+To restrict origins of HTTP requests add lines starting with
+`# Dgraph.Allow-Origin` at the end of your GraphQL schema specifying the origins
+allowed.
+
+For example, the following restricts all origins except the ones specified.
+
+```sh
+# Dgraph.Allow-Origin "https://example.com"
+# Dgraph.Allow-Origin "https://www.example.com"
+```
+
+<Note>CORS restrictions only apply to browsers.</Note>
+
+<Note>
+  By default, the `/graphql` endpoint doesn't limit the request origin
+  (`Access-Control-Allow-Origin: *`).
+</Note>

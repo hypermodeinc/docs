@@ -1,0 +1,385 @@
+---
+title: Graph Data Models 101
+description:
+  Graphs provide an alternative to tabular data structures, allowing for a more
+  natural way to store and retrieve data
+"og:title": "Graph Data Models 101 - Dgraph"
+---
+
+import DgraphWIP from "/snippets/dgraph-wip.mdx"
+
+<DgraphWIP />
+
+When building an app, you might wonder which database is the best choice. A
+traditional relational database that you can query using SQL is a familiar
+choice, but does a relational database really provide a natural fit to your data
+model, and the performance that you need if your app goes viral and needs to
+scale up rapidly?
+
+This tutorial takes a deeper look at data modeling using relational databases
+compared to graph databases like Dgraph, to give you a better understanding of
+the advantages of using a graph database to power your app. If you aren't
+familiar with graph data models or graph databases, this tutorial was written
+for you.
+
+## Learning goals
+
+In this tutorial, you'll learn about graphs, and how a graph database is
+different from a database built on a relational data model. This tutorial
+doesn't include any code or syntax, but rather a comparison of graphs and
+relational data models. By the end of this tutorial, you should be able to
+answer the following questions:
+
+- What's a graph?
+- How are graphs different from relational models?
+- How's data modeled in a graph?
+- How's data queried from a graph?
+
+Along the way, you might find that a graph is the right fit for the data model
+used by your app. Any data model that tracks lots of different relationships (or
+_edges_) between various data types is a good candidate for a graph model.
+
+Whether this is the first time you are learning about graphs or looking to
+deepen your understanding of graphs with some concrete examples, this tutorial
+should help you along your journey.
+
+If you are already familiar with graphs, you can jump right into our coding
+example for [React](/dgraph/guides/message-board-app/introduction).
+
+## Graphs and natural data modeling
+
+Graphs provide an alternative to tabular data structures, allowing for a more
+natural way to store and retrieve data.
+
+For example, you could imagine that we're modeling a conversation within a
+family:
+
+- A `father`, who starts a conversation about going to get ice cream.
+- A `mother`, who comments that she would also like ice cream.
+- A `child`, who likes the idea of the family going to get ice cream.
+
+This conversation could easily occur in the context of a modern social media or
+messaging app, so you can imagine the data model for such an app as follows:
+
+![A graph diagram for a social media app's data model](/images/dgraph/guides/data-model-101/evolution-3.png)
+
+For the remainder of this guide, we use this as our example app: a basic social
+media or messaging app, with a data model that includes `people`, `posts`,
+`comments`, and `reactions`.
+
+A graph data model is different from a relational model. A graph focuses on the
+relationships between information, whereas a relational model focuses on storing
+similar information in a list. The graph model received its name because it
+resembles a graph when illustrated.
+
+- Data objects are called _nodes_ and are illustrated with a circle.
+- Properties of nodes are called _predicates_ and are illustrated as a panel on
+  the node.
+- Relationships between nodes are called _edges_ and are illustrated as
+  connecting lines. Edges are named to describe the relationship between two
+  nodes. A `reaction` is an example of an edge, in which a person reacts to a
+  post.
+
+Some illustrations omit the predicates panel and show only the nodes and edges.
+
+Referring back to the example app, the `father`, `mother`, `child`, `post`, and
+`comment` are nodes. The name of the people, the post's title, and text of the
+comment are the predicates. The natural relationships between the authors of the
+posts, authors of the comments, and the comments' topics are edges.
+
+As you can see, a graph models data in a natural way that shows the
+relationships (edges) between the entities (nodes) that contain predicates.
+
+## Relational Data Modeling
+
+This section considers the example social media app introduced in the previous
+section and discusses how it could be modeled with a traditional relational data
+model, such as those used by SQL databases.
+
+With relational data models, you create lists of each type of data in tables,
+and then add columns in those tables to track the attributes of that table's
+data. Looking back on our data, we remember that there are three main types,
+`People`, `Posts`, and `Comments`
+
+![Three tables](/images/dgraph/guides/data-model-101/evolution-4.png)
+
+To define relationships between records in two tables, a relational data model
+uses numeric identifiers called _foreign keys_, that take the form of table
+columns. Foreign keys can only model one-to-many relationship types, such as the
+following:
+
+- The relationship from `Posts` to `People`, to track contributors (authors,
+  editors, etc.) of a `Post`
+- The relationship from `Comments` to `People`, to track the author of the
+  comment
+- The relationship from `Comments` to `Posts`, to track on which post comments
+  were made
+- The relationship between rows in the `Comments` table, to track comments made
+  in reply to other comments (a self-reference relationship)
+
+![Relationships between rows in tables](/images/dgraph/guides/data-model-101/evolution-5.png)
+
+The limitations of foreign keys become apparent when your app requires you to
+model many-to-many relationships. In our example app, a person can like many
+posts or comments, and posts and comments can be liked by many people. The only
+way to model this relationship in a relational database is to create a new
+table. This so-called _pivot table_ usually doesn't store any information
+itself, it just stores links between two other tables.
+
+In our example app, we decided to limit the number of tables by having a single
+“Likes” table instead of having `people_like_posts` and `people_like_comments`
+tables. None of these solutions is perfect, though, and there is a trade-off
+between having a lower table count or having more empty fields in our tables
+(also known as "sparse data").
+
+![An illustration of sparse data when creating a Likes table](/images/dgraph/guides/data-model-101/evolution-6.png)
+
+Because foreign keys can't be added in reference to entities that don't exist,
+adding new posts and authors requires additional work. To add a new post and a
+new author at the same time (in the Posts and People tables), we must first add
+a row to the `People` table and then retrieve their primary key and associate it
+with the new row in the `Posts` table.
+
+![Adding a post and an author at the same time](/images/dgraph/guides/data-model-101/evolution-7.png)
+
+By now, you might ask yourself: how does a relational model expand to handle new
+data, new types of data, and new data relationships?
+
+When new data is added to the model, the model changes to accept the data. The
+simplest type of change is when you add a new row to a table. The new row adopts
+all of the columns from the table. When you add a new property to a table, the
+model changes and adds the new property as a column on every existing and future
+row for the table. And when you add a new data type to the database, you create
+a new table with its own pre-defined columns. This new data type might link to
+existing tables or need more pivot tables for a new many-to-many relationship.
+So, with each data type added to your relational data model, the need to add
+foreign keys and pivot tables increases, making support for querying every
+potential data relationship increasingly unwieldy.
+
+![Expanding a relational data model means more pivot tables](/images/dgraph/guides/data-model-101/evolution-8.png)
+
+Properties are stored as new columns and relationships require new columns and
+sometimes new pivot tables. Changing the schema in a relational model directly
+effects the data that's held by the model, and can impact database query
+performance.
+
+## Graph Data Modeling
+
+In this section we take our example social media app and see how it could be
+modeled in a graph.
+
+The concept of modeling data in a graph starts by placing dots, which represent
+nodes. Nodes can have one or more predicates (properties). A `person` may have
+predicates for their name, age, and gender. A `post` might have a predicate
+value showing when it was posted, and a value containing the contents of the
+post. A `comment` would most likely have a predicate containing the comment
+string. However, any one node could have other predicates that aren't contained
+on any other node. Each node represents an individual item, hence the singular
+naming structure.
+
+![Nodes used in the example social media app](/images/dgraph/guides/data-model-101/evolution-9.png)
+
+As graphs naturally resemble the data you are modeling, the individual nodes can
+be moved around this conceptual space to clearly show the relationships between
+these data nodes. Relationships are formed in graphs by creating an edge between
+them. In our app, a post has an author, a post can have comments, a comment has
+an author, and a comment can have a reply.
+
+For sake of illustration we also show the family tree information. The `father`
+and the `mother` are linked together with a `spouse` edge, and both parents are
+related to the child along a `child` edge.
+
+![Illustration of relationships as edges](/images/dgraph/guides/data-model-101/evolution-10.png)
+
+With a graph, you can also name the inverse relations. From here we can quickly
+see the inverse relationships. A `Post` has an `Author` and a `Person` has
+`Posts`. A `Post` has `Comments` and a `Comment` is on a `Post`. A `Comment` has
+an `Author`, and a `Person` has `Comments`. A `Parent` has a `Child`, and a
+`Child` has a `Parent`.
+
+You create many-to-many relationships in the same way that you make one-to-many
+relationships, with an edge between nodes.
+
+Adding groups of related data occurs naturally within a graph. The data is sent
+as a complete object instead of separate pieces of information that needs to be
+connected afterwards. Adding a new person and a new post to our graph is a
+one-step process. New data coming in doesn't have to be related to any existing
+data. You can insert this whole data object with 3 people, a post, and a comment
+all in one step.
+
+When new data is added to the model, the model changes to accept the data. Every
+change to a graph model is received naturally. When you add a new node with a
+data type, you are simply creating a new dot in space and applying a type to it.
+The new node doesn't include any predicates or relationships other than what you
+define for it. When you want to add a new predicate onto an existing data type,
+the model changes and adds the new property onto the items that you define.
+Other items not specifically given the new property type aren't changed. When
+you add a new data type to the database, a new node is created, ready to receive
+new edges and predicates.
+
+![Illustration of expanding a graph data model](/images/dgraph/guides/data-model-101/evolution-11.png)
+
+The key to remember when modeling a graph is to focus on the relationships
+between nodes. In a graph you can change the model without affecting the
+underlying data. Because the graph is stored as individual nodes, you can adjust
+predicates of individual nodes, create edges between sets of nodes, and add new
+node types without affecting any of the other nodes.
+
+## Query Data in a Relational Model
+
+Storing our data is great, but the best data model would be useless without the
+ability to query the data our app requires. So, how does information get
+retrieved in a relational model compared to a graph model?
+
+In a relational model, tables are stored in files. To support the sample social
+media app described in this tutorial, you would need four files: `People`,
+`Posts`, `Comments`, and `Likes`.
+
+![Visualization of four files](/images/dgraph/guides/data-model-101/evolution-12.png)
+
+When you request data from a file, one of two things happens: either a table
+scan takes place or an index is invoked. To find this data, the whole file must
+be read until the data is found or the end of the file is reached. In our
+example app there is a post titled, “Ice Cream?”. If the title isn't indexed,
+every post in the file would need to be read until the database finds the post
+entitled, “Ice Cream?”. This method would be like reading the entire dictionary
+to find the definition of a single word: very time-consuming. This process could
+be optimized by creating an index on the post’s title column. Using an index
+speeds up searches for data, but it can still be time-consuming.
+
+### What's an index?
+
+An index is an algorithm used to find the location of data. Instead of scanning
+an entire file looking for a piece of data, an index is used to aggregate the
+data into "chunks" and then create a decision tree pointing to the individual
+chunks of data. Such a decision tree could look like the following:
+
+![Image showing a tree to lookup the term graph from an index. The tree should be in a “graph” type format with circles instead of squares.](/images/dgraph/guides/data-model-101/evolution-13.png)
+
+Relational data models rely heavily on indexes to quickly find the requested
+data. Because the data required to answer a single question usually lives in
+multiple tables, you must use multiple indexes each time that related data is
+joined together. And because you can't index every column, some types of queries
+won't benefit from indexing.
+
+### How data is joined in a relational model
+
+In a relational model, the request's response must be returned as a single table
+consisting of columns and rows. To form this single table response, data from
+multiple tables must be joined together. In our app example, we found the post
+entitled “Ice Cream?” and also found the comments, “Yes!”, “When?”, and “After
+Lunch”. Each of these comments also has a corresponding author: `Mother`,
+`Child`, and `Father`. Because there is only one post as the root of the join,
+the post is duplicated to join to each comment.
+
+![Joins in a relational model](/images/dgraph/guides/data-model-101/evolution-15.png)
+
+Flattening query results can lead to many duplicate rows. Consider the case
+where you also want to query which people liked the comments on this example
+post. This query requires mapping a many-to-many relationship, which invokes two
+additional index searches to get the list of likes by `person`.
+
+![Flattening in a relational model](/images/dgraph/guides/data-model-101/evolution-16.png)
+
+Joining all of this together would form a single table containing many
+duplicates: duplicate `posts` and duplicate `comments`. Another side effect of
+this response approach is that it's likely that empty data exists in the
+response.
+
+In the next section, you'll see that querying a graph data model avoids the
+issues that you would face when querying a relational data model.
+
+## Query Data in a Graph Model
+
+As you'll see in this section, the data model we use determines the ease with
+which we can query for different types of data. The more your app relies on
+queries about the relationships between different types of data, the more you
+benefit from querying data using a graph data model.
+
+In a graph data model, each record (a `person`, `post` or `comment`) is stored
+as a data _object_ (sometimes also called a _node_). In the example social media
+app described in this tutorial, there are objects for individual people, posts,
+and comments.
+
+![Image of many objects of people, posts, and comments(not showing the relationships for clarity of the objects themselves)](/images/dgraph/guides/data-model-101/evolution-18.png)
+
+When data is requested from the graph, a root function determines which nodes
+are selected for the starting points. This root function uses indexes to
+determine which nodes match quickly. In our app example, we want to start with
+the root being the post with the title “Ice Cream?”. This type of lookup evokes
+an index on the post's title, much like indexes work in a relational model. The
+indexes at the root of the graph use the full index tree to find the data.
+
+Connecting edges together to form a connected graph is called _traversal_. After
+arriving at our `post`, “Ice Cream?”, we traverse the graph to arrive at the
+post's `comments`. To find the post's `author`, we traverse the next step to
+arrive at the people who authored the comment. This process follows the natural
+progression of related data, and graph data models allow us to query our data to
+follow this progression efficiently.
+
+What do we mean by efficiently? A graph data model lets you traverse from one
+node to a distantly related node without the need for anything like pivot
+tables. This means that queries based on edges can be updated easily, with no
+need to change the schema to support new many-to-many relationships. And, with
+no need to build tables specifically for query optimization, you can adjust your
+schema quickly to accommodate new types of data without adversely impacting
+existing queries.
+
+![Image of post with connected comments and author](/images/dgraph/guides/data-model-101/evolution-19.png)
+
+A feature of a graph model is that related edges can be filtered anywhere within
+the graph's traversing. When you want to know the most recent `comment` on your
+post or the last `person` to like the comment, filters can be applied to the
+edge.
+
+![Image of filters along an edge](/images/dgraph/guides/data-model-101/evolution-21.png)
+
+When filters get applied along an edge, only the nodes that match the edge are
+filtered - not all of the nodes in the graph. Applying this logic reduces the
+size of the graph and makes index trees smaller. The smaller an index tree is,
+the faster that it can be resolved.
+
+In a graph model, data is returned in an object-oriented format. Any related
+data is joined to its parent within the object in a nested structure.
+
+```json
+{
+  "title": "IceCream?",
+  "comments": [
+    {
+      "title": "Yes!",
+      "author": {
+        "name": "Mother"
+      }
+    },
+    {
+      "title": "When?",
+      "author": {
+        "name": "Child"
+      }
+    },
+    {
+      "title": "After Lunch",
+      "author": {
+        "name": "Father"
+      }
+    }
+  ]
+}
+```
+
+This object-oriented structure allows data to be joined without duplication.
+
+## Conclusion
+
+Congratulations on finishing the Dgraph learn course **Graph Data Models 101**!
+
+Now that you have an overview and understanding of
+
+- what a graph is
+- how a graph differs from a relational model
+- how to model a graph
+- and how to query a graph
+
+you are ready to jump into using Dgraph, the only truly native distributed graph
+database.

@@ -1,0 +1,18 @@
+---
+title: "@auth"
+"og:title": "@auth - Dgraph"
+---
+
+import DgraphWIP from "/snippets/dgraph-wip.mdx"
+
+<DgraphWIP />
+
+`@auth` allows you to define how to apply authorization rules on the
+queries/mutation for a type.
+
+Refer to [graphql endpoint security](/dgraph/graphql/security/overview),
+[Role-Based Access Control (RBAC) rules](/dgraph/graphql/security/rbac-rules)
+and [Graph traversal rules](/dgraph/graphql/security/graphtraversal-rules) for
+details.
+
+`@auth` directive isn't supported on `union` and `@remote` types.
