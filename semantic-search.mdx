@@ -1,0 +1,396 @@
+---
+title: Semantic Search With Dgraph and Modus
+description:
+  "Add natural language search to your app with Dgraph, Modus, and AI embeddings"
+---
+
+By leveraging embeddings and similarity search backed by a scalable vector index
+developers can enable semantic and similarity-based searches, improving the
+relevance of search results within their applications. This tutorial covers
+implementing semantic search using Modus, Dgraph, and Hypermode hosted AI models
+to add natural language or semantic search to your app using an example of
+ecommerce product data.
+
+<iframe
+  src="https://www.youtube.com/embed/Z2fB-nBf4Wo"
+  title="Natural Language Search With Dgraph, Modus, and Hypermode"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write;
+encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen
+  style={{ aspectRatio: "16 / 9", width: "100%" }}
+></iframe>
+
+## Semantic search overview
+
+Semantic search focuses on understanding the meaning and context behind queries
+rather than just matching keywords, using embeddings to capture semantic
+relationships between concepts. Vector search serves as the technical
+implementation method, converting text into numerical vector embeddings and
+finding similar content through mathematical distance calculations in
+multidimensional space.
+
+Vector search is a powerful technique that transforms data (like text, images,
+or audio) into numerical representations called embeddings. These embeddings
+capture the semantic meaning of the content in a multi-dimensional space and
+position similar items closer together. When performing a search, the query is
+also converted into an embedding, and the system finds items whose embeddings
+are closest to the query embedding.
+
+This approach offers significant benefits over traditional keyword-based search,
+including improved relevance by capturing context and semantics, enhanced
+precision by understanding user intent, and the ability to handle complex
+queries with higher accuracy. Vector search is particularly effective for
+applications like semantic search, recommendation systems, and retrieval
+augmented generation (RAG), optimizing both efficiency and accuracy in finding
+and retrieving data based on meaningful similarity rather than exact matches.
+When combined with graph traversals, vector search can enable complex GraphRAG
+retrieval patterns.
+
+## The components
+
+- **Dgraph** is a scalable graph database capable of near real-time graph
+  traversals and vector search.
+- **Modus** is the serverless API framework for building AI applications.
+- **Hypermode** is the platform for deploying AI applications, including model
+  hosting.
+
+## Prerequisites
+
+This tutorial assumes you have:
+
+1. Created a Dgraph instance, either hosted in the cloud or locally via Docker
+   or installed via the Dgraph binary
+2. Installed the Modus CLI and created a Modus app. See the
+   [Modus Quickstart](modus/quickstart) to get started with Modus.
+
+## Natural language search with Dgraph and Modus
+
+The steps to implement natural language or semantic search with Dgraph include
+defining the Dgraph connection in your Modus app manifest, selecting and
+configuring an embedding model, declaring a vector index in the Dgraph DQL
+schema, and using the `similar_to` DQL function to search for similar text in
+vector space.
+
+Our example app uses ecommerce product data consisting of product details to
+enable semantic product search based on natural language terms.
+
+## Declare Dgraph connection and Hypermode embedding model
+
+First, update the Modus app manifest file `modus.json` to define the connection
+to your Dgraph instance and the embedding model used to generate embeddings.
+Here we're using the MiniLM model hosted by Hypermode and connecting to a
+locally running Dgraph instance.
+
+```json
+{
+  "$schema": "https://schema.hypermode.com/modus.json",
+  "endpoints": {
+    "default": {
+      "type": "graphql",
+      "path": "/graphql",
+      "auth": "bearer-token"
+    }
+  },
+  "models": {
+    "minilm": {
+      "sourceModel": "sentence-transformers/all-MiniLM-L6-v2",
+      "connection": "hypermode",
+      "provider": "hugging-face"
+    }
+  },
+  "connections": {
+    "dgraph-grpc": {
+      "type": "dgraph",
+      "grpcTarget": "localhost:9080"
+    }
+  }
+}
+```
+
+<Note>
+  In order to use Hypermode hosted models in the local Modus development
+  environment you'll need to use the `hyp` CLI to connect your local environment
+  with your Hypermode account. See the [Using Hypermode-hosted
+  models](work-locally#using-hypermode-hosted-models) docs page for more
+  information.
+</Note>
+
+## Type definitions
+
+Next, in our Modus app we define our data model using classes with decorators
+for automatic serialization/deserialization. The `@json` decorator enables JSON
+serialization, while `@alias` maps property names to Dgraph convention friendly
+formats.
+
+We'll be using ecommerce data so we'll create simple types defining products and
+their categories.
+
+```ts
+@json
+export class Product {
+  @alias("Product.id")
+  id!: string
+
+  @alias("Product.title")
+  title: string = ""
+
+  @alias("Product.description")
+  description: string = ""
+
+  @alias("Product.category")
+  @omitnull()
+  category: Category | null = null
+}
+
+@json
+export class Category {
+  @alias("Category.name")
+  name: string = ""
+}
+```
+
+## Embedding model integration
+
+Next, we create an embedding function that uses a transformer model (MiniLM in
+this case) to convert product descriptions and search queries into vectors:
+
+```ts
+import { models } from "@hypermode/modus-sdk-as"
+import { EmbeddingsModel } from "@hypermode/modus-sdk-as/models/experimental/embeddings"
+
+const EMBEDDING_MODEL = "minilm"
+
+export function embedText(content: string[]): f32[][] {
+  const model = models.getModel<EmbeddingsModel>(EMBEDDING_MODEL)
+  const input = model.createInput(content)
+  const output = model.invoke(input)
+  return output.predictions
+}
+```
+
+## Define Dgraph schema
+
+We declare a schema to use Dgraph's vector search capability and create an index
+on the `Product.embedding` property, even though Dgraph can function without a
+schema.
+
+To define our Dgraph schema with vector indexing support we add the
+`@index(hnsw)` directive to the property storing the embedding value, in this
+case `Product.embedding`. We also define the other property types and node
+labels.
+
+```rdf
+<Category.name>: string @index(hash) .
+<Product.category>: uid @reverse .
+<Product.description>: string .
+<Product.id>: string @index(hash) .
+<Product.embedding>: float32vector @index(hnsw) .
+```
+
+To apply this schema to our Dgraph instance we can make a POST request to the
+`/alter` endpoint of our Dgraph instance:
+
+```bash
+curl -X POST localhost:8080/alter --silent --data-binary '@dqlschema.txt'
+```
+
+or use the schema tab of the Ratel interface to apply the schema.
+
+## Define Modus mutation function
+
+Now we're ready to create a Modus function to create data in Dgraph. Here we
+create an upsert mutation that creates a product and related category in Dgraph,
+without creating duplicate nodes.
+
+This function uses the embedding model we configured in previous steps to create
+an embedding of the product description and save to the `Product.embedding`
+property.
+
+```ts
+const DGRAPH_CONNECTION = "dgraph-grpc"
+
+/**
+ * Add or update a new product to the database
+ */
+export function upsertProduct(product: Product): Map<string, string> | null {
+  let payload = buildProductMutationJson(DGRAPH_CONNECTION, product)
+
+  const embedding = embedText([product.description])[0]
+  payload = addEmbeddingToJson(payload, "Product.embedding", embedding)
+
+  const mutation = new dgraph.Mutation(payload)
+  const response = dgraph.executeMutations(DGRAPH_CONNECTION, mutation)
+
+  return response.Uids
+}
+```
+
+<Note>
+  Refer to the full code
+  [here](https://github.com/hypermodeinc/modus-recipes/tree/main/dgraph-101) for
+  how to implement other Dgraph mutation and query functions and associated
+  Dgraph helpers.
+</Note>
+
+## Dgraph `similar_to` query function
+
+Next, we create a Modus function that uses Dgraph's `similar_to` query function
+that leverages the vector index to find semantically similar products by
+computing an embedding of the search term and searching for nearby product
+descriptions in vector space.
+
+```ts
+/**
+ * Search products by similarity to a given text
+ */
+export function searchProducts(search: string): Product[] {
+  const embedding = embedText([search])[0]
+  const topK = 3
+  const body = `
+    Product.id
+    Product.description
+    Product.title
+    Product.category {
+      Category.name
+    }
+  `
+  return searchBySimilarity<Product>(
+    DGRAPH_CONNECTION,
+    embedding,
+    "Product.embedding",
+    body,
+    topK,
+  )
+}
+
+export function searchBySimilarity<T>(
+  connection: string,
+  embedding: f32[],
+  predicate: string,
+  body: string,
+  topK: i32,
+): T[] {
+  const query = new dgraph.Query(`
+    query search($vector: float32vector) {
+        var(func: similar_to(${predicate},${topK},$vector))  {
+            vemb as Product.embedding
+            dist as math((vemb - $vector) dot (vemb - $vector))
+            score as math(1 - (dist / 2.0))
+        }
+
+        list(func:uid(score),orderdesc:val(score))  @filter(gt(val(score),0.25)){
+            ${body}
+        }
+    }`).withVariable("$vector", embedding)
+
+  const response = dgraph.executeQuery(connection, query)
+  console.log(response.Json)
+  return JSON.parse<ListOf<T>>(response.Json).list
+}
+```
+
+## Query Modus endpoint
+
+We can run our Modus app using the `modus dev` command which generates a GraphQL
+schema from the functions we've defined and start a local GraphQL endpoint for
+testing and development.
+
+Navigate to `http://localhost:8686/explorer` in your browser and use the Modus
+API Explorer to first insert sample data into Dgraph using the upsert mutation
+function we defined previously and then search for similar products using vector
+search.
+
+First, to create product and category nodes:
+
+```graphql
+mutation ($product: ProductInput!) {
+  upsertProduct(product: $product) {
+    key
+    value
+  }
+}
+```
+
+We'll use the following values for the `product` variable creating three product
+nodes ad their associated category nodes in Dgraph:
+
+| Product ID | Title                   | Description                                                                                        | Category           |
+| ---------- | ----------------------- | -------------------------------------------------------------------------------------------------- | ------------------ |
+| P001       | Solar-Powered Umbrella  | A stylish umbrella with solar panels that charge your devices while you walk.                      | Outdoor Gear       |
+| P002       | Self-Warming Coffee Mug | A mug that keeps your coffee at the perfect temperature using smart heating technology.            | Kitchen Appliances |
+| P003       | Smart Pillow 2.0        | A pillow that tracks your sleep patterns and plays soothing sounds to help you fall asleep faster. | Smart Home         |
+
+![Creating products in Dgraph](images/tutorials/semantic-search/upsert.png)
+
+And then to search for semantically similar products based on a search string we
+can execute the following query, using the value of our search string for the
+`$search` variable.
+
+```graphql
+query ($search: String!) {
+  searchProducts(search: $search) {
+    id
+    title
+    description
+    category {
+      name
+    }
+  }
+}
+```
+
+For example, if we search using the search term "rain":
+
+```graphql
+query {
+  searchProducts(search: "rain") {
+    id
+    title
+    description
+    category {
+      name
+    }
+  }
+}
+```
+
+the product search results returns our solar powered umbrella.
+
+```json
+{
+  "data": {
+    "searchProducts": [
+      {
+        "id": "P001",
+        "title": "Solar-Powered Umbrella",
+        "description": "A stylish umbrella with solar panels that charge your devices while you walk.",
+        "category": {
+          "name": "Outdoor Gear"
+        }
+      }
+    ]
+  }
+}
+```
+
+Even though the description of the solar powered umbrella doesn't include the
+word "rain" thanks to the meaning encoded into the embedding our semantic search
+process understands the association between rain and umbrella.
+
+## Next steps
+
+Now that we've implemented semantic search using Dgraph, Modus, and Hypermode
+hosted models using the local development experience we're ready to take the
+next step and deploy our project to Hypermode. See the [Deploy Project](deploy)
+section for a walk through of this process.
+
+## Resources
+
+- You can find the full code for this example in the
+  [Modus Recipes](https://github.com/hypermodeinc/modus-recipes) GitHub
+  repository:
+  [https://github.com/hypermodeinc/modus-recipes/tree/main/dgraph-101](https://github.com/hypermodeinc/modus-recipes/tree/main/dgraph-101)
+- Watch a video overview of this tutorial in the
+  [Hypermode YouTube channel](https://www.youtube.com/@hypermodeinc):
+  [https://www.youtube.com/watch?v=Z2fB-nBf4Wo](https://www.youtube.com/watch?v=Z2fB-nBf4Wo)
