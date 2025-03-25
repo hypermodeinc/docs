@@ -48,6 +48,123 @@ real-time use cases.
   </Card>
 </CardGroup>
 
+## Start Building
+
+Getting started with Dgraph is simple and straightforward.
+
+Follow these steps to deploy your graph and run your first query. Use a
+serverless graph on the Hypermode platform or start locally via Docker.
+
+<Tabs>
+  <Tab title="On Hypermode">
+    <Steps>
+
+      <Step title="Sign in to Hypermode and create your first graph">
+      Graphs on Hypermode provides a fully managed Dgraph service for building and deploying knowledge graphs.
+       Learn more about Graphs on Hypermode in the [Hypermode Graphs documentation](/graphs/overview).
+
+        To get started navigate to [`https://hypermode.com/sign-in`](https://hypermode.com/sign-in) and sign-in to Hypermode to create your account. You'll also be prompted to create a workspace and to create a graph.
+
+        ![](/images/dgraph/overview/create-graph.png)
+
+        After your graph is provisioned, you can select it from the Workspace overview page to view the details for your graph.
+
+        ![](/images/dgraph/overview/workspace-overview.png)
+
+        Here you can see the details for each graph, including the connection string and API Key used to connect to your graph.
+
+        ![](/images/dgraph/overview/hypermode1.png)
+
+        We'll use this connection string in the next step to connect our graph instance to the Ratel graph client and run our first query.
+      </Step>
+      <Step title="Connect Ratel">
+        Ratel is a web-based UI dashboard for interacting with Dgraph using Dgraph's query language, [DQL](./glossary#DQL)
+        We'll use Ratel to run our first query and visualize the results.
+
+        Navigate to the hosted version of Ratel at [`https://ratel.hypermode.com`](https://ratel.hypermode.com) and enter your graph connection string from the previous step for the "Dgraph Alpha URL".
+        This will allow Ratel to connect to your graph and execute DQL queries.
+
+
+          ![](/images/dgraph/overview/hypermode-ratel-1.png)
+
+
+      </Step>
+      <Step title="Query your graph">
+         Now we're ready to query our graph. We'll use a simple DQL query to verify Ratel is connected to our instance.
+
+        Run the following query in Ratel:
+
+        ```dql
+        schema {}
+        ```
+
+        This will return a representation of the data stored in Dgraph, even if the graph is empty.
+
+        ![](/images/dgraph/overview/ratel_query_hypermode.png)
+
+        Now that we've created a Hypermode Graph and run our first DQL query see [how to use DQL to create data in Dgraph,
+        traverse the graph, and build applications using Dgraph clients](/dgraph/quickstart).
+      </Step>
+    </Steps>
+
+  </Tab>
+  <Tab title="Locally">
+    <Steps>
+      <Step title="Run Dgraph with Docker">
+        The [`dgraph/standalone`](https://hub.docker.com/r/dgraph/standalone) Docker image has everything needed to run Dgraph locally.
+
+        Ensure you have [Docker installed](https://www.docker.com/), then run the following command to start a local Dgraph instance:
+
+        ```bash
+        docker run --rm -it -p 8080:8080 -p 9080:9080 dgraph/standalone:latest
+        ```
+
+        This will create a local Dgraph instance and expose the ports necessary to connect to Dgraph via HTTP and gRPC. Specifically:
+
+        * `docker run` - initiates a new Docker container
+        * `--rm` - automatically removes the container when it exits, helping with cleanup
+        * `-it` - uses interactive mode to show output of the container
+        * `-p 8080:8080` - maps port 8080 from the host machine to port 8080 in the Docker container to allow Dgraph HTTP connections
+        * `-p 9080:9080` - maps port 9080 from the host machine to port 9080 in the Docker container to allow Dgraph gRPC connections
+        * `dgraph/standalone:latest` - specifies the Docker image to use, this is the official Dgraph image with latest tag
+      </Step>
+      <Step title="Connect Ratel">
+        Ratel is a web-based UI dashboard for interacting with Dgraph using Dgraph's query language,[DQL](./glossary#DQL)
+
+        Navigate to the hosted version of Ratel at `https://ratel.hypermode.com` and enter `http://localhost:8080` for the "Dgraph Alpha URL".
+        This will allow Ratel to connect to our local Dgraph instance and execute DQL queries.
+
+           ![Setting up Ratel](/images/dgraph/overview/ratel.png)
+
+        <Note>
+        You can also run Ratel locally by running the `dgraph/ratel` container with the following command:
+        ```bash
+        docker run --rm -it -p 8000:8000 dgraph/ratel:latest
+        ```
+        </Note>
+
+      </Step>
+      <Step title="Query your graph">
+        Now we're ready to query our local Dgraph instance. We'll use a simple DQL query to verify Ratel is connected to our instance.
+
+        Run the following query in Ratel:
+
+        ```dql
+        schema {}
+        ```
+
+        This will return a representation of the data stored in Dgraph, even if the graph is empty.
+
+        ![](/images/dgraph/overview/ratel_query.png)
+
+        Now that we've created a local Dgraph instance and run our first DQL query see [how to use DQL to create data in Dgraph,
+        traverse the graph, and build applications using Dgraph clients](/dgraph/quickstart)
+      </Step>
+    </Steps>
+
+  </Tab>
+</Tabs>
+
 ## More Resources
 
 <CardGroup cols={3}>
