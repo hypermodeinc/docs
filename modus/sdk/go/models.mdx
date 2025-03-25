@@ -96,13 +96,13 @@ type Model[TIn, TOut any] interface {
 <ResponseField name="TIn" required>
   The type of the input data for the model. This can be any type, including a
   custom type defined in your project. It should match the shape of the data
-  expected by the model. It's usually a struct.
+  expected by the model. It is usually a struct.
 </ResponseField>
 
 <ResponseField name="TOut" required>
   The type of the output data from the model. This can be any type, including a
   custom type defined in your project. It should match the shape of the data
-  returned by the model. It's usually a struct.
+  returned by the model. It is usually a struct.
 </ResponseField>
 
 <ResponseField name="Info()" type="method">
@@ -138,13 +138,13 @@ func (ModelBase[TIn, TOut]) Invoke(input *TIn) (*TOut, error)
 <ResponseField name="TIn" required>
   The type of the input data for the model. This can be any type, including a
   custom type defined in your project. It should match the shape of the data
-  expected by the model. It's usually a struct.
+  expected by the model. It is usually a struct.
 </ResponseField>
 
 <ResponseField name="TOut" required>
   The type of the output data from the model. This can be any type, including a
   custom type defined in your project. It should match the shape of the data
-  returned by the model. It's usually a struct.
+  returned by the model. It is usually a struct.
 </ResponseField>
 
 <ResponseField name="Debug" type="bool">
@@ -164,8 +164,8 @@ func (ModelBase[TIn, TOut]) Invoke(input *TIn) (*TOut, error)
 
 #### ModelInfo
 
-Information about a model that's used to construct a `Model` instance. It's also
-available from a method on the `Model` interface.
+Information about a model that's used to construct a `Model` instance. It is
+also available from a method on the `Model` interface.
 
 <Info>
 

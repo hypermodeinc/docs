@@ -48,7 +48,6 @@ CLI|cli
 const
 CRUD
 Debugf
-Dgraph|dgraph
 DQL
 embeddable
 Errorf
@@ -82,3 +81,51 @@ UUID
 Warnf
 WASM
 waitlist
+
+# Dgraph terms
+Alpha
+ACLs
+ACID
+Bulk Loader
+CloudWatch
+dateTime
+dgo
+[Dd]graph
+Dgraph Cloud
+dgraph4j
+enum|enums
+gzip
+Grafana
+Jaeger
+Live Loader
+MinIO
+NoConflict
+pprof
+pydgraph
+Ratel
+[Ss]harding
+[Ss]harded
+S3
+subgraph
+tablet
+UID|UIDs
+[Uu]psert|[Uu]pserts
+Zero
+
+# Badger terms
+Badger
+SSTables
+
+# General
+[Aa]dmin
+CPU
+CSV
+Docker Compose
+func
+goroutine|goroutines
+Helm
+JWT
+nullable
+prefetch|prefetches
+vCPU|vCPUs
+WebSocket
