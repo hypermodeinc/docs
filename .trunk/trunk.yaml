@@ -2,7 +2,7 @@
 version: 0.1
 
 cli:
-  version: 1.22.10
+  version: 1.22.11
 
 plugins:
   sources:
@@ -18,21 +18,21 @@ runtimes:
 
 lint:
   enabled:
-    - renovate@39.181.0
-    - golangci-lint@1.64.5
-    - vale@3.9.5
+    - renovate@39.210.1
+    - golangci-lint@1.64.8
+    - vale@3.10.0
     - actionlint@1.7.7
-    - checkov@3.2.377
+    - checkov@3.2.390
     - git-diff-check
     - markdownlint@0.44.0
     - oxipng@9.1.4
-    - prettier@3.5.2:
+    - prettier@3.5.3:
         packages:
           - "@mintlify/prettier-config@1.0.6"
     - svgo@3.3.2
-    - trivy@0.59.1
-    - trufflehog@3.88.13
-    - yamllint@1.35.1
+    - trivy@0.60.0
+    - trufflehog@3.88.18
+    - yamllint@1.36.2
   ignore:
     - linters: [ALL]
       paths:
