@@ -405,34 +405,6 @@
                   "dgraph/enterprise/learner-nodes",
                   "dgraph/enterprise/multitenancy"
                 ]
-              },
-              {
-                "group": "Dgraph Cloud",
-                "pages": [
-                  "dgraph/cloud/overview",
-                  "dgraph/cloud/provision-backend",
-                  "dgraph/cloud/authentication",
-                  "dgraph/cloud/anonymous-access",
-                  "dgraph/cloud/schema",
-                  "dgraph/cloud/schema-modes",
-                  "dgraph/cloud/advanced-queries",
-                  "dgraph/cloud/monitoring",
-                  "dgraph/cloud/drop-data",
-                  "dgraph/cloud/clone",
-                  "dgraph/cloud/multitenancy",
-                  "dgraph/cloud/import-export",
-                  {
-                    "group": "Cloud API",
-                    "pages": [
-                      "dgraph/cloud/api/overview",
-                      "dgraph/cloud/api/authentication",
-                      "dgraph/cloud/api/backend",
-                      "dgraph/cloud/api/schema",
-                      "dgraph/cloud/api/backup",
-                      "dgraph/cloud/api/lambda"
-                    ]
-                  }
-                ]
               }
             ]
           }
