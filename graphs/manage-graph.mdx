@@ -1,0 +1,60 @@
+---
+title: Manage Graph
+description: Manage your graph's resources and configuration
+---
+
+## Region availability
+
+Graphs on Hypermode are available in the following regions:
+
+| Region | Location              |
+| :----- | :-------------------- |
+| `iad1` | Washington, D.C., USA |
+| `pdx1` | Portland, Oregon, USA |
+
+Additional regions are planned to be available in the near future:
+
+- Frankfurt, Germany
+- Dublin, Ireland
+- Singapore
+
+## Scaling
+
+Graph compute is measured in gigabytes (GB) of memory, with 1 vCPU allocated per
+4 gigabytes of memory. On Hypermode, you're charged for the compute allocated to
+your graph, billed to the second. That means when your graph is scaled to zero,
+you're only billed for the underlying storage.
+
+### Scale to zero
+
+By default, new graphs scale to zero after five minutes of inactivity. When a
+new query or mutation is received, the graph scales up and process that request.
+
+You can configure the scaling behavior for your graph by increasing the idle
+period. Set the idle period to `0` to turn off scale to zero.
+
+### Autoscaling
+
+Autoscaling is a feature that automatically scales your graph based on the
+compute and memory load. When under sustained load, the graph scales up to
+handle the additional load. When the load subsides, the graph scales down
+automatically.
+
+You can configure the autoscaling behavior for your graph by setting the `min`
+and `max` values. The `min` value is the minimum number of compute units the
+graph has, and the `max` value is the maximum number of compute units the graph
+can scale to.
+
+### Storage
+
+You are billed only for the storage used by your graph. The storage is
+automatically provisioned and expanded based on the growth of data within your
+graph.
+
+## Backups
+
+Your graph on Hypermode is automatically backed up every four hours, with
+backups stored with zonal isolation. To restore your graph to a previous state,
+please reach out to support via the console.
+
+<Note>User control of backup frequency and restore is coming soon.</Note>

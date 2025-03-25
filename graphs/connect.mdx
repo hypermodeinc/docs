@@ -1,4 +1,55 @@
 ---
 title: Connect to Graph
-description: ...
+description: Connect to your graph from a SDK, IDE, or Modus
 ---
+
+## Connection strings
+
+A connection string is a URL that contains all of the necessary information to
+connect to your graph from a Dgraph client or Modus. It is displayed after you
+deploy your graph.
+
+## Authentication
+
+Your graph endpoint is protected by bearer token authorization passed in the
+`Authorization` header as an API key. You can find your API key in the console
+alongside your graph connection details. The API key is already included in the
+connection string.
+
+<Warning>
+  If you remove your API key from your graph, it is made publicly accessible
+  with no authentication.
+</Warning>
+
+## Clients
+
+Dgraph includes a web client and language-specific SDKs for programmatically
+working with your graph. When using the auto-generated GraphQL API, you can use
+any GraphQL client to work with your graph.
+
+### Ratel
+
+Dgraph includes Ratel, a web client for easily connecting to and exploring your
+graph. Ratel is available hosted at https://ratel.hypermode.com. To connect to
+your graph, paste your connection string into the Ratel interface and click
+`Connect`.
+
+### Dgraph SDKs
+
+Dgraph SDKs are available for a number of languages, including
+[Go](/dgraph/sdks/go), [Python](/dgraph/sdks/python), [Java](/dgraph/sdks/java),
+and [JavaScript](/dgraph/sdks/javascript). The SDKs have been updated to support
+the connection string for connecting to your graph on Hypermode. Ensure you're
+running the latest version of the SDK for your language.
+
+### GraphQL clients
+
+When working with your graph through the auto-generated GraphQL API, you can use
+any [GraphQL IDE or client](/dgraph/graphql/connecting) to connect to your
+graph.
+
+### Modus
+
+Modus provides a framework for integrating data from your graph into a complete
+AI-ready backend. Learn more on
+[connecting Modus to your graph](/modus/data-fetching#dgraph).

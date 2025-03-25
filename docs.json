@@ -25,7 +25,7 @@
               "graphs/connect",
               "graphs/manage-schema",
               "graphs/manage-data",
-              "graphs/backups"
+              "graphs/manage-graph"
             ]
           },
           {
