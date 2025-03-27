@@ -216,7 +216,9 @@ You can access Azure Blob Storage locally using one of these methods:
 
 - Using
   [MinIO Azure Gateway](https://docs.min.io/docs/minio-gateway-for-azure.html)
-  with the [MinIO Helm chart](https://github.com/minio/charts) for Kubernetes:
+  with the
+  [MinIO Helm chart](https://github.com/minio/minio/tree/master/helm/minio) for
+  Kubernetes:
 
   ```sh
   helm repo add minio https://helm.min.io/
@@ -237,9 +239,7 @@ You can use [Google Cloud Storage](https://cloud.google.com/storage) through the
 
 - Create
   [storage buckets](https://cloud.google.com/storage/docs/creating-buckets)
-- Create a Service Account key for GCS and get a credentials file. For more
-  information, see
-  [Create a Service Account key](https://github.com/minio/minio/blob/master/docs/gateway/gcs.md#11-create-a-service-account-ey-for-gcs-and-get-the-credentials-file).
+- Create a Service Account key for GCS and get a credentials file
 
 When you have a `credentials.json`, you can access GCS locally using one of
 these methods:
@@ -268,7 +268,9 @@ these methods:
   ```
 
 - Using [MinIO GCS Gateway](https://docs.min.io/docs/minio-gateway-for-gcs.html)
-  with the [MinIO Helm chart](https://github.com/minio/charts) for Kubernetes:
+  with the
+  [MinIO Helm chart](https://github.com/minio/minio/tree/master/helm/minio) for
+  Kubernetes:
 
   ```sh
   ## create MinIO Helm config
