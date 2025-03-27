@@ -8,6 +8,9 @@
     "dark": "#CC00BE"
   },
   "favicon": "favicon.png",
+  "banner": {
+    "content": "🚀 [Developer Preview: Hypermode Graphs](https://hypermode.com/sign-in)"
+  },
   "navigation": {
     "tabs": [
       {
@@ -437,12 +440,7 @@
         "label": "Blog",
         "href": "https://hypermode.com/blog"
       }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Start free",
-      "href": "https://hypermode.com/sign-up"
-    }
+    ]
   },
   "footer": {
     "socials": {
