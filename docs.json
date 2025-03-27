@@ -13,7 +13,7 @@
       "anchors": [
         {
           "anchor": "Hypermode Agents (waitlist)",
-          "icon": "rectangle-code",
+          "icon": "code-simple",
           "color": {
             "light": "#FF00EE",
             "dark": "#CC00BE"
