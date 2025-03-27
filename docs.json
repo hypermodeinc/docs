@@ -477,21 +477,7 @@
       "youtube": "https://www.youtube.com/@hypermodeinc",
       "x": "https://x.com/hypermodeinc",
       "linkedin": "https://www.linkedin.com/company/hypermode"
-    },
-    "links": [
-      {
-        "items": [
-          {
-            "label": "Status",
-            "href": "https://status.hypermode.com"
-          },
-          {
-            "label": "Blog",
-            "href": "https://hypermode.com/blog"
-          }
-        ]
-      }
-    ]
+    }
   },
   "integrations": {
     "fathom": {
