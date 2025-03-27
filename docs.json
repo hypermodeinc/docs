@@ -9,9 +9,31 @@
   },
   "favicon": "favicon.png",
   "banner": {
-    "content": "🚀 [Developer Preview: Hypermode Graphs](https://hypermode.com/sign-in)"
+    "content": "🚀 [Start your next project with the developer preview of Hypermode Graphs](https://hypermode.com/sign-in)"
   },
   "navigation": {
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Dev Preview: Hypermode Graphs",
+          "icon": "chart-network",
+          "color": {
+            "light": "#FF00EE",
+            "dark": "#CC00BE"
+          },
+          "href": "https://hypermode.com/sign-in"
+        },
+        {
+          "anchor": "Dgraph Cloud",
+          "icon": "cloud",
+          "color": {
+            "light": "#FF00EE",
+            "dark": "#CC00BE"
+          },
+          "href": "https://cloud.dgraph.io"
+        }
+      ]
+    },
     "tabs": [
       {
         "tab": "Hypermode",
@@ -449,7 +471,21 @@
       "youtube": "https://www.youtube.com/@hypermodeinc",
       "x": "https://x.com/hypermodeinc",
       "linkedin": "https://www.linkedin.com/company/hypermode"
-    }
+    },
+    "links": [
+      {
+        "items": [
+          {
+            "label": "Status",
+            "href": "https://status.hypermode.com"
+          },
+          {
+            "label": "Blog",
+            "href": "https://hypermode.com/blog"
+          }
+        ]
+      }
+    ]
   },
   "integrations": {
     "fathom": {
