@@ -8,14 +8,20 @@
     "dark": "#CC00BE"
   },
   "favicon": "favicon.png",
-  "banner": {
-    "content": "🚀 [Start your next project with the developer preview of Hypermode Graphs](https://hypermode.com/sign-in)"
-  },
   "navigation": {
     "global": {
       "anchors": [
         {
-          "anchor": "Dev Preview: Hypermode Graphs",
+          "anchor": "Hypermode Agents (waitlist)",
+          "icon": "rectangle-code",
+          "color": {
+            "light": "#FF00EE",
+            "dark": "#CC00BE"
+          },
+          "href": "https://hypermode.com/sign-in"
+        },
+        {
+          "anchor": "Hypermode Graphs (preview)",
           "icon": "chart-network",
           "color": {
             "light": "#FF00EE",
