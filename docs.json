@@ -9,6 +9,37 @@
   },
   "favicon": "favicon.png",
   "navigation": {
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Hypermode Agents (waitlist)",
+          "icon": "code-simple",
+          "color": {
+            "light": "#FF00EE",
+            "dark": "#CC00BE"
+          },
+          "href": "https://hypermode.typeform.com/agentswaitlist"
+        },
+        {
+          "anchor": "Hypermode Graphs (preview)",
+          "icon": "chart-network",
+          "color": {
+            "light": "#FF00EE",
+            "dark": "#CC00BE"
+          },
+          "href": "https://hypermode.com/sign-in"
+        },
+        {
+          "anchor": "Dgraph Cloud",
+          "icon": "cloud",
+          "color": {
+            "light": "#FF00EE",
+            "dark": "#CC00BE"
+          },
+          "href": "https://cloud.dgraph.io"
+        }
+      ]
+    },
     "tabs": [
       {
         "tab": "Hypermode",
@@ -437,12 +468,7 @@
         "label": "Blog",
         "href": "https://hypermode.com/blog"
       }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Start free",
-      "href": "https://hypermode.com/sign-up"
-    }
+    ]
   },
   "footer": {
     "socials": {
