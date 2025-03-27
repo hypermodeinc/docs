@@ -19,10 +19,10 @@ Badger’s design is based on a paper titled
 The following blog posts are a great starting point for learning more about
 Badger and the underlying design principles:
 
-- [Introducing Badger: A fast key-value store written natively in Go](https://dgraph.io/blog/post/badger/)
-- [Make Badger crash resilient with ALICE](https://dgraph.io/blog/post/alice/)
-- [Badger vs LMDB vs BoltDB: Benchmarking key-value databases in Go](https://dgraph.io/blog/post/badger-lmdb-boltdb/)
-- [Concurrent ACID Transactions in Badger](https://dgraph.io/blog/post/badger-txn/)
+- [Introducing Badger: A fast key-value store written natively in Go](https://hypermode.com/blog/badger/)
+- [Make Badger crash resilient with ALICE](https://hypermode.com/blog/alice/)
+- [Badger vs LMDB vs BoltDB: Benchmarking key-value databases in Go](https://hypermode.com/blog/badger-lmdb-boltdb/)
+- [Concurrent ACID Transactions in Badger](https://hypermode.com/blog/badger-txn/)
 
 ## Comparisons
 
@@ -50,7 +50,7 @@ specifically for rotating disks. As such RocksDB's design isn't aimed at SSDs.
 
 <sup>3</sup> SSI: Serializable Snapshot Isolation. For more details, see the
 blog post [Concurrent ACID Transactions in
-Badger](https://dgraph.io/blog/post/badger-txn/)
+Badger](https://hypermode.com/blog/badger-txn/)
 
 <sup>4</sup> Badger provides direct access to value versions via its Iterator
 API. Users can also specify how many versions to keep per key via Options.
