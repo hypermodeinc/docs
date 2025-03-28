@@ -30,35 +30,33 @@ In this section we'll create a new graph, then we'll connect our new graph to
 
 <Tabs>
   <Tab title="On Hypermode">
+  <Steps>
+    <Step title="Sign in to Hypermode and create your workspace">
 
-<Steps>
+      Open [`hypermode.com/go`](https://hypermode.com/go) in your web browser and sign
+      in to Hypermode to create your account.
 
-<Step title="Sign in to Hypermode and create your workspace">
+      After signing in you'll be prompted to choose a name for your workspace.
 
-Open [`hypermode.com/go`](https://hypermode.com/go) in your web browser and sign
-in to Hypermode to create your account.
+      ![Create your Hypermode workspace](/images/dgraph/quickstart/create-workspace.png)
 
-After signing in you'll be prompted to choose a name for your workspace.
+      Enter a name for your workspace and then select **Create workspace**.
 
-![Create your Hypermode workspace](/images/dgraph/quickstart/create-workspace.png)
+    </Step>
 
-Enter a name for your workspace and then select **Create workspace**.
+  <Step title="Create your graph">
 
-</Step>
+    After creating your Hypermode workspace you'll be prompted to create your first
+    graph.
 
-<Step title="Create your graph">
+    ![Create your first Hypermode graph](/images/dgraph/quickstart/create-graph-2.png)
 
-After creating your Hypermode workspace you'll be prompted to create your first
-graph.
+    Enter a name for your graph and choose the hosting location, then select
+    **Create graph**.
 
-![Create your first Hypermode graph](/images/dgraph/quickstart/create-graph-2.png)
+    </Step>
 
-Enter a name for your graph and choose the hosting location, then select
-**Create graph**.
-
-</Step>
-
-<Step title="View your graph details">
+  <Step title="View your graph details">
 
 Once your graph is created you'll see the graph details including its status,
 connection string, and API key.
@@ -71,9 +69,9 @@ via Dgraph clients such as Ratel or language SDKs.
 Click on the copy icon next to the connection string to copy the Dgraph
 connection string.
 
-</Step>
+  </Step>
 
-<Step title="Connect the Ratel graph client">
+  <Step title="Connect the Ratel graph client">
 
 Ratel is a web-based Dgraph client for interacting with your graph. We'll use
 Ratel to execute DQL queries and update the graph schema.
@@ -92,10 +90,10 @@ results of these operations, including visualizing graph data.
 
 Now we're ready to add data to our graph.
 
-</Step>
+  </Step>
 
-</Steps>
-</Tab>
+  </Steps>
+    </Tab>
 
 <Tab title="Locally"><Steps>
       <Step title="Run Dgraph with Docker">
@@ -155,9 +153,9 @@ With Dgraph, we use **triples** to describe each piece of our graph, which when
 combined together make up our property graph. Triples are composed of a subject,
 predicate, and object.
 
-```text
-<subject> <predicate> <object> .
-```
+      ```text
+      <subject> <predicate> <object> .
+      ```
 
 The subject always refers to a [node](./glossary#node),
 [predicates](./glossary#predicate) can be a relationship or property, and the
@@ -178,46 +176,46 @@ The create, update, and delete operations in Dgraph are called mutations.
 In the Ratel **Console** page, select the **Mutate** tab, then paste the
 following mutation:
 
-```dql
-{
-  set {
+      ```dql
+      {
+        set {
 
-    _:scifi <dgraph.type> "Genre" .
-    _:scifi <Genre.name> "Sci-Fi" .
+          _:scifi <dgraph.type> "Genre" .
+          _:scifi <Genre.name> "Sci-Fi" .
 
-    _:starwars <dgraph.type> "Movie" .
-    _:starwars <Movie.title> "Star Wars: Episode IV - A New Hope" .
-    _:starwars <Movie.release_date> "1977-05-25"^^<xs:dateTime> .
+          _:starwars <dgraph.type> "Movie" .
+          _:starwars <Movie.title> "Star Wars: Episode IV - A New Hope" .
+          _:starwars <Movie.release_date> "1977-05-25"^^<xs:dateTime> .
 
 
-    _:startrek <dgraph.type> "Movie" .
-    _:startrek <Movie.title> "Star Trek: The Motion Picture" .
-    _:startrek <Movie.release_date> "1979-12-07"^^<xs:dateTime> .
+          _:startrek <dgraph.type> "Movie" .
+          _:startrek <Movie.title> "Star Trek: The Motion Picture" .
+          _:startrek <Movie.release_date> "1979-12-07"^^<xs:dateTime> .
 
-    _:george <dgraph.type> "Person" .
-    _:george <Person.name> "George Lucas" .
+          _:george <dgraph.type> "Person" .
+          _:george <Person.name> "George Lucas" .
 
-    _:luke <dgraph.type> "Character" .
-    _:luke <Character.name> "Luke Skywalker" .
+          _:luke <dgraph.type> "Character" .
+          _:luke <Character.name> "Luke Skywalker" .
 
-    _:leia <dgraph.type> "Character" .
-    _:leia <Character.name> "Princess Leia" .
+          _:leia <dgraph.type> "Character" .
+          _:leia <Character.name> "Princess Leia" .
 
-    _:han <dgraph.type> "Character" .
-    _:han <Character.name> "Han Solo" .
+          _:han <dgraph.type> "Character" .
+          _:han <Character.name> "Han Solo" .
 
-    _:starwars <Movie.genre> _:scifi .
-    _:startrek <Movie.genre> _:scifi .
+          _:starwars <Movie.genre> _:scifi .
+          _:startrek <Movie.genre> _:scifi .
 
-    _:starwars <Movie.director> _:george .
+          _:starwars <Movie.director> _:george .
 
-    _:starwars <Movie.character> _:luke .
-    _:starwars <Movie.character> _:leia .
-    _:starwars <Movie.character> _:han .
+          _:starwars <Movie.character> _:luke .
+          _:starwars <Movie.character> _:leia .
+          _:starwars <Movie.character> _:han .
 
-  }
-}
-```
+        }
+      }
+      ```
 
 The preceding DQL mutation uses
 [N-Quad RDF format](/dgraph/dql/rdf#n-quads-format) to define the triples that
@@ -230,23 +228,24 @@ make up the property graph we want to create.
 Select **Run** to execute the mutation. In the JSON tab we can see the result of
 this mutation.
 
-```json
-{
-  "data": {
-    "code": "Success",
-    "message": "Done",
-    "queries": null,
-    "uids": {
-      "george": "0x4",
-      "han": "0x7",
-      "leia": "0x6",
-      "luke": "0x5",
-      "scifi": "0x1",
-      "startrek": "0x3",
-      "starwars": "0x2"
-    }
-  }, ...
-```
+      ```json
+      {
+        "data": {
+          "code": "Success",
+          "message": "Done",
+          "queries": null,
+          "uids": {
+            "george": "0x4",
+            "han": "0x7",
+            "leia": "0x6",
+            "luke": "0x5",
+            "scifi": "0x1",
+            "startrek": "0x3",
+            "starwars": "0x2"
+          }
+        }
+      }
+      ```
 
 Dgraph displays the universal identifiers ([UID](/dgraph/glossary#uid)) of the
 nodes that were created.
@@ -261,22 +260,22 @@ nodes that were created.
 
 In the **Console** page, select the **Query** tab and run this query:
 
-```dql
-{
-  movies(func: type(Movie)) {
-    Movie.title
-    Movie.genre {
-       Genre.name
-     }
-    Movie.director {
-      Person.name
-    }
-    Movie.character {
-      Character.name
-    }
-  }
-}
-```
+      ```dql
+      {
+        movies(func: type(Movie)) {
+          Movie.title
+          Movie.genre {
+            Genre.name
+          }
+          Movie.director {
+            Person.name
+          }
+          Movie.character {
+            Character.name
+          }
+        }
+      }
+      ```
 
 This query searches for all `Movie` nodes as the start of the traversal using
 the `type(Movie)` function to define the starting point of our query traversal,
@@ -288,46 +287,46 @@ then finds any genres, directors, and characters connected to each movie.
 
 In Ratel's JSON tab we can view the results of this query as JSON:
 
-```JSON
-{
-  "data": {
-    "movies": [
+      ```json
       {
-        "Movie.title": "Star Wars: Episode IV - A New Hope",
-        "Movie.genre": [
-          {
-            "Genre.name": "Sci-Fi"
-          }
-        ],
-        "Movie.director": [
-          {
-            "Person.name": "George Lucas"
-          }
-        ],
-        "Movie.character": [
-          {
-            "Character.name": "Luke Skywalker"
-          },
-          {
-            "Character.name": "Princess Leia"
-          },
-          {
-            "Character.name": "Han Solo"
-          }
-        ]
-      },
-      {
-        "Movie.title": "Star Trek: The Motion Picture",
-        "Movie.genre": [
-          {
-            "Genre.name": "Sci-Fi"
-          }
-        ]
+        "data": {
+          "movies": [
+            {
+              "Movie.title": "Star Wars: Episode IV - A New Hope",
+              "Movie.genre": [
+                {
+                  "Genre.name": "Sci-Fi"
+                }
+              ],
+              "Movie.director": [
+                {
+                  "Person.name": "George Lucas"
+                }
+              ],
+              "Movie.character": [
+                {
+                  "Character.name": "Luke Skywalker"
+                },
+                {
+                  "Character.name": "Princess Leia"
+                },
+                {
+                  "Character.name": "Han Solo"
+                }
+              ]
+            },
+            {
+              "Movie.title": "Star Trek: The Motion Picture",
+              "Movie.genre": [
+                {
+                  "Genre.name": "Sci-Fi"
+                }
+              ]
+            }
+          ]
+        }
       }
-    ]
-  }
-}
-```
+      ```
 
 In the response panel, Select **Graph** to view a graph visualization of the
 results of our query:
@@ -389,51 +388,51 @@ before 1979.
 
 In the **Console** page select the **Query** tab and run this query:
 
-```dql
-{
-  movieSearch(func: allofterms(Movie.title, "Star"), orderasc: Movie.release_date) @filter(lt(Movie.release_date, "1979")) {
-    Movie.title
-    Movie.release_date
-    Movie.director {
-     Person.name
-    }
-    Movie.character (orderasc: Character.name) {
-     Character.name
-    }
-  }
-}
-```
+      ```dql
+      {
+        movieSearch(func: allofterms(Movie.title, "Star"), orderasc: Movie.release_date) @filter(lt(Movie.release_date, "1979")) {
+          Movie.title
+          Movie.release_date
+          Movie.director {
+          Person.name
+          }
+          Movie.character (orderasc: Character.name) {
+          Character.name
+          }
+        }
+      }
+      ```
 
 We can see the JSON result in the JSON tab:
 
-```JSON
-{
-  "data": {
-    "movieSearch": [
+      ```JSON
       {
-        "Movie.title": "Star Wars: Episode IV - A New Hope",
-        "Movie.release_date": "1977-05-25T00:00:00Z",
-        "Movie.director": [
-          {
-            "Person.name": "George Lucas"
-          }
-        ],
-        "Movie.character": [
-          {
-            "Character.name": "Han Solo"
-          },
-          {
-            "Character.name": "Luke Skywalker"
-          },
-          {
-            "Character.name": "Princess Leia"
-          }
-        ]
+        "data": {
+          "movieSearch": [
+            {
+              "Movie.title": "Star Wars: Episode IV - A New Hope",
+              "Movie.release_date": "1977-05-25T00:00:00Z",
+              "Movie.director": [
+                {
+                  "Person.name": "George Lucas"
+                }
+              ],
+              "Movie.character": [
+                {
+                  "Character.name": "Han Solo"
+                },
+                {
+                  "Character.name": "Luke Skywalker"
+                },
+                {
+                  "Character.name": "Princess Leia"
+                }
+              ]
+            }
+          ]
+        }
       }
-    ]
-  }
-}
-```
+      ```
 
 And also view the graph visualization of the result in the Graph tab:
 
@@ -471,38 +470,38 @@ traverse from a genre node to a movie node we use the syntax `~Movie.genre`.
 
 In this query we find all movies connected to the "Sci-Fi" genre:
 
-```dql
-{
-  genreSearch(func: type(Genre)) {
-    Genre.name
-    movies: ~Movie.genre {
-      Movie.title
-    }
-  }
-}
-```
+      ```dql
+      {
+        genreSearch(func: type(Genre)) {
+          Genre.name
+          movies: ~Movie.genre {
+            Movie.title
+          }
+        }
+      }
+      ```
 
 Note that we can also alias the field name to "movies" in our result JSON using
 the syntax `movies: ~Movie.genre`.
 
-```json
-{
-  "data": {
-    "genreSearch": [
+      ```json
       {
-        "Genre.name": "Sci-Fi",
-        "movies": [
-          {
-            "Movie.title": "Star Wars: Episode IV - A New Hope"
-          },
-          {
-            "Movie.title": "Star Trek: The Motion Picture"
-          }
-        ]
-      }
-    ]
-  }
-```
+        "data": {
+          "genreSearch": [
+            {
+              "Genre.name": "Sci-Fi",
+              "movies": [
+                {
+                  "Movie.title": "Star Wars: Episode IV - A New Hope"
+                },
+                {
+                  "Movie.title": "Star Trek: The Motion Picture"
+                }
+              ]
+            }
+          ]
+        }
+      ```
 
 </Step>
 
