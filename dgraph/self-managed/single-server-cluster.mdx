@@ -35,14 +35,14 @@ You can install a single server Dgraph cluster in Kubernetes.
    ```
 
    After your Kubernetes cluster is up, you can use
-   [dgraph-single.yaml](https://github.com/hypermodeinc/dgraph/blob/main/contrib/config/kubernetes/dgraph-single/dgraph-single.yaml)
+   [dgraph-single.yaml](https://github.com/hypermodeinc/dgraph/blob/master/contrib/config/kubernetes/dgraph-single/dgraph-single.yaml)
    to start a Zero, Alpha, and Ratel UI services.
 
 2. Start a StatefulSet that creates a single Pod with `Zero`, `Alpha`, and
    `Ratel UI`:
 
    ```sh
-   kubectl create --filename https://raw.githubusercontent.com/hypermodeinc/dgraph/main/contrib/config/kubernetes/dgraph-single/dgraph-single.yaml
+   kubectl create --filename https://raw.githubusercontent.com/hypermodeinc/dgraph/master/contrib/config/kubernetes/dgraph-single/dgraph-single.yaml
    ```
 
    An output similar to this appears:
@@ -96,6 +96,6 @@ You can install a single server Dgraph cluster in Kubernetes.
 Delete all the resources using:
 
 ```sh
-kubectl delete --filename https://raw.githubusercontent.com/hypermodeinc/dgraph/main/contrib/config/kubernetes/dgraph-single/dgraph-single.yaml
+kubectl delete --filename https://raw.githubusercontent.com/hypermodeinc/dgraph/master/contrib/config/kubernetes/dgraph-single/dgraph-single.yaml
 kubectl delete persistentvolumeclaims --selector app=dgraph
 ```
