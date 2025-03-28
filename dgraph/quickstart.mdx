@@ -7,186 +7,467 @@ import DgraphWIP from "/snippets/dgraph-wip.mdx"
 
 <DgraphWIP />
 
-This is a quick start guide to run [DQL](./glossary#DQL) queries and mutations.
+In this Dgraph quick start guide we walk through creating a graph, inserting
+data, and querying the graph using [DQL](./glossary#dql).
 
-This guide helps you:
+This guide helps you to understand how to:
 
-- Understand how JSON data is represented as a graph
+- Create a new Dgraph graph
+- Connect your graph to the Ratel web client
+- Add data using mutations
 - Query the graph using DQL
-- Use indexes
+- Update the graph schema to support more advanced queries
 
-## Step 1: Run Dgraph
+## Run Dgraph and connect the Ratel web UI
 
-The easiest way to get Dgraph up and running is using the
+The easiest way to get Dgraph up and running is using
 [Dgraph on Hypermode](https://hypermode.com/go).
 
-1. In the Hypermode console, click **Launch new backend**
-2. Select a region that meets your requirements
-3. Type a name for your graph instance
-4. Click **Launch**
-5. Click **Ratel** to access the UI that provides browser-based queries,
-   mutations and visualizations.
+In this section we'll sign in to Hypermode and create a new graph, then we'll
+connect our new graph to [Ratel](./glossary#ratel), the web-based UI for Dgraph.
 
-## Step 2: Run mutation
+<Steps>
+
+<Step title="Sign in to Hypermode and create your workspace">
+
+Open [`hypermode.com/go`](https://hypermode.com/go) in your web browser and sign
+in to Hypermode to create your account.
+
+After signing in you'll be prompted to choose a name for your workspace.
+
+![Create your Hypermode workspace](/images/dgraph/quickstart/create-workspace.png)
+
+Enter a name for your workspace and then select **Create workspace**.
+
+</Step>
+
+<Step title="Create your graph">
+
+After creating your Hypermode workspace you'll be prompted to create your first
+graph.
+
+![Create your first Hypermode graph](/images/dgraph/quickstart/create-graph-2.png)
+
+Enter a name for your graph and choose the hosting location, then select
+**Create graph**.
+
+</Step>
+
+<Step title="View your graph details">
+
+Once your graph is created you'll see the graph details including its status,
+connection string, and API key.
+
+![Graph detail view](/images/dgraph/quickstart/graph-details.png)
+
+We'll use the Dgraph connection string and the API key to connect to our graph
+via Dgraph clients such as Ratel or language SDKs.
+
+Click on the copy icon next to the connection string to copy the Dgraph
+connection string.
+
+</Step>
+
+<Step title="Connect the Ratel graph client">
+
+Ratel is a web-based Dgraph client for interacting with your graph. We'll use
+Ratel to execute DQL queries and update the graph schema.
+
+Navigate to [ratel.hypermode.com](https://ratel.hypermode.com) and paste the
+Dgraph connection string you copied in the previous step into the "Dgraph Conn
+String" text box in Ratel then select **Connect** to verify the connection and
+then select **Continue** to access the Ratel console.
+
+![Connecting to Ratel](/images/dgraph/quickstart/ratel-connection-string.png)
+
+The Ratel console is where we can execute DQL queries and mutations and view the
+results of these operations, including visualizing graph data.
+
+![Ratel overview](/images/dgraph/quickstart/ratel-overview.png)
+
+Now we're ready to add data to our graph.
+
+</Step>
+
+</Steps>
+
+## Add data to the graph with a mutation
+
+Graph databases like Dgraph use a data model called the **property graph**,
+which consists of [**nodes**](./glossary#node),
+[**relationships**](./glossary#relationship) that connect nodes, and key-value
+pair **properties** that describe nodes and relationships.
+
+With Dgraph, we use **triples** to describe each piece of our graph, which when
+combined together make up our property graph. Triples are composed of a subject,
+predicate, and object.
+
+```text
+<subject> <predicate> <object> .
+```
+
+The subject always refers to a [node](./glossary#node),
+[predicates](./glossary#predicate) can be a relationship or property, and the
+object can be a node or property value. You can read more about triples in the
+[RDF section of the docs](/dgraph/dql/rdf), but for now let's move on to
+creating data in Dgraph using triples.
+
+Let's create data about movies, characters, and their genres. Here's the
+property graph representation of the data we'll create:
+
+![Movie and actor data model](/images/dgraph/quickstart/data-model.png)
+
+<Steps>
+<Step title="Add mutation in Ratel">
 
 The create, update, and delete operations in Dgraph are called mutations.
 
-Ratel makes it easier to run queries and mutations.
+In the Ratel **Console** page, select the **Mutate** tab, then paste the
+following mutation:
 
-1. In the **Console** page, select **Mutate** tab.
+```dql
+{
+  set {
 
-2. Paste the following:
+    _:scifi <dgraph.type> "Genre" .
+    _:scifi <Genre.name> "Sci-Fi" .
 
-   ```dql
-     {
-     "set": [
-       {
-         "name":"Star Wars: Episode IV - A New Hope",
-         "release_date": "1977-05-25",
-         "director": {
-           "name": "George Lucas",
-           "dgraph.type": "Person"
-         },
-         "starring" : [
-           {
-             "name": "Luke Skywalker"
-           },
-           {
-             "name": "Princess Leia"
-           },
-           {
-             "name": "Han Solo"
-           }
-         ]
-       },
-       {
-         "name":"Star Trek: The Motion Picture",
-         "release_date": "1979-12-07"
-       }
-     ]
-   }
-   ```
+    _:starwars <dgraph.type> "Movie" .
+    _:starwars <Movie.title> "Star Wars: Episode IV - A New Hope" .
+    _:starwars <Movie.release_date> "1977-05-25"^^<xs:dateTime> .
 
-   The input data is in JSON Format. Dgraph also supports [RDF](./glossary#RDF)
-   notation.
 
-   The sample JSON data is an array of two movies with some attributes. These
-   are stored as [Nodes](./glossary#node) in Dgraph.
+    _:startrek <dgraph.type> "Movie" .
+    _:startrek <Movie.title> "Star Trek: The Motion Picture" .
+    _:startrek <Movie.release_date> "1979-12-07"^^<xs:dateTime> .
 
-   The "Star Wars" movie has a `director` field which is an JSON object and a
-   `starring` field which is an array of JSON objects. Each object is also
-   stored as a Node in Dgraph . The `director` and `starring` are stored as
-   [relations](./glossary#relation).
+    _:george <dgraph.type> "Person" .
+    _:george <Person.name> "George Lucas" .
 
-3. Click **Run** to execute the mutation.
+    _:luke <dgraph.type> "Character" .
+    _:luke <Character.name> "Luke Skywalker" .
 
-   View the Dgraph response in the JSON tab:
+    _:leia <dgraph.type> "Character" .
+    _:leia <Character.name> "Princess Leia" .
 
-   ```dql
-   {
-     "data": {
-       "code": "Success",
-       "message": "Done",
-       "queries": null,
-       "uids": {
-         "dg.1119451236.100": "0xfffd8d726c1de414",
-         "dg.1119451236.101": "0xfffd8d726c1de40f",
-         "dg.1119451236.102": "0xfffd8d726c1de410",
-         "dg.1119451236.103": "0xfffd8d726c1de411",
-         "dg.1119451236.104": "0xfffd8d726c1de412",
-         "dg.1119451236.99": "0xfffd8d726c1de413"
-       }
-     }, ...
-   ```
+    _:han <dgraph.type> "Character" .
+    _:han <Character.name> "Han Solo" .
+
+    _:starwars <Movie.genre> _:scifi .
+    _:startrek <Movie.genre> _:scifi .
+
+    _:starwars <Movie.director> _:george .
+
+    _:starwars <Movie.character> _:luke .
+    _:starwars <Movie.character> _:leia .
+    _:starwars <Movie.character> _:han .
+
+  }
+}
+```
+
+The preceding DQL mutation uses
+[N-Quad RDF format](/dgraph/dql/rdf#n-quads-format) to define the triples that
+make up the property graph we want to create.
+
+</Step>
+
+<Step title="View mutation results">
+
+Select **Run** to execute the mutation. In the JSON tab we can see the result of
+this mutation.
+
+```json
+{
+  "data": {
+    "code": "Success",
+    "message": "Done",
+    "queries": null,
+    "uids": {
+      "george": "0x4",
+      "han": "0x7",
+      "leia": "0x6",
+      "luke": "0x5",
+      "scifi": "0x1",
+      "startrek": "0x3",
+      "starwars": "0x2"
+    }
+  }, ...
+```
 
 Dgraph displays the universal identifiers ([UID](/dgraph/glossary#uid)) of the
 nodes that were created.
 
-## Step 3: First query
+</Step>
+</Steps>
 
-1. In the **Console** page, select **Query** tab and run this query:
+## Query the graph
 
-   ```dql
-     {
-       movies(func: has(release_date)) {
-       name
-       director { name }
-       starring { name }
-       }
-       }
-   ```
+<Steps>
+<Step title="Query for all movies">
 
-   The query lists all movies that have a `release_date` and for each, it looks
-   for the `director` and `starring` relations and provides the name attribute
-   of the related nodes if any.
-
-2. In the response panel, select **Graph**, to view a Graph output:
-
-   ![Query result](/images/dgraph/quickstart-graph.png)
-
-## Step 4: Alter schema
-
-Alter the schema to add indexes on some of the data so queries can use term
-matching, filtering, and sorting.
-
-1. In the **Schema** page, select **Predicates**. Dgraph creates and displays
-   the predicates `name`, `release-date`,`director` and `starring`. A
-   [predicate](/dgraph/glossary#predicate) is Dgraph internal representation of
-   a node attribute or a relation.
-2. Select the `name` predicate. Ratel displays details about the predicate type
-   and indexes.
-3. Select **index** and select **term** for `name` predicate.
-4. Click **Update** to apply the index.
-
-![Adding an index](/images/dgraph/quickstart-predicate.png)
-
-Set the index for the `release_date`:
-
-1. Select `release_date` predicate.
-2. Change the type to **dateTime**
-3. Select **index** and choose **year** for the index type.
-4. Click **Update** to apply the index on the `release-date` predicate.
-
-## Step 5: Queries using indexes
-
-Let's get the movies having the term "Star" in their name and released
-before 1979.
-
-In the **Console** page select **Query** tab and run this query:
+In the **Console** page, select the **Query** tab and run this query:
 
 ```dql
 {
-  me(func: allofterms(name, "Star"), orderasc: release_date) @filter(lt(release_date, "1979")) {
-    name
-    release_date
-    revenue
-    running_time
-    director {
-     name
+  movies(func: type(Movie)) {
+    Movie.title
+    Movie.genre {
+       Genre.name
+     }
+    Movie.director {
+      Person.name
     }
-    starring (orderasc: name) {
-     name
+    Movie.character {
+      Character.name
     }
   }
 }
 ```
 
-Observe the JSON result and the graph result.
+This query searches for all `Movie` nodes as the start of the traversal using
+the `type(Movie)` function to define the starting point of our query traversal,
+then finds any genres, directors, and characters connected to each movie.
 
-You can play with the release date and the search terms conditions to see Dgraph
+</Step>
+
+<Step title="View results in JSON and graph visualization">
+
+In Ratel's JSON tab we can view the results of this query as JSON:
+
+```JSON
+{
+  "data": {
+    "movies": [
+      {
+        "Movie.title": "Star Wars: Episode IV - A New Hope",
+        "Movie.genre": [
+          {
+            "Genre.name": "Sci-Fi"
+          }
+        ],
+        "Movie.director": [
+          {
+            "Person.name": "George Lucas"
+          }
+        ],
+        "Movie.character": [
+          {
+            "Character.name": "Luke Skywalker"
+          },
+          {
+            "Character.name": "Princess Leia"
+          },
+          {
+            "Character.name": "Han Solo"
+          }
+        ]
+      },
+      {
+        "Movie.title": "Star Trek: The Motion Picture",
+        "Movie.genre": [
+          {
+            "Genre.name": "Sci-Fi"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+In the response panel, Select **Graph** to view a graph visualization of the
+results of our query:
+
+![Query result graph visualization](/images/dgraph/quickstart/query-result-1.png)
+
+</Step>
+
+</Steps>
+
+## Update the graph schema and query using an index
+
+The previous query used the `type()` function to find the starting point of our
+graph traversal. We can use more complex functions to filter by string
+comparison operator, and others, however to use these function we must first
+update the graph schema to create an index on the predicates we want to use in
+these functions.
+
+The [function documentation](/dgraph/dql/functions/) specifies which kind of
+index is needed for each function.
+
+We'll use Ratel to alter the schema to add indexes on some of the data so
+queries can use term matching, filtering, and sorting.
+
+<Steps>
+
+<Step title="Create an index for movie title">
+
+In Ratel's **Schema** page, select **Predicates**. Here we can see all the
+predicates used in the graph. A [predicate](/dgraph/glossary#predicate) is
+Dgraph's internal representation of a node, property, or relationship.
+
+Select the `Movie.title` predicate. Ratel displays details about the predicate
+type and indexes.
+
+Change the type to **string** then select **index** and select **term** for the
+`Movie.title` predicate, then select **Update** to apply the index.
+
+![Adding an index for movie title](/images/dgraph/quickstart/schema-title.png)
+
+</Step>
+
+<Step title="Create an index for movie release date">
+
+Next, we'll create an index for the `Movie.release_date` predicate.
+
+Select the `Movie.release_date` predicate. Change the type to **dateTime**.
+Select **index** and choose **year** for the index tokenizer. Click **Update**
+to apply the index on the `release-date` predicate.
+
+![Adding an index for movie release date](/images/dgraph/quickstart/schema-date.png)
+
+</Step>
+
+<Step title="Query using indexes">
+
+Now let's find all movies with the term "Star" in their title and released
+before 1979.
+
+In the **Console** page select the **Query** tab and run this query:
+
+```dql
+{
+  movieSearch(func: allofterms(Movie.title, "Star"), orderasc: Movie.release_date) @filter(lt(Movie.release_date, "1979")) {
+    Movie.title
+    Movie.release_date
+    Movie.director {
+     Person.name
+    }
+    Movie.character (orderasc: Character.name) {
+     Character.name
+    }
+  }
+}
+```
+
+We can see the JSON result in the JSON tab:
+
+```JSON
+{
+  "data": {
+    "movieSearch": [
+      {
+        "Movie.title": "Star Wars: Episode IV - A New Hope",
+        "Movie.release_date": "1977-05-25T00:00:00Z",
+        "Movie.director": [
+          {
+            "Person.name": "George Lucas"
+          }
+        ],
+        "Movie.character": [
+          {
+            "Character.name": "Han Solo"
+          },
+          {
+            "Character.name": "Luke Skywalker"
+          },
+          {
+            "Character.name": "Princess Leia"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+And also view the graph visualization of the result in the Graph tab:
+
+![Graph visualization of query result](/images/dgraph/quickstart/query-result-2.png)
+
+Try changing the release date and the search terms conditions to see Dgraph
 search and filtering in action.
 
-In these five steps, you set up Dgraph, added some data, visualized it as a
-graph, added indexes and queried the data .
+</Step>
+</Steps>
+
+## Reverse relationship query
+
+<Steps>
+
+<Step title="Add reverse relationship">
+
+In the previous queries we traversed from the movie node to its connected genre
+node, but what if we want to find all movies connected to a genre node? In order
+to traverse from a genre node to a movie node we need to explicitly define the
+`Movie.genre` predicate as a reverse relationship.
+
+To define a reverse relationship for the `Movie.genre` predicate we'll return to
+the Schema page in Ratel, select the `Movie.genre` predicate and toggle the
+**reverse** checkbox. Then select **Update** to apply this schema change.
+
+![Define a reverse relationship in the graph schema](/images/dgraph/quickstart/schema-reverse.png)
+
+</Step>
+
+<Step title="Query using the reverse relationship">
+
+In a DQL query the `~` operator is used to specify a reverse relationship. To
+traverse from a genre node to a movie node we use the syntax `~Movie.genre`.
+
+In this query we find all movies connected to the "Sci-Fi" genre:
+
+```dql
+{
+  genreSearch(func: type(Genre)) {
+    Genre.name
+    movies: ~Movie.genre {
+      Movie.title
+    }
+  }
+}
+```
+
+Note that we can also alias the field name to "movies" in our result JSON using
+the syntax `movies: ~Movie.genre`.
+
+```json
+{
+  "data": {
+    "genreSearch": [
+      {
+        "Genre.name": "Sci-Fi",
+        "movies": [
+          {
+            "Movie.title": "Star Wars: Episode IV - A New Hope"
+          },
+          {
+            "Movie.title": "Star Trek: The Motion Picture"
+          }
+        ]
+      }
+    ]
+  }
+```
+
+</Step>
+
+</Steps>
+
+In this quick start we created a new graph instance using Dgraph on Hypermode,
+added data, queried the graph, visualized the results, and updated the schema of
+our graph.
 
 ## Where to go from here
 
-- A wider range of queries can also be found in the
-  [Query Language](/dgraph/dql/query) reference.
+- Learn more about using [DQL](/dgraph/dql/query) to query your graph.
 - Go to [Clients](/dgraph/sdks/overview) to see how to communicate with Dgraph
   from your app.
+- Learn how to build intelligent applications using Dgraph and Modus such as
+  [natural language search.](https://docs.hypermode.com/semantic-search)
 
 ## Need help
 
-- Please use [discuss.dgraph.io](https://discuss.dgraph.io) for questions,
-  issues, feature requests, and discussions.
+- Join the [Hypermode Discord server](https://discord.hypermode.com) for
+  questions, issues, feature requests, and discussions.

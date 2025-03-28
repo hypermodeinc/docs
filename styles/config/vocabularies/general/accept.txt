@@ -74,6 +74,7 @@ REST|[Rr]est
 Scattergories
 SDK|sdk
 TLS
+tokenizer
 URL|url
 UTC
 urql
@@ -102,7 +103,7 @@ MinIO
 NoConflict
 pprof
 pydgraph
-Ratel
+[Rr]atel
 [Ss]harding
 [Ss]harded
 S3
