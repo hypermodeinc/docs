@@ -254,6 +254,20 @@ This connection type supports connecting to Dgraph databases. You can use the
 [Dgraph APIs](/modus/sdk/assemblyscript/dgraph) in the Modus SDK to interact
 with the database.
 
+There are two ways to connect to Dgraph:
+
+- [Using a connection string](#using-a-dgraph-connection-string) (preferred
+  method)
+- [Using a gRPC target](#using-a-dgraph-grpc-target) (older method)
+
+You can use either approach in Modus, but not both.
+
+#### Using a Dgraph connection string
+
+This is the preferred method for connecting to Dgraph. It uses a simplified URI
+based connection string to specify all options, including host, port, options,
+and authentication.
+
 **Example:**
 
 ```json modus.json
@@ -261,7 +275,38 @@ with the database.
   "connections": {
     "my-dgraph": {
       "type": "dgraph",
-      "grpcTarget": "frozen-mango.grpc.eu-central-1.aws.cloud.dgraph.io:443",
+      "connString": "dgraph://example.hypermode.host:443?sslmode=verify-ca&bearertoken={{DGRAPH_API_KEY}}"
+    }
+  }
+}
+```
+
+<ResponseField name="type" type="string" required>
+  Always set to `"dgraph"` for this connection type.
+</ResponseField>
+
+<ResponseField name="connString" type="string" required>
+  The connection string for the Dgraph database, in URI format.
+</ResponseField>
+
+#### Using a Dgraph gRPC target
+
+This is the older method for connecting to Dgraph. It uses a gRPC target to
+specify the host and port, and a separate key for authentication. It
+automatically uses SSL mode (with full CA verification) for the connection -
+_except_ when connecting to `localhost`.
+
+Additional options such as username/password authentication aren't supported. If
+you need to use these options, use the connection string method instead.
+
+**Example:**
+
+```json modus.json
+{
+  "connections": {
+    "my-dgraph": {
+      "type": "dgraph",
+      "grpcTarget": "example.grpc.region.aws.cloud.dgraph.io:443",
       "key": "{{DGRAPH_API_KEY}}"
     }
   }
