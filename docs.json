@@ -530,6 +530,10 @@
     {
       "source": "/modus/sdk/postgresql",
       "destination": "/modus/sdk/assemblyscript/postgresql"
+    },
+    {
+      "source": "/graphs/deploy",
+      "destination": "/graphs/provision"
     }
   ]
 }
