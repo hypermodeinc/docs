@@ -52,7 +52,7 @@
             "group": "Graphs",
             "pages": [
               "graphs/overview",
-              "graphs/deploy",
+              "graphs/provision",
               "graphs/connect",
               "graphs/manage-schema",
               "graphs/manage-data",
