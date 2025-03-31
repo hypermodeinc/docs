@@ -492,6 +492,11 @@
   },
   "redirects": [
     {
+      "source": "/",
+      "destination": "/introduction",
+      "permanent": true
+    },
+    {
       "source": "/modus/sdk/collections",
       "destination": "/modus/sdk/assemblyscript/collections"
     },
