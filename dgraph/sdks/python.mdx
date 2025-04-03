@@ -35,16 +35,62 @@ More details on the supported versions can be found at
 ### Creating a client
 
 You can initialize a `DgraphClient` object by passing it a list of
-`DgraphClientStub` clients as arguments. Connecting to multiple Dgraph servers
-in the same cluster allows for better distribution of workload.
+`DgraphClientStub` clients as variadic arguments. Connecting to multiple Dgraph
+servers in the same cluster allows for better distribution of workload.
 
 The following code snippet shows just one connection.
 
-```python
+```python3
 import pydgraph
 
 client_stub = pydgraph.DgraphClientStub('localhost:9080')
 client = pydgraph.DgraphClient(client_stub)
+```
+
+### Using Dgraph Connection Strings
+
+The pydgraph package supports connecting to a Dgraph cluster using connection
+strings. Dgraph connections strings take the form
+`dgraph://{username:password@}host:port?args`.
+
+`username` and `password` are optional. If username is provided, a password must
+also be present. If supplied, these credentials are used to log into a Dgraph
+cluster through the ACL mechanism.
+
+Valid connection string args:
+
+| Arg         | Value                           | Description                                                                                                                                                   |
+| ----------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| apikey      | \<key\>                         | a Dgraph Cloud API Key                                                                                                                                        |
+| bearertoken | \<token\>                       | an access token                                                                                                                                               |
+| sslmode     | disable \| require \| verify-ca | TLS option, the default is `disable`. If `verify-ca` is set, the TLS certificate configured in the Dgraph cluster must be from a valid certificate authority. |
+
+Note the `sslmode=require` pair is not supported and will throw an Exception if
+used. Python gRPC does not support traffic over TLS that does not fully verify
+the certificate and domain. Developers should use the existing stub/client
+initialization steps for self-signed certs as demonstrated in tls_example.py
+sample script in the
+[pydgraph repository](https://github.com/hypermodeinc/pydgraph).
+
+Some example connection strings:
+
+| Value                                                                                                        | Explanation                                                                         |
+| ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| dgraph://localhost:9080                                                                                      | Connect to localhost, no ACL, no TLS                                                |
+| dgraph://sally:supersecret@dg.example.com:443?sslmode=verify-ca                                              | Connect to remote server, use ACL and require TLS and a valid certificate from a CA |
+| dgraph://foo-bar.grpc.us-west-2.aws.cloud.dgraph.io:443?sslmode=verify-ca&apikey=\<your-api-connection-key\> | Connect to a Dgraph Cloud cluster                                                   |
+| dgraph://foo-bar.grpc.hypermode.com:443?sslmode=verify-ca&bearertoken=\<some access token\>                  | Connect to a Dgraph cluster protected by a secure gateway                           |
+
+Using the `Open` function with a connection string:
+
+```go
+// open a connection to an ACL-enabled, non-TLS cluster and login as groot
+client = pydgraph.open("dgraph://groot:password@localhost:8090")
+
+// Use the client
+...
+
+client.close()
 ```
 
 ### Multi-tenancy

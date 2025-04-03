@@ -28,45 +28,92 @@ More details on the supported versions can be found at
 
 ## Create the client
 
-To create a client, dial a connection to Dgraph's external gRPC port (typically
-`9080`). The following code snippet shows just one connection. You can connect
-to multiple Dgraph Alphas to distribute the workload evenly.
+### Connection Strings
+
+The dgo package supports connecting to a Dgraph cluster using connection
+strings. Dgraph connections strings take the form
+`dgraph://{username:password@}host:port?args`.
+
+`username` and `password` are optional. If username is provided, a password must
+also be present. If supplied, these credentials are used to log into a Dgraph
+cluster through the ACL mechanism.
+
+Valid connection string args:
+
+| Arg         | Value                           | Description                                                                                                                                                   |
+| ----------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| apikey      | \<key\>                         | a Dgraph Cloud API Key                                                                                                                                        |
+| bearertoken | \<token\>                       | an access token                                                                                                                                               |
+| sslmode     | disable \| require \| verify-ca | TLS option, the default is `disable`. If `verify-ca` is set, the TLS certificate configured in the Dgraph cluster must be from a valid certificate authority. |
+
+Some example connection strings:
+
+| Value                                                                                                        | Explanation                                                                         |
+| ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| dgraph://localhost:9080                                                                                      | Connect to localhost, no ACL, no TLS                                                |
+| dgraph://sally:supersecret@dg.example.com:443?sslmode=verify-ca                                              | Connect to remote server, use ACL and require TLS and a valid certificate from a CA |
+| dgraph://foo-bar.grpc.us-west-2.aws.cloud.dgraph.io:443?sslmode=verify-ca&apikey=\<your-api-connection-key\> | Connect to a Dgraph Cloud cluster                                                   |
+| dgraph://foo-bar.grpc.hypermode.com?sslmode=verify-ca&bearertoken=\<some access token\>                      | Connect to a Dgraph cluster protected by a secure gateway                           |
+
+Using the `Open` function with a connection string:
 
 ```go
-func newClient() *dgo.Dgraph {
-  // Dial a gRPC connection. The address to dial to can be configured when
-  // setting up the dgraph cluster.
-  d, err := grpc.Dial("localhost:9080", grpc.WithInsecure())
-  if err != nil {
-    log.Fatal(err)
-  }
-
-  return dgo.NewDgraphClient(
-    api.NewDgraphClient(d),
-  )
-}
+// open a connection to an ACL-enabled, non-TLS cluster and login as groot
+client, err := dgo.Open("dgraph://groot:password@localhost:8090")
+// Check error
+defer client.Close()
+// Use the client
 ```
 
-The client can be configured to use gRPC compression:
+### Advanced client creation
+
+For more control, you can create a client using the `NewClient` or the
+`NewRoundRobinClient` function.
 
 ```go
-func newClient() *dgo.Dgraph {
-  // Dial a gRPC connection. The address to dial to can be configured when
-  // setting up the dgraph cluster.
-  dialOpts := append([]grpc.DialOption{},
-    grpc.WithInsecure(),
-    grpc.WithDefaultCallOptions(grpc.UseCompressor(gzip.Name)))
-  d, err := grpc.Dial("localhost:9080", dialOpts...)
+// endpoints for three alpha nodes
+endpoints := []string{"localhost:9180", "localhost:9182", "localhost:9183"}
 
-  if err != nil {
-    log.Fatal(err)
-  }
+client, err := dgo.NewRoundRobinClient(endpoints,
+  // add Dgraph ACL credentials
+  dgo.WithACLCreds("groot", "password"),
+  // add insecure transport credentials
+  dgo.WithGrpcOption(grpc.WithTransportCredentials(insecure.NewCredentials())),
+  // add retry policy
+  dgo.WithGrpcOption(grpc.WithDefaultServiceConfig(`{
+      "methodConfig": [{
+        "retryPolicy": {
+          "MaxAttempts": 4
+        }
+      }]
+    }`)),
+)
+// Check error
+defer client.Close()
+// Use the client
+```
 
-  return dgo.NewDgraphClient(
-    api.NewDgraphClient(d),
-  )
-}
+### Connecting To Dgraph Cloud
 
+You can use either `Open` or `NewClient` to connect to Dgraph Cloud.
+
+Using `Open` with a connection string:
+
+```go
+client, err := dgo.Open("dgraph://foo-bar.grpc.cloud.dgraph.io:443?sslmode=verify-ca&apikey=AValidKeYFromDgrAPHCloud=")
+// Check error
+defer client.Close()
+```
+
+Using `NewClient`:
+
+```go
+client, err := dgo.NewClient("foo-bar.grpc.cloud.dgraph.io:443",
+  dgo.WithDgraphAPIKey("AValidKeYFromDgrAPHCloud="),
+  dgo.WithSystemCertPool(),
+)
+// Check error
+defer client.Close()
 ```
 
 ### Multi-tenancy

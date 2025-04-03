@@ -36,6 +36,39 @@ client library exists for your language, that's a simpler option.
   semi-random initial predicate distribution.
 </Tip>
 
+### Connection Strings
+
+Most clients support opening communications to Dgraph clusters using connection
+strings. Dgraph connections strings take the form
+`dgraph://{username:password@}host:port?args`.
+
+`username` and `password` are optional. If username is provided, a password must
+also be present. If supplied, these credentials are used to log into a Dgraph
+cluster through the ACL mechanism.
+
+Valid connection string args:
+
+| Arg         | Value                           | Description                                                                                                                                                   |
+| ----------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| apikey      | \<key\>                         | a Dgraph Cloud API Key                                                                                                                                        |
+| bearertoken | \<token\>                       | an access token                                                                                                                                               |
+| sslmode     | disable \| require \| verify-ca | TLS option, the default is `disable`. If `verify-ca` is set, the TLS certificate configured in the Dgraph cluster must be from a valid certificate authority. |
+
+Note that using `sslmode=require` disables certificate validation and
+significantly reduces the security of TLS. This mode should only be used in
+non-production (e.g., testing or development) environments.
+
+Some example connection strings:
+
+| Value                                                                                                        | Explanation                                                                         |
+| ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| dgraph://localhost:9080                                                                                      | Connect to localhost, no ACL, no TLS                                                |
+| dgraph://sally:supersecret@dg.example.com:443?sslmode=verify-ca                                              | Connect to remote server, use ACL and require TLS and a valid certificate from a CA |
+| dgraph://foo-bar.grpc.us-west-2.aws.cloud.dgraph.io:443?sslmode=verify-ca&apikey=\<your-api-connection-key\> | Connect to a Dgraph Cloud cluster                                                   |
+| dgraph://foo-bar.grpc.hypermode.com?sslmode=verify-ca&bearertoken=\<some access token\>                      | Connect to a Dgraph cluster protected by a secure gateway                           |
+
+See the various Dgraph client libraries for details on using connection strings.
+
 ### Transactions
 
 Dgraph clients perform mutations and queries using transactions. A transaction
