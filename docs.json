@@ -483,6 +483,9 @@
     "fathom": {
       "siteId": "LQSVRZXR"
     },
+    "posthog": {
+      "apiKey": "phc_Q0NhwRIDTmaMNBAkZlNrGQJEKnU8UL5ryhynxmvJalB"
+    },
     "koala": {
       "publicApiKey": "pk_11b969347385f3731b3fb58b4a358e5e1720"
     }
