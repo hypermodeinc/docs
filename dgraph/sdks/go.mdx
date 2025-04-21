@@ -7,7 +7,7 @@ import DgraphWIP from "/snippets/dgraph-wip.mdx"
 
 <DgraphWIP />
 
-[![GoDoc](https://godoc.org/github.com/dgraph-io/dgo?status.svg)](https://godoc.org/github.com/dgraph-io/dgo)
+[![GoDoc](https://pkg.go.dev/badge/github.com/dgraph-io/dgo/v250)](https://pkg.go.dev/github.com/dgraph-io/dgo/v250)
 
 The Go client communicates with the server on the gRPC port (default value
 9080).
@@ -15,18 +15,332 @@ The Go client communicates with the server on the gRPC port (default value
 The client can be obtained in the usual way via `go get`:
 
 ```sh
- Requires at least Go 1.23
-export GO111MODULE=on
-go get -u -v github.com/dgraph-io/dgo/v210
+# Requires at least Go 1.23
+go get -u -v github.com/dgraph-io/dgo/v250
 ```
 
-The full [GoDoc](https://godoc.org/github.com/dgraph-io/dgo) contains
+The full [GoDoc](https://pkg.go.dev/github.com/dgraph-io/dgo/v250) contains
 documentation for the client API along with examples showing how to use it.
 
-More details on the supported versions can be found at
-[this link](https://github.com/hypermodeinc/dgo#supported-versions).
+## Supported versions
 
-## Create the client
+Depending on the version of Dgraph that you are connecting to, you should use a
+compatible version of this client and their corresponding import paths.
+
+| Dgraph version | dgo version | dgo import path                 |
+| -------------- | ----------- | ------------------------------- |
+| dgraph 23.X.Y  | dgo 230.X.Y | "github.com/dgraph-io/dgo/v230" |
+| dgraph 24.X.Y  | dgo 240.X.Y | "github.com/dgraph-io/dgo/v240" |
+| dgraph 25.X.Y  | dgo 240.X.Y | "github.com/dgraph-io/dgo/v240" |
+| dgraph 25.X.Y  | dgo 250.X.Y | "github.com/dgraph-io/dgo/v250" |
+
+## v25 APIs
+
+These are _experimental_ APIs that we're still making changes to. If you have
+any feedback, please let us know either on Discord or GitHub.
+
+### Connection strings
+
+The dgo package supports connecting to a Dgraph cluster using connection
+strings. Dgraph connection strings take the form
+`dgraph://{username:password@}host:port?args`.
+
+`username` and `password` are optional. If username is provided, a password must
+also be present. If supplied, these credentials are used to log into a Dgraph
+cluster through the ACL mechanism.
+
+Valid connection string arguments:
+
+| Arg         | Value                           | Description                                                                                                                                                   |
+| ----------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| apikey      | \<key\>                         | a Dgraph Cloud API Key                                                                                                                                        |
+| bearertoken | \<token\>                       | an access token                                                                                                                                               |
+| sslmode     | disable \| require \| verify-ca | TLS option, the default is `disable`. If `verify-ca` is set, the TLS certificate configured in the Dgraph cluster must be from a valid certificate authority. |
+
+Some example connection strings:
+
+| Value                                                                                                        | Explanation                                                                         |
+| ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| dgraph://localhost:9080                                                                                      | Connect to localhost, no ACL, no TLS                                                |
+| dgraph://sally:supersecret@dg.example.com:443?sslmode=verify-ca                                              | Connect to remote server, use ACL and require TLS and a valid certificate from a CA |
+| dgraph://foo-bar.grpc.us-west-2.aws.cloud.dgraph.io:443?sslmode=verify-ca&apikey=\<your-api-connection-key\> | Connect to a Dgraph Cloud cluster                                                   |
+| dgraph://foo-bar.grpc.hypermode.com?sslmode=verify-ca&bearertoken=\<some access token\>                      | Connect to a Dgraph cluster protected by a secure gateway                           |
+
+Using the `Open` function with a connection string:
+
+```go
+// open a connection to an ACL-enabled, non-TLS cluster and login as groot
+client, err := dgo.Open("dgraph://groot:password@localhost:8090")
+// Check error
+defer client.Close()
+// Use the clients
+```
+
+### Advanced client creation
+
+For more control, you can create a client using the `NewClient` function.
+
+```go
+client, err := dgo.NewClient("localhost:9181",
+  // add Dgraph ACL credentials
+  dgo.WithACLCreds("groot", "password"),
+  // add insecure transport credentials
+  dgo.WithGrpcOption(grpc.WithTransportCredentials(insecure.NewCredentials())),
+)
+// Check error
+defer client.Close()
+// Use the client
+```
+
+You can connect to multiple alphas using `NewRoundRobinClient`.
+
+```go
+client, err := dgo.NewRoundRobinClient([]string{"localhost:9181", "localhost:9182", "localhost:9183"},
+  // add Dgraph ACL credentials
+  dgo.WithACLCreds("groot", "password"),
+  // add insecure transport credentials
+  dgo.WithGrpcOption(grpc.WithTransportCredentials(insecure.NewCredentials())),
+)
+// Check error
+defer client.Close()
+// Use the client
+```
+
+### Connecting to Dgraph cloud
+
+You can use either `Open` or `NewClient` to connect to Dgraph Cloud. Note
+`DialCloud` is marked deprecated and will be removed in later versions.
+
+Using `Open` with a connection string:
+
+```go
+client, err := dgo.Open("dgraph://foo-bar.grpc.cloud.dgraph.io:443?sslmode=verify-ca&apikey=AValidKeYFromDgrAPHCloud=")
+// Check error
+defer client.Close()
+```
+
+Using `NewClient`:
+
+```go
+client, err := dgo.NewClient("foo-bar.grpc.cloud.dgraph.io:443",
+  dgo.WithDgraphAPIKey("AValidKeYFromDgrAPHCloud="),
+  dgo.WithSystemCertPool(),
+)
+// Check error
+defer client.Close()
+```
+
+### Dropping all data
+
+In order to drop all data in the Dgraph cluster and start fresh, use the
+`DropAllNamespaces` function.
+
+```go
+err := client.DropAllNamespaces(context.TODO())
+// Handle error
+```
+
+### Set schema
+
+To set the schema, use the `SetSchema` function.
+
+```go
+sch := `
+  name: string @index(exact) .
+  email: string @index(exact) @unique .
+  age: int .
+`
+err := client.SetSchema(context.TODO(), dgo.RootNamespace, sch)
+// Handle error
+```
+
+### Running a mutation
+
+To run a mutation, use the `RunDQL` function.
+
+```go
+mutationDQL := `{
+  set {
+    _:alice <name> "Alice" .
+    _:alice <email> "alice@example.com" .
+    _:alice <age> "29" .
+  }
+}`
+resp, err := client.RunDQL(context.TODO(), dgo.RootNamespace, mutationDQL)
+// Handle error
+// Print map of blank UIDs
+fmt.Printf("%+v\n", resp.BlankUids)
+```
+
+### Running a query
+
+To run a query, use the same `RunDQL` function.
+
+```go
+queryDQL := `{
+  alice(func: eq(name, "Alice")) {
+    name
+    email
+    age
+  }
+}`
+resp, err := client.RunDQL(context.TODO(), dgo.RootNamespace, queryDQL)
+// Handle error
+fmt.Printf("%s\n", resp.QueryResult)
+```
+
+### Running a query with variables
+
+To run a query with variables, using `RunDQLWithVars`.
+
+```go
+queryDQL = `query Alice($name: string) {
+  alice(func: eq(name, $name)) {
+    name
+    email
+    age
+  }
+}`
+vars := map[string]string{"$name": "Alice"}
+resp, err := client.RunDQLWithVars(context.TODO(), dgo.RootNamespace, queryDQL, vars)
+// Handle error
+fmt.Printf("%s\n", resp.QueryResult)
+```
+
+### Running a best effort query
+
+To run a `BestEffort` query, use the same `RunDQL` function with `TxnOption`.
+
+```go
+queryDQL := `{
+  alice(func: eq(name, "Alice")) {
+    name
+    email
+    age
+  }
+}`
+resp, err := client.RunDQL(context.TODO(), dgo.RootNamespace, queryDQL, dgo.WithBestEffort())
+// Handle error
+fmt.Printf("%s\n", resp.QueryResult)
+```
+
+### Running a read-only query
+
+To run a `ReadOnly` query, use the same `RunDQL` function with `TxnOption`.
+
+```go
+queryDQL := `{
+  alice(func: eq(name, "Alice")) {
+    name
+    email
+    age
+  }
+}`
+resp, err := client.RunDQL(context.TODO(), dgo.RootNamespace, queryDQL, dgo.WithReadOnly())
+// Handle error
+fmt.Printf("%s\n", resp.QueryResult)
+```
+
+### Running a query with rdf response
+
+To get the query response in RDF format instead of JSON format, use the
+following `TxnOption`.
+
+```go
+queryDQL := `{
+  alice(func: eq(name, "Alice")) {
+    name
+    email
+    age
+  }
+}`
+resp, err = client.RunDQL(context.TODO(), dgo.RootNamespace, queryDQL, dgo.WithResponseFormat(api_v25.RespFormat_RDF))
+// Handle error
+fmt.Printf("%s\n", resp.QueryResult)
+```
+
+### Running an Upsert
+
+The `RunDQL` function also allows you to run upserts as well.
+
+```go
+upsertQuery := `upsert {
+  query {
+    user as var(func: eq(email, "alice@example.com"))
+  }
+  mutation {
+    set {
+      uid(user) <age> "30" .
+      uid(user) <name> "Alice Sayum" .
+    }
+  }
+}`
+resp, err := client.RunDQL(context.TODO(), dgo.RootNamespace, upsertQuery)
+// Handle error
+fmt.Printf("%s\n", resp.QueryResult)
+fmt.Printf("%+v\n", resp.BlankUids)
+```
+
+### Running a conditional upsert
+
+```go
+upsertQuery := `upsert {
+  query {
+    user as var(func: eq(email, "alice@example.com"))
+  }
+  mutation @if(eq(len(user), 1)) {
+    set {
+      uid(user) <age> "30" .
+      uid(user) <name> "Alice Sayum" .
+    }
+  }
+}`
+resp, err := client.RunDQL(context.TODO(), dgo.RootNamespace, upsertQuery)
+// Handle error
+fmt.Printf("%s\n", resp.QueryResult)
+```
+
+### Creating a new namespace
+
+Dgraph v25 supports namespaces that have names. You can create one using the dgo
+client.
+
+```go
+err := client.CreateNamespace(context.TODO(), "finance-graph")
+// Handle error
+```
+
+You can now pass this name to `SetSchema`, `RunDQL` or similar functions.
+
+### Dropping a Namespace
+
+To drop a namespace:
+
+```go
+err := client.DropNamespace(context.TODO(), "finance-graph")
+// Handle error
+```
+
+### Rename a Namespace
+
+A namespace can be renamed as follows.
+
+```go
+err := client.RenameNamespace(context.TODO(), "finance-graph", "new-finance-graph")
+// Handle error
+```
+
+### List all namespaces
+
+```go
+namespaces, err := client.ListNamespaces(context.TODO())
+// Handle error
+fmt.Printf("%+v\n", namespaces)
+```
+
+## v1 APIs
+
+### Create the client
 
 To create a client, dial a connection to Dgraph's external gRPC port (typically
 `9080`). The following code snippet shows just one connection. You can connect
@@ -66,7 +380,6 @@ func newClient() *dgo.Dgraph {
     api.NewDgraphClient(d),
   )
 }
-
 ```
 
 ### Multi-tenancy
@@ -94,7 +407,7 @@ In this example, the client logs into namespace `123` using username `groot` and
 password `password`. Once logged in, the client can perform all the operations
 allowed to the `groot` user of namespace `123`.
 
-## Alter the database
+### Alter the database
 
 To set the schema, set it on a `api.Operation` object, and pass it down to the
 `Alter` method.
@@ -133,7 +446,7 @@ needs to be reused, such as in between unit tests.
   err := c.Alter(context.Background(), &api.Operation{DropOp: api.Operation_DATA})
 ```
 
-## Create a transaction
+### Create a transaction
 
 Dgraph supports running distributed ACID transactions. To create a transaction,
 just call `c.NewTxn()`. This operation doesn't incur in network calls.
@@ -163,7 +476,7 @@ reduce the number of outbound requests to Zero. This may yield improved
 latencies in read-bound workloads where linearizable reads are not strictly
 needed.
 
-## Run a query
+### Run a query
 
 You can run a query by calling `txn.Query`. The response would contain a `JSON`
 field, which has the JSON encoded result. You can unmarshal it into Go struct
@@ -197,7 +510,7 @@ via `json.Unmarshal`.
   }
 ```
 
-## Query with RDF response
+### Query with RDF response
 
 You can get query result as a RDF response by calling `txn.QueryRDF`. The
 response would contain a `Rdf` field, which has the RDF encoded result.
@@ -226,7 +539,7 @@ response would contain a `Rdf` field, which has the RDF encoded result.
   fmt.Println(resp.Rdf)
 ```
 
-## Run a mutation
+### Run a mutation
 
 `txn.Mutate` would run the mutation. It takes in a `api.Mutation` object, which
 provides two main ways to set data: JSON and RDF N-Quad. You can choose
@@ -261,7 +574,7 @@ Sometimes, you only want to commit mutation, without querying anything further.
 In such cases, you can use a `CommitNow` field in `api.Mutation` to indicate
 that the mutation must be immediately committed.
 
-## Commit the transaction
+### Commit the transaction
 
 Once all the queries and mutations are done, you can commit the transaction. It
 returns an error in case the transaction couldn't be committed.
@@ -275,7 +588,7 @@ returns an error in case the transaction couldn't be committed.
   err := txn.Commit(context.Background())
 ```
 
-## Complete example
+### Complete example
 
 This is an example from the [GoDoc](https://godoc.org/github.com/dgraph-io/dgo).
 It shows how to create a `Node` with name `Alice`, while also creating her
