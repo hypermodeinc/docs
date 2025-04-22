@@ -61,7 +61,7 @@ identifier, Dgraph creates only one node:
      },
      {
       "uid": "_:diggy",
-      "specie": "badger"
+      "species": "badger"
      }
    ]
  }
@@ -81,7 +81,7 @@ that was created with the `diggy` identifier:
 }
 ```
 
-Note that the `specie` field is added to the node already created with `name`
+Note that the `species` field is added to the node already created with `name`
 and `dgraph.type` information.
 
 ### Referencing existing nodes
@@ -96,18 +96,18 @@ For example:
    "set": [
      {
       "uid": "0xfffd8d72745f0650",
-      "specie": "badger"
+      "species": "badger"
      }
    ]
  }
 ```
 
-Adds the `specie` information to the node that was created earlier.
+Adds the `species` information to the node that was created earlier.
 
 ## Language support
 
 To set a string value for a specific language, append the language tag to the
-field name. In case, `specie` predicate has the @lang directive, the JSON
+field name. In case, `species` predicate has the @lang directive, the JSON
 mutation
 
 ```dql
@@ -117,14 +117,14 @@ mutation
       "uid": "_:diggy",
       "name": "diggy",
       "dgraph.type": "Mascot",
-      "specie@en" : "badger",
-      "specie@fr" : "blaireau"
+      "species@en" : "badger",
+      "species@fr" : "blaireau"
      }
    ]
  }
 ```
 
-Dgraph sets the `specie` string predicate in English and in French.
+Dgraph sets the `species` string predicate in English and in French.
 
 ## Geolocation support
 
