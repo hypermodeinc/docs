@@ -1,0 +1,131 @@
+---
+title: Model Router
+description: "Iterate quickly with seamless access to the most popular models"
+---
+
+With Model Router, you can access the most popular models with a single endpoint
+and bill. Experiment with new models and scale your app without worrying about
+the underlying infrastructure.
+
+## Setup
+
+Getting started with Model Router is simple. Generate an API key and drop it
+into your favorite framework.
+
+### Generate API key
+
+API keys for Model Router are generated within your workspace. Generate a key by
+[logging into the console](https://hypermode.com/login) and navigating to the
+Model Router page.
+
+### Connect via framework
+
+Model Router integrates easily into the most popular frameworks.
+
+<Tabs>
+  <Tab title="OpenAI SDK">
+    Model Router is a drop-in replacement for OpenAI's API.
+    <CodeGroup>
+      ```python Python
+      ```
+
+      ```typescript TypeScript
+      ```
+    </CodeGroup>
+
+  </Tab>
+  <Tab title="Vercel AI SDK">
+
+  </Tab>
+  <Tab title="Modus">
+
+    To use the Model Router in a Modus app, in your [app manifest](/modus/app-manifest) create
+    a connection to the Model Router and add a model that references that connection.
+
+    ```json modus.json {11-16}
+    {
+        ...
+      "models": {
+        "meta-llama-llama-4-scout-17b-16e-instruct": {
+          "sourceModel": "meta-llama/llama-4-scout-17b-16e-instruct",
+          "connection": "model-router",
+          "path": "v1/chat/completions"
+        },
+      },
+      "connections": {
+        "model-router": {
+          "type": "http",
+          "baseUrl": "https://models.hypermode.host/",
+          "headers": {
+            "Authorization": "Bearer {{API_KEY}}"
+          }
+        }
+      },
+      ...
+    }
+    ```
+
+  </Tab>
+</Tabs>
+
+### Connect directly via API
+
+You can also access the API directly.
+
+<CodeGroup>
+    ```python Python
+    coming soon
+    ```
+
+    ```typescript TypeScript
+    coming soon
+    ```
+
+    ```go Go
+    coming soon
+    ```
+
+</CodeGroup>
+
+## Available models
+
+Hypermode provides a variety of the most popular open source and commercial
+models.
+
+<Note>
+  We're constantly evaluating model usage in determining new models to add to
+  our catalog. Interested in using a model not listed here? Let us know at
+  [help@hypermode.com](mailto:help@hypermode.com).
+</Note>
+
+### Generation
+
+Large language models provide text generation and reasoning capabilities.
+
+| Provider | Model                     | Slug                                       | Model Unit Multiplier |
+| -------- | ------------------------- | ------------------------------------------ | --------------------- |
+| Meta     | Llama 3.2                 | `meta-llama/Llama-3.2-3B-Instruct`         | 1                     |
+| DeepSeek | DeepSeek-R1-Distill-Llama | `deepseek-ai/DeepSeek-R1-Distill-Llama-8B` | 1                     |
+
+### Embedding
+
+Embedding models provide vector representations of text for similarity matching
+and other applications.
+
+| Provider     | Model        | Slug                                     | Model Unit Multiplier |
+| ------------ | ------------ | ---------------------------------------- | --------------------- |
+| Hugging Face | MiniLM-L6-v2 | `sentence-transformers/all-MiniLM-L6-v2` | 0.1                   |
+| Hugging Face | MiniLM-L6-v2 | `sentence-transformers/all-MiniLM-L6-v2` | 0.1                   |
+
+## Logging
+
+By default, all model invocations are logged for future display in the console.
+If you'd like to opt out of model logging, please
+[contact us](mailto:help@hypermode.com).
+
+## Billing
+
+Hypermode Model Router simplifies how you pay for model consumption, billing by
+model compute time and type. Model Units are included with all paid plans and
+are calculated by taking the Model Unit Multiplier times the seconds of model
+runtime across all requests.

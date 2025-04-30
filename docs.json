@@ -61,7 +61,7 @@
           },
           {
             "group": "Tools",
-            "pages": ["hosted-models", "hyp-cli"]
+            "pages": ["model-router", "hyp-cli"]
           },
           {
             "group": "Resources",
@@ -542,6 +542,10 @@
     {
       "source": "/graphs/deploy",
       "destination": "/graphs/provision"
+    },
+    {
+      "source": "/hosted-models",
+      "destination": "/model-router"
     }
   ]
 }
