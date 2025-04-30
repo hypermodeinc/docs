@@ -248,125 +248,125 @@ callOpenAI()
 package main
 
 import (
-	"bytes"
-	"encoding/json"
-	"fmt"
-	"io"
-	"net/http"
-	"os"
+  "bytes"
+  "encoding/json"
+  "fmt"
+  "io"
+  "net/http"
+  "os"
 )
 
 // Define structs for the request and response
 type Message struct {
-	Role    string `json:"role"`
-	Content string `json:"content"`
+  Role    string `json:"role"`
+  Content string `json:"content"`
 }
 
 type ChatCompletionRequest struct {
-	Model       string    `json:"model"`
-	Messages    []Message `json:"messages"`
-	MaxTokens   int       `json:"max_tokens"`
-	Temperature float64   `json:"temperature"`
+  Model       string    `json:"model"`
+  Messages    []Message `json:"messages"`
+  MaxTokens   int       `json:"max_tokens"`
+  Temperature float64   `json:"temperature"`
 }
 
 type ChatCompletionChoice struct {
-	Message      Message `json:"message"`
-	Index        int     `json:"index"`
-	FinishReason string  `json:"finish_reason"`
+  Message      Message `json:"message"`
+  Index        int     `json:"index"`
+  FinishReason string  `json:"finish_reason"`
 }
 
 type Usage struct {
-	PromptTokens     int `json:"prompt_tokens"`
-	CompletionTokens int `json:"completion_tokens"`
-	TotalTokens      int `json:"total_tokens"`
+  PromptTokens     int `json:"prompt_tokens"`
+  CompletionTokens int `json:"completion_tokens"`
+  TotalTokens      int `json:"total_tokens"`
 }
 
 type ChatCompletionResponse struct {
-	ID      string                 `json:"id"`
-	Object  string                 `json:"object"`
-	Created int64                  `json:"created"`
-	Model   string                 `json:"model"`
-	Choices []ChatCompletionChoice `json:"choices"`
-	Usage   Usage                  `json:"usage"`
+  ID      string                 `json:"id"`
+  Object  string                 `json:"object"`
+  Created int64                  `json:"created"`
+  Model   string                 `json:"model"`
+  Choices []ChatCompletionChoice `json:"choices"`
+  Usage   Usage                  `json:"usage"`
 }
 
 func main() {
-	// Your Hypermode API key
-	apiKey := "<HYPERMODE_API_KEY>"
+  // Your Hypermode API key
+  apiKey := "<HYPERMODE_API_KEY>"
 
-	// Use the Hypermode Model Router base url
-	baseURL := "https://models.hypermode.host"
+  // Use the Hypermode Model Router base url
+  baseURL := "https://models.hypermode.host"
 
-	// API endpoint
-	endpoint := baseURL + "/v1/chat/completions"
+  // API endpoint
+  endpoint := baseURL + "/v1/chat/completions"
 
-	// Create the request payload
-	requestBody := ChatCompletionRequest{
-		Model: "meta-llama/llama-4-scout-17b-16e-instruct",
-		Messages: []Message{
-			{
-				Role:    "system",
-				Content: "You are a helpful assistant.",
-			},
-			{
-				Role:    "user",
-				Content: "What is Dgraph?",
-			},
-		},
-		MaxTokens:   150,
-		Temperature: 0.7,
-	}
+  // Create the request payload
+  requestBody := ChatCompletionRequest{
+    Model: "meta-llama/llama-4-scout-17b-16e-instruct",
+    Messages: []Message{
+      {
+        Role:    "system",
+        Content: "You are a helpful assistant.",
+      },
+      {
+        Role:    "user",
+        Content: "What is Dgraph?",
+      },
+    },
+    MaxTokens:   150,
+    Temperature: 0.7,
+  }
 
-	// Convert the request to JSON
-	jsonData, err := json.Marshal(requestBody)
-	if err != nil {
-		fmt.Printf("Error marshaling JSON: %v\n", err)
-		os.Exit(1)
-	}
+  // Convert the request to JSON
+  jsonData, err := json.Marshal(requestBody)
+  if err != nil {
+    fmt.Printf("Error marshaling JSON: %v\n", err)
+    os.Exit(1)
+  }
 
-	// Create an HTTP request
-	req, err := http.NewRequest("POST", endpoint, bytes.NewBuffer(jsonData))
-	if err != nil {
-		fmt.Printf("Error creating request: %v\n", err)
-		os.Exit(1)
-	}
+  // Create an HTTP request
+  req, err := http.NewRequest("POST", endpoint, bytes.NewBuffer(jsonData))
+  if err != nil {
+    fmt.Printf("Error creating request: %v\n", err)
+    os.Exit(1)
+  }
 
-	// Set headers
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+apiKey)
+  // Set headers
+  req.Header.Set("Content-Type", "application/json")
+  req.Header.Set("Authorization", "Bearer "+apiKey)
 
-	// Create an HTTP client and send the request
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		fmt.Printf("Error sending request: %v\n", err)
-		os.Exit(1)
-	}
-	defer resp.Body.Close()
+  // Create an HTTP client and send the request
+  client := &http.Client{}
+  resp, err := client.Do(req)
+  if err != nil {
+    fmt.Printf("Error sending request: %v\n", err)
+    os.Exit(1)
+  }
+  defer resp.Body.Close()
 
-	// Read the response body
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Printf("Error reading response: %v\n", err)
-		os.Exit(1)
-	}
+  // Read the response body
+  body, err := io.ReadAll(resp.Body)
+  if err != nil {
+    fmt.Printf("Error reading response: %v\n", err)
+    os.Exit(1)
+  }
 
-	// Check if the request was successful
-	if resp.StatusCode == http.StatusOK {
-		// Parse and print the response
-		var response ChatCompletionResponse
-		err = json.Unmarshal(body, &response)
-		if err != nil {
-			fmt.Printf("Error parsing response: %v\n", err)
-			os.Exit(1)
-		}
+  // Check if the request was successful
+  if resp.StatusCode == http.StatusOK {
+    // Parse and print the response
+    var response ChatCompletionResponse
+    err = json.Unmarshal(body, &response)
+    if err != nil {
+      fmt.Printf("Error parsing response: %v\n", err)
+      os.Exit(1)
+    }
 
-		fmt.Println(response.Choices[0].Message.Content)
-	} else {
-		// Print error information
-		fmt.Printf("Error: %d\n", resp.StatusCode)
-		fmt.Println(string(body))
-	}
+    fmt.Println(response.Choices[0].Message.Content)
+  } else {
+    // Print error information
+    fmt.Printf("Error: %d\n", resp.StatusCode)
+    fmt.Println(string(body))
+  }
 }
 
 ```
@@ -497,7 +497,3 @@ Hypermode Model Router simplifies how you pay for model consumption, billing by
 model compute time and type. Model Units are included with all paid plans and
 are calculated by taking the Model Unit Multiplier times the seconds of model
 runtime across all requests.
-
-```
-
-```
