@@ -15,8 +15,8 @@ into your favorite framework.
 ### Generate API key
 
 API keys for Model Router are generated within your workspace. Generate a key by
-[logging into the console](https://hypermode.com/login) and navigating to the
-Model Router page.
+[logging into the console](https://hypermode.com/login) and navigating to
+**Model router** → **API keys**.
 
 ### Connect via framework
 
@@ -30,9 +30,9 @@ Model Router integrates easily into the most popular frameworks.
 ```python Python
 import openai
 
-# Configure with your Hypermode API key and Hypermode Model Router base url
+# Configure with your Hypermode Workspace API key and Hypermode Model Router base url
 client = openai.OpenAI(
-    api_key="<HYPERMODE_API_KEY>",
+    api_key="<YOUR_HYP_WKS_KEY>",
     base_url="https://models.hypermode.host/v1",
 )
 
@@ -41,7 +41,7 @@ response = client.chat.completions.create(
     model="meta-llama/llama-4-scout-17b-16e-instruct",
     messages=[
         {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": "What is Dgraph?"},
+        {"role": "user", "content": "What is Modus?"},
     ],
     max_tokens=150,
     temperature=0.7,
@@ -55,9 +55,9 @@ print(response.choices[0].message.content)
 ```typescript TypeScript
 import OpenAI from "openai"
 
-// Configure with your Hypermode API key and Hypermode Model Router base url
+// Configure with your Hypermode Workspace API key and Hypermode Model Router base url
 const client = new OpenAI({
-  apiKey: "<HYPERMODE_API_KEY>",
+  apiKey: "<YOUR_HYP_WKS_KEY>",
   baseURL: "https://models.hypermode.host/v1",
 })
 
@@ -68,7 +68,7 @@ async function generateCompletion() {
       model: "meta-llama/llama-4-scout-17b-16e-instruct",
       messages: [
         { role: "system", content: "You are a helpful assistant." },
-        { role: "user", content: "What is Dgraph?" },
+        { role: "user", content: "What is Modus?" },
       ],
       max_tokens: 150,
       temperature: 0.7,
@@ -90,36 +90,69 @@ generateCompletion()
   </Tab>
   <Tab title="Vercel AI SDK">
 
+```typescript
+import { createOpenAI } from "@ai-sdk/openai"
+import { generateText } from "ai"
+
+// Configure with your Hypermode Workspace API key and Hypermode Model Router base url
+const hypermode = createOpenAI({
+  name: "hypermode",
+  apiKey: "<YOUR_HYP_WKS_KEY>",
+  baseURL: "https://models.hypermode.host/v1",
+})
+
+async function generateHoliday() {
+  try {
+    const { text, usage, providerMetadata } = await generateText({
+      model: hypermode("o3-mini"),
+      prompt: "Invent a new holiday and describe its traditions.",
+      providerOptions: { hypermode: { reasoningEffort: "low" } },
+    })
+
+    // Print the response
+    console.log(text)
+    return { text, usage, providerMetadata }
+  } catch (error) {
+    console.error("Error generating text:", error)
+    throw error
+  }
+}
+
+// Call the function
+generateHoliday()
+```
+
   </Tab>
   <Tab title="Modus">
 
-    To use the Model Router in a Modus app, in your [app manifest](/modus/app-manifest) create
-    a connection to the Model Router and add a model that references that connection.
+To use the Model Router in a Modus app, in your
+[app manifest](/modus/app-manifest) create a connection to the Model Router and
+add a model that references that connection.
 
-    ```json modus.json {11-16}
-    {
-        ...
-      "models": {
-        "meta-llama-llama-4-scout-17b-16e-instruct": {
-          "sourceModel": "meta-llama/llama-4-scout-17b-16e-instruct",
-          "connection": "model-router",
-          "path": "v1/chat/completions"
-        },
-      },
-      "connections": {
-        "model-router": {
-          "type": "http",
-          "baseUrl": "https://models.hypermode.host/",
-          "headers": {
-            "Authorization": "Bearer {{API_KEY}}"
-          }
-        }
-      },
-      ...
+```json modus.json {11-16}
+{
+    ...
+  "models": {
+    "meta-llama-llama-4-scout-17b-16e-instruct": {
+      "sourceModel": "meta-llama/llama-4-scout-17b-16e-instruct",
+      "connection": "model-router",
+      "path": "v1/chat/completions"
+    },
+  },
+  "connections": {
+    "model-router": {
+      "type": "http",
+      "baseUrl": "https://models.hypermode.host/",
+      "headers": {
+        "Authorization": "Bearer {{YOUR_HYP_WKS_KEY}}"
+      }
     }
-    ```
+  },
+  ...
+}
+```
 
-  </Tab>
+</Tab>
 </Tabs>
 
 ### Connect directly via API
@@ -132,27 +165,27 @@ You can also access the API directly.
 import requests
 import json
 
-# Your Hypermode API key
-api_key = "<HYPERMODE_API_KEY>"
+# Your Hypermode Workspace API key
+api_key = "<YOUR_HYP_WKS_KEY>"
 
 # Use the Hypermode Model Router base url
-base_url = "https://models.hypermode.host"
+base_url = "https://models.hypermode.host/v1"
 
 # API endpoint
-endpoint = f"{base_url}/v1/chat/completions"
+endpoint = f"{base_url}/chat/completions"
 
 # Headers
 headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
 
 # Request payload
 payload = {
-    "model": "meta-llama/llama-4-scout-17b-16e-instruct",
-    "messages": [
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": "What is Dgraph?"},
-    ],
-    "max_tokens": 150,
-    "temperature": 0.7,
+  "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+  "messages": [
+      {"role": "system", "content": "You are a helpful assistant."},
+      {"role": "user", "content": "What is Dgraph?"},
+  ],
+  "max_tokens": 150,
+  "temperature": 0.7,
 }
 
 # Make the API request
@@ -160,13 +193,13 @@ response = requests.post(endpoint, headers=headers, data=json.dumps(payload))
 
 # Check if the request was successful
 if response.status_code == 200:
-    # Parse and print the response
-    response_data = response.json()
-    print(response_data["choices"][0]["message"]["content"])
+  # Parse and print the response
+  response_data = response.json()
+  print(response_data["choices"][0]["message"]["content"])
 else:
-    # Print error information
-    print(f"Error: {response.status_code}")
-    print(response.text)
+  # Print error information
+  print(f"Error: {response.status_code}")
+  print(response.text)
 ```
 
 ```typescript TypeScript
@@ -194,14 +227,14 @@ interface ChatCompletionResponse {
 }
 
 async function callOpenAI(): Promise<void> {
-  // Your Hypermode API key
-  const apiKey = "<HYPERMODE_API_KEY>"
+  // Your Hypermode Workspace API key
+  const apiKey = "<YOUR_HYP_WKS_KEY>"
 
   // Use the Hypermode Model Router base url
-  const baseUrl = "https://models.hypermode.host"
+  const baseUrl = "https://models.hypermode.host/v1"
 
   // API endpoint
-  const endpoint = `${baseUrl}/v1/chat/completions`
+  const endpoint = `${baseUrl}/chat/completions`
 
   // Request payload
   const payload = {
@@ -291,14 +324,14 @@ type ChatCompletionResponse struct {
 }
 
 func main() {
-  // Your Hypermode API key
-  apiKey := "<HYPERMODE_API_KEY>"
+  // Your Hypermode Workspace API key
+  apiKey := "<YOUR_HYP_WKS_KEY>"
 
   // Use the Hypermode Model Router base url
-  baseURL := "https://models.hypermode.host"
+  baseURL := "https://models.hypermode.host/v1"
 
   // API endpoint
-  endpoint := baseURL + "/v1/chat/completions"
+  endpoint := baseURL + "/chat/completions"
 
   // Create the request payload
   requestBody := ChatCompletionRequest{
@@ -388,112 +421,101 @@ models.
 
 Large language models provide text generation and reasoning capabilities.
 
-| Provider  | Model                                 | Slug                                        | Model Unit Multiplier |
-| --------- | ------------------------------------- | ------------------------------------------- | --------------------- |
-| Meta      | Llama 4 Scout                         | `meta-llama/llama-4-scout-17b-16e-instruct` | 1                     |
-| Meta      | Llama 3.2                             | `meta-llama/llama-3.2-3b-instruct`          | 1                     |
-| DeepSeek  | DeepSeek-R1-Distill-Llama             | `deepseek-ai/deepseek-r1-distill-llama-8b`  | 1                     |
-| Anthropic | Claude 3.7 Sonnet                     | `claude-3-7-sonnet-20250219`                | 1                     |
-| Anthropic | Claude 3.5 Sonnet                     | `claude-3-5-sonnet-20241022`                | 1                     |
-| Anthropic | Claude 3.5 Haiku                      | `claude-3-5-haiku-20241022`                 | 1                     |
-| Anthropic | Claude 3.5 Sonnet                     | `claude-3-5-sonnet-20240620`                | 1                     |
-| Anthropic | Claude 3.5 Haiku                      | `claude-3-5-haiku-20240307`                 | 1                     |
-| Anthropic | Claude 3.5 Opus                       | `claude-3-5-opus-20240229`                  | 1                     |
-| Anthropic | Claude 3.5 Sonnet                     | `claude-3-5-sonnet-20240229`                | 1                     |
-| Anthropic | Claude 2.1                            | `claude-2.1`                                | 1                     |
-| Anthropic | Claude 2.0                            | `claude-2.0`                                | 1                     |
-| OpenAI    | o1                                    | `o1`                                        | 1                     |
-| OpenAI    | o1                                    | `o1-2024-12-17`                             | 1                     |
-| OpenAI    | o1-mini                               | `o1-mini`                                   | 1                     |
-| OpenAI    | o1-mini-2024-09-12                    | `o1-mini-2024-09-12`                        | 1                     |
-| OpenAI    | o1-preview                            | `o1-preview`                                | 1                     |
-| OpenAI    | o1-preview-2024-09-12                 | `o1-preview-2024-09-12`                     | 1                     |
-| OpenAI    | o3-mini                               | `o3-mini`                                   | 1                     |
-| OpenAI    | o3-mini-2025-01-31                    | `o3-mini-2025-01-31`                        | 1                     |
-| OpenAI    | gpt-4.1                               | `gpt-4.1`                                   | 1                     |
-| OpenAI    | gpt-4.1-2025-04-14                    | `gpt-4.1-2025-04-14`                        | 1                     |
-| OpenAI    | gpt-4.1-mini                          | `gpt-4.1-mini`                              | 1                     |
-| OpenAI    | gpt-4.1-mini-2025-04-14               | `gpt-4.1-mini-2025-04-14`                   | 1                     |
-| OpenAI    | gpt-4.1-nano                          | `gpt-4.1-nano`                              | 1                     |
-| OpenAI    | gpt-4.1-nano-2025-04-14               | `gpt-4.1-nano-2025-04-14`                   | 1                     |
-| OpenAI    | gpt-4o                                | `gpt-4o`                                    | 1                     |
-| OpenAI    | gpt-4o-2024-05-13                     | `gpt-4o-2024-05-13`                         | 1                     |
-| OpenAI    | gpt-4o-2024-08-06                     | `gpt-4o-2024-08-06`                         | 1                     |
-| OpenAI    | gpt-4o-2024-11-20                     | `gpt-4o-2024-11-20`                         | 1                     |
-| OpenAI    | gpt-4o-audio-preview                  | `gpt-4o-audio-preview`                      | 1                     |
-| OpenAI    | gpt-4o-audio-preview-2024-10-01       | `gpt-4o-audio-preview-2024-10-01`           | 1                     |
-| OpenAI    | gpt-4o-audio-preview-2024-12-17       | `gpt-4o-audio-preview-2024-12-17`           | 1                     |
-| OpenAI    | gpt-4o-search-preview                 | `gpt-4o-search-preview`                     | 1                     |
-| OpenAI    | gpt-4o-search-preview-2025-03-11      | `gpt-4o-search-preview-2025-03-11`          | 1                     |
-| OpenAI    | gpt-4o-mini                           | `gpt-4o-mini`                               | 1                     |
-| OpenAI    | gpt-4o-mini-2024-07-18                | `gpt-4o-mini-2024-07-18`                    | 1                     |
-| OpenAI    | gpt-4-turbo                           | `gpt-4-turbo`                               | 1                     |
-| OpenAI    | gpt-4-turbo-2024-04-09                | `gpt-4-turbo-2024-04-09`                    | 1                     |
-| OpenAI    | gpt-4-turbo-preview                   | `gpt-4-turbo-preview`                       | 1                     |
-| OpenAI    | gpt-4-0125-preview                    | `gpt-4-0125-preview`                        | 1                     |
-| OpenAI    | gpt-4-1106-preview                    | `gpt-4-1106-preview`                        | 1                     |
-| OpenAI    | gpt-4                                 | `gpt-4`                                     | 1                     |
-| OpenAI    | gpt-4-0613                            | `gpt-4-0613`                                | 1                     |
-| OpenAI    | gpt-4.5-preview                       | `gpt-4.5-preview`                           | 1                     |
-| OpenAI    | gpt-4.5-preview-2025-02-27            | `gpt-4.5-preview-2025-02-27`                | 1                     |
-| OpenAI    | gpt-3.5-turbo-0125                    | `gpt-3.5-turbo-0125`                        | 1                     |
-| OpenAI    | gpt-3.5-turbo                         | `gpt-3.5-turbo`                             | 1                     |
-| OpenAI    | gpt-3.5-turbo-1106                    | `gpt-3.5-turbo-1106`                        | 1                     |
-| OpenAI    | gpt-3.5-turbo                         | `gpt-3.5-turbo`                             | 1                     |
-| OpenAI    | gpt-3.5-turbo-1106                    | `gpt-3.5-turbo-1106`                        | 1                     |
-| OpenAI    | chatgpt-4o-latest                     | `chatgpt-4o-latest`                         | 1                     |
-| Google    | gemini-pro-vision                     | `gemini-pro-vision`                         | 1                     |
-| Google    | gemini-1.5-pro-latest                 | `gemini-1.5-pro-latest`                     | 1                     |
-| Google    | gemini-1.5-pro-001                    | `gemini-1.5-pro-001`                        | 1                     |
-| Google    | gemini-1.5-pro-002                    | `gemini-1.5-pro-002`                        | 1                     |
-| Google    | gemini-1.5-pro                        | `gemini-1.5-pro`                            | 1                     |
-| Google    | gemini-1.5-flash-latest               | `gemini-1.5-flash-latest`                   | 1                     |
-| Google    | gemini-1.5-flash-001                  | `gemini-1.5-flash-001`                      | 1                     |
-| Google    | gemini-1.5-flash-001-tuning           | `gemini-1.5-flash-001-tuning`               | 1                     |
-| Google    | gemini-1.5-flash                      | `gemini-1.5-flash`                          | 1                     |
-| Google    | gemini-1.5-flash-002                  | `gemini-1.5-flash-002`                      | 1                     |
-| Google    | gemini-1.5-flash-8b                   | `gemini-1.5-flash-8b`                       | 1                     |
-| Google    | gemini-1.5-flash-8b-001               | `gemini-1.5-flash-8b-001`                   | 1                     |
-| Google    | gemini-1.5-flash-8b-latest            | `gemini-1.5-flash-8b-latest`                | 1                     |
-| Google    | gemini-1.5-flash-8b-exp-0827          | `gemini-1.5-flash-8b-exp-0827`              | 1                     |
-| Google    | gemini-1.5-flash-8b-exp-0924          | `gemini-1.5-flash-8b-exp-0924`              | 1                     |
-| Google    | gemini-2.5-pro-exp-03-25              | `gemini-2.5-pro-exp-03-25`                  | 1                     |
-| Google    | gemini-2.5-pro-preview-03-25          | `gemini-2.5-pro-preview-03-25`              | 1                     |
-| Google    | gemini-2.5-flash-preview-04-17        | `gemini-2.5-flash-preview-04-17`            | 1                     |
-| Google    | gemini-2.0-flash-exp                  | `gemini-2.0-flash-exp`                      | 1                     |
-| Google    | gemini-2.0-flash                      | `gemini-2.0-flash`                          | 1                     |
-| Google    | gemini-2.0-flash-001                  | `gemini-2.0-flash-001`                      | 1                     |
-| Google    | gemini-2.0-flash-exp-image-generation | `gemini-2.0-flash-exp-image-generation`     | 1                     |
-| Google    | gemini-2.0-flash-lite-001             | `gemini-2.0-flash-lite-001`                 | 1                     |
-| Google    | gemini-2.0-flash-lite                 | `gemini-2.0-flash-lite`                     | 1                     |
-| Google    | gemini-2.0-flash-lite-preview-02-05   | `gemini-2.0-flash-lite-preview-02-05`       | 1                     |
-| Google    | gemini-2.0-flash-lite-preview         | `gemini-2.0-flash-lite-preview`             | 1                     |
-| Google    | gemini-2.0-pro-exp                    | `gemini-2.0-pro-exp`                        | 1                     |
-| Google    | gemini-2.0-pro-exp-02-05              | `gemini-2.0-pro-exp-02-05`                  | 1                     |
-| Google    | gemini-2.0-flash-thinking-exp-01-21   | `gemini-2.0-flash-thinking-exp-01-21`       | 1                     |
-| Google    | gemini-2.0-flash-thinking-exp         | `gemini-2.0-flash-thinking-exp`             | 1                     |
-| Google    | gemini-2.0-flash-thinking-exp-1219    | `gemini-2.0-flash-thinking-exp-1219`        | 1                     |
-| Google    | gemini-2.0-flash-live-001             | `gemini-2.0-flash-live-001`                 | 1                     |
+| Provider  | Model                                  | Slug                                        |
+| --------- | -------------------------------------- | ------------------------------------------- |
+| Anthropic | Claude 3.7 Sonnet                      | `claude-3-7-sonnet-20250219`                |
+| Anthropic | Claude 3.5 Sonnet (latest)             | `claude-3-5-sonnet-20241022`                |
+| Anthropic | Claude 3.5 Sonnet                      | `claude-3-5-sonnet-20240620`                |
+| Anthropic | Claude 3.5 Sonnet                      | `claude-3-5-sonnet-20240229`                |
+| Anthropic | Claude 3.5 Haiku (latest)              | `claude-3-5-haiku-20241022`                 |
+| Anthropic | Claude 3.5 Haiku                       | `claude-3-5-haiku-20240307`                 |
+| Anthropic | Claude 3.5 Opus                        | `claude-3-5-opus-20240229`                  |
+| Anthropic | Claude 2.1                             | `claude-2.1`                                |
+| Anthropic | Claude 2.0                             | `claude-2.0`                                |
+| DeepSeek  | DeepSeek-R1-Distill-Llama              | `deepseek-ai/deepseek-r1-distill-llama-8b`  |
+| Google    | Gemini 2.5 Pro                         | `gemini-2.5-pro-exp-03-25`                  |
+| Google    | Gemini 2.5 Pro Preview                 | `gemini-2.5-pro-preview-03-25`              |
+| Google    | Gemini 2.5 Flash Preview               | `gemini-2.5-flash-preview-04-17`            |
+| Google    | Gemini 2.0 Pro                         | `gemini-2.0-pro-exp-02-05`                  |
+| Google    | Gemini 2.0 Flash Lite (latest)         | `gemini-2.0-flash-lite`                     |
+| Google    | Gemini 2.0 Flash Lite                  | `gemini-2.0-flash-lite-001`                 |
+| Google    | Gemini 2.0 Flash Lite Preview (latest) | `gemini-2.0-flash-lite-preview-02-05`       |
+| Google    | Gemini 2.0 Flash Lite Preview          | `gemini-2.0-flash-lite-preview`             |
+| Google    | Gemini 2.0 Flash Image Generation      | `gemini-2.0-flash-exp-image-generation`     |
+| Google    | Gemini 2.0 Flash Thinking (latest)     | `gemini-2.0-flash-thinking-exp`             |
+| Google    | Gemini 2.0 Flash Thinking              | `gemini-2.0-flash-thinking-exp-1219`        |
+| Google    | Gemini 2.0 Flash Thinking              | `gemini-2.0-flash-thinking-exp-01-21`       |
+| Google    | Gemini 2.0 Flash Live                  | `gemini-2.0-flash-live-001`                 |
+| Google    | Gemini 2.0 Flash (latest)              | `gemini-2.0-flash`                          |
+| Google    | Gemini 2.0 Flash                       | `gemini-2.0-flash-001`                      |
+| Google    | Gemini 2.0 Flash                       | `gemini-2.0-flash-exp`                      |
+| Google    | Gemini 1.5 Pro (latest)                | `gemini-1.5-pro-latest`                     |
+| Google    | Gemini 1.5 Pro                         | `gemini-1.5-pro`                            |
+| Google    | Gemini 1.5 Pro                         | `gemini-1.5-pro-002`                        |
+| Google    | Gemini 1.5 Pro                         | `gemini-1.5-pro-001`                        |
+| Google    | Gemini 1.5 Flash (latest)              | `gemini-1.5-flash-latest`                   |
+| Google    | Gemini 1.5 Flash                       | `gemini-1.5-flash`                          |
+| Google    | Gemini 1.5 Flash                       | `gemini-1.5-flash-002`                      |
+| Google    | Gemini 1.5 Flash                       | `gemini-1.5-flash-001`                      |
+| Google    | Gemini 1.5 Flash 8B (latest)           | `gemini-1.5-flash-8b-latest`                |
+| Google    | Gemini 1.5 Flash 8B                    | `gemini-1.5-flash-8b`                       |
+| Google    | Gemini 1.5 Flash 8B                    | `gemini-1.5-flash-8b-exp-0924`              |
+| Google    | Gemini 1.5 Flash 8B                    | `gemini-1.5-flash-8b-exp-0827`              |
+| Google    | Gemini 1.5 Flash 8B                    | `gemini-1.5-flash-8b-001`                   |
+| Google    | Gemini Pro Vision                      | `gemini-pro-vision`                         |
+| Meta      | Llama 4 Scout                          | `meta-llama/llama-4-scout-17b-16e-instruct` |
+| Meta      | Llama 3.2                              | `meta-llama/llama-3.2-3b-instruct`          |
+| OpenAI    | GPT 4.5 Preview (latest)               | `gpt-4.5-preview`                           |
+| OpenAI    | GPT 4.5 Preview                        | `gpt-4.5-preview-2025-02-27`                |
+| OpenAI    | O3 Mini (latest)                       | `o3-mini`                                   |
+| OpenAI    | O3 Mini                                | `o3-mini-2025-01-31`                        |
+| OpenAI    | O1 (latest)                            | `o1`                                        |
+| OpenAI    | O1                                     | `o1-2024-12-17`                             |
+| OpenAI    | O1 Preview (latest)                    | `o1-preview`                                |
+| OpenAI    | O1 Preview                             | `o1-preview-2024-09-12`                     |
+| OpenAI    | O1 Mini (latest)                       | `o1-mini`                                   |
+| OpenAI    | O1 Mini                                | `o1-mini-2024-09-12`                        |
+| OpenAI    | GPT 4.1 (latest)                       | `gpt-4.1`                                   |
+| OpenAI    | GPT 4.1                                | `gpt-4.1-2025-04-14`                        |
+| OpenAI    | GPT 4.1 Mini (latest)                  | `gpt-4.1-mini`                              |
+| OpenAI    | GPT 4.1 Mini                           | `gpt-4.1-mini-2025-04-14`                   |
+| OpenAI    | GPT 4.1 Nano (latest)                  | `gpt-4.1-nano`                              |
+| OpenAI    | GPT 4.1 Nano                           | `gpt-4.1-nano-2025-04-14`                   |
+| OpenAI    | GPT 4o (latest)                        | `gpt-4o`                                    |
+| OpenAI    | GPT 4o                                 | `gpt-4o-2024-11-20`                         |
+| OpenAI    | GPT 4o                                 | `gpt-4o-2024-08-06`                         |
+| OpenAI    | GPT 4o                                 | `gpt-4o-2024-05-13`                         |
+| OpenAI    | GPT 4o Mini (latest)                   | `gpt-4o-mini`                               |
+| OpenAI    | GPT 4o Mini                            | `gpt-4o-mini-2024-07-18`                    |
+| OpenAI    | GPT 4o Audio Preview (latest)          | `gpt-4o-audio-preview`                      |
+| OpenAI    | GPT 4o Audio Preview                   | `gpt-4o-audio-preview-2024-12-17`           |
+| OpenAI    | GPT 4o Audio Preview                   | `gpt-4o-audio-preview-2024-10-01`           |
+| OpenAI    | GPT 4o Search Preview (latest)         | `gpt-4o-search-preview`                     |
+| OpenAI    | GPT 4o Search Preview                  | `gpt-4o-search-preview-2025-03-11`          |
+| OpenAI    | GPT 4o Search Preview                  | `gpt-4o-search-preview-2025-03-11`          |
+| OpenAI    | ChatGPT 4o                             | `chatgpt-4o-latest`                         |
+| OpenAI    | GPT 4 (latest)                         | `gpt-4`                                     |
+| OpenAI    | GPT 4                                  | `gpt-4-0613`                                |
+| OpenAI    | GPT 4 Turbo                            | `gpt-4-turbo-2024-04-09`                    |
+| OpenAI    | GPT 4 Turbo Preview                    | `gpt-4-turbo-preview`                       |
+| OpenAI    | GPT 4 Preview (latest)                 | `gpt-4-1106-preview`                        |
+| OpenAI    | GPT 4 Preview                          | `gpt-4-0125-preview`                        |
+| OpenAI    | GPT 3.5 Turbo (latest)                 | `gpt-3.5-turbo`                             |
+| OpenAI    | GPT 3.5 Turbo                          | `gpt-3.5-turbo-1106`                        |
+| OpenAI    | GPT 3.5 Turbo                          | `gpt-3.5-turbo-0125`                        |
 
 ### Embedding
 
 Embedding models provide vector representations of text for similarity matching
 and other applications.
 
-| Provider     | Model        | Slug                                     | Model Unit Multiplier |
-| ------------ | ------------ | ---------------------------------------- | --------------------- |
-| Hugging Face | MiniLM-L6-v2 | `sentence-transformers/all-MiniLM-L6-v2` | 0.1                   |
-| Hugging Face | MiniLM-L6-v2 | `sentence-transformers/all-MiniLM-L6-v2` | 0.1                   |
+| Provider     | Model           | Slug                                     |
+| ------------ | --------------- | ---------------------------------------- |
+| Hugging Face | MiniLM-L6-v2    | `sentence-transformers/all-MiniLM-L6-v2` |
+| Nomic AI     | Embed Text V1.5 | `nomic-ai/nomic-embed-text-v1.5`         |
 
 ## Logging
 
 By default, all model invocations are logged for future display in the console.
 If you'd like to opt out of model logging, please
 [contact us](mailto:help@hypermode.com).
-
-## Billing
-
-Hypermode Model Router simplifies how you pay for model consumption, billing by
-model compute time and type. Model Units are included with all paid plans and
-are calculated by taking the Model Unit Multiplier times the seconds of model
-runtime across all requests.
