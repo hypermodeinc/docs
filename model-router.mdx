@@ -159,6 +159,8 @@ add a model that references that connection.
 
 You can also access the API directly.
 
+### Generation
+
 <CodeGroup>
 
 ```bash curl
@@ -411,6 +413,256 @@ func main() {
     }
 
     fmt.Println(response.Choices[0].Message.Content)
+  } else {
+    // Print error information
+    fmt.Printf("Error: %d\n", resp.StatusCode)
+    fmt.Println(string(body))
+  }
+}
+
+```
+
+</CodeGroup>
+
+### Embeddings
+
+<CodeGroup>
+
+```bash curl
+# Note: verify that you model supports dimensions parameter
+# this is the case for OpenAI 'text-embedding-3' and later models.
+
+curl -X POST \
+  https://models.hypermode.host/v1/embeddings \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $YOUR_HYP_WKS_KEY" \
+  -d '{
+    "model": "text-embedding-3-large",
+    "dimensions": 256,
+    "input": [
+        "Hypermode is an AI development platform that provides hosting and management capabilities for agents and knowledge graphs",
+        "Modus is an open source, serverless framework for building functions and APIs, powered by WebAssembly."
+    ],
+    "encoding_format": "float"
+  }'
+
+```
+
+```python Python
+import requests
+import json
+
+# Your Hypermode Workspace API key
+api_key = "<YOUR_HYP_WKS_KEY>"
+
+# Use the Hypermode Model Router base url
+base_url = "https://models.hypermode.host/v1"
+
+# API endpoint
+endpoint = f"{base_url}/embeddings"
+
+# Headers
+headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
+
+# Request payload
+payload = {
+  "model": "text-embedding-3-large",
+  "input": [
+      "Hypermode is an AI development platform that provides hosting and management capabilities for agents and knowledge graphs",
+      "Modus is an open source, serverless framework for building functions and APIs, powered by WebAssembly."
+  ],
+  "dimensions": 256,
+}
+
+# Make the API request
+response = requests.post(endpoint, headers=headers, data=json.dumps(payload))
+
+# Check if the request was successful
+if response.status_code == 200:
+  # Parse and print the response
+  response_data = response.json()
+  print(response_data["data"])
+else:
+  # Print error information
+  print(f"Error: {response.status_code}")
+  print(response.text)
+```
+
+```typescript TypeScript
+// Define types for API responses
+interface EmbeddingResult {
+  object: string
+  index: number
+  embedding: number[]
+}
+
+interface EmbeddingResponse {
+  object: string
+  data: EmbeddingResult[]
+  model: string
+  usage: {
+    prompt_tokens: number
+    total_tokens: number
+  }
+}
+
+async function testEmbeddings(): Promise<void> {
+  // Your Hypermode Workspace API key
+  const apiKey = "<YOUR_HYP_WKS_KEY>"
+
+  // Use the Hypermode Model Router base url
+  const baseUrl = "https://models.hypermode.host/v1"
+
+  // API endpoint
+  const endpoint = `${baseUrl}/embeddings`
+
+  // Request payload
+  const payload = {
+    model: "text-embedding-3-large",
+    input: [
+      "Hypermode is an AI development platform that provides hosting and management capabilities for agents and knowledge graphs",
+      "Modus is an open source, serverless framework for building functions and APIs, powered by WebAssembly.",
+    ],
+    dimensions: 256,
+  }
+
+  try {
+    // Make the API request
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify(payload),
+    })
+
+    // Check if the request was successful
+    if (response.ok) {
+      // Parse and print the response
+      const responseData: EmbeddingResponse = await response.json()
+      console.log(responseData.data)
+    } else {
+      // Print error information
+      console.error(`Error: ${response.status}`)
+      console.error(await response.text())
+    }
+  } catch (error) {
+    console.error("Request failed:", error)
+  }
+}
+
+// Call the function
+testEmbeddings()
+```
+
+```go Go
+package main
+
+import (
+  "bytes"
+  "encoding/json"
+  "fmt"
+  "io"
+  "net/http"
+  "os"
+)
+
+// Define structs for the request and response
+type Message struct {
+  Role    string `json:"role"`
+  Content string `json:"content"`
+}
+
+type EmbeddingRequest struct {
+  Model       string    `json:"model"`
+  Input    []string `json:"input"`
+  Dimensions   int       `json:"dimensions"`
+}
+
+type EmbeddingResult struct {
+  Object    string       `json:"object"`
+  Index     int           `json:"index"`
+  Embedding []float       `json:"embedding"`
+}
+
+type Usage struct {
+  PromptTokens     int `json:"prompt_tokens"`
+  TotalTokens      int `json:"total_tokens"`
+}
+
+type EmbeddingsResponse struct {
+  Object  string                 `json:"object"`
+  Model   string                 `json:"model"`
+  Data []EmbeddingResult `json:"data"`
+  Usage   Usage                  `json:"usage"`
+}
+
+func main() {
+  // Your Hypermode Workspace API key
+  apiKey := "<YOUR_HYP_WKS_KEY>"
+
+  // Use the Hypermode Model Router base url
+  baseURL := "https://models.hypermode.host/v1"
+
+  // API endpoint
+  endpoint := baseURL + "/embeddings"
+
+  // Create the request payload
+  requestBody := EmbeddingRequest{
+    Model: "text-embedding-3-large",
+    Input: []string{
+      "Hypermode is an AI development platform that provides hosting and management capabilities for agents and knowledge graphs",
+      "Modus is an open source, serverless framework for building functions and APIs, powered by WebAssembly.",
+    },
+    Dimensions:   256,
+  }
+
+  // Convert the request to JSON
+  jsonData, err := json.Marshal(requestBody)
+  if err != nil {
+    fmt.Printf("Error marshaling JSON: %v\n", err)
+    os.Exit(1)
+  }
+
+  // Create an HTTP request
+  req, err := http.NewRequest("POST", endpoint, bytes.NewBuffer(jsonData))
+  if err != nil {
+    fmt.Printf("Error creating request: %v\n", err)
+    os.Exit(1)
+  }
+
+  // Set headers
+  req.Header.Set("Content-Type", "application/json")
+  req.Header.Set("Authorization", "Bearer "+apiKey)
+
+  // Create an HTTP client and send the request
+  client := &http.Client{}
+  resp, err := client.Do(req)
+  if err != nil {
+    fmt.Printf("Error sending request: %v\n", err)
+    os.Exit(1)
+  }
+  defer resp.Body.Close()
+
+  // Read the response body
+  body, err := io.ReadAll(resp.Body)
+  if err != nil {
+    fmt.Printf("Error reading response: %v\n", err)
+    os.Exit(1)
+  }
+
+  // Check if the request was successful
+  if resp.StatusCode == http.StatusOK {
+    // Parse and print the response
+    var response EmbeddingsResponse
+    err = json.Unmarshal(body, &response)
+    if err != nil {
+      fmt.Printf("Error parsing response: %v\n", err)
+      os.Exit(1)
+    }
+
+    fmt.Println(response.Data)
   } else {
     // Print error information
     fmt.Printf("Error: %d\n", resp.StatusCode)
