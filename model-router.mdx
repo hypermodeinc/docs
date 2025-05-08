@@ -182,8 +182,8 @@ curl -X POST \
 ```
 
 ```python Python
-import requests
 import json
+import requests
 
 # Your Hypermode Workspace API key
 api_key = "<YOUR_HYP_WKS_KEY>"
@@ -199,27 +199,19 @@ headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_ke
 
 # Request payload
 payload = {
-  "model": "meta-llama/llama-4-scout-17b-16e-instruct",
-  "messages": [
-      {"role": "system", "content": "You are a helpful assistant."},
-      {"role": "user", "content": "What is Dgraph?"},
-  ],
-  "max_tokens": 150,
-  "temperature": 0.7,
+    "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+    "messages": [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "What is Dgraph?"},
+    ],
+    "max_tokens": 150,
+    "temperature": 0.7,
 }
 
 # Make the API request
-response = requests.post(endpoint, headers=headers, data=json.dumps(payload))
-
-# Check if the request was successful
-if response.status_code == 200:
-  # Parse and print the response
-  response_data = response.json()
-  print(response_data["choices"][0]["message"]["content"])
-else:
-  # Print error information
-  print(f"Error: {response.status_code}")
-  print(response.text)
+with requests.post(endpoint, headers=headers, data=json.dumps(payload)) as response:
+    response.raise_for_status()
+    print(response.json()["choices"][0]["message"]["content"])
 ```
 
 ```typescript TypeScript
@@ -470,26 +462,18 @@ headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_ke
 
 # Request payload
 payload = {
-  "model": "text-embedding-3-large",
-  "input": [
-      "Hypermode is an AI development platform that provides hosting and management capabilities for agents and knowledge graphs",
-      "Modus is an open source, serverless framework for building functions and APIs, powered by WebAssembly."
-  ],
-  "dimensions": 256,
+    "model": "text-embedding-3-large",
+    "input": [
+        "Hypermode is an AI development platform that provides hosting and management capabilities for agents and knowledge graphs",
+        "Modus is an open source, serverless framework for building functions and APIs, powered by WebAssembly.",
+    ],
+    "dimensions": 256,
 }
 
 # Make the API request
-response = requests.post(endpoint, headers=headers, data=json.dumps(payload))
-
-# Check if the request was successful
-if response.status_code == 200:
-  # Parse and print the response
-  response_data = response.json()
-  print(response_data["data"])
-else:
-  # Print error information
-  print(f"Error: {response.status_code}")
-  print(response.text)
+with requests.post(endpoint, headers=headers, data=json.dumps(payload)) as response:
+    response.raise_for_status()
+    print(response.json()["data"])
 ```
 
 ```typescript TypeScript
