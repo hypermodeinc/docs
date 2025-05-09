@@ -62,6 +62,24 @@ URL to access the app.
 Build your Modus app. The Modus CLI compiles your app and generates a `.build`
 folder for the artifacts.
 
-### `uninstall`
 
-Uninstall the Modus CLI from your system.
+## Uninstall
+
+To uninstall the Modus CLI, run the following command:
+
+```sh
+npm uninstall -g @hypermode/modus-cli
+```
+
+Then, find where the Modus CLI was installed using which modus and delete the directory: 
+
+```sh
+which modus                    
+/Users/someone/.nvm/versions/node/v22.13.0/bin/modus
+```
+
+Delete the directory:
+
+```sh
+rm -rf /Users/someone/.nvm/versions/node/v22.13.0/bin/modus
+```
