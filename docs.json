@@ -8,6 +8,9 @@
     "dark": "#CC00BE"
   },
   "favicon": "favicon.png",
+  "banner": {
+    "content": "🚀 Model Router is here! One API, one bill, multiple models. [Learn more →](https://hypermode.com/blog/introducing-model-router)"
+  },
   "navigation": {
     "global": {
       "anchors": [
