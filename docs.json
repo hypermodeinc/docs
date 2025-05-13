@@ -59,7 +59,8 @@
               "graphs/connect",
               "graphs/manage-schema",
               "graphs/manage-data",
-              "graphs/manage-graph"
+              "graphs/manage-graph",
+              "graphs/v25-preview"
             ]
           },
           {
