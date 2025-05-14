@@ -1,27 +1,72 @@
 ---
 title: Using Dgraph
-description: "Use Dgraph with your Modus app"
+description: "Add 'memory' and Knowledge Graph connection to your app."
 mode: "wide"
 "og:title": "Using Dgraph - Modus"
 ---
 
 Integrating Dgraph in Modus is a powerful solution to expose AI services with
-'memory' or to create, maintain and leverage knowledge graphs.
+"memory" or to create, maintain and leverage knowledge graphs.
 
-### 1.Provision your environment
+After you have [initialized a Modus app](/modus/quickstart):
 
-Work locally Provision a Graph in Hypermode.
+1. Provision your environment\
+   Run [Dgraph locally](/dgraph/quickstart#locally) or
+   [provision a Graph on Hypermode](/dgraph/quickstart#on-hypermode).
 
-### 2.Declare the connection in Modus Manifest
+1. Declare the connection in the App Manifest\
+    Edit the [App Manifest](/modus/app-manifest) to declare a connection to the
+   Dgraph instance using the
+   [Dgraph connection string](/modus/app-manifest#using-a-dgraph-connection-string).
 
-https://docs.hypermode.com/modus/app-manifest#using-a-dgraph-connection-string
+   For local instance of Dgraph, the connection string is
+   `dgraph://localhost:9080`.\
+    For a Graph on Hypermode, the connection string is available from the
+   Hypermode dashboard.
+   ![Graph detail view](/images/dgraph/quickstart/graph-details.png)
 
-### 3.Use Modus SDK to query and mutate the graph.
+   Make sure to use a variable for the bearer token so you don't commit secrets
+   in your project! \
 
-## Options using Dgraph
+```json modus.jon with dgraph connection using API_KEY secret
+"connections": {
+    // This defines a dgraph connection
+    // Get the connection string from the Hypermode dashboard.
+    // use a variable for bearer token
+    "my-dgraph": {
+      "type": "dgraph",
+      "connString": "dgraph://modus-recipes-backend-hypermode.hypermode.host:443?sslmode=verify-ca&bearertoken={{API_KEY}}"
+    }
+  }
+```
 
-### Dgraph schema
+\
+Note: you can also define a Dgraph connection
+[Using the gRPC target](/modus/app-manifest#using-a-dgraph-grpc-target)
+parameter.
 
-### Dgraph GraphQL endpoint
+1. Set the secrets\
+   When working locally set your
+   [Environment Secrets](/modus/run-locally#environment-secrets) using a .env
+   file.\
+
+   ```json example of .env file for my-dgraph connection
+   MODUS_MY_DGRAPH_APY_KEY='<your API Key>'
+   ```
+
+   \
+   When you app is deployed on Hypermode,
+   [Add the connection secrets](/configure-environment#connection-secrets) in
+   the Hypermode Console.
+
+1. Use Modus SDK to query and mutate the graph.\
+   In your Modus app, use the Modus SDK to
+   [fetch data from Dgraph](/modus/data-fetching#dgraph).
 
 ## Resources
+
+- [Manage Schema](/graphs/manage-schema) to deploy a schema to your Dgraph
+  instance if needed.
+- Get inspirations from
+  [Modus Recipes](https://github.com/hypermodeinc/modus-recipes) where you'll
+  find examples using Dgraph in Modus.
