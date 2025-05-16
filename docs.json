@@ -98,7 +98,7 @@
           },
           {
             "group": "How-To Guides",
-            "pages": ["modus/deepseek-model"]
+            "pages": ["modus/deepseek-model", "modus/modus-dgraph"]
           },
           {
             "group": "SDK Reference",
