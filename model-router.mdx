@@ -681,102 +681,101 @@ models.
 
 Large language models provide text generation and reasoning capabilities.
 
-| Provider  | Model                                  | Slug                                        |
-| --------- | -------------------------------------- | ------------------------------------------- |
-| Anthropic | Claude 3.7 Sonnet                      | `claude-3-7-sonnet-20250219`                |
-| Anthropic | Claude 3.5 Sonnet (latest)             | `claude-3-5-sonnet-20241022`                |
-| Anthropic | Claude 3.5 Sonnet                      | `claude-3-5-sonnet-20240620`                |
-| Anthropic | Claude 3.5 Sonnet                      | `claude-3-5-sonnet-20240229`                |
-| Anthropic | Claude 3.5 Haiku (latest)              | `claude-3-5-haiku-20241022`                 |
-| Anthropic | Claude 3.5 Haiku                       | `claude-3-5-haiku-20240307`                 |
-| Anthropic | Claude 3.5 Opus                        | `claude-3-5-opus-20240229`                  |
-| Anthropic | Claude 2.1                             | `claude-2.1`                                |
-| Anthropic | Claude 2.0                             | `claude-2.0`                                |
-| DeepSeek  | DeepSeek-R1-Distill-Llama              | `deepseek-ai/deepseek-r1-distill-llama-8b`  |
-| Google    | Gemini 2.5 Pro                         | `gemini-2.5-pro-exp-03-25`                  |
-| Google    | Gemini 2.5 Pro Preview                 | `gemini-2.5-pro-preview-03-25`              |
-| Google    | Gemini 2.5 Flash Preview               | `gemini-2.5-flash-preview-04-17`            |
-| Google    | Gemini 2.0 Pro                         | `gemini-2.0-pro-exp-02-05`                  |
-| Google    | Gemini 2.0 Flash Lite (latest)         | `gemini-2.0-flash-lite`                     |
-| Google    | Gemini 2.0 Flash Lite                  | `gemini-2.0-flash-lite-001`                 |
-| Google    | Gemini 2.0 Flash Lite Preview (latest) | `gemini-2.0-flash-lite-preview-02-05`       |
-| Google    | Gemini 2.0 Flash Lite Preview          | `gemini-2.0-flash-lite-preview`             |
-| Google    | Gemini 2.0 Flash Image Generation      | `gemini-2.0-flash-exp-image-generation`     |
-| Google    | Gemini 2.0 Flash Thinking (latest)     | `gemini-2.0-flash-thinking-exp`             |
-| Google    | Gemini 2.0 Flash Thinking              | `gemini-2.0-flash-thinking-exp-1219`        |
-| Google    | Gemini 2.0 Flash Thinking              | `gemini-2.0-flash-thinking-exp-01-21`       |
-| Google    | Gemini 2.0 Flash Live                  | `gemini-2.0-flash-live-001`                 |
-| Google    | Gemini 2.0 Flash (latest)              | `gemini-2.0-flash`                          |
-| Google    | Gemini 2.0 Flash                       | `gemini-2.0-flash-001`                      |
-| Google    | Gemini 2.0 Flash                       | `gemini-2.0-flash-exp`                      |
-| Google    | Gemini 1.5 Pro (latest)                | `gemini-1.5-pro-latest`                     |
-| Google    | Gemini 1.5 Pro                         | `gemini-1.5-pro`                            |
-| Google    | Gemini 1.5 Pro                         | `gemini-1.5-pro-002`                        |
-| Google    | Gemini 1.5 Pro                         | `gemini-1.5-pro-001`                        |
-| Google    | Gemini 1.5 Flash (latest)              | `gemini-1.5-flash-latest`                   |
-| Google    | Gemini 1.5 Flash                       | `gemini-1.5-flash`                          |
-| Google    | Gemini 1.5 Flash                       | `gemini-1.5-flash-002`                      |
-| Google    | Gemini 1.5 Flash                       | `gemini-1.5-flash-001`                      |
-| Google    | Gemini 1.5 Flash 8B (latest)           | `gemini-1.5-flash-8b-latest`                |
-| Google    | Gemini 1.5 Flash 8B                    | `gemini-1.5-flash-8b`                       |
-| Google    | Gemini 1.5 Flash 8B                    | `gemini-1.5-flash-8b-exp-0924`              |
-| Google    | Gemini 1.5 Flash 8B                    | `gemini-1.5-flash-8b-exp-0827`              |
-| Google    | Gemini 1.5 Flash 8B                    | `gemini-1.5-flash-8b-001`                   |
-| Google    | Gemini Pro Vision                      | `gemini-pro-vision`                         |
-| Meta      | Llama 4 Scout                          | `meta-llama/llama-4-scout-17b-16e-instruct` |
-| Meta      | Llama 3.2                              | `meta-llama/llama-3.2-3b-instruct`          |
-| OpenAI    | GPT 4.5 Preview (latest)               | `gpt-4.5-preview`                           |
-| OpenAI    | GPT 4.5 Preview                        | `gpt-4.5-preview-2025-02-27`                |
-| OpenAI    | O3 Mini (latest)                       | `o3-mini`                                   |
-| OpenAI    | O3 Mini                                | `o3-mini-2025-01-31`                        |
-| OpenAI    | O1 (latest)                            | `o1`                                        |
-| OpenAI    | O1                                     | `o1-2024-12-17`                             |
-| OpenAI    | O1 Preview (latest)                    | `o1-preview`                                |
-| OpenAI    | O1 Preview                             | `o1-preview-2024-09-12`                     |
-| OpenAI    | O1 Mini (latest)                       | `o1-mini`                                   |
-| OpenAI    | O1 Mini                                | `o1-mini-2024-09-12`                        |
-| OpenAI    | GPT 4.1 (latest)                       | `gpt-4.1`                                   |
-| OpenAI    | GPT 4.1                                | `gpt-4.1-2025-04-14`                        |
-| OpenAI    | GPT 4.1 Mini (latest)                  | `gpt-4.1-mini`                              |
-| OpenAI    | GPT 4.1 Mini                           | `gpt-4.1-mini-2025-04-14`                   |
-| OpenAI    | GPT 4.1 Nano (latest)                  | `gpt-4.1-nano`                              |
-| OpenAI    | GPT 4.1 Nano                           | `gpt-4.1-nano-2025-04-14`                   |
-| OpenAI    | GPT 4o (latest)                        | `gpt-4o`                                    |
-| OpenAI    | GPT 4o                                 | `gpt-4o-2024-11-20`                         |
-| OpenAI    | GPT 4o                                 | `gpt-4o-2024-08-06`                         |
-| OpenAI    | GPT 4o                                 | `gpt-4o-2024-05-13`                         |
-| OpenAI    | GPT 4o Mini (latest)                   | `gpt-4o-mini`                               |
-| OpenAI    | GPT 4o Mini                            | `gpt-4o-mini-2024-07-18`                    |
-| OpenAI    | GPT 4o Audio Preview (latest)          | `gpt-4o-audio-preview`                      |
-| OpenAI    | GPT 4o Audio Preview                   | `gpt-4o-audio-preview-2024-12-17`           |
-| OpenAI    | GPT 4o Audio Preview                   | `gpt-4o-audio-preview-2024-10-01`           |
-| OpenAI    | GPT 4o Search Preview (latest)         | `gpt-4o-search-preview`                     |
-| OpenAI    | GPT 4o Search Preview                  | `gpt-4o-search-preview-2025-03-11`          |
-| OpenAI    | GPT 4o Search Preview                  | `gpt-4o-search-preview-2025-03-11`          |
-| OpenAI    | ChatGPT 4o                             | `chatgpt-4o-latest`                         |
-| OpenAI    | GPT 4 (latest)                         | `gpt-4`                                     |
-| OpenAI    | GPT 4                                  | `gpt-4-0613`                                |
-| OpenAI    | GPT 4 Turbo                            | `gpt-4-turbo-2024-04-09`                    |
-| OpenAI    | GPT 4 Turbo Preview                    | `gpt-4-turbo-preview`                       |
-| OpenAI    | GPT 4 Preview (latest)                 | `gpt-4-1106-preview`                        |
-| OpenAI    | GPT 4 Preview                          | `gpt-4-0125-preview`                        |
-| OpenAI    | GPT 3.5 Turbo (latest)                 | `gpt-3.5-turbo`                             |
-| OpenAI    | GPT 3.5 Turbo                          | `gpt-3.5-turbo-1106`                        |
-| OpenAI    | GPT 3.5 Turbo                          | `gpt-3.5-turbo-0125`                        |
-| Mistral   | Mistral Large (coming soon)            | `mistral-large-latest`                      |
-| Mistral   | Pixtral Large (coming soon)            | `pixtral-large-latest`                      |
-| Mistral   | Mistral Medium (coming soon)           | `mistral-medium-latest`                     |
-| Mistral   | Mistral Moderation (coming soon)       | `mistral-moderation-latest`                 |
-| Mistral   | Ministral 3B (coming soon)             | `ministral-3b-latest`                       |
-| Mistral   | Ministral 8B (coming soon)             | `ministral-8b-latest`                       |
-| Mistral   | Open Mistral Nemo (coming soon)        | `open-mistral-nemo`                         |
-| Mistral   | Mistral Small (coming soon)            | `mistral-small-latest`                      |
-| Mistral   | Mistral Saba (coming soon)             | `mistral-saba-latest`                       |
-| Mistral   | Codestral (coming soon)                | `codestral-latest`                          |
-| xAI       | Grok 3 Beta (coming soon)              | `grok-3-beta`                               |
-| xAI       | Grok 3 Fast Beta (coming soon)         | `grok-3-fast-beta`                          |
-| xAI       | Grok 3 Mini Beta (coming soon)         | `grok-3-mini-beta`                          |
-| xAI       | Grok 3 Mini Fast Beta (coming soon)    | `grok-3-mini-fast-beta`                     |
+| Provider  | Model                               | Slug                                        |
+| --------- | ----------------------------------- | ------------------------------------------- |
+| Anthropic | Claude 3.7 Sonnet (latest)          | `claude-3-7-sonnet-latest`                  |
+| Anthropic | Claude 3.7 Sonnet                   | `claude-3-7-sonnet-20250219`                |
+| Anthropic | Claude 3.5 Sonnet (latest)          | `claude-3-5-sonnet-latest`                  |
+| Anthropic | Claude 3.5 Sonnet                   | `claude-3-5-sonnet-20241022`                |
+| Anthropic | Claude 3.5 Sonnet                   | `claude-3-5-sonnet-20240620`                |
+| Anthropic | Claude 3.5 Haiku (latest)           | `claude-3-5-haiku-latest`                   |
+| Anthropic | Claude 3.5 Haiku                    | `claude-3-5-haiku-20241022`                 |
+| Anthropic | Claude 3 Opus (latest)              | `claude-3-opus-latest`                      |
+| Anthropic | Claude 3 Opus                       | `claude-3-opus-20240229`                    |
+| Anthropic | Claude 3 Sonnet                     | `claude-3-sonnet-20240229`                  |
+| Anthropic | Claude 3 Haiku                      | `claude-3-haiku-20240307`                   |
+| DeepSeek  | DeepSeek-R1-Distill-Llama           | `deepseek-ai/deepseek-r1-distill-llama-8b`  |
+| Google    | Gemini 2.5 Pro                      | `gemini-2.5-pro-exp-03-25`                  |
+| Google    | Gemini 2.5 Pro Preview              | `gemini-2.5-pro-preview-05-06`              |
+| Google    | Gemini 2.5 Flash Preview            | `gemini-2.5-flash-preview-04-17`            |
+| Google    | Gemini 2.0 Flash Lite               | `gemini-2.0-flash-lite`                     |
+| Google    | Gemini 2.0 Flash Image Generation   | `gemini-2.0-flash-exp-image-generation`     |
+| Google    | Gemini 2.0 Flash Live               | `gemini-2.0-flash-live-001`                 |
+| Google    | Gemini 2.0 Flash (latest)           | `gemini-2.0-flash`                          |
+| Google    | Gemini 2.0 Flash                    | `gemini-2.0-flash-001`                      |
+| Google    | Gemini 1.5 Pro (latest)             | `gemini-1.5-pro-latest`                     |
+| Google    | Gemini 1.5 Pro                      | `gemini-1.5-pro`                            |
+| Google    | Gemini 1.5 Pro                      | `gemini-1.5-pro-002`                        |
+| Google    | Gemini 1.5 Pro                      | `gemini-1.5-pro-001`                        |
+| Google    | Gemini 1.5 Flash (latest)           | `gemini-1.5-flash-latest`                   |
+| Google    | Gemini 1.5 Flash                    | `gemini-1.5-flash`                          |
+| Google    | Gemini 1.5 Flash                    | `gemini-1.5-flash-002`                      |
+| Google    | Gemini 1.5 Flash                    | `gemini-1.5-flash-001`                      |
+| Google    | Gemini 1.5 Flash 8B (latest)        | `gemini-1.5-flash-8b-latest`                |
+| Google    | Gemini 1.5 Flash 8B                 | `gemini-1.5-flash-8b`                       |
+| Google    | Gemini 1.5 Flash 8B                 | `gemini-1.5-flash-8b-exp-0924`              |
+| Google    | Gemini 1.5 Flash 8B                 | `gemini-1.5-flash-8b-exp-0827`              |
+| Google    | Gemini 1.5 Flash 8B                 | `gemini-1.5-flash-8b-001`                   |
+| Meta      | Llama 4 Scout                       | `meta-llama/llama-4-scout-17b-16e-instruct` |
+| Meta      | Llama 3.2                           | `meta-llama/llama-3.2-3b-instruct`          |
+| OpenAI    | O3 (latest)                         | `o3`                                        |
+| OpenAI    | O3                                  | `o3-2025-04-16`                             |
+| OpenAI    | O4 Mini (latest)                    | `o4-mini`                                   |
+| OpenAI    | O4 Mini                             | `o4-mini-2025-04-16`                        |
+| OpenAI    | GPT 4.5 Preview (latest)            | `gpt-4.5-preview`                           |
+| OpenAI    | GPT 4.5 Preview                     | `gpt-4.5-preview-2025-02-27`                |
+| OpenAI    | O3 Mini (latest)                    | `o3-mini`                                   |
+| OpenAI    | O3 Mini                             | `o3-mini-2025-01-31`                        |
+| OpenAI    | O1 (latest)                         | `o1`                                        |
+| OpenAI    | O1                                  | `o1-2024-12-17`                             |
+| OpenAI    | O1 Preview (latest)                 | `o1-preview`                                |
+| OpenAI    | O1 Preview                          | `o1-preview-2024-09-12`                     |
+| OpenAI    | O1 Mini (latest)                    | `o1-mini`                                   |
+| OpenAI    | O1 Mini                             | `o1-mini-2024-09-12`                        |
+| OpenAI    | GPT 4.1 (latest)                    | `gpt-4.1`                                   |
+| OpenAI    | GPT 4.1                             | `gpt-4.1-2025-04-14`                        |
+| OpenAI    | GPT 4.1 Mini (latest)               | `gpt-4.1-mini`                              |
+| OpenAI    | GPT 4.1 Mini                        | `gpt-4.1-mini-2025-04-14`                   |
+| OpenAI    | GPT 4.1 Nano (latest)               | `gpt-4.1-nano`                              |
+| OpenAI    | GPT 4.1 Nano                        | `gpt-4.1-nano-2025-04-14`                   |
+| OpenAI    | GPT-4o Mini Search Preview (latest) | `gpt-4o-mini-search-preview`                |
+| OpenAI    | GPT-4o Mini Search Preview          | `gpt-4o-mini-search-preview-2025-03-11`     |
+| OpenAI    | GPT 4o (latest)                     | `gpt-4o`                                    |
+| OpenAI    | GPT 4o                              | `gpt-4o-2024-11-20`                         |
+| OpenAI    | GPT 4o                              | `gpt-4o-2024-08-06`                         |
+| OpenAI    | GPT 4o                              | `gpt-4o-2024-05-13`                         |
+| OpenAI    | GPT 4o Mini (latest)                | `gpt-4o-mini`                               |
+| OpenAI    | GPT 4o Mini                         | `gpt-4o-mini-2024-07-18`                    |
+| OpenAI    | GPT 4o Audio Preview (latest)       | `gpt-4o-audio-preview`                      |
+| OpenAI    | GPT 4o Audio Preview                | `gpt-4o-audio-preview-2024-12-17`           |
+| OpenAI    | GPT 4o Audio Preview                | `gpt-4o-audio-preview-2024-10-01`           |
+| OpenAI    | GPT 4o Search Preview (latest)      | `gpt-4o-search-preview`                     |
+| OpenAI    | GPT 4o Search Preview               | `gpt-4o-search-preview-2025-03-11`          |
+| OpenAI    | GPT 4o Search Preview               | `gpt-4o-search-preview-2025-03-11`          |
+| OpenAI    | ChatGPT 4o                          | `chatgpt-4o-latest`                         |
+| OpenAI    | GPT 4 (latest)                      | `gpt-4`                                     |
+| OpenAI    | GPT 4                               | `gpt-4-0613`                                |
+| OpenAI    | GPT 4 Turbo                         | `gpt-4-turbo-2024-04-09`                    |
+| OpenAI    | GPT 4 Turbo Preview                 | `gpt-4-turbo-preview`                       |
+| OpenAI    | GPT 4 Preview (latest)              | `gpt-4-1106-preview`                        |
+| OpenAI    | GPT 4 Preview                       | `gpt-4-0125-preview`                        |
+| OpenAI    | GPT 3.5 Turbo (latest)              | `gpt-3.5-turbo`                             |
+| OpenAI    | GPT 3.5 Turbo                       | `gpt-3.5-turbo-1106`                        |
+| OpenAI    | GPT 3.5 Turbo                       | `gpt-3.5-turbo-0125`                        |
+| Mistral   | Mistral Large (coming soon)         | `mistral-large-latest`                      |
+| Mistral   | Pixtral Large (coming soon)         | `pixtral-large-latest`                      |
+| Mistral   | Mistral Medium (coming soon)        | `mistral-medium-latest`                     |
+| Mistral   | Mistral Moderation (coming soon)    | `mistral-moderation-latest`                 |
+| Mistral   | Ministral 3B (coming soon)          | `ministral-3b-latest`                       |
+| Mistral   | Ministral 8B (coming soon)          | `ministral-8b-latest`                       |
+| Mistral   | Open Mistral Nemo (coming soon)     | `open-mistral-nemo`                         |
+| Mistral   | Mistral Small (coming soon)         | `mistral-small-latest`                      |
+| Mistral   | Mistral Saba (coming soon)          | `mistral-saba-latest`                       |
+| Mistral   | Codestral (coming soon)             | `codestral-latest`                          |
+| xAI       | Grok 3 Beta (coming soon)           | `grok-3-beta`                               |
+| xAI       | Grok 3 Fast Beta (coming soon)      | `grok-3-fast-beta`                          |
+| xAI       | Grok 3 Mini Beta (coming soon)      | `grok-3-mini-beta`                          |
+| xAI       | Grok 3 Mini Fast Beta (coming soon) | `grok-3-mini-fast-beta`                     |
 
 ### Embedding
 
