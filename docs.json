@@ -59,8 +59,7 @@
               "graphs/connect",
               "graphs/manage-schema",
               "graphs/manage-data",
-              "graphs/manage-graph",
-              "graphs/v25-preview"
+              "graphs/manage-graph"
             ]
           },
           {
@@ -157,7 +156,8 @@
               "dgraph/overview",
               "dgraph/why-dgraph",
               "dgraph/quickstart",
-              "dgraph/guides"
+              "dgraph/guides",
+              "dgraph/v25-preview"
             ]
           },
           {
