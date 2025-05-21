@@ -14,10 +14,10 @@ releases available for use on Hypermode and locally. The fastest way to get
 started is to sign up for a free
 [Hypermode account](https://hypermode.com/login).
 
-The run locally, use the Docker image `dgraph/standalone:v25.0.0-preview3`.
+The run locally, use the Docker image `dgraph/standalone:v25.0.0-preview4`.
 
 ```bash
-docker run --rm -it -p 8080:8080 -p 9080:9080 dgraph/standalone:v25.0.0-preview3
+docker run --rm -it -p 8080:8080 -p 9080:9080 dgraph/standalone:v25.0.0-preview4
 ```
 
 ## Features
@@ -291,6 +291,11 @@ To get the query response in RDF format instead of JSON format, use the
 following `TxnOption`.
 
 ```go
+import (
+  "github.com/dgraph-io/dgo/v250"
+  "github.com/dgraph-io/dgo/v250/protos/api_v2"
+)
+
 queryDQL := `{
   alice(func: eq(name, "Alice")) {
     name
@@ -298,7 +303,7 @@ queryDQL := `{
     age
   }
 }`
-resp, err = client.RunDQL(context.TODO(), dgo.RootNamespace, queryDQL, dgo.WithResponseFormat(api_v25.RespFormat_RDF))
+resp, err = client.RunDQL(context.TODO(), dgo.RootNamespace, queryDQL, dgo.WithResponseFormat(api_v2.RespFormat_RDF))
 // handle error
 fmt.Printf("%s\n", resp.QueryResult)
 ```
