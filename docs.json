@@ -9,7 +9,7 @@
   },
   "favicon": "favicon.png",
   "banner": {
-    "content": "🚀 Model Router is here! One API, one bill, multiple models. [Learn more →](https://hypermode.com/blog/introducing-model-router)"
+    "content": "🎉 Dgraph v25 Preview is out with namespaces, MCP, and more! [Learn more →](/dgraph/v25-preview)"
   },
   "navigation": {
     "global": {
@@ -156,7 +156,8 @@
               "dgraph/overview",
               "dgraph/why-dgraph",
               "dgraph/quickstart",
-              "dgraph/guides"
+              "dgraph/guides",
+              "dgraph/v25-preview"
             ]
           },
           {
