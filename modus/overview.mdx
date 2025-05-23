@@ -8,22 +8,26 @@ sidebarTitle: "Overview"
 
 ## What is Modus? {/* vale Google.Contractions = NO */}
 
-Modus is an open source, serverless framework for building functions and APIs,
-powered by WebAssembly.
+Modus is an open source agent framework (including both a runtime and SDK) built
+on WebAssembly. It is designed for rapid iteration and production-ready
+performance for agents and AI APIs. With Modus, you have all the components you
+need to go from zero to a fully functioning agent.
 
-You write your app logic in Go or AssemblyScript, and Modus provides additional
-features to easily integrate models, data, and external services.
+{/* // TODO: [Image] // TODO: [Link to v1 vision blog] */}
 
-To **build apps that are thoughtful, fun, and effective**, we often need to
-integrate models in different forms, whether generative large language models or
-classical machine/deep learning models.
+## Key features
 
-Your app might be a simple create, read, update, and delete (CRUD) function that
-has a single model to identify similar entries. Or, it could be a complex
-agentic reasoning system that chains dozens of models and data sources together.
-**Modus creates a way of working with models that scales with your needs.**
+Modus is built from the ground up for agent development.
 
-Modus exists to make it easier for you to build the apps of your dreams.
+| Feature                     | Description                                                                                      |
+| --------------------------- | ------------------------------------------------------------------------------------------------ |
+| WebAssembly powered runtime | A small, portable, and highly efficient execution engine for deploying agents anywhere           |
+| Flexible tool support       | Consume Model Context Protocol (MCP) servers or build your own custom tools to power your agents |
+| Triggered agent actions     | Define and trigger specific actions for your agents to perform                                   |
+| Built-in agent memory       | Support for both short-term and long-term agent memory, powered by knowledge graphs              |
+| Agent operations            | Built-in inference logging and traces for agent-level observability                              |
+| Serverless scale-to-zero    | Each agent spins up on demand and scales to zero in idle state                                   |
+| Fully open source           | No vendor lock-in, but designed for low cold-start times and rapid scaling                       |
 
 <Note>
   Modus is a multi-language framework. It currently includes support for Go and
@@ -31,27 +35,45 @@ Modus exists to make it easier for you to build the apps of your dreams.
   language support is in development.
 </Note>
 
-## What is Modus good for? {/* vale Google.Contractions = NO */}
+## When to use Modus
 
-We designed Modus primarily as a general-purpose app framework, it just happens
-to treat models as a first-class component. With Modus you can use models, as
-appropriate, without additional complexity.
+### Rapid prototyping to scaling with confidence
 
-However, Modus is best for apps that require sub-second response times. We've
-made trade-offs to optimize for speed and simplicity.
+Start with one-line agent definitions using **AgentKit** - no infrastructure
+setup, no complex wiring. You get streaming UI, context management, and logging
+out of the box. Once your agent logic is solid, deploy via the same framework.
+Because agents are WebAssembly based and serverless, they incur zero cost when
+idle and start fast under load.
+
+### Language-agnostic logic, safely
+
+With WebAssembly's secure isolation environment, define agent behavior in Go or
+AssemblyScript. Compile to WebAssembly and Modus runs it securely. Each agent
+runs as a lightweight actor: self-contained, message-driven, and supervised by
+the runtime.
+
+### Persistent context beyond sessions
+
+For use-cases like multi-day workflows, personal assistants, tutoring, or
+domain-specific agents (for example ticketing systems), long-term context is
+crucial. Modus provides it without requiring a dedicated database layer. Modus'
+built-in short-term memory handles conversational state and context within
+agents. Connect to long-term graph memory for externalized and persisted, but
+serverless-friendly memory. You gain full "recall" - across sessions and
+workflows- without maintaining stateful servers.
+
+### Observability at the functional level
+
+When you need clarity on _why_ the agent did something, no just _what_ the model
+saw, Modus gives you full introspection. Agent-level tracing gives you a
+complete timeline of agent behavior. Inference logging allows you to visualize
+latency and data flow, audit decisions, or replay session history for debugging.
+
+### Serverless efficiency, no vendor lock-in
+
+Agents activate only when needed. No uptime cost when idle. Use Modus anywhere -
+in the cloud or on-prem - without vendor lock-in or proprietary constraints.
+Optimize costs without sacrificing flexibility or control over infrastructure.
 
 For more inspiration, check out the
 [Modus recipes](https://github.com/hypermodeinc/modus-recipes).
-
-## Main features
-
-A few of the core Modus features include:
-
-| Feature                                     | Description                                                                                  |
-| ------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| [Multi-Language](/modus/project-structure)  | Write functions in Go and AssemblyScript, with additional language support in development    |
-| [Auto-Generated API](/modus/api-generation) | A secure API is automatically generated from your function signatures                        |
-| [Model Integration](/modus/model-invoking)  | Connect and invoke AI models from different providers, without learning a new SDK            |
-| [Search](/modus/search)                     | Add natural language search and recommendations with integrated vector embeddings            |
-| [Authentication](/modus/authentication)     | Secure your API endpoints with minimal configuration                                         |
-| **WebAssembly Runtime**                     | Small and portable execution engine for deployment across server, edge, and desktop computes |
