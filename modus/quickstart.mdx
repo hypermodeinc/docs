@@ -181,7 +181,7 @@ learn how to use the basic components of a Modus app and how to run it locally.
             return "", err
           }
 
-          instruction := "You are a helpful assistant that summarizes quotes. Provide a brief, insightful summary that captures the essence and meaning of the quote in 1-2 sentences."
+          instruction := "Provide a brief, insightful summary that captures the essence and meaning of the quote in 1-2 sentences."
           prompt := fmt.Sprintf("Quote: \"%s\" - %s", quote, author)
 
           input, err := model.CreateInput(
@@ -265,7 +265,7 @@ learn how to use the basic components of a Modus app and how to run it locally.
         function summarizeQuote(quote: string, author: string): string {
           const model = models.getModel<OpenAIChatModel>(modelName);
 
-          const instruction = "You are a helpful assistant that summarizes quotes. Provide a brief, insightful summary that captures the essence and meaning of the quote in 1-2 sentences.";
+          const instruction = "Provide a brief, insightful summary that captures the essence and meaning of the quote in 1-2 sentences.";
           const prompt = `Quote: "${quote}" - ${author}`;
 
           const input = model.createInput([
