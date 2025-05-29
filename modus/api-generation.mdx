@@ -139,21 +139,28 @@ function classify(text: string, threshold: f32): ClassifierResult[] {
   </Tab>
 </Tabs>
 
-## Generating Mutations
+## Generating mutations
 
-By default, all exported functions are generated as GraphQL **queries** unless they follow specific naming conventions that indicate they perform mutations (data modifications). 
+By default, all exported functions are generated as GraphQL **queries** unless
+they follow specific naming conventions that indicate they perform mutations
+(data modifications).
 
-Functions are automatically classified as **mutations** when they start with these prefixes:
+Functions are automatically classified as **mutations** when they start with
+these prefixes:
+
 - `mutate`
 - `post`, `patch`, `put`, `delete`
 - `add`, `update`, `insert`, `upsert`
 - `create`, `edit`, `save`, `remove`, `alter`, `modify`
 
 For example:
+
 - `getUserById` → Query
-- `listProducts` → Query  
+- `listProducts` → Query
 - `addUser` → Mutation
 - `updateProduct` → Mutation
 - `deleteOrder` → Mutation
 
-The prefix is detected precisely - `addPost` becomes a mutation, but `additionalPosts` remains a query since "additional" doesn't match the exact "add" prefix pattern.
+The prefix is detected precisely - `addPost` becomes a mutation, but
+`additionalPosts` remains a query since "additional" doesn't match the exact
+"add" prefix pattern.
