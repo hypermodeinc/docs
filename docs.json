@@ -63,6 +63,10 @@
             ]
           },
           {
+            "group": "Apps",
+            "pages": ["apps/overview"]
+          },
+          {
             "group": "Tools",
             "pages": ["model-router", "hyp-cli"]
           },
