@@ -5,19 +5,16 @@ mode: "wide"
 "og:title": "Quickstart - Modus"
 ---
 
-## Your first mission, agent deployment
+## Your first Modus app
 
-In this quickstart, you'll learn to build and deploy intelligent agents that
-operate autonomously in your stack. Think James Bond meets The Matrix—your
-agents maintain memory, coordinate operations, and never lose their mission
-context.
+In this quickstart, you'll learn to build your first Modus app with a single
+function that demonstrates how to integrate external APIs with AI models. We'll
+start with this stateless function, and later you can learn about building
+stateful agents that maintain memory and coordinate complex operations.
 
 Our examples use Go, which we recommend for new projects. You can also choose
 AssemblyScript if you prefer. For AssemblyScript usage, refer to the
 [AssemblyScript SDK overview](/modus/sdk/assemblyscript/overview).
-
-We'll start with a simple function and then show you how to build stateful
-agents that remember every interaction.
 
 ## Prerequisites
 
@@ -76,13 +73,15 @@ agents that remember every interaction.
     Add an AI model to your manifest:
 
       ```json
+      {
         "models": {
           "text-generator": {
             "sourceModel": "meta-llama/Llama-3.2-3B-Instruct",
             "provider": "hugging-face",
             "connection": "hypermode"
           }
-        },
+        }
+      }
       ```
 
   </Step>
@@ -96,7 +95,7 @@ agents that remember every interaction.
     Authenticate with your Hypermode account:
 
     ```sh
-    hyp login
+      hyp login
     ```
 
     This connects your local development environment to Hypermode's model infrastructure.

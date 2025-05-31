@@ -1,58 +1,181 @@
----
-title: "What is a Function?"
-description: "Learn about stateless functions in Modus"
-"og:title": "What is a Function? - Modus"
----
+# What's a function?
 
-## Functions in Modus
+Functions in Modus are your reliable field operatives—specialized agents who
+handle specific missions with precision and speed. Like elite reconnaissance
+units, they get in, complete their objective, and report back. No unnecessary
+complications, no lingering presence, just pure operational efficiency.
 
-Functions in Modus are stateless, request-response operations designed for fast,
-predictable API endpoints, data processing, and AI inference tasks. They're
-perfect when you need quick responses without maintaining context between calls.
+Functions are the backbone of your intelligence network, handling everything
+from data gathering to AI-powered analysis, all while maintaining perfect
+operational discipline.
 
-## Key characteristics
+## Operational profile
 
-- **Stateless**: Each function call is independent with no memory of previous
-  interactions
-- **Fast**: Optimized for sub-second response times
-- **Scalable**: Automatically scale based on demand
-- **Simple**: Straightforward request-in, response-out pattern
+Functions are stateless, request-response operations designed for fast,
+predictable missions. They're your go-to operatives when you need quick
+intelligence gathering, data processing, or tactical strikes without maintaining
+ongoing surveillance between operations.
 
-## When to use functions
+### Core capabilities
 
-Functions are ideal for:
+- **Mission-focused**: Each operation is independent with no memory of previous
+  assignments
+- **Lightning fast**: Optimized for sub-second mission completion
+- **Infinitely scalable**: Deploy as many operatives as needed
+- **Clean operations**: Straightforward request-in, intel-out pattern
+- **Auto-deployed**: Exposed automatically as GraphQL queries or mutations
 
-- **API endpoints** that process individual requests
-- **Data processing** tasks like transformations or validations
-- **AI inference** for text generation, classification, or embeddings
-- **Integrations** with external services
-- **Calculations** that don't require historical context
+## How functions become endpoints
 
-## Example: Text generation function
+When you deploy your operatives, Modus automatically exposes them through a
+GraphQL API. Your functions become either **queries** (for gathering
+intelligence) or **mutations** (for operational changes) based on their mission
+type.
 
-Here's a simple function that generates text using an AI model:
+### Intelligence gathering queries
 
-<CodeGroup>
+Most functions become GraphQL queries—perfect for reconnaissance and data
+retrieval:
 
-```go Go
+```go
+// Becomes a GraphQL query: getUserProfile(id: String!): UserProfile
+func GetUserProfile(id string) (*UserProfile, error) {
+    // Intelligence gathering operation
+    return fetchUserData(id)
+}
+
+// Becomes a GraphQL query: analyzeMarketTrends(): TrendReport
+func AnalyzeMarketTrends() (*TrendReport, error) {
+    // Analysis operation using AI models
+    return generateTrendAnalysis()
+}
+```
+
+### Operational change mutations
+
+Functions that modify data automatically become GraphQL mutations. Modus detects
+these by their mission prefixes:
+
+```go
+// Becomes a GraphQL mutation: createUser(data: UserInput!): User
+func CreateUser(data UserInput) (*User, error) {
+    // Operational creation mission
+    return deployNewUser(data)
+}
+
+// Becomes a GraphQL mutation: updateMissionStatus(id: String!, status: String!): Mission
+func UpdateMissionStatus(id string, status string) (*Mission, error) {
+    // Status update operation
+    return modifyMissionRecord(id, status)
+}
+```
+
+Functions starting with `create`, `update`, `delete`, and similar action words
+automatically become mutations.
+
+## Mission example: weather intelligence analysis
+
+Here's a complete tactical operation that demonstrates how functions integrate
+external APIs with AI models for intelligence analysis:
+
+```go
 package main
 
 import (
+    "fmt"
     "strings"
+    "github.com/hypermodeinc/modus/sdk/go/pkg/http"
     "github.com/hypermodeinc/modus/sdk/go/pkg/models"
     "github.com/hypermodeinc/modus/sdk/go/pkg/models/openai"
 )
 
+type WeatherIntel struct {
+    City        string  `json:"city"`
+    Temperature float64 `json:"temperature"`
+    Conditions  string  `json:"conditions"`
+    Analysis    string  `json:"analysis"`
+}
+
 const modelName = "text-generator"
 
-func GenerateText(prompt string) (string, error) {
+// Operative: Gather weather intelligence and provide tactical analysis
+func GatherWeatherIntelligence(city string) (*WeatherIntel, error) {
+    // Fetch weather data from OpenWeatherMap API
+    url := fmt.Sprintf(
+        "https://api.openweathermap.org/data/2.5/weather?q=%s&appid={{API_KEY}}&units=metric",
+        city,
+    )
+
+    response, err := http.Fetch(url)
+    if err != nil {
+        return nil, err
+    }
+    if !response.Ok() {
+        return nil, fmt.Errorf(
+            "weather intelligence gathering failed: %d %s",
+            response.Status,
+            response.StatusText,
+        )
+    }
+
+    // Parse weather data
+    var weatherData struct {
+        Name string `json:"name"`
+        Main struct {
+            Temp float64 `json:"temp"`
+        } `json:"main"`
+        Weather []struct {
+            Description string `json:"description"`
+        } `json:"weather"`
+    }
+
+    response.JSON(&weatherData)
+
+    conditions := "unknown"
+    if len(weatherData.Weather) > 0 {
+        conditions = weatherData.Weather[0].Description
+    }
+
+    // Generate tactical analysis
+    analysis, err := analyzeTacticalConditions(
+        weatherData.Name,
+        weatherData.Main.Temp,
+        conditions,
+    )
+    if err != nil {
+        fmt.Printf("Tactical analysis failed for %s: %v\n", weatherData.Name, err)
+        analysis = "Analysis unavailable - proceed with standard protocols"
+    }
+
+    return &WeatherIntel{
+        City:        weatherData.Name,
+        Temperature: weatherData.Main.Temp,
+        Conditions:  conditions,
+        Analysis:    analysis,
+    }, nil
+}
+
+// Analyze weather conditions for tactical implications
+func analyzeTacticalConditions(city string, temp float64, conditions string) (string, error) {
     model, err := models.GetModel[openai.ChatModel](modelName)
     if err != nil {
         return "", err
     }
 
+    prompt := `You are a tactical analyst evaluating weather conditions for field operations.
+    Provide a brief tactical assessment of how these weather conditions might impact
+    outdoor activities, visibility, and operational considerations in 1-2 sentences.`
+
+    content := fmt.Sprintf(
+        "Location: %s, Temperature: %.1f°C, Conditions: %s",
+        city,
+        temp,
+        conditions,
+    )
+
     input, err := model.CreateInput(
-        openai.NewUserMessage(prompt),
+        openai.NewSystemMessage(prompt),
+        openai.NewUserMessage(content),
     )
     if err != nil {
         return "", err
@@ -69,91 +192,70 @@ func GenerateText(prompt string) (string, error) {
 }
 ```
 
-```ts AssemblyScript
-import { models } from "@hypermode/modus-sdk-as"
-import {
-  OpenAIChatModel,
-  UserMessage,
-} from "@hypermode/modus-sdk-as/models/openai/chat"
+This operative automatically becomes available as a GraphQL query:
 
-const modelName: string = "text-generator"
-
-export function generateText(prompt: string): string {
-  const model = models.getModel<OpenAIChatModel>(modelName)
-  const input = model.createInput([new UserMessage(prompt)])
-
-  input.temperature = 0.7
-
-  const output = model.invoke(input)
-  return output.choices[0].message.content.trim()
-}
-```
-
-</CodeGroup>
-
-## Example: Data processing function
-
-Functions are also great for processing data without AI:
-
-<CodeGroup>
-
-```go Go
-func ProcessOrder(orderData string) (OrderSummary, error) {
-    var order Order
-    if err := json.Unmarshal([]byte(orderData), &order); err != nil {
-        return OrderSummary{}, err
-    }
-
-    total := 0.0
-    for _, item := range order.Items {
-        total += item.Price * float64(item.Quantity)
-    }
-
-    return OrderSummary{
-        OrderID: order.ID,
-        Total:   total,
-        Status:  "processed",
-    }, nil
-}
-```
-
-```ts AssemblyScript
-export function processOrder(orderData: string): OrderSummary {
-  const order = JSON.parse<Order>(orderData)
-
-  let total: f64 = 0
-  for (let i = 0; i < order.items.length; i++) {
-    total += order.items[i].price * order.items[i].quantity
-  }
-
-  return {
-    orderId: order.id,
-    total: total,
-    status: "processed",
+```graphql
+query {
+  gatherWeatherIntelligence(city: "London") {
+    city
+    temperature
+    conditions
+    analysis
   }
 }
 ```
 
-</CodeGroup>
+To use this function, you'll need to:
+
+Sign up for a free API key at [OpenWeatherMap](https://openweathermap.org/api)
+
+Add the connection to your `modus.json`:
+
+```json
+{
+  "connections": {
+    "weather-api": {
+      "type": "http",
+      "baseUrl": "https://api.openweathermap.org/",
+      "queryParameters": {
+        "appid": "{{API_KEY}}"
+      }
+    }
+  }
+}
+```
+
+Set your API key in `.env.dev.local`:
+
+```sh
+MODUS_WEATHER_API_API_KEY=your_openweathermap_api_key_here
+```
 
 ## Functions against agents
 
-| Functions               | Agents                         |
-| ----------------------- | ------------------------------ |
-| Stateless               | Stateful                       |
-| Single request/response | Persistent across interactions |
-| No memory               | Maintains conversation history |
-| Fast, predictable       | Long-running workflows         |
-| Simple operations       | Complex, multi-step processes  |
+| Functions              | Agents                   |
+| ---------------------- | ------------------------ |
+| Field operatives       | Agents                   |
+| Single mission focus   | Long-term assignments    |
+| No operational memory  | Complete mission history |
+| Fast tactical strikes  | Strategic operations     |
+| Independent operations | Coordinated campaigns    |
 
-## Getting started with functions
+## When to deploy agents
 
-1. **Define your function** in Go or AssemblyScript
-2. **Export it** so Modus can generate an API endpoint
-3. **Configure models or connections** in your `modus.json` if needed
-4. **Run locally** with `modus dev` to test
-5. **Deploy** to Hypermode for production
+Functions are perfect for most tactical operations, but when you need persistent
+surveillance, complex multi-phase operations, or operatives that remember every
+detail of ongoing investigations, it's time to deploy your
+[agents](/modus/agents).
 
-Functions form the foundation of many Modus apps. When you need to maintain
-state or memory across interactions, consider using [agents](/modus/agents)
-instead.
+Consider upgrading to agents when missions require:
+
+- **Operational memory** across multiple engagements
+- **Conversation intelligence** that builds over time
+- **Multi-phase operations** spanning days or weeks
+- **Recovery protocols** from mission failures
+- **Continuous monitoring** with state preservation
+
+Your functions form the tactical backbone of your intelligence operations—fast,
+reliable, and always ready for the next mission. They handle the day-to-day
+operations while your agents manage the long-term strategic initiatives.
