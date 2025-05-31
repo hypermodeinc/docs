@@ -1,0 +1,159 @@
+---
+title: "What is a Function?"
+description: "Learn about stateless functions in Modus"
+"og:title": "What is a Function? - Modus"
+---
+
+## Functions in Modus
+
+Functions in Modus are stateless, request-response operations designed for fast,
+predictable API endpoints, data processing, and AI inference tasks. They're
+perfect when you need quick responses without maintaining context between calls.
+
+## Key characteristics
+
+- **Stateless**: Each function call is independent with no memory of previous
+  interactions
+- **Fast**: Optimized for sub-second response times
+- **Scalable**: Automatically scale based on demand
+- **Simple**: Straightforward request-in, response-out pattern
+
+## When to use functions
+
+Functions are ideal for:
+
+- **API endpoints** that process individual requests
+- **Data processing** tasks like transformations or validations
+- **AI inference** for text generation, classification, or embeddings
+- **Integrations** with external services
+- **Calculations** that don't require historical context
+
+## Example: Text generation function
+
+Here's a simple function that generates text using an AI model:
+
+<CodeGroup>
+
+```go Go
+package main
+
+import (
+    "strings"
+    "github.com/hypermodeinc/modus/sdk/go/pkg/models"
+    "github.com/hypermodeinc/modus/sdk/go/pkg/models/openai"
+)
+
+const modelName = "text-generator"
+
+func GenerateText(prompt string) (string, error) {
+    model, err := models.GetModel[openai.ChatModel](modelName)
+    if err != nil {
+        return "", err
+    }
+
+    input, err := model.CreateInput(
+        openai.NewUserMessage(prompt),
+    )
+    if err != nil {
+        return "", err
+    }
+
+    input.Temperature = 0.7
+
+    output, err := model.Invoke(input)
+    if err != nil {
+        return "", err
+    }
+
+    return strings.TrimSpace(output.Choices[0].Message.Content), nil
+}
+```
+
+```ts AssemblyScript
+import { models } from "@hypermode/modus-sdk-as"
+import {
+  OpenAIChatModel,
+  UserMessage,
+} from "@hypermode/modus-sdk-as/models/openai/chat"
+
+const modelName: string = "text-generator"
+
+export function generateText(prompt: string): string {
+  const model = models.getModel<OpenAIChatModel>(modelName)
+  const input = model.createInput([new UserMessage(prompt)])
+
+  input.temperature = 0.7
+
+  const output = model.invoke(input)
+  return output.choices[0].message.content.trim()
+}
+```
+
+</CodeGroup>
+
+## Example: Data processing function
+
+Functions are also great for processing data without AI:
+
+<CodeGroup>
+
+```go Go
+func ProcessOrder(orderData string) (OrderSummary, error) {
+    var order Order
+    if err := json.Unmarshal([]byte(orderData), &order); err != nil {
+        return OrderSummary{}, err
+    }
+
+    total := 0.0
+    for _, item := range order.Items {
+        total += item.Price * float64(item.Quantity)
+    }
+
+    return OrderSummary{
+        OrderID: order.ID,
+        Total:   total,
+        Status:  "processed",
+    }, nil
+}
+```
+
+```ts AssemblyScript
+export function processOrder(orderData: string): OrderSummary {
+  const order = JSON.parse<Order>(orderData)
+
+  let total: f64 = 0
+  for (let i = 0; i < order.items.length; i++) {
+    total += order.items[i].price * order.items[i].quantity
+  }
+
+  return {
+    orderId: order.id,
+    total: total,
+    status: "processed",
+  }
+}
+```
+
+</CodeGroup>
+
+## Functions against agents
+
+| Functions               | Agents                         |
+| ----------------------- | ------------------------------ |
+| Stateless               | Stateful                       |
+| Single request/response | Persistent across interactions |
+| No memory               | Maintains conversation history |
+| Fast, predictable       | Long-running workflows         |
+| Simple operations       | Complex, multi-step processes  |
+
+## Getting started with functions
+
+1. **Define your function** in Go or AssemblyScript
+2. **Export it** so Modus can generate an API endpoint
+3. **Configure models or connections** in your `modus.json` if needed
+4. **Run locally** with `modus dev` to test
+5. **Deploy** to Hypermode for production
+
+Functions form the foundation of many Modus apps. When you need to maintain
+state or memory across interactions, consider using [agents](/modus/agents)
+instead.

@@ -79,13 +79,15 @@
             "group": "Getting Started",
             "pages": [
               "modus/overview",
-              "modus/project-structure",
-              "modus/quickstart"
+              "modus/quickstart",
+              "modus/functions",
+              "modus/agents"
             ]
           },
           {
             "group": "Building Your App",
             "pages": [
+              "modus/project-structure",
               "modus/app-manifest",
               "modus/data-fetching",
               "modus/model-invoking",

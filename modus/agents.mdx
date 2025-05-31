@@ -1,0 +1,319 @@
+---
+title: "What is an Agent?"
+description: "Learn about stateful agents in Modus"
+"og:title": "What is an Agent? - Modus"
+---
+
+## Agents in Modus
+
+Agents in Modus are stateful, autonomous entities that maintain persistent
+memory across interactions. They solve fundamental problems with traditional
+stateless approaches: no more parsing conversation histories from JSON strings,
+no more rebuilding context from scratch on every message, no more losing
+everything when errors occur.
+
+## Key characteristics
+
+- **Stateful**: Maintains memory and context across interactions
+- **Persistent**: Automatically saves and restores state
+- **Resilient**: Graceful recovery from failures
+- **Autonomous**: Can operate independently over extended periods
+- **Actor-based**: Each agent instance runs in isolation
+
+## When to use agents
+
+Agents are perfect for:
+
+- **Chat applications** that need conversation history
+- **Multi-turn workflows** spanning multiple interactions
+- **Long-running processes** that maintain context over time
+- **Collaborative systems** where agents coordinate with each other
+- **Personalized experiences** that learn user preferences
+
+## The problem agents solve
+
+Traditional stateless chat functions require:
+
+```go
+func Chat(query string, chat_history string) (ChatResponse, error) {
+    // Parse the entire chat history every single time
+    var messages []ChatMessage
+    if chat_history != "" && chat_history != "null" {
+        err := json.Unmarshal([]byte(chat_history), &messages)
+        if err != nil {
+            // If parsing fails, we lose everything
+            messages = []ChatMessage{}
+        }
+    }
+
+    // Add current message and rebuild context
+    messages = append(messages, ChatMessage{
+        Role: "user",
+        Content: query,
+    })
+
+    // Convert to OpenAI format every time
+    // Call model and rebuild history again...
+}
+```
+
+Every interaction requires parsing massive JSON strings, reconstructing context,
+and risking data loss on errors.
+
+## How agents change everything
+
+With agents, conversation state lives in memory and persists automatically:
+
+<CodeGroup>
+
+```go Go
+package main
+
+import (
+    "encoding/json"
+    "fmt"
+    "time"
+    "github.com/hypermodeinc/modus/sdk/go/pkg/agents"
+    "github.com/hypermodeinc/modus/sdk/go/pkg/models"
+    "github.com/hypermodeinc/modus/sdk/go/pkg/models/openai"
+)
+
+type ChatAgent struct {
+    agents.AgentBase
+
+    conversationId string
+    messages       []Message
+    lastActivity   time.Time
+    userContext    string
+}
+
+type Message struct {
+    ID        string    `json:"id"`
+    Role      string    `json:"role"`
+    Content   string    `json:"content"`
+    Timestamp time.Time `json:"timestamp"`
+}
+
+func (c *ChatAgent) Name() string {
+    return "ChatAgent"
+}
+
+func (c *ChatAgent) OnReceiveMessage(msgName string, data *string) (*string, error) {
+    switch msgName {
+    case "chat":
+        return c.handleChatMessage(data)
+    case "get_history":
+        return c.getConversationHistory()
+    default:
+        return nil, fmt.Errorf("unknown message type: %s", msgName)
+    }
+}
+
+func (c *ChatAgent) handleChatMessage(data *string) (*string, error) {
+    var request ChatRequest
+    json.Unmarshal([]byte(*data), &request)
+
+    // Add user message to persistent state - no parsing needed!
+    userMessage := Message{
+        ID:        fmt.Sprintf("%d", time.Now().UnixNano()),
+        Role:      "user",
+        Content:   request.Message,
+        Timestamp: time.Now(),
+    }
+    c.messages = append(c.messages, userMessage)
+    c.lastActivity = time.Now()
+
+    // Generate response using current context
+    response, err := c.generateAIResponse()
+    if err != nil {
+        return nil, err
+    }
+
+    // Add response to persistent state
+    assistantMessage := Message{
+        ID:        fmt.Sprintf("%d", time.Now().UnixNano()),
+        Role:      "assistant",
+        Content:   response,
+        Timestamp: time.Now(),
+    }
+    c.messages = append(c.messages, assistantMessage)
+
+    // Return response
+    chatResponse := ChatResponse{
+        Message:        response,
+        ConversationId: c.conversationId,
+    }
+
+    responseData, _ := json.Marshal(chatResponse)
+    responseStr := string(responseData)
+    return &responseStr, nil
+}
+```
+
+```ts AssemblyScript
+import { agents } from "@hypermode/modus-sdk-as"
+import { models } from "@hypermode/modus-sdk-as"
+import {
+  OpenAIChatModel,
+  SystemMessage,
+  UserMessage,
+} from "@hypermode/modus-sdk-as/models/openai/chat"
+
+@json
+class Message {
+  id!: string
+  role!: string
+  content!: string
+  timestamp!: string
+}
+
+export class ChatAgent extends agents.AgentBase {
+  conversationId: string = ""
+  messages: Message[] = []
+  lastActivity: string = ""
+  userContext: string = ""
+
+  Name(): string {
+    return "ChatAgent"
+  }
+
+  OnReceiveMessage(msgName: string, data: string | null): string | null {
+    switch (msgName) {
+      case "chat":
+        return this.handleChatMessage(data)
+      case "get_history":
+        return this.getConversationHistory()
+      default:
+        throw new Error(`Unknown message type: ${msgName}`)
+    }
+  }
+
+  handleChatMessage(data: string | null): string | null {
+    if (!data) throw new Error("No message data provided")
+
+    const request = JSON.parse<ChatRequest>(data)
+
+    // Add user message to persistent state - no parsing needed!
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: "user",
+      content: request.message,
+      timestamp: new Date().toISOString(),
+    }
+
+    this.messages.push(userMessage)
+    this.lastActivity = new Date().toISOString()
+
+    // Generate AI response using current context
+    const response = this.generateAIResponse()
+
+    // Add response to persistent state
+    const assistantMessage: Message = {
+      id: (Date.now() + 1).toString(),
+      role: "assistant",
+      content: response,
+      timestamp: new Date().toISOString(),
+    }
+
+    this.messages.push(assistantMessage)
+
+    const chatResponse: ChatResponse = {
+      message: response,
+      conversationId: this.conversationId,
+    }
+
+    return JSON.stringify(chatResponse)
+  }
+}
+```
+
+</CodeGroup>
+
+## Agent lifecycle
+
+Agents have built-in lifecycle hooks for robust operation:
+
+```go
+func (c *ChatAgent) OnInitialize() error {
+    // Called when agent first starts
+    c.lastActivity = time.Now()
+    return nil
+}
+
+func (c *ChatAgent) OnResume() error {
+    // Called when agent wakes up with complete state intact
+    fmt.Printf("Resuming conversation %s with %d messages",
+        c.conversationId, len(c.messages))
+    return nil
+}
+
+func (c *ChatAgent) OnSuspend() error {
+    // Called before agent goes dormant
+    return nil
+}
+
+func (c *ChatAgent) OnTerminate() error {
+    // Called before final shutdown
+    return nil
+}
+```
+
+## Working with agents
+
+To use agents in your Modus app:
+
+1. **Register your agent** in the `init()` function:
+
+   ```go
+   func init() {
+       agents.Register(&ChatAgent{})
+   }
+   ```
+
+2. **Start an agent instance**:
+
+   ```go
+   func StartChatAgent() (string, error) {
+       agentInfo, err := agents.Start("ChatAgent")
+       return agentInfo.Id, err
+   }
+   ```
+
+3. **Send messages to agents**:
+
+   ```go
+   func SendChatMessage(agentId string, message string) (ChatResponse, error) {
+       request := ChatRequest{Message: message}
+       requestData, _ := json.Marshal(request)
+       requestStr := string(requestData)
+
+       responseStr, err := agents.SendMessage(agentId, "chat", agents.WithData(requestStr))
+       // Handle response...
+   }
+   ```
+
+## Agents against functions
+
+| Agents                         | Functions               |
+| ------------------------------ | ----------------------- |
+| Stateful                       | Stateless               |
+| Persistent across interactions | Single request/response |
+| Maintains conversation history | No memory               |
+| Long-running workflows         | Fast, predictable       |
+| Complex, multi-step processes  | Simple operations       |
+| Automatic state persistence    | Manual state management |
+
+## Beyond simple chat
+
+Agents enable sophisticated patterns impossible with stateless functions:
+
+- **Contextual understanding**: Store user preferences and conversation themes
+- **Multi-turn reasoning**: Build understanding over multiple interactions
+- **Conversation recovery**: Retry from last known state instead of losing
+  everything
+- **Progressive enhancement**: Start simple and build sophistication over time
+
+Agents represent a fundamental shift from fragile, stateless functions to
+robust, persistent entities that maintain conversation continuity no matter what
+happens. They're the foundation for building production-ready intelligent
+applications.
