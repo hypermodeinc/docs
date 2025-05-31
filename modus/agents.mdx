@@ -6,11 +6,10 @@ description: "Learn about stateful agents in Modus"
 
 ## Agents in Modus
 
-Agents in Modus are stateful, autonomous entities that maintain persistent
-memory across interactions. They solve fundamental problems with traditional
-stateless approaches: no more parsing conversation histories from JSON strings,
-no more rebuilding context from scratch on every message, no more losing
-everything when errors occur.
+Agents in Modus are elite operatives that maintain persistent memory across
+missions. Unlike stateless functions that lose everything when operations end,
+agents remember every detail, survive system failures, and never lose their
+operational context.
 
 ## Key characteristics
 
@@ -24,296 +23,245 @@ everything when errors occur.
 
 Agents are perfect for:
 
-- **Chat applications** that need conversation history
 - **Multi-turn workflows** spanning multiple interactions
 - **Long-running processes** that maintain context over time
-- **Collaborative systems** where agents coordinate with each other
-- **Personalized experiences** that learn user preferences
+- **Stateful operations** that need to remember previous actions
+- **Complex coordination** between different system components
+- **Persistent monitoring** that tracks changes over time
 
-## The problem agents solve
+## Agent structure
 
-Traditional stateless chat functions require:
+Every agent starts with the essential operational framework:
 
 ```go
-func Chat(query string, chat_history string) (ChatResponse, error) {
-    // Parse the entire chat history every single time
-    var messages []ChatMessage
-    if chat_history != "" && chat_history != "null" {
-        err := json.Unmarshal([]byte(chat_history), &messages)
-        if err != nil {
-            // If parsing fails, we lose everything
-            messages = []ChatMessage{}
-        }
-    }
-
-    // Add current message and rebuild context
-    messages = append(messages, ChatMessage{
-        Role: "user",
-        Content: query,
-    })
-
-    // Convert to OpenAI format every time
-    // Call model and rebuild history again...
-}
-```
-
-Every interaction requires parsing massive JSON strings, reconstructing context,
-and risking data loss on errors.
-
-## How agents change everything
-
-With agents, conversation state lives in memory and persists automatically:
-
-<CodeGroup>
-
-```go Go
 package main
 
 import (
-    "encoding/json"
     "fmt"
     "time"
     "github.com/hypermodeinc/modus/sdk/go/pkg/agents"
-    "github.com/hypermodeinc/modus/sdk/go/pkg/models"
-    "github.com/hypermodeinc/modus/sdk/go/pkg/models/openai"
 )
 
-type ChatAgent struct {
+type OperativeAgent struct {
     agents.AgentBase
 
-    conversationId string
-    messages       []Message
-    lastActivity   time.Time
-    userContext    string
+    missionCount int
+    assignments  []string
+    lastContact  time.Time
 }
 
-type Message struct {
-    ID        string    `json:"id"`
-    Role      string    `json:"role"`
-    Content   string    `json:"content"`
-    Timestamp time.Time `json:"timestamp"`
+func (o *OperativeAgent) Name() string {
+    return "OperativeAgent"
 }
+```
 
-func (c *ChatAgent) Name() string {
-    return "ChatAgent"
-}
+The agent embeds `agents.AgentBase`, which provides all the infrastructure for
+state management, secure communications, and mission persistence. Your
+operational data—mission count, assignment records, contact logs—lives as fields
+in the struct, automatically preserved across all interactions.
 
-func (c *ChatAgent) OnReceiveMessage(msgName string, data *string) (*string, error) {
+## Agent message handling
+
+Agents process operational directives through their secure message handling
+system:
+
+```go
+func (o *OperativeAgent) OnReceiveMessage(msgName string, data *string) (*string, error) {
     switch msgName {
-    case "chat":
-        return c.handleChatMessage(data)
-    case "get_history":
-        return c.getConversationHistory()
+    case "accept_mission":
+        return o.acceptMission(data)
+    case "mission_status":
+        return o.getMissionStatus()
+    case "assignment_history":
+        return o.getAssignmentHistory()
     default:
-        return nil, fmt.Errorf("unknown message type: %s", msgName)
+        return nil, fmt.Errorf("unrecognized directive: %s", msgName)
     }
-}
-
-func (c *ChatAgent) handleChatMessage(data *string) (*string, error) {
-    var request ChatRequest
-    json.Unmarshal([]byte(*data), &request)
-
-    // Add user message to persistent state - no parsing needed!
-    userMessage := Message{
-        ID:        fmt.Sprintf("%d", time.Now().UnixNano()),
-        Role:      "user",
-        Content:   request.Message,
-        Timestamp: time.Now(),
-    }
-    c.messages = append(c.messages, userMessage)
-    c.lastActivity = time.Now()
-
-    // Generate response using current context
-    response, err := c.generateAIResponse()
-    if err != nil {
-        return nil, err
-    }
-
-    // Add response to persistent state
-    assistantMessage := Message{
-        ID:        fmt.Sprintf("%d", time.Now().UnixNano()),
-        Role:      "assistant",
-        Content:   response,
-        Timestamp: time.Now(),
-    }
-    c.messages = append(c.messages, assistantMessage)
-
-    // Return response
-    chatResponse := ChatResponse{
-        Message:        response,
-        ConversationId: c.conversationId,
-    }
-
-    responseData, _ := json.Marshal(chatResponse)
-    responseStr := string(responseData)
-    return &responseStr, nil
 }
 ```
 
-```ts AssemblyScript
-import { agents } from "@hypermode/modus-sdk-as"
-import { models } from "@hypermode/modus-sdk-as"
-import {
-  OpenAIChatModel,
-  SystemMessage,
-  UserMessage,
-} from "@hypermode/modus-sdk-as/models/openai/chat"
+Each directive triggers specific operational procedures, with all intelligence
+automatically maintained in the agent's secure memory.
 
-@json
-class Message {
-  id!: string
-  role!: string
-  content!: string
-  timestamp!: string
+## Processing operations
+
+Here's how agents handle field operations while maintaining persistent state:
+
+```go
+func (o *OperativeAgent) acceptMission(data *string) (*string, error) {
+    missionType := "classified"
+    if data != nil {
+        missionType = *data
+    }
+
+    // Update operational status - no intel parsing needed!
+    o.missionCount++
+    o.assignments = append(o.assignments, fmt.Sprintf("Mission %d: %s", o.missionCount, missionType))
+    o.lastContact = time.Now()
+
+    result := fmt.Sprintf("Mission %d accepted. Status: Active", o.missionCount)
+    return &result, nil
 }
 
-export class ChatAgent extends agents.AgentBase {
-  conversationId: string = ""
-  messages: Message[] = []
-  lastActivity: string = ""
-  userContext: string = ""
-
-  Name(): string {
-    return "ChatAgent"
-  }
-
-  OnReceiveMessage(msgName: string, data: string | null): string | null {
-    switch (msgName) {
-      case "chat":
-        return this.handleChatMessage(data)
-      case "get_history":
-        return this.getConversationHistory()
-      default:
-        throw new Error(`Unknown message type: ${msgName}`)
-    }
-  }
-
-  handleChatMessage(data: string | null): string | null {
-    if (!data) throw new Error("No message data provided")
-
-    const request = JSON.parse<ChatRequest>(data)
-
-    // Add user message to persistent state - no parsing needed!
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: "user",
-      content: request.message,
-      timestamp: new Date().toISOString(),
-    }
-
-    this.messages.push(userMessage)
-    this.lastActivity = new Date().toISOString()
-
-    // Generate AI response using current context
-    const response = this.generateAIResponse()
-
-    // Add response to persistent state
-    const assistantMessage: Message = {
-      id: (Date.now() + 1).toString(),
-      role: "assistant",
-      content: response,
-      timestamp: new Date().toISOString(),
-    }
-
-    this.messages.push(assistantMessage)
-
-    const chatResponse: ChatResponse = {
-      message: response,
-      conversationId: this.conversationId,
-    }
-
-    return JSON.stringify(chatResponse)
-  }
+func (o *OperativeAgent) getMissionStatus() (*string, error) {
+    result := fmt.Sprintf("Agent operative. Missions completed: %d", o.missionCount)
+    return &result, nil
 }
 ```
 
-</CodeGroup>
+What makes this operationally superior:
+
+- No transmission of massive state files on every contact
+- No reconstruction of mission history from scratch
+- No risk of losing operational data during communication failures
+- No manual management of assignment records between missions
+
+The agent maintains its complete operational state in secure memory, accessing
+it instantly when processing new directives.
+
+## State persistence
+
+Agents automatically preserve their operational state through Modus's built-in
+intelligence management:
+
+```go
+func (o *OperativeAgent) GetState() *string {
+    state := fmt.Sprintf("%d|%s|%d",
+        o.missionCount,
+        strings.Join(o.assignments, ","),
+        o.lastContact.Unix())
+    return &state
+}
+
+func (o *OperativeAgent) SetState(data *string) {
+    if data == nil {
+        return
+    }
+
+    parts := strings.Split(*data, "|")
+    if len(parts) >= 3 {
+        o.missionCount, _ = strconv.Atoi(parts[0])
+        o.assignments = strings.Split(parts[1], ",")
+        timestamp, _ := strconv.ParseInt(parts[2], 10, 64)
+        o.lastContact = time.Unix(timestamp, 0)
+    }
+}
+```
 
 ## Agent lifecycle
 
-Agents have built-in lifecycle hooks for robust operation:
+Agents have built-in operational protocols for mission continuity:
 
 ```go
-func (c *ChatAgent) OnInitialize() error {
-    // Called when agent first starts
-    c.lastActivity = time.Now()
+func (o *OperativeAgent) OnInitialize() error {
+    // Called when agent is first deployed to the field
+    o.lastContact = time.Now()
+    fmt.Printf("Operative %s deployed and ready for missions", o.Id())
     return nil
 }
 
-func (c *ChatAgent) OnResume() error {
-    // Called when agent wakes up with complete state intact
-    fmt.Printf("Resuming conversation %s with %d messages",
-        c.conversationId, len(c.messages))
+func (o *OperativeAgent) OnResume() error {
+    // Called when agent reestablishes contact with complete intel intact
+    fmt.Printf("Agent back online. %d missions completed, %d assignments on record",
+        o.missionCount, len(o.assignments))
     return nil
 }
 
-func (c *ChatAgent) OnSuspend() error {
-    // Called before agent goes dormant
+func (o *OperativeAgent) OnSuspend() error {
+    // Called before agent goes dark
     return nil
 }
 
-func (c *ChatAgent) OnTerminate() error {
-    // Called before final shutdown
+func (o *OperativeAgent) OnTerminate() error {
+    // Called before final extraction
+    fmt.Printf("Agent %s extracted. Mission complete.", o.Id())
     return nil
 }
 ```
 
-## Working with agents
+## Deploying and controlling agents
 
-To use agents in your Modus app:
+Agents must be registered and then deployed through functions that become part
+of your GraphQL API.
 
-1. **Register your agent** in the `init()` function:
+First, register your agent in the `init()` function:
 
-   ```go
-   func init() {
-       agents.Register(&ChatAgent{})
-   }
-   ```
+```go
+func init() {
+    agents.Register(&OperativeAgent{})
+}
+```
 
-2. **Start an agent instance**:
+Create a function to deploy new agent instances. This function becomes a GraphQL
+mutation:
 
-   ```go
-   func StartChatAgent() (string, error) {
-       agentInfo, err := agents.Start("ChatAgent")
-       return agentInfo.Id, err
-   }
-   ```
+```go
+func DeployOperative() (string, error) {
+    agentInfo, err := agents.Start("OperativeAgent")
+    if err != nil {
+        return "", err
+    }
 
-3. **Send messages to agents**:
+    // Return the agent ID - clients must store this to communicate with the agent
+    return agentInfo.Id, nil
+}
+```
 
-   ```go
-   func SendChatMessage(agentId string, message string) (ChatResponse, error) {
-       request := ChatRequest{Message: message}
-       requestData, _ := json.Marshal(request)
-       requestStr := string(requestData)
+Create functions to communicate with specific agent instances using their ID:
 
-       responseStr, err := agents.SendMessage(agentId, "chat", agents.WithData(requestStr))
-       // Handle response...
-   }
-   ```
+```go
+func AssignMission(agentId string, missionType string) (string, error) {
+    result, err := agents.SendMessage(agentId, "accept_mission", agents.WithData(missionType))
+    if err != nil {
+        return "", err
+    }
+    if result == nil {
+        return "", fmt.Errorf("no response from agent")
+    }
+    return *result, err
+}
 
-## Agents against functions
+func GetMissionStatus(agentId string) (string, error) {
+    result, err := agents.SendMessage(agentId, "mission_status")
+    if err != nil {
+        return "", err
+    }
+    if result == nil {
+        return "", fmt.Errorf("no response from agent")
+    }
+    return *result, err
+}
+```
 
-| Agents                         | Functions               |
-| ------------------------------ | ----------------------- |
-| Stateful                       | Stateless               |
-| Persistent across interactions | Single request/response |
-| Maintains conversation history | No memory               |
-| Long-running workflows         | Fast, predictable       |
-| Complex, multi-step processes  | Simple operations       |
-| Automatic state persistence    | Manual state management |
+**Important**: clients must store the agent ID returned from `DeployOperative()`
+to communicate with that specific agent instance. Each agent maintains its own
+independent state and can only be accessed through its unique ID.
 
-## Beyond simple chat
+## Agent workflow example
 
-Agents enable sophisticated patterns impossible with stateless functions:
+1. Client calls `DeployOperative()` → receives agent ID `"agent_12345"`
+2. Client stores `"agent_12345"` for future communications
+3. Client calls `AssignMission("agent_12345", "surveillance")` → agent updates
+   its state
+4. Client calls `GetMissionStatus("agent_12345")` → agent returns current status
+   from memory
+5. Agent persists across system restarts, maintaining all mission history
 
-- **Contextual understanding**: Store user preferences and conversation themes
-- **Multi-turn reasoning**: Build understanding over multiple interactions
-- **Conversation recovery**: Retry from last known state instead of losing
-  everything
-- **Progressive enhancement**: Start simple and build sophistication over time
+## Beyond simple operations
 
-Agents represent a fundamental shift from fragile, stateless functions to
-robust, persistent entities that maintain conversation continuity no matter what
-happens. They're the foundation for building production-ready intelligent
-applications.
+Agents enable sophisticated operational patterns impossible with stateless
+functions:
+
+- **Operational continuity**: Maintain mission state across system failures and
+  re-deployments
+- **Intelligence building**: Accumulate understanding across multiple
+  assignments and contacts
+- **Mission recovery**: Resume operations from last secure checkpoint instead of
+  starting over
+- **Network coordination**: Manage complex multi-agent operations with shared
+  intelligence
+
+Agents represent the evolution from stateless functions to elite operatives that
+maintain complete operational continuity. They're the foundation for building
+intelligence networks that never lose track of their missions, no matter what
+happens in the field.
