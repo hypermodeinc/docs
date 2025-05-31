@@ -1,0 +1,267 @@
+---
+title: "What is an Agent?"
+description: "Learn about stateful agents in Modus"
+"og:title": "What is an Agent? - Modus"
+---
+
+## Agents in Modus
+
+Agents in Modus are elite operatives that maintain persistent memory across
+missions. Unlike stateless functions that lose everything when operations end,
+agents remember every detail, survive system failures, and never lose their
+operational context.
+
+## Key characteristics
+
+- **Stateful**: Maintains memory and context across interactions
+- **Persistent**: Automatically saves and restores state
+- **Resilient**: Graceful recovery from failures
+- **Autonomous**: Can operate independently over extended periods
+- **Actor-based**: Each agent instance runs in isolation
+
+## When to use agents
+
+Agents are perfect for:
+
+- **Multi-turn workflows** spanning multiple interactions
+- **Long-running processes** that maintain context over time
+- **Stateful operations** that need to remember previous actions
+- **Complex coordination** between different system components
+- **Persistent monitoring** that tracks changes over time
+
+## Agent structure
+
+Every agent starts with the essential operational framework:
+
+```go
+package main
+
+import (
+    "fmt"
+    "time"
+    "github.com/hypermodeinc/modus/sdk/go/pkg/agents"
+)
+
+type OperativeAgent struct {
+    agents.AgentBase
+
+    missionCount int
+    assignments  []string
+    lastContact  time.Time
+}
+
+func (o *OperativeAgent) Name() string {
+    return "OperativeAgent"
+}
+```
+
+The agent embeds `agents.AgentBase`, which provides all the infrastructure for
+state management, secure communications, and mission persistence. Your
+operational data—mission count, assignment records, contact logs—lives as fields
+in the struct, automatically preserved across all interactions.
+
+## Agent message handling
+
+Agents process operational directives through their secure message handling
+system:
+
+```go
+func (o *OperativeAgent) OnReceiveMessage(msgName string, data *string) (*string, error) {
+    switch msgName {
+    case "accept_mission":
+        return o.acceptMission(data)
+    case "mission_status":
+        return o.getMissionStatus()
+    case "assignment_history":
+        return o.getAssignmentHistory()
+    default:
+        return nil, fmt.Errorf("unrecognized directive: %s", msgName)
+    }
+}
+```
+
+Each directive triggers specific operational procedures, with all intelligence
+automatically maintained in the agent's secure memory.
+
+## Processing operations
+
+Here's how agents handle field operations while maintaining persistent state:
+
+```go
+func (o *OperativeAgent) acceptMission(data *string) (*string, error) {
+    missionType := "classified"
+    if data != nil {
+        missionType = *data
+    }
+
+    // Update operational status - no intel parsing needed!
+    o.missionCount++
+    o.assignments = append(o.assignments, fmt.Sprintf("Mission %d: %s", o.missionCount, missionType))
+    o.lastContact = time.Now()
+
+    result := fmt.Sprintf("Mission %d accepted. Status: Active", o.missionCount)
+    return &result, nil
+}
+
+func (o *OperativeAgent) getMissionStatus() (*string, error) {
+    result := fmt.Sprintf("Agent operative. Missions completed: %d", o.missionCount)
+    return &result, nil
+}
+```
+
+What makes this operationally superior:
+
+- No transmission of massive state files on every contact
+- No reconstruction of mission history from scratch
+- No risk of losing operational data during communication failures
+- No manual management of assignment records between missions
+
+The agent maintains its complete operational state in secure memory, accessing
+it instantly when processing new directives.
+
+## State persistence
+
+Agents automatically preserve their operational state through Modus's built-in
+intelligence management:
+
+```go
+func (o *OperativeAgent) GetState() *string {
+    state := fmt.Sprintf("%d|%s|%d",
+        o.missionCount,
+        strings.Join(o.assignments, ","),
+        o.lastContact.Unix())
+    return &state
+}
+
+func (o *OperativeAgent) SetState(data *string) {
+    if data == nil {
+        return
+    }
+
+    parts := strings.Split(*data, "|")
+    if len(parts) >= 3 {
+        o.missionCount, _ = strconv.Atoi(parts[0])
+        o.assignments = strings.Split(parts[1], ",")
+        timestamp, _ := strconv.ParseInt(parts[2], 10, 64)
+        o.lastContact = time.Unix(timestamp, 0)
+    }
+}
+```
+
+## Agent lifecycle
+
+Agents have built-in operational protocols for mission continuity:
+
+```go
+func (o *OperativeAgent) OnInitialize() error {
+    // Called when agent is first deployed to the field
+    o.lastContact = time.Now()
+    fmt.Printf("Operative %s deployed and ready for missions", o.Id())
+    return nil
+}
+
+func (o *OperativeAgent) OnResume() error {
+    // Called when agent reestablishes contact with complete intel intact
+    fmt.Printf("Agent back online. %d missions completed, %d assignments on record",
+        o.missionCount, len(o.assignments))
+    return nil
+}
+
+func (o *OperativeAgent) OnSuspend() error {
+    // Called before agent goes dark
+    return nil
+}
+
+func (o *OperativeAgent) OnTerminate() error {
+    // Called before final extraction
+    fmt.Printf("Agent %s extracted. Mission complete.", o.Id())
+    return nil
+}
+```
+
+## Deploying and controlling agents
+
+Agents must be registered and then deployed through functions that become part
+of your GraphQL API.
+
+First, register your agent in the `init()` function:
+
+```go
+func init() {
+    agents.Register(&OperativeAgent{})
+}
+```
+
+Create a function to deploy new agent instances. This function becomes a GraphQL
+mutation:
+
+```go
+func DeployOperative() (string, error) {
+    agentInfo, err := agents.Start("OperativeAgent")
+    if err != nil {
+        return "", err
+    }
+
+    // Return the agent ID - clients must store this to communicate with the agent
+    return agentInfo.Id, nil
+}
+```
+
+Create functions to communicate with specific agent instances using their ID:
+
+```go
+func AssignMission(agentId string, missionType string) (string, error) {
+    result, err := agents.SendMessage(agentId, "accept_mission", agents.WithData(missionType))
+    if err != nil {
+        return "", err
+    }
+    if result == nil {
+        return "", fmt.Errorf("no response from agent")
+    }
+    return *result, err
+}
+
+func GetMissionStatus(agentId string) (string, error) {
+    result, err := agents.SendMessage(agentId, "mission_status")
+    if err != nil {
+        return "", err
+    }
+    if result == nil {
+        return "", fmt.Errorf("no response from agent")
+    }
+    return *result, err
+}
+```
+
+**Important**: clients must store the agent ID returned from `DeployOperative()`
+to communicate with that specific agent instance. Each agent maintains its own
+independent state and can only be accessed through its unique ID.
+
+## Agent workflow example
+
+1. Client calls `DeployOperative()` → receives agent ID `"agent_12345"`
+2. Client stores `"agent_12345"` for future communications
+3. Client calls `AssignMission("agent_12345", "surveillance")` → agent updates
+   its state
+4. Client calls `GetMissionStatus("agent_12345")` → agent returns current status
+   from memory
+5. Agent persists across system restarts, maintaining all mission history
+
+## Beyond simple operations
+
+Agents enable sophisticated operational patterns impossible with stateless
+functions:
+
+- **Operational continuity**: Maintain mission state across system failures and
+  re-deployments
+- **Intelligence building**: Accumulate understanding across multiple
+  assignments and contacts
+- **Mission recovery**: Resume operations from last secure checkpoint instead of
+  starting over
+- **Network coordination**: Manage complex multi-agent operations with shared
+  intelligence
+
+Agents represent the evolution from stateless functions to elite operatives that
+maintain complete operational continuity. They're the foundation for building
+intelligence networks that never lose track of their missions, no matter what
+happens in the field.
