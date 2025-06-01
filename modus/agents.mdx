@@ -89,7 +89,7 @@ func DeployAnalyst() (string, error) {
 
 When you call this function through GraphQL, it returns a unique agent ID:
 
-```graphql
+```dql
 mutation {
   deployAnalyst
 }
@@ -141,14 +141,16 @@ func GetThreatAssessment(agentId string) (string, error) {
 
 These functions become GraphQL mutations that you can call with your agent's ID:
 
-```graphql
+```dql
 mutation {
   submitIntelligence(
     agentId: "agent_abc123xyz"
     data: "Suspicious network activity detected"
   )
 }
+```
 
+```dql
 query {
   getThreatAssessment(agentId: "agent_abc123xyz")
 }
