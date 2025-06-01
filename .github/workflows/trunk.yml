@@ -8,5 +8,5 @@ permissions:
   contents: read
 
 jobs:
-  call-workflow-in-another-repo:
+  trunk-code-quality:
     uses: hypermodeinc/.github/.github/workflows/trunk.yml@main
