@@ -89,7 +89,7 @@ func DeployAnalyst() (string, error) {
 
 When you call this function through GraphQL, it returns a unique agent ID:
 
-```dql
+```graphql
 mutation {
   deployAnalyst
 }
@@ -117,7 +117,11 @@ functions that send messages to specific agent instances:
 
 ```go
 func SubmitIntelligence(agentId string, data string) (string, error) {
-    result, err := agents.SendMessage(agentId, "analyze_intelligence", agents.WithData(data))
+    result, err := agents.SendMessage(
+        agentId,
+        "analyze_intelligence",
+        agents.WithData(data),
+    )
     if err != nil {
         return "", err
     }
@@ -141,16 +145,14 @@ func GetThreatAssessment(agentId string) (string, error) {
 
 These functions become GraphQL mutations that you can call with your agent's ID:
 
-```dql
+```graphql
 mutation {
   submitIntelligence(
     agentId: "agent_abc123xyz"
     data: "Suspicious network activity detected"
   )
 }
-```
 
-```dql
 query {
   getThreatAssessment(agentId: "agent_abc123xyz")
 }
@@ -166,7 +168,10 @@ Agents process operational directives through their secure message handling
 system:
 
 ```go
-func (i *IntelligenceAgent) OnReceiveMessage(msgName string, data *string) (*string, error) {
+func (i *IntelligenceAgent) OnReceiveMessage(
+    msgName string,
+    data *string,
+) (*string, error) {
     switch msgName {
     case "analyze_intelligence":
         return i.analyzeIntelligence(data)
@@ -189,7 +194,9 @@ Here's how agents handle field operations while maintaining persistent state and
 using AI models for analysis:
 
 ```go
-func (i *IntelligenceAgent) analyzeIntelligence(data *string) (*string, error) {
+func (i *IntelligenceAgent) analyzeIntelligence(
+    data *string,
+) (*string, error) {
     if data == nil {
         return nil, fmt.Errorf("no intelligence data provided")
     }
@@ -205,12 +212,14 @@ func (i *IntelligenceAgent) analyzeIntelligence(data *string) (*string, error) {
     model, _ := models.GetModel[openai.ChatModel]("analyst-model")
 
     systemPrompt := `You are an intelligence analyst.
-    Analyze patterns from accumulated briefings and provide threat assessment.`
+        Analyze patterns from accumulated briefings
+        and provide threat assessment.`
 
     userPrompt := fmt.Sprintf(`All Intelligence:
-%s
+        %s
 
-Provide threat assessment:`, context)
+        Provide threat assessment:`,
+        context)
 
     input, _ := model.CreateInput(
         openai.NewSystemMessage(systemPrompt),
@@ -226,21 +235,30 @@ Provide threat assessment:`, context)
         i.confidence = 1.0
     }
 
-    result := fmt.Sprintf(`Analysis complete: %s
-(Confidence: %.2f based on %d briefings)`,
-        analysis, i.confidence, len(i.briefings))
+    result := fmt.Sprintf(`Analysis complete:
+        %s
+
+        (Confidence: %.2f based on %d briefings)`,
+        analysis,
+        i.confidence,
+        len(i.briefings))
     return &result, nil
 }
 
 func (i *IntelligenceAgent) getThreatAssessment() (*string, error) {
     if len(i.briefings) == 0 {
-        result := "No intelligence processed yet. Deploy to field for analysis."
+        result := `No intelligence processed yet.
+            Deploy to field for analysis.`
         return &result, nil
     }
 
-    result := fmt.Sprintf(`Current threat assessment: %d briefings analyzed.
-Confidence level: %.2f. Agent operational.`,
-        len(i.briefings), i.confidence)
+    result := fmt.Sprintf(`Current threat assessment:
+        %d briefings analyzed.
+
+        Confidence level: %.2f.
+        Agent operational.`,
+        len(i.briefings),
+        i.confidence)
     return &result, nil
 }
 ```
@@ -261,18 +279,16 @@ invoking AI models.
 
 This combination creates agents that:
 
-**First Analysis:**
+<Note>
+  **First Analysis:** "New threat detected. Limited context available.
+  (Confidence: 0.10 based on 1 briefing)"
+</Note>
 
-```sh
-"New threat detected. Limited context available. (Confidence: 0.10 based on 1 briefing)"
-```
-
-**After Multiple Briefings:**
-
-```sh
-"Pattern confirmed across 5 previous incidents. This matches Advanced Persistent
-Threat signatures. Immediate escalation recommended. (Confidence: 0.85 based on 8 briefings)"
-```
+<Note>
+  **After Multiple Briefings:** "Pattern confirmed across 5 previous incidents.
+  This matches Advanced Persistent Threat signatures. Immediate escalation
+  recommended. (Confidence: 0.85 based on 8 briefings)"
+</Note>
 
 The agent doesn't just remember—it **learns and becomes more intelligent with
 every interaction**. AI models see the complete operational picture, enabling
@@ -319,14 +335,18 @@ func (i *IntelligenceAgent) OnInitialize() error {
     // Called when agent is first deployed to the field
     i.lastContact = time.Now()
     i.confidence = 0.0
-    fmt.Printf("Intelligence Agent %s deployed and ready for analysis", i.Id())
+    fmt.Printf(`Intelligence Agent %s deployed
+        and ready for analysis`, i.Id())
     return nil
 }
 
 func (i *IntelligenceAgent) OnResume() error {
     // Called when agent reestablishes contact with complete intel intact
-    fmt.Printf(`Agent back online. %d briefings processed.
-        Confidence level: %.2f`, len(i.briefings), i.confidence)
+    fmt.Printf(`Agent back online.
+        %d briefings processed.
+        Confidence level: %.2f`,
+        len(i.briefings),
+        i.confidence)
     return nil
 }
 
@@ -337,7 +357,8 @@ func (i *IntelligenceAgent) OnSuspend() error {
 
 func (i *IntelligenceAgent) OnTerminate() error {
     // Called before final extraction
-    fmt.Printf("Agent %s extracted. Intelligence archive preserved.", i.Id())
+    fmt.Printf(`Agent %s extracted.
+        Intelligence archive preserved.`, i.Id())
     return nil
 }
 ```
