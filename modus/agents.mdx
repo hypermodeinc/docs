@@ -102,8 +102,16 @@ When you call this function through GraphQL, it returns a unique agent ID:
 mutation {
   deployAnalyst
 }
+```
 
-# Returns: "agent_abc123xyz"
+Response:
+
+```json
+{
+  "data": {
+    "deployAnalyst": "agent_abc123xyz"
+  }
+}
 ```
 
 You can think of an Agent as a persistent server process with durable memory.
@@ -161,9 +169,37 @@ mutation {
     data: "Suspicious network activity detected"
   )
 }
+```
 
+Response:
+
+```json
+{
+  "data": {
+    "submitIntelligence": "Analysis complete.
+      Threat pattern matches previous incident #7823.
+      Confidence: 0.85 based on 3 briefings.
+      Recommend immediate investigation."
+  }
+}
+```
+
+```graphql
 query {
   getThreatAssessment(agentId: "agent_abc123xyz")
+}
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "getThreatAssessment": "Current threat assessment:
+      3 briefings analyzed.
+      Confidence level: 0.85.
+      Agent operational."
+  }
 }
 ```
 
@@ -432,6 +468,22 @@ query MonitorAnalysis($agentId: String!) {
     currentTask
     estimatedTimeRemaining
     isComplete
+  }
+}
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "checkAnalysisProgress": {
+      "phase": "Deep Intelligence Analysis",
+      "progress": 0.75,
+      "currentTask": "[15:42:33] Phase 2: Generating threat assessment...",
+      "estimatedTimeRemaining": 45,
+      "isComplete": false
+    }
   }
 }
 ```
