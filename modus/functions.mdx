@@ -93,6 +93,38 @@ func CreateSecurityAlert(data AlertInput) (*SecurityAlert, error) {
 }
 ```
 
+Now you can execute operational changes:
+
+```graphql
+mutation {
+  createSecurityAlert(
+    data: {
+      type: "INTRUSION_ATTEMPT"
+      severity: "CRITICAL"
+      source: "firewall_logs"
+    }
+  ) {
+    alertId
+    status
+    timestamp
+  }
+}
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "createSecurityAlert": {
+      "alertId": "alert_20250115_001",
+      "status": "ACTIVE",
+      "timestamp": "2025-01-15T14:30:00Z"
+    }
+  }
+}
+```
+
 Functions starting with `create`, `update`, `delete`, and similar action words
 automatically become mutations.
 
