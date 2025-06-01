@@ -202,9 +202,38 @@ AssemblyScript if you prefer. For AssemblyScript usage, refer to the
     modus dev
     ```
 
-    Modus generates a GraphQL API that you can interact with however you like.
-    We provide you with an exploration tool at `http://localhost:8686/explorer`
-    for testing your functions.
+    Modus automatically generates a GraphQL API from your functions.
+    Since your function is named `GatherIntelligence()`, it becomes a GraphQL query field called `gatherIntelligence`.
+
+    Open the Modus API Explorer at `http://localhost:8686/explorer` to test your function.
+    The explorer is fully GraphQL-compatible, so you can issue this query:
+
+    ```graphql
+    query {
+      gatherIntelligence {
+        quote
+        author
+        analysis
+      }
+    }
+    ```
+
+    You'll receive a response like:
+
+    ```json
+    {
+      "data": {
+        "gatherIntelligence": {
+          "quote": "The only way to do great work is to love what you do.",
+          "author": "Steve Jobs",
+          "analysis": "
+            This emphasizes that passion and genuine interest in your work are fundamental drivers of excellence.
+            When you love what you do, the effort required for mastery feels less burdensome and innovation flows more naturally.
+          "
+        }
+      }
+    }
+    ```
 
     Your function now:
     - Fetches data from external APIs
