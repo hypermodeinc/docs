@@ -7,7 +7,7 @@ import DgraphWIP from "/snippets/dgraph-wip.mdx"
 
 <DgraphWIP />
 
-[![GoDoc](https://godoc.org/github.com/dgraph-io/dgo?status.svg)](https://godoc.org/github.com/dgraph-io/dgo)
+[![GoDoc](https://pkg.go.dev/badge/github.com/dgraph-io/dgo/v240)](https://pkg.go.dev/github.com/dgraph-io/dgo/v240)
 
 The Go client communicates with the server on the gRPC port (default value
 9080).
@@ -17,14 +17,27 @@ The client can be obtained in the usual way via `go get`:
 ```sh
  Requires at least Go 1.23
 export GO111MODULE=on
-go get -u -v github.com/dgraph-io/dgo/v210
+go get -u -v github.com/dgraph-io/dgo/v240
 ```
 
 The full [GoDoc](https://godoc.org/github.com/dgraph-io/dgo) contains
 documentation for the client API along with examples showing how to use it.
 
-More details on the supported versions can be found at
-[this link](https://github.com/hypermodeinc/dgo#supported-versions).
+## Supported versions
+
+Depending on the version of Dgraph that you are connecting to, you should use a
+compatible version of this client and their corresponding import paths.
+
+| Dgraph version | dgo version | dgo import path                 |
+| -------------- | ----------- | ------------------------------- |
+| dgraph 23.X.Y  | dgo 230.X.Y | `github.com/dgraph-io/dgo/v230` |
+| dgraph 24.X.Y  | dgo 240.X.Y | `github.com/dgraph-io/dgo/v240` |
+| dgraph 25.X.Y  | dgo 250.X.Y | `github.com/dgraph-io/dgo/v250` |
+
+<Tip>
+  Use the new v2 APIs with Dgraph v25. See the [v2
+  APIs](/dgraph/v25-preview#v2-apis)
+</Tip>
 
 ## Create the client
 
@@ -66,7 +79,6 @@ func newClient() *dgo.Dgraph {
     api.NewDgraphClient(d),
   )
 }
-
 ```
 
 ### Multi-tenancy

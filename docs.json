@@ -8,6 +8,9 @@
     "dark": "#CC00BE"
   },
   "favicon": "favicon.png",
+  "banner": {
+    "content": "🎉 Dgraph v25 Preview is out with namespaces, MCP, and more! [Learn more →](/dgraph/v25-preview)"
+  },
   "navigation": {
     "global": {
       "anchors": [
@@ -27,7 +30,7 @@
             "light": "#FF00EE",
             "dark": "#CC00BE"
           },
-          "href": "https://hypermode.com/sign-in"
+          "href": "https://hypermode.com/login"
         },
         {
           "anchor": "Dgraph Cloud",
@@ -61,7 +64,7 @@
           },
           {
             "group": "Tools",
-            "pages": ["hosted-models", "hyp-cli"]
+            "pages": ["model-router", "hyp-cli"]
           },
           {
             "group": "Resources",
@@ -95,7 +98,7 @@
           },
           {
             "group": "How-To Guides",
-            "pages": ["modus/deepseek-model"]
+            "pages": ["modus/deepseek-model", "modus/modus-dgraph"]
           },
           {
             "group": "SDK Reference",
@@ -153,7 +156,8 @@
               "dgraph/overview",
               "dgraph/why-dgraph",
               "dgraph/quickstart",
-              "dgraph/guides"
+              "dgraph/guides",
+              "dgraph/v25-preview"
             ]
           },
           {
@@ -542,6 +546,10 @@
     {
       "source": "/graphs/deploy",
       "destination": "/graphs/provision"
+    },
+    {
+      "source": "/hosted-models",
+      "destination": "/model-router"
     }
   ]
 }

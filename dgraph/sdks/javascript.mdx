@@ -424,3 +424,306 @@ meta.add("auth-token", "mySuperSecret")
 
 await dgraphClient.alter(op, meta)
 ```
+
+## Browser support
+
+<Note>
+  The official Dgraph JavaScript gRPC client is designed for Node.js
+  environments and doesn't officially support browser usage due to gRPC-web
+  limitations and bundling complexities. However, you can achieve **most** of
+  the same capabilities in browsers using Dgraph's HTTP API with standard
+  `fetch` requests.
+</Note>
+
+<Tip>
+  If you only need basic CRUD operations and don't require admin endpoints (like
+  schema alterations or dropping data), consider using Dgraph's GraphQL API
+  instead, which is designed for client-side usage and provides better security
+  boundaries.
+</Tip>
+
+<Warning>
+  We don't recommend connecting directly to Dgraph from browser applications as
+  this could expose your database credentials and connection details to end
+  users. Consider using a backend API as a proxy instead.
+</Warning>
+
+### Node.js gRPC vs browser HTTP API
+
+Below are side-by-side examples showing how to perform common operations using
+both the Node.js gRPC client and browser-compatible HTTP requests.
+
+#### Creating a connection
+
+**Node.js (gRPC):**
+
+```js
+const dgraph = require("dgraph-js")
+const grpc = require("grpc")
+
+const clientStub = new dgraph.DgraphClientStub(
+  "localhost:9080",
+  grpc.credentials.createInsecure(),
+)
+const dgraphClient = new dgraph.DgraphClient(clientStub)
+```
+
+**Browser (HTTP):**
+
+```js
+const DGRAPH_HTTP_URL = "http://localhost:8080"
+
+// Test connection to Dgraph
+const response = await fetch(`${DGRAPH_HTTP_URL}/health`)
+if (!response.ok) {
+  throw new Error(`Cannot connect to Dgraph: ${response.status}`)
+}
+console.log("Connected to Dgraph successfully")
+```
+
+#### Setting schema
+
+**Node.js (gRPC):**
+
+```js
+const schema = "name: string @index(exact) ."
+const op = new dgraph.Operation()
+op.setSchema(schema)
+await dgraphClient.alter(op)
+```
+
+**Browser (HTTP):**
+
+```js
+const schema = "name: string @index(exact) ."
+
+await fetch(`${DGRAPH_HTTP_URL}/alter`, {
+  method: "POST",
+  headers: { "Content-Type": "application/rdf" },
+  body: schema,
+})
+```
+
+#### Running queries
+
+**Node.js (gRPC):**
+
+```js
+const query = `query all($a: string) {
+  all(func: eq(name, $a)) {
+    name
+  }
+}`
+const vars = { $a: "Alice" }
+const res = await dgraphClient.newTxn().queryWithVars(query, vars)
+const data = res.getJson()
+```
+
+**Browser (HTTP):**
+
+```js
+const query = `query all($a: string) {
+  all(func: eq(name, $a)) {
+    name
+  }
+}`
+const vars = { $a: "Alice" }
+
+const response = await fetch(`${DGRAPH_HTTP_URL}/query`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ query, variables: vars }),
+})
+const data = await response.json()
+```
+
+#### Running mutations
+
+**Node.js (gRPC):**
+
+```js
+const txn = dgraphClient.newTxn()
+try {
+  const p = { name: "Alice", age: 26 }
+  const mu = new dgraph.Mutation()
+  mu.setSetJson(p)
+  mu.setCommitNow(true)
+  await txn.mutate(mu)
+} finally {
+  await txn.discard()
+}
+```
+
+**Browser (HTTP):**
+
+```js
+const p = { name: "Alice", age: 26 }
+
+await fetch(`${DGRAPH_HTTP_URL}/mutate?commitNow=true`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ set: [p] }),
+})
+```
+
+#### Upsert operations
+
+**Node.js (gRPC):**
+
+```js
+const query = `query {
+  user as var(func: eq(email, "wrong_email@dgraph.io"))
+}`
+
+const mu = new dgraph.Mutation()
+mu.setSetNquads(`uid(user) <email> "correct_email@dgraph.io" .`)
+
+const req = new dgraph.Request()
+req.setQuery(query)
+req.setMutationsList([mu])
+req.setCommitNow(true)
+
+await dgraphClient.newTxn().doRequest(req)
+```
+
+**Browser (HTTP):**
+
+```js
+const query = `query {
+  user as var(func: eq(email, "wrong_email@dgraph.io"))
+}`
+
+await fetch(`${DGRAPH_HTTP_URL}/mutate?commitNow=true`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    query: query,
+    set: [{ uid: "uid(user)", email: "correct_email@dgraph.io" }],
+  }),
+})
+```
+
+#### Conditional upserts
+
+**Node.js (gRPC):**
+
+```js
+const query = `query {
+  user as var(func: eq(email, "wrong_email@dgraph.io"))
+}`
+
+const mu = new dgraph.Mutation()
+mu.setSetNquads(`uid(user) <email> "correct_email@dgraph.io" .`)
+mu.setCond(`@if(eq(len(user), 1))`)
+
+const req = new dgraph.Request()
+req.setQuery(query)
+req.addMutations(mu)
+req.setCommitNow(true)
+
+await dgraphClient.newTxn().doRequest(req)
+```
+
+**Browser (HTTP):**
+
+```js
+const query = `query {
+  user as var(func: eq(email, "wrong_email@dgraph.io"))
+}`
+
+await fetch(`${DGRAPH_HTTP_URL}/mutate?commitNow=true`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    query: query,
+    mutations: [
+      {
+        set: [{ uid: "uid(user)", email: "correct_email@dgraph.io" }],
+        cond: "@if(eq(len(user), 1))",
+      },
+    ],
+  }),
+})
+```
+
+#### Drop all data
+
+**Node.js (gRPC):**
+
+```js
+const op = new dgraph.Operation()
+op.setDropAll(true)
+await dgraphClient.alter(op)
+```
+
+**Browser (HTTP):**
+
+```js
+await fetch(`${DGRAPH_HTTP_URL}/alter`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ drop_all: true }),
+})
+```
+
+#### Authentication
+
+**Node.js (gRPC):**
+
+```js
+const meta = new grpc.Metadata()
+meta.add("auth-token", "mySuperSecret")
+await dgraphClient.alter(op, meta)
+```
+
+**Browser (HTTP):**
+
+```js
+await fetch(`${DGRAPH_HTTP_URL}/alter`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/rdf",
+    "auth-token": "mySuperSecret",
+  },
+  body: schema,
+})
+```
+
+### Browser-specific considerations
+
+#### Connection strings
+
+For convenience, you can parse connection strings similar to database URLs:
+
+```js
+function parseDgraphUrl(connectionString) {
+  if (connectionString.startsWith("http")) {
+    return { url: connectionString, headers: {} }
+  }
+
+  // Handle dgraph://user:pass@host:port format
+  const url = new URL(connectionString.replace("dgraph://", "https://"))
+  const headers = {}
+
+  if (url.username && url.password) {
+    headers["Authorization"] =
+      `Basic ${btoa(`${url.username}:${url.password}`)}`
+  }
+
+  return {
+    url: `http://${url.hostname}:${url.port || 8080}`,
+    headers,
+  }
+}
+
+// Usage
+const { url, headers } = parseDgraphUrl("dgraph://user:pass@localhost:8080")
+const DGRAPH_HTTP_URL = url
+```
+
+### Limitations of HTTP API
+
+- **No streaming**: HTTP doesn't support gRPC streaming capabilities
+- **Transaction isolation**: HTTP requests are stateless; use upserts for
+  consistency
+- **Performance**: Higher overhead compared to persistent gRPC connections

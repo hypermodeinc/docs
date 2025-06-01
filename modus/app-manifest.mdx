@@ -188,8 +188,8 @@ Typically, you'll use the `baseUrl` field. However, some APIs, such as
 If provided, requests on the connection include these headers. Each key-value pair is a header name and value.
 
 Values may include variables using the `{{VARIABLE}}` template syntax, which
-resolve at runtime to secrets provided for each connection, via the Hypermode
-Console.
+resolve at runtime to environment variables provided for each connection, via
+the Hypermode Console.
 
   <Accordion title="Examples">
 
@@ -502,7 +502,7 @@ alphanumeric characters and hyphens.
 <ResponseField name="connection" type="string" required>
   Connection for the model instance.
 
-- Specify `"hypermode"` for models that [Hypermode hosts](/hosted-models).
+- Specify `"hypermode"` for models that Hypermode hosts.
 - Otherwise, specify a name that matches a connection defined in the
   [`connections`](#connections) section of the manifest.
 
@@ -513,8 +513,7 @@ alphanumeric characters and hyphens.
 When using `hugging-face` as the `provider` and `hypermode` as the `connection`,
 Hypermode automatically facilitates the connection to an instance of a shared or
 dedicated instance of the model. Your project's functions securely access the
-hosted model, with no further configuration required. For more details, see
-[hosted models](/hosted-models).
+hosted model, with no further configuration required.
 
 </Tip>
 
