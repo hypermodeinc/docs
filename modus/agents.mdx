@@ -38,27 +38,30 @@ package main
 
 import (
     "fmt"
+    "strings"
     "time"
     "github.com/hypermodeinc/modus/sdk/go/pkg/agents"
+    "github.com/hypermodeinc/modus/sdk/go/pkg/models"
+    "github.com/hypermodeinc/modus/sdk/go/pkg/models/openai"
 )
 
-type OperativeAgent struct {
+type IntelligenceAgent struct {
     agents.AgentBase
 
-    missionCount int
-    assignments  []string
-    lastContact  time.Time
+    briefings   []string  // Intelligence history
+    confidence  float64   // Analytical confidence
+    lastContact time.Time
 }
 
-func (o *OperativeAgent) Name() string {
-    return "OperativeAgent"
+func (i *IntelligenceAgent) Name() string {
+    return "IntelligenceAgent"
 }
 ```
 
 The agent embeds `agents.AgentBase`, which provides all the infrastructure for
 state management, secure communications, and mission persistence. Your
-operational data—mission count, assignment records, contact logs—lives as fields
-in the struct, automatically preserved across all interactions.
+operational data—intelligence briefings, confidence metrics, contact logs—lives
+as fields in the struct, automatically preserved across all interactions.
 
 ## Spawning agents through functions
 
@@ -69,12 +72,12 @@ demand:
 ```go
 // Register your agent type during initialization
 func init() {
-    agents.Register(&OperativeAgent{})
+    agents.Register(&IntelligenceAgent{})
 }
 
 // Deploy a new agent instance - this becomes a GraphQL mutation
-func DeployOperative() (string, error) {
-    agentInfo, err := agents.Start("OperativeAgent")
+func DeployAnalyst() (string, error) {
+    agentInfo, err := agents.Start("IntelligenceAgent")
     if err != nil {
         return "", err
     }
@@ -88,7 +91,7 @@ When you call this function through GraphQL, it returns a unique agent ID:
 
 ```graphql
 mutation {
-  deployOperative
+  deployAnalyst
 }
 
 # Returns: "agent_abc123xyz"
@@ -113,8 +116,19 @@ Once deployed, you communicate with your agent using its unique ID. Create
 functions that send messages to specific agent instances:
 
 ```go
-func AcceptMission(agentId string, missionType string) (string, error) {
-    result, err := agents.SendMessage(agentId, "accept_mission", agents.WithData(missionType))
+func SubmitIntelligence(agentId string, data string) (string, error) {
+    result, err := agents.SendMessage(agentId, "analyze_intelligence", agents.WithData(data))
+    if err != nil {
+        return "", err
+    }
+    if result == nil {
+        return "", fmt.Errorf("no response from agent")
+    }
+    return *result, nil
+}
+
+func GetThreatAssessment(agentId string) (string, error) {
+    result, err := agents.SendMessage(agentId, "threat_assessment", nil)
     if err != nil {
         return "", err
     }
@@ -125,19 +139,24 @@ func AcceptMission(agentId string, missionType string) (string, error) {
 }
 ```
 
-This function becomes a GraphQL mutation that you can call with your agent's ID:
+These functions become GraphQL mutations that you can call with your agent's ID:
 
 ```graphql
 mutation {
-  acceptMission(agentId: "agent_abc123xyz", missionType: "surveillance")
+  submitIntelligence(
+    agentId: "agent_abc123xyz"
+    data: "Suspicious network activity detected"
+  )
 }
 
-# Returns: "Mission 1 accepted. Status: Active"
+query {
+  getThreatAssessment(agentId: "agent_abc123xyz")
+}
 ```
 
-The agent receives the `accept_mission` message, processes it using its internal
-state, updates its mission count and assignment history, and returns a
-response—all while maintaining persistent memory of every interaction.
+The agent receives the message, processes it using its internal state and AI
+reasoning, updates its intelligence database, and returns a response—all while
+maintaining persistent memory of every interaction.
 
 ## Agent message handling
 
@@ -145,14 +164,14 @@ Agents process operational directives through their secure message handling
 system:
 
 ```go
-func (o *OperativeAgent) OnReceiveMessage(msgName string, data *string) (*string, error) {
+func (i *IntelligenceAgent) OnReceiveMessage(msgName string, data *string) (*string, error) {
     switch msgName {
-    case "accept_mission":
-        return o.acceptMission(data)
-    case "mission_status":
-        return o.getMissionStatus()
-    case "assignment_history":
-        return o.getAssignmentHistory()
+    case "analyze_intelligence":
+        return i.analyzeIntelligence(data)
+    case "threat_assessment":
+        return i.getThreatAssessment()
+    case "intelligence_history":
+        return i.getIntelligenceHistory()
     default:
         return nil, fmt.Errorf("unrecognized directive: %s", msgName)
     }
@@ -162,28 +181,64 @@ func (o *OperativeAgent) OnReceiveMessage(msgName string, data *string) (*string
 Each directive triggers specific operational procedures, with all intelligence
 automatically maintained in the agent's secure memory.
 
-## Processing operations
+## Processing operations with AI intelligence
 
-Here's how agents handle field operations while maintaining persistent state:
+Here's how agents handle field operations while maintaining persistent state and
+using AI models for analysis:
 
 ```go
-func (o *OperativeAgent) acceptMission(data *string) (*string, error) {
-    missionType := "classified"
-    if data != nil {
-        missionType = *data
+func (i *IntelligenceAgent) analyzeIntelligence(data *string) (*string, error) {
+    if data == nil {
+        return nil, fmt.Errorf("no intelligence data provided")
     }
 
-    // Update operational status - no intel parsing needed!
-    o.missionCount++
-    o.assignments = append(o.assignments, fmt.Sprintf("Mission %d: %s", o.missionCount, missionType))
-    o.lastContact = time.Now()
+    // Store new intelligence in persistent memory
+    i.briefings = append(i.briefings, *data)
+    i.lastContact = time.Now()
 
-    result := fmt.Sprintf("Mission %d accepted. Status: Active", o.missionCount)
+    // Build context from all accumulated intelligence
+    context := strings.Join(i.briefings, "\n")
+
+    // AI analysis using complete operational history
+    model, _ := models.GetModel[openai.ChatModel]("analyst-model")
+
+    systemPrompt := `You are an intelligence analyst.
+    Analyze patterns from accumulated briefings and provide threat assessment.`
+
+    userPrompt := fmt.Sprintf(`All Intelligence:
+%s
+
+Provide threat assessment:`, context)
+
+    input, _ := model.CreateInput(
+        openai.NewSystemMessage(systemPrompt),
+        openai.NewUserMessage(userPrompt),
+    )
+
+    output, _ := model.Invoke(input)
+    analysis := output.Choices[0].Message.Content
+
+    // Update confidence based on data volume
+    i.confidence = float64(len(i.briefings)) / 10.0
+    if i.confidence > 1.0 {
+        i.confidence = 1.0
+    }
+
+    result := fmt.Sprintf(`Analysis complete: %s
+(Confidence: %.2f based on %d briefings)`,
+        analysis, i.confidence, len(i.briefings))
     return &result, nil
 }
 
-func (o *OperativeAgent) getMissionStatus() (*string, error) {
-    result := fmt.Sprintf("Agent operative. Missions completed: %d", o.missionCount)
+func (i *IntelligenceAgent) getThreatAssessment() (*string, error) {
+    if len(i.briefings) == 0 {
+        result := "No intelligence processed yet. Deploy to field for analysis."
+        return &result, nil
+    }
+
+    result := fmt.Sprintf(`Current threat assessment: %d briefings analyzed.
+Confidence level: %.2f. Agent operational.`,
+        len(i.briefings), i.confidence)
     return &result, nil
 }
 ```
@@ -191,12 +246,35 @@ func (o *OperativeAgent) getMissionStatus() (*string, error) {
 What makes this operationally superior:
 
 - No transmission of massive state files on every contact
-- No reconstruction of mission history from scratch
-- No risk of losing operational data during communication failures
-- No manual management of assignment records between missions
+- No reconstruction of intelligence history from scratch
+- AI models see complete operational context, not just current input
+- No risk of losing analytical data during communication failures
+- Intelligence quality improves with each briefing processed
 
-The agent maintains its complete operational state in secure memory, accessing
-it instantly when processing new directives.
+The agent maintains its complete operational state and intelligence database in
+secure memory, accessing it instantly when processing new directives and
+invoking AI models.
+
+## The power of intelligent persistence
+
+This combination creates agents that:
+
+**First Analysis:**
+
+```sh
+"New threat detected. Limited context available. (Confidence: 0.10 based on 1 briefing)"
+```
+
+**After Multiple Briefings:**
+
+```sh
+"Pattern confirmed across 5 previous incidents. This matches Advanced Persistent
+Threat signatures. Immediate escalation recommended. (Confidence: 0.85 based on 8 briefings)"
+```
+
+The agent doesn't just remember—it **learns and becomes more intelligent with
+every interaction**. AI models see the complete operational picture, enabling
+sophisticated pattern recognition impossible with stateless functions.
 
 ## State persistence
 
@@ -204,25 +282,28 @@ Agents automatically preserve their operational state through Modus's built-in
 intelligence management:
 
 ```go
-func (o *OperativeAgent) GetState() *string {
-    state := fmt.Sprintf("%d|%s|%d",
-        o.missionCount,
-        strings.Join(o.assignments, ","),
-        o.lastContact.Unix())
+func (i *IntelligenceAgent) GetState() *string {
+    briefingsData := strings.Join(i.briefings, "|")
+    state := fmt.Sprintf("%.2f|%s|%d",
+        i.confidence,
+        briefingsData,
+        i.lastContact.Unix())
     return &state
 }
 
-func (o *OperativeAgent) SetState(data *string) {
+func (i *IntelligenceAgent) SetState(data *string) {
     if data == nil {
         return
     }
 
     parts := strings.Split(*data, "|")
     if len(parts) >= 3 {
-        o.missionCount, _ = strconv.Atoi(parts[0])
-        o.assignments = strings.Split(parts[1], ",")
+        i.confidence, _ = strconv.ParseFloat(parts[0], 64)
+        if parts[1] != "" {
+            i.briefings = strings.Split(parts[1], "|")
+        }
         timestamp, _ := strconv.ParseInt(parts[2], 10, 64)
-        o.lastContact = time.Unix(timestamp, 0)
+        i.lastContact = time.Unix(timestamp, 0)
     }
 }
 ```
@@ -232,41 +313,46 @@ func (o *OperativeAgent) SetState(data *string) {
 Agents have built-in operational protocols for mission continuity:
 
 ```go
-func (o *OperativeAgent) OnInitialize() error {
+func (i *IntelligenceAgent) OnInitialize() error {
     // Called when agent is first deployed to the field
-    o.lastContact = time.Now()
-    fmt.Printf("Operative %s deployed and ready for missions", o.Id())
+    i.lastContact = time.Now()
+    i.confidence = 0.0
+    fmt.Printf("Intelligence Agent %s deployed and ready for analysis", i.Id())
     return nil
 }
 
-func (o *OperativeAgent) OnResume() error {
+func (i *IntelligenceAgent) OnResume() error {
     // Called when agent reestablishes contact with complete intel intact
-    fmt.Printf("Agent back online. %d missions completed, %d assignments on record",
-        o.missionCount, len(o.assignments))
+    fmt.Printf(`Agent back online. %d briefings processed.
+        Confidence level: %.2f`, len(i.briefings), i.confidence)
     return nil
 }
 
-func (o *OperativeAgent) OnSuspend() error {
+func (i *IntelligenceAgent) OnSuspend() error {
     // Called before agent goes dark
     return nil
 }
 
-func (o *OperativeAgent) OnTerminate() error {
+func (i *IntelligenceAgent) OnTerminate() error {
     // Called before final extraction
-    fmt.Printf("Agent %s extracted. Mission complete.", o.Id())
+    fmt.Printf("Agent %s extracted. Intelligence archive preserved.", i.Id())
     return nil
 }
 ```
 
 ## Agent workflow example
 
-1. Client calls `DeployOperative()` → receives agent ID `"agent_12345"`
+1. Client calls `DeployAnalyst()` → receives agent ID `"agent_12345"`
 2. Client stores `"agent_12345"` for future communications
-3. Client calls `AssignMission("agent_12345", "surveillance")` → agent updates
-   its state
-4. Client calls `GetMissionStatus("agent_12345")` → agent returns current status
-   from memory
-5. Agent persists across system restarts, maintaining all mission history
+3. Client calls `SubmitIntelligence("agent_12345", "network anomaly detected")`
+   → agent stores data and uses AI to analyze patterns from complete
+   intelligence history
+4. Agent invokes AI model with accumulated context → generates sophisticated
+   threat assessment based on all previous briefings
+5. Client calls `GetThreatAssessment("agent_12345")` → agent returns AI-powered
+   analysis from persistent memory
+6. Agent persists across system restarts, maintaining complete intelligence
+   database and learned patterns
 
 **Important**: clients must store the agent ID returned from deployment
 functions to communicate with that specific agent instance. Each agent maintains
@@ -280,13 +366,16 @@ functions:
 - **Operational continuity**: Maintain mission state across system failures and
   re-deployments
 - **Intelligence building**: Accumulate understanding across multiple
-  assignments and contacts
+  assignments through AI-powered analysis
 - **Mission recovery**: Resume operations from last secure checkpoint instead of
   starting over
 - **Network coordination**: Manage complex multi-agent operations with shared
   intelligence
+- **Adaptive learning**: AI models become more effective as agents accumulate
+  operational data
 
 Agents represent the evolution from stateless functions to elite operatives that
-maintain complete operational continuity. They're the foundation for building
-intelligence networks that never lose track of their missions, no matter what
+maintain complete operational continuity and build intelligence over time.
+They're the foundation for building intelligence networks that never lose track
+of their missions and become smarter with every interaction, no matter what
 happens in the field.
