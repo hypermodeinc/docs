@@ -9,4 +9,4 @@ permissions:
 
 jobs:
   call-workflow-in-another-repo:
-    uses: hypermodeinc/.github/.github/workflows/trunk.yml@v1
+    uses: hypermodeinc/.github/.github/workflows/trunk.yml@main
