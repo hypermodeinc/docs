@@ -114,6 +114,9 @@ func ImportAgentSighting(sighting AgentSighting) (*string, error) {
 }
 ```
 
+The key here is using AI to enhance the raw sighting data before storing it.
+Here's how the AI analysis works:
+
 ```go
 func analyzeAgentWithAI(behavior string) (string, error) {
     model, _ := models.GetModel[openai.ChatModel]("text-generator")
@@ -131,7 +134,7 @@ func analyzeAgentWithAI(behavior string) (string, error) {
 }
 ```
 
-Let's test this with some incoming intelligence from Zion's monitoring systems:
+Let's test this with some incoming intelligence:
 
 ```graphql
 mutation {
@@ -140,7 +143,9 @@ mutation {
       sightingId: "SIGHT-2025-001"
       agentName: "Smith"
       location: "Downtown Loop - Financial District"
-      behavior: "Unusual pattern recognition algorithm detected. Agent displaying enhanced replication capabilities beyond normal parameters."
+      behavior: "Unusual pattern recognition algorithm detected.
+                 Agent displaying enhanced replication capabilities
+                 beyond normal parameters."
       threatLevel: 9
       timestamp: "2025-01-15T14:30:00Z"
     }
@@ -202,6 +207,9 @@ func AnalyzeAgentPatterns(timeRange string) (*ThreatAnalysisResponse, error) {
 }
 ```
 
+Once we've the institutional data, we use AI to analyze patterns across all
+related sightings:
+
 ```go
 func generateThreatAssessment(sightings interface{}) (string, error) {
     model, _ := models.GetModel[openai.ChatModel]("text-generator")
@@ -240,12 +248,17 @@ query {
   "data": {
     "analyzeAgentPatterns": {
       "sightingCount": 47,
-      "activeAgents": ["Smith", "Brown", "Jones"],
-      "threatAssessment": "
-        Critical escalation detected.
-        Agent Smith showing unprecedented adaptive behavior patterns and enhanced replication protocols.
-        Cross-referencing indicates coordinated search algorithms across multiple city sectors.
-        The One may have been detected by the system.",
+      "activeAgents": [
+        "Smith",
+        "Brown",
+        "Jones"
+      ],
+      "threatAssessment": "Critical escalation detected.
+                           Agent Smith showing unprecedented adaptive behavior patterns
+                           and enhanced replication protocols.
+                           Cross-referencing indicates coordinated search algorithms
+                           across multiple city sectors.
+                           The One may have been detected by the system.",
       "recommendations": [
         "Implement emergency extraction protocols for key personnel",
         "Activate deep cover resistance cells in high-threat sectors",
@@ -295,6 +308,9 @@ func (s *SurveillanceAgent) OnReceiveMessage(msgName string, data *string) (*str
 }
 ```
 
+The core surveillance operation queries the knowledge graph and updates the
+agent's memory:
+
 ```go
 func (s *SurveillanceAgent) runContinuousSurveillance() (*string, error) {
     // Query knowledge graph for new sightings since last sweep
@@ -313,9 +329,42 @@ func (s *SurveillanceAgent) runContinuousSurveillance() (*string, error) {
     // Update agent's personal operational state
     s.LastSweepTime = time.Now()
 
-    result := fmt.Sprintf("Surveillance sweep completed at %s. Monitoring %d sectors for anomalous Agent activity.",
+    result := fmt.Sprintf("Surveillance sweep completed at %s. Monitoring %d sectors...",
         s.LastSweepTime.Format("15:04:05"), len(s.MonitoredSectors))
     return &result, nil
+}
+
+func (s *SurveillanceAgent) getOperationalStatus() (*string, error) {
+    // Return formatted status of agent's current operational state
+    status := fmt.Sprintf(`Surveillance Agent Status:
+    - Operational: %s
+    - Monitoring %d sectors
+    - Last sweep: %s
+    - Tracking %d ongoing sightings`, ...)
+    return &status, nil
+}
+```
+
+To make these agent capabilities accessible via GraphQL, we need wrapper
+functions that handle deployment and messaging:
+
+```go
+// Deploy a new surveillance agent - this becomes a GraphQL mutation
+func DeploySurveillanceAgent() (string, error) {
+    agentInfo, _ := agents.Start("SurveillanceAgent")
+    return agentInfo.Id, nil
+}
+
+// Initiate continuous surveillance - this becomes a GraphQL mutation
+func InitiateSurveillance(agentId string) (string, error) {
+    result, _ := agents.SendMessage(agentId, "continuous_surveillance")
+    return *result, nil
+}
+
+// Get surveillance status - this becomes a GraphQL query
+func GetSurveillanceStatus(agentId string) (string, error) {
+    result, _ := agents.SendMessage(agentId, "get_status")
+    return *result, nil
 }
 ```
 
@@ -347,7 +396,7 @@ new Agent activity and maintains its own operational state:
 
 ```graphql
 mutation {
-  sendMessage(agentId: "agent_neo_001", message: "continuous_surveillance")
+  initiateSurveillance(agentId: "agent_neo_001")
 }
 ```
 
@@ -356,7 +405,8 @@ mutation {
 ```json
 {
   "data": {
-    "sendMessage": "Surveillance sweep completed at 14:35:22. Monitoring 3 sectors for anomalous Agent activity."
+    "initiateSurveillance": "Surveillance sweep completed at 14:35:22.
+                            Monitoring 3 sectors for anomalous Agent activity."
   }
 }
 ```
@@ -370,8 +420,8 @@ battleground.
 Check what your surveillance agent has learned and is tracking:
 
 ```graphql
-mutation {
-  sendMessage(agentId: "agent_neo_001", message: "get_status")
+query {
+  getSurveillanceStatus(agentId: "agent_neo_001")
 }
 ```
 
@@ -380,12 +430,11 @@ mutation {
 ```json
 {
   "data": {
-    "sendMessage": "
-      Surveillance Agent Status:
-        Operational: Active
-        Monitoring 3 sectors
-        Last Sweep: 2025-01-15T14:35:22Z
-        Tracking 5 ongoing sightings"
+    "getSurveillanceStatus": "Surveillance Agent Status:
+                              - Operational: Active
+                              - Monitoring 3 sectors
+                              - Last sweep: 2025-01-15 14:35:22
+                              - Tracking 5 ongoing sightings"
   }
 }
 ```
@@ -396,7 +445,7 @@ What you've just built demonstrates the power of combining all four Modus
 components in the fight against the machines:
 
 **Functions** rapidly processed incoming Agent sightings and provided strategic
-analysis by querying institutional surveillance data from Zion's archives
+analysis by querying institutional surveillance data
 
 **Knowledge graphs** stored not just the raw sighting data, but the
 relationships between Agent encounters, behavioral patterns, and threat
