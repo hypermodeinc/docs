@@ -48,9 +48,18 @@ import (
 type IntelligenceAgent struct {
     agents.AgentBase
 
-    briefings   []string  // Intelligence history
-    confidence  float64   // Analytical confidence
-    lastContact time.Time
+    briefings      []string     // Intelligence history
+    confidence     float64      // Analytical confidence
+    lastContact    time.Time
+    currentMission *MissionPhase // Track long-running operations
+    missionLog     []string     // Operational progress log
+}
+
+type MissionPhase struct {
+    Name        string
+    StartTime   time.Time
+    Duration    time.Duration
+    Complete    bool
 }
 
 func (i *IntelligenceAgent) Name() string {
@@ -162,6 +171,35 @@ The agent receives the message, processes it using its internal state and AI
 reasoning, updates its intelligence database, and returns a response—all while
 maintaining persistent memory of every interaction.
 
+### Asynchronous operations
+
+For fire-and-forget operations where you don't need to wait for a response,
+agents support asynchronous messaging:
+
+```go
+func InitiateBackgroundAnalysis(agentId string, data string) error {
+    // Send message asynchronously - agent processes in background
+    err := agents.SendMessageAsync(
+        agentId,
+        "analyze_background_intel",
+        agents.WithData(data),
+    )
+    if err != nil {
+        return err
+    }
+
+    // Operation initiated - agent continues processing independently
+    return nil
+}
+```
+
+This enables agents to handle long-running operations like:
+
+- Background data processing
+- Scheduled intelligence gathering
+- Multi-phase operations that don't require immediate responses
+- Autonomous monitoring and alerting
+
 ## Agent message handling
 
 Agents process operational directives through their secure message handling
@@ -175,8 +213,12 @@ func (i *IntelligenceAgent) OnReceiveMessage(
     switch msgName {
     case "analyze_intelligence":
         return i.analyzeIntelligence(data)
+    case "analyze_background_intel":
+        return i.analyzeBackgroundIntel(data)
     case "threat_assessment":
         return i.getThreatAssessment()
+    case "get_status":
+        return i.getOperationalStatus()
     case "intelligence_history":
         return i.getIntelligenceHistory()
     default:
@@ -274,6 +316,132 @@ What makes this operationally superior:
 The agent maintains its complete operational state and intelligence database in
 secure memory, accessing it instantly when processing new directives and
 invoking AI models.
+
+### Long-running mission operations
+
+For complex multi-phase operations, agents can update their state continuously
+while providing real-time progress tracking:
+
+```go
+func (i *IntelligenceAgent) analyzeBackgroundIntel(data *string) (*string, error) {
+    // Initialize multi-phase operation
+    i.currentMission = &MissionPhase{
+        Name:      "Deep Intelligence Analysis",
+        StartTime: time.Now(),
+        Complete:  false,
+    }
+    i.missionLog = []string{"Mission initiated: Deep intelligence analysis"}
+
+    // Phase 1: Data Processing
+    i.updateMissionLog("Phase 1: Processing raw intelligence data...")
+    i.briefings = append(i.briefings, *data)
+
+    // Phase 2: AI Analysis (simplified for brevity)
+    i.updateMissionLog("Phase 2: Generating threat assessment...")
+    // ... AI model invocation ...
+
+    // Phase 3: Mission Complete
+    i.currentMission.Complete = true
+    i.currentMission.Duration = time.Since(i.currentMission.StartTime)
+    i.updateMissionLog("Mission completed successfully")
+
+    return &result, nil
+}
+
+func (i *IntelligenceAgent) updateMissionLog(message string) {
+    timestamp := time.Now().Format("15:04:05")
+    logEntry := fmt.Sprintf("[%s] %s", timestamp, message)
+    i.missionLog = append(i.missionLog, logEntry)
+}
+```
+
+This demonstrates how agents maintain state across complex, multi-step
+operations while providing detailed progress tracking for monitoring systems.
+
+## Monitoring ongoing operations
+
+<Note>
+  Real-time GraphQL subscriptions for agent monitoring are coming soon. For now,
+  you can monitor agent progress using GraphQL polling.
+</Note>
+
+When you initiate long-running operations with `SendMessageAsync`, you can
+monitor progress by checking the agent's state:
+
+```go
+func CheckAnalysisProgress(agentId string) (*AnalysisStatus, error) {
+    result, err := agents.SendMessage(agentId, "get_status")
+    if err != nil {
+        return nil, err
+    }
+
+    var status AnalysisStatus
+    json.Unmarshal([]byte(*result), &status)
+    return &status, nil
+}
+
+type AnalysisStatus struct {
+    Phase          string    `json:"phase"`
+    Progress       float64   `json:"progress"`
+    CurrentTask    string    `json:"current_task"`
+    EstimatedTime  int       `json:"estimated_time_remaining"`
+    IsComplete     bool      `json:"is_complete"`
+}
+```
+
+The agent tracks its operational status using the mission state we defined
+earlier:
+
+```go
+func (i *IntelligenceAgent) getOperationalStatus() (*string, error) {
+    var status AnalysisStatus
+
+    if i.currentMission == nil {
+        status = AnalysisStatus{
+            Phase:       "Standby",
+            Progress:    1.0,
+            CurrentTask: "Awaiting mission directives",
+            IsComplete:  true,
+        }
+    } else {
+        // Calculate progress based on mission log entries
+        progress := float64(len(i.missionLog)) / 4.0 // 4 phases expected
+        if progress > 1.0 { progress = 1.0 }
+
+        status = AnalysisStatus{
+            Phase:       i.currentMission.Name,
+            Progress:    progress,
+            CurrentTask: i.missionLog[len(i.missionLog)-1], // Latest entry
+            IsComplete:  i.currentMission.Complete,
+        }
+    }
+
+    statusJson, _ := json.Marshal(status)
+    result := string(statusJson)
+    return &result, nil
+}
+```
+
+Your client can poll this status endpoint via GraphQL:
+
+```graphql
+query MonitorAnalysis($agentId: String!) {
+  checkAnalysisProgress(agentId: $agentId) {
+    phase
+    progress
+    currentTask
+    estimatedTimeRemaining
+    isComplete
+  }
+}
+```
+
+This polling approach enables:
+
+- **Progress tracking**: Monitor completion percentage and current phase
+- **User feedback**: Show progress bars and status updates in your UI
+- **Operation coordination**: Know when to proceed to next steps
+- **Error detection**: Identify when operations stall or fail
 
 ## The power of intelligent persistence
 
@@ -374,7 +542,12 @@ func (i *IntelligenceAgent) OnTerminate() error {
    threat assessment based on all previous briefings
 5. Client calls `GetThreatAssessment("agent_12345")` → agent returns AI-powered
    analysis from persistent memory
-6. Agent persists across system restarts, maintaining complete intelligence
+6. For long-running analysis, client calls
+   `InitiateBackgroundAnalysis("agent_12345", data)` → agent processes
+   asynchronously
+7. Client polls `CheckAnalysisProgress("agent_12345")` → monitors progress until
+   complete
+8. Agent persists across system restarts, maintaining complete intelligence
    database and learned patterns
 
 **Important**: clients must store the agent ID returned from deployment
@@ -396,6 +569,11 @@ functions:
   intelligence
 - **Adaptive learning**: AI models become more effective as agents accumulate
   operational data
+- **Asynchronous operations**: Handle long-running missions without blocking
+  other operations
+- **Real-time monitoring**: Track progress and status of ongoing operations
+- **Event-driven coordination**: React to operational changes and mission
+  updates
 
 Agents represent the evolution from stateless functions to elite operatives that
 maintain complete operational continuity and build intelligence over time.
