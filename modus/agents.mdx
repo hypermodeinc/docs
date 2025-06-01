@@ -19,7 +19,7 @@ operational context.
 - **Autonomous**: Can operate independently over extended periods
 - **Actor-based**: Each agent instance runs in isolation
 
-## When to use agents
+## When to deploy agents
 
 Agents are perfect for:
 
@@ -59,6 +59,85 @@ The agent embeds `agents.AgentBase`, which provides all the infrastructure for
 state management, secure communications, and mission persistence. Your
 operational data—mission count, assignment records, contact logs—lives as fields
 in the struct, automatically preserved across all interactions.
+
+## Spawning agents through functions
+
+Agents are deployed through regular Modus functions that become part of your
+GraphQL API. These deployment functions create and manage agent instances on
+demand:
+
+```go
+// Register your agent type during initialization
+func init() {
+    agents.Register(&OperativeAgent{})
+}
+
+// Deploy a new agent instance - this becomes a GraphQL mutation
+func DeployOperative() (string, error) {
+    agentInfo, err := agents.Start("OperativeAgent")
+    if err != nil {
+        return "", err
+    }
+
+    // Return the agent ID - clients must store this to communicate with the agent
+    return agentInfo.Id, nil
+}
+```
+
+When you call this function through GraphQL, it returns a unique agent ID:
+
+```graphql
+mutation {
+  deployOperative
+}
+
+# Returns: "agent_abc123xyz"
+```
+
+You can think of an Agent as a persistent server process with durable memory.
+Once deployed, you can reference your agent by its ID across sessions, page
+reloads, and even system restarts. The agent maintains its complete state and
+continues operating exactly where it left off.
+
+<Note>
+  **Agent builders and visual workflows:** We're actively developing Agent
+  Builder tools and "eject to code" feature that generates complete agent
+  deployments from visual workflows. These tools automatically create the
+  deployment functions and agent management code for complex multi-agent
+  systems.
+</Note>
+
+## Communicating with your agent
+
+Once deployed, you communicate with your agent using its unique ID. Create
+functions that send messages to specific agent instances:
+
+```go
+func AcceptMission(agentId string, missionType string) (string, error) {
+    result, err := agents.SendMessage(agentId, "accept_mission", agents.WithData(missionType))
+    if err != nil {
+        return "", err
+    }
+    if result == nil {
+        return "", fmt.Errorf("no response from agent")
+    }
+    return *result, nil
+}
+```
+
+This function becomes a GraphQL mutation that you can call with your agent's ID:
+
+```graphql
+mutation {
+  acceptMission(agentId: "agent_abc123xyz", missionType: "surveillance")
+}
+
+# Returns: "Mission 1 accepted. Status: Active"
+```
+
+The agent receives the `accept_mission` message, processes it using its internal
+state, updates its mission count and assignment history, and returns a
+response—all while maintaining persistent memory of every interaction.
 
 ## Agent message handling
 
@@ -179,64 +258,6 @@ func (o *OperativeAgent) OnTerminate() error {
 }
 ```
 
-## Deploying and controlling agents
-
-Agents must be registered and then deployed through functions that become part
-of your GraphQL API.
-
-First, register your agent in the `init()` function:
-
-```go
-func init() {
-    agents.Register(&OperativeAgent{})
-}
-```
-
-Create a function to deploy new agent instances. This function becomes a GraphQL
-mutation:
-
-```go
-func DeployOperative() (string, error) {
-    agentInfo, err := agents.Start("OperativeAgent")
-    if err != nil {
-        return "", err
-    }
-
-    // Return the agent ID - clients must store this to communicate with the agent
-    return agentInfo.Id, nil
-}
-```
-
-Create functions to communicate with specific agent instances using their ID:
-
-```go
-func AssignMission(agentId string, missionType string) (string, error) {
-    result, err := agents.SendMessage(agentId, "accept_mission", agents.WithData(missionType))
-    if err != nil {
-        return "", err
-    }
-    if result == nil {
-        return "", fmt.Errorf("no response from agent")
-    }
-    return *result, err
-}
-
-func GetMissionStatus(agentId string) (string, error) {
-    result, err := agents.SendMessage(agentId, "mission_status")
-    if err != nil {
-        return "", err
-    }
-    if result == nil {
-        return "", fmt.Errorf("no response from agent")
-    }
-    return *result, err
-}
-```
-
-**Important**: clients must store the agent ID returned from `DeployOperative()`
-to communicate with that specific agent instance. Each agent maintains its own
-independent state and can only be accessed through its unique ID.
-
 ## Agent workflow example
 
 1. Client calls `DeployOperative()` → receives agent ID `"agent_12345"`
@@ -246,6 +267,10 @@ independent state and can only be accessed through its unique ID.
 4. Client calls `GetMissionStatus("agent_12345")` → agent returns current status
    from memory
 5. Agent persists across system restarts, maintaining all mission history
+
+**Important**: clients must store the agent ID returned from deployment
+functions to communicate with that specific agent instance. Each agent maintains
+its own independent state and can only be accessed through its unique ID.
 
 ## Beyond simple operations
 
