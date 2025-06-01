@@ -52,12 +52,6 @@ func GatherThreatIntelligence(source string) (*ThreatReport, error) {
     // Intelligence gathering operation
     return fetchThreatData(source)
 }
-
-// This function becomes a GraphQL query
-func AnalyzeSecurityPatterns() (*SecurityAssessment, error) {
-    // Analysis operation using AI models
-    return generateSecurityAnalysis()
-}
 ```
 
 Your operatives are now accessible via GraphQL:
@@ -68,12 +62,6 @@ query {
     threatLevel
     indicators
     recommendations
-  }
-
-  analyzeSecurityPatterns {
-    riskScore
-    anomalies
-    actionItems
   }
 }
 ```
@@ -87,11 +75,6 @@ query {
       "threatLevel": "HIGH",
       "indicators": ["unusual_traffic", "failed_auth_attempts"],
       "recommendations": ["immediate_investigation", "block_suspicious_ips"]
-    },
-    "analyzeSecurityPatterns": {
-      "riskScore": 8.5,
-      "anomalies": ["off_hours_access", "geographic_anomaly"],
-      "actionItems": ["verify_user_identity", "enable_2fa"]
     }
   }
 }
@@ -107,55 +90,6 @@ these by their mission prefixes:
 func CreateSecurityAlert(data AlertInput) (*SecurityAlert, error) {
     // Create new security alert
     return deploySecurityAlert(data)
-}
-
-// This becomes a GraphQL mutation
-func UpdateThreatLevel(id string, level string) (*ThreatAssessment, error) {
-    // Update threat assessment
-    return modifyThreatRecord(id, level)
-}
-```
-
-Now you can execute operational changes:
-
-```graphql
-mutation {
-  createSecurityAlert(
-    data: {
-      type: "INTRUSION_ATTEMPT"
-      severity: "CRITICAL"
-      source: "firewall_logs"
-    }
-  ) {
-    alertId
-    status
-    timestamp
-  }
-
-  updateThreatLevel(id: "threat_001", level: "CRITICAL") {
-    id
-    newLevel
-    escalated
-  }
-}
-```
-
-**Response:**
-
-```json
-{
-  "data": {
-    "createSecurityAlert": {
-      "alertId": "alert_20250115_001",
-      "status": "ACTIVE",
-      "timestamp": "2025-01-15T14:30:00Z"
-    },
-    "updateThreatLevel": {
-      "id": "threat_001",
-      "newLevel": "CRITICAL",
-      "escalated": true
-    }
-  }
 }
 ```
 
@@ -317,10 +251,17 @@ To use this function, you'll need to:
 
 Sign up for a free API key at [OpenWeatherMap](https://openweathermap.org/api)
 
-Add the connection to your `modus.json`:
+Add the connections and models to your `modus.json`:
 
 ```json
 {
+  "models": {
+    "text-generator": {
+      "sourceModel": "meta-llama/Llama-3.2-3B-Instruct",
+      "provider": "hugging-face",
+      "connection": "hypermode"
+    }
+  },
   "connections": {
     "weather-api": {
       "type": "http",
