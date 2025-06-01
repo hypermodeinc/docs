@@ -121,7 +121,8 @@ Here's how the AI analysis works:
 func analyzeAgentWithAI(behavior string) (string, error) {
     model, _ := models.GetModel[openai.ChatModel]("text-generator")
 
-    prompt := "Analyze this Agent behavior pattern and assess threat level, behavioral changes, and tactical implications for resistance operations."
+    prompt := `Analyze this Agent behavior pattern and assess threat level,
+               behavioral changes, and tactical implications for resistance operations.`
 
     input, _ := model.CreateInput(
         openai.NewSystemMessage(prompt),
@@ -143,9 +144,7 @@ mutation {
       sightingId: "SIGHT-2025-001"
       agentName: "Smith"
       location: "Downtown Loop - Financial District"
-      behavior: "Unusual pattern recognition algorithm detected.
-                 Agent displaying enhanced replication capabilities
-                 beyond normal parameters."
+      behavior: "Unusual pattern recognition algorithm detected. Agent displaying enhanced replication capabilities beyond normal parameters."
       threatLevel: 9
       timestamp: "2025-01-15T14:30:00Z"
     }
@@ -214,7 +213,8 @@ related sightings:
 func generateThreatAssessment(sightings interface{}) (string, error) {
     model, _ := models.GetModel[openai.ChatModel]("text-generator")
 
-    prompt := "Based on these Agent sightings, provide a strategic threat assessment focusing on behavioral patterns and risks to resistance operations."
+    prompt := `Based on these Agent sightings, provide a strategic threat assessment
+               focusing on behavioral patterns and risks to resistance operations.`
 
     sightingsJson, _ := json.Marshal(sightings)
     input, _ := model.CreateInput(
@@ -248,22 +248,10 @@ query {
   "data": {
     "analyzeAgentPatterns": {
       "sightingCount": 47,
-      "activeAgents": [
-        "Smith",
-        "Brown",
-        "Jones"
-      ],
-      "threatAssessment": "Critical escalation detected.
-                           Agent Smith showing unprecedented adaptive behavior patterns
-                           and enhanced replication protocols.
-                           Cross-referencing indicates coordinated search algorithms
-                           across multiple city sectors.
-                           The One may have been detected by the system.",
-      "recommendations": [
-        "Implement emergency extraction protocols for key personnel",
-        "Activate deep cover resistance cells in high-threat sectors",
-        "Prepare for potential system-wide reset scenario"
-      ]
+      "activeAgents": ["Smith", "Brown", "Jones"],
+      "threatAssessment": "Critical escalation detected. Agent Smith showing
+                       unprecedented adaptive behavior patterns...",
+      "recommendations": ["Emergency extraction protocols", "Activate deep cover cells", "..."]
     }
   }
 }
@@ -406,7 +394,7 @@ mutation {
 {
   "data": {
     "initiateSurveillance": "Surveillance sweep completed at 14:35:22.
-                            Monitoring 3 sectors for anomalous Agent activity."
+                         Monitoring 3 sectors for anomalous Agent activity."
   }
 }
 ```
@@ -431,10 +419,10 @@ query {
 {
   "data": {
     "getSurveillanceStatus": "Surveillance Agent Status:
-                              - Operational: Active
-                              - Monitoring 3 sectors
-                              - Last sweep: 2025-01-15 14:35:22
-                              - Tracking 5 ongoing sightings"
+                          - Operational: Active
+                          - Monitoring 3 sectors
+                          - Last sweep: 2025-01-15 14:35:22
+                          - Tracking 5 ongoing sightings"
   }
 }
 ```
