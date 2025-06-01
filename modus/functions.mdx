@@ -11,6 +11,9 @@ handle specific missions with precision and speed. Like elite reconnaissance
 units, they get in, complete their objective, and report back. No unnecessary
 complications, no lingering presence, just pure operational efficiency.
 
+You can think of a function as an endpoint—each function you write automatically
+becomes a callable API endpoint that external systems can access.
+
 Functions are the backbone of your intelligence network, handling everything
 from data gathering to AI-powered analysis, all while maintaining perfect
 operational discipline.
@@ -44,16 +47,53 @@ Most functions become GraphQL queries—perfect for reconnaissance and data
 retrieval:
 
 ```go
-// Becomes a GraphQL query: gatherThreatIntelligence(source: String!): ThreatReport
+// This function becomes a GraphQL query
 func GatherThreatIntelligence(source string) (*ThreatReport, error) {
     // Intelligence gathering operation
     return fetchThreatData(source)
 }
 
-// Becomes a GraphQL query: analyzeSecurityPatterns(): SecurityAssessment
+// This function becomes a GraphQL query
 func AnalyzeSecurityPatterns() (*SecurityAssessment, error) {
     // Analysis operation using AI models
     return generateSecurityAnalysis()
+}
+```
+
+Your operatives are now accessible via GraphQL:
+
+```graphql
+query {
+  gatherThreatIntelligence(source: "network_logs") {
+    threatLevel
+    indicators
+    recommendations
+  }
+
+  analyzeSecurityPatterns {
+    riskScore
+    anomalies
+    actionItems
+  }
+}
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "gatherThreatIntelligence": {
+      "threatLevel": "HIGH",
+      "indicators": ["unusual_traffic", "failed_auth_attempts"],
+      "recommendations": ["immediate_investigation", "block_suspicious_ips"]
+    },
+    "analyzeSecurityPatterns": {
+      "riskScore": 8.5,
+      "anomalies": ["off_hours_access", "geographic_anomaly"],
+      "actionItems": ["verify_user_identity", "enable_2fa"]
+    }
+  }
 }
 ```
 
@@ -63,16 +103,59 @@ Functions that modify data automatically become GraphQL mutations. Modus detects
 these by their mission prefixes:
 
 ```go
-// Becomes a GraphQL mutation: createSecurityAlert(data: AlertInput!): SecurityAlert
+// This becomes a GraphQL mutation
 func CreateSecurityAlert(data AlertInput) (*SecurityAlert, error) {
     // Create new security alert
     return deploySecurityAlert(data)
 }
 
-// Becomes a GraphQL mutation: updateThreatLevel(id: String!, level: String!): ThreatAssessment
+// This becomes a GraphQL mutation
 func UpdateThreatLevel(id string, level string) (*ThreatAssessment, error) {
     // Update threat assessment
     return modifyThreatRecord(id, level)
+}
+```
+
+Now you can execute operational changes:
+
+```graphql
+mutation {
+  createSecurityAlert(
+    data: {
+      type: "INTRUSION_ATTEMPT"
+      severity: "CRITICAL"
+      source: "firewall_logs"
+    }
+  ) {
+    alertId
+    status
+    timestamp
+  }
+
+  updateThreatLevel(id: "threat_001", level: "CRITICAL") {
+    id
+    newLevel
+    escalated
+  }
+}
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "createSecurityAlert": {
+      "alertId": "alert_20250115_001",
+      "status": "ACTIVE",
+      "timestamp": "2025-01-15T14:30:00Z"
+    },
+    "updateThreatLevel": {
+      "id": "threat_001",
+      "newLevel": "CRITICAL",
+      "escalated": true
+    }
+  }
 }
 ```
 
@@ -222,8 +305,7 @@ You'll receive a tactical intelligence report like:
       "conditions": "light rain",
       "analysis": "
         Light rain conditions will reduce visibility for surveillance operations and may impact equipment performance.
-        Recommend waterproof gear and consider delayed outdoor activities requiring clear sight lines.
-      "
+        Recommend waterproof gear and consider delayed outdoor activities requiring clear sight lines."
     }
   }
 }
