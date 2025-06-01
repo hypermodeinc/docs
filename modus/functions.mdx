@@ -44,16 +44,16 @@ Most functions become GraphQL queries—perfect for reconnaissance and data
 retrieval:
 
 ```go
-// Becomes a GraphQL query: getUserProfile(id: String!): UserProfile
-func GetUserProfile(id string) (*UserProfile, error) {
+// Becomes a GraphQL query: gatherThreatIntelligence(source: String!): ThreatReport
+func GatherThreatIntelligence(source string) (*ThreatReport, error) {
     // Intelligence gathering operation
-    return fetchUserData(id)
+    return fetchThreatData(source)
 }
 
-// Becomes a GraphQL query: analyzeMarketTrends(): TrendReport
-func AnalyzeMarketTrends() (*TrendReport, error) {
+// Becomes a GraphQL query: analyzeSecurityPatterns(): SecurityAssessment
+func AnalyzeSecurityPatterns() (*SecurityAssessment, error) {
     // Analysis operation using AI models
-    return generateTrendAnalysis()
+    return generateSecurityAnalysis()
 }
 ```
 
@@ -63,23 +63,23 @@ Functions that modify data automatically become GraphQL mutations. Modus detects
 these by their mission prefixes:
 
 ```go
-// Becomes a GraphQL mutation: createUser(data: UserInput!): User
-func CreateUser(data UserInput) (*User, error) {
-    // Operational creation mission
-    return deployNewUser(data)
+// Becomes a GraphQL mutation: createSecurityAlert(data: AlertInput!): SecurityAlert
+func CreateSecurityAlert(data AlertInput) (*SecurityAlert, error) {
+    // Create new security alert
+    return deploySecurityAlert(data)
 }
 
-// Becomes a GraphQL mutation: updateMissionStatus(id: String!, status: String!): Mission
-func UpdateMissionStatus(id string, status string) (*Mission, error) {
-    // Status update operation
-    return modifyMissionRecord(id, status)
+// Becomes a GraphQL mutation: updateThreatLevel(id: String!, level: String!): ThreatAssessment
+func UpdateThreatLevel(id string, level string) (*ThreatAssessment, error) {
+    // Update threat assessment
+    return modifyThreatRecord(id, level)
 }
 ```
 
 Functions starting with `create`, `update`, `delete`, and similar action words
 automatically become mutations.
 
-## Mission example: weather intelligence analysis
+## Mission example: field conditions intelligence analysis
 
 Here's a complete tactical operation that demonstrates how functions integrate
 external APIs with AI models for intelligence analysis:
@@ -207,6 +207,24 @@ query {
     temperature
     conditions
     analysis
+  }
+}
+```
+
+You'll receive a tactical intelligence report like:
+
+```json
+{
+  "data": {
+    "gatherWeatherIntelligence": {
+      "city": "London",
+      "temperature": 12.3,
+      "conditions": "light rain",
+      "analysis": "
+        Light rain conditions will reduce visibility for surveillance operations and may impact equipment performance.
+        Recommend waterproof gear and consider delayed outdoor activities requiring clear sight lines.
+      "
+    }
   }
 }
 ```
