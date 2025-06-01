@@ -81,7 +81,8 @@
               "modus/overview",
               "modus/quickstart",
               "modus/functions",
-              "modus/agents"
+              "modus/agents",
+              "modus/knowledge-graphs"
             ]
           },
           {

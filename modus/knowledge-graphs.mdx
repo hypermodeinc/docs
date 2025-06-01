@@ -1,0 +1,445 @@
+---
+title: "What about knowledge graphs?"
+description:
+  "Build persistent intelligence networks using agents, functions, and knowledge
+  graphs"
+"og:title": "What about knowledge graphs? - Modus"
+---
+
+## What about knowledge graphs?
+
+Your operatives need more than just memory—they need intelligence networks.
+While agents maintain their own operational state and memory across missions,
+knowledge graphs provide something fundamentally different: shared institutional
+knowledge that captures relationships between entities, events, and intelligence
+across your entire organization.
+
+At Hypermode, we recognize that knowledge graphs aren't just storage—they're
+becoming critical infrastructure for next-generation AI systems. That's why
+we've invested deeply in Dgraph, bringing enterprise-grade graph capabilities to
+Modus applications.
+
+This is where knowledge graphs transform your Modus deployment from isolated
+operatives into a coordinated intelligence network with shared institutional
+memory.
+
+## What are intelligence networks?
+
+Intelligence networks in Modus combine:
+
+- **Agent state**: personal operational memory that each agent maintains across
+  missions
+- **Knowledge graphs**: shared institutional intelligence that captures
+  relationships between entities, events, and intelligence across your
+  organization
+- **Functions**: rapid tactical operations for data processing and analysis
+- **AI models**: advanced pattern recognition and decision-making intelligence
+
+Think of it as the difference between what an individual operative remembers
+versus what your intelligence agency knows. Agent state is personal memory—what
+happened to this specific operative, what conversations they've had, what tasks
+they're tracking. Knowledge graphs are institutional intelligence—how threats
+relate to each other, which indicators connect to which actors, what patterns
+emerge across all operations.
+
+## Setting up your intelligence infrastructure
+
+First, connect to your knowledge graph by adding this to your `modus.json`:
+
+```json
+{
+  "connections": {
+    "dgraph": {
+      "type": "dgraph",
+      "connString": "dgraph://your-graph.hypermode.host:443?sslmode=verify-ca&bearertoken={{API_KEY}}"
+    }
+  },
+  "models": {
+    "text-generator": {
+      "sourceModel": "meta-llama/Llama-3.2-3B-Instruct",
+      "provider": "hugging-face",
+      "connection": "hypermode"
+    }
+  }
+}
+```
+
+Set your credentials in `.env.dev.local`:
+
+```sh
+MODUS_DGRAPH_API_KEY=your_graph_api_key_here
+```
+
+## Mission scenario: agent anomaly detection
+
+Let's walk through a realistic intelligence operation that demonstrates how all
+these components work together. You're building a system to monitor for
+anomalous agent behavior in the Matrix. The operation needs to:
+
+1. Rapidly import new agent activity reports
+2. Find patterns across historical agent data
+3. Coordinate ongoing surveillance operations
+4. Provide strategic analysis to the resistance
+
+### Step 1: rapid intelligence import
+
+When new agent activity is detected, you need to process it quickly. This is
+perfect for a stateless function:
+
+```go
+func ImportAgentActivity(activity AgentActivity) (*string, error) {
+    // AI-powered analysis of the agent behavior
+    analysis, _ := analyzeAgentWithAI(activity.Description)
+
+    // Store in knowledge graph - builds institutional intelligence
+    mutation := dgraph.NewMutation().WithSetJson(fmt.Sprintf(`{
+        "dgraph.type": "AgentSighting",
+        "sighting_id": "%s",
+        "agent_name": "%s",
+        "location": "%s",
+        "behavior": "%s",
+        "analysis": "%s"
+    }`, activity.SightingID, activity.AgentName, activity.Location,
+        activity.Behavior, analysis))
+
+    dgraph.ExecuteMutations("dgraph", mutation)
+    // ...
+}
+```
+
+Let's test this with some incoming agent intelligence:
+
+```graphql
+mutation {
+  importAgentActivity(
+    activity: {
+      sightingId: "SIGHT-2025-001"
+      agentName: "Smith"
+      location: "Downtown Matrix Sector 7"
+      behavior: "Unusual pattern recognition anomaly detected"
+      threatLevel: 9
+    }
+  )
+}
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "importAgentActivity": "Agent activity processed: SIGHT-2025-001"
+  }
+}
+```
+
+Behind the scenes, the AI model analyzed the agent behavior and the knowledge
+graph now contains both the raw sighting data and the AI-enhanced analysis,
+ready to be connected to other related agent activities.
+
+### Step 2: strategic analysis using institutional knowledge
+
+Now that we've agent activity in our knowledge graph, let's analyze the broader
+Matrix surveillance landscape. This function queries relationships across all
+stored agent data:
+
+```go
+func AnalyzeAgentPatterns(timeRange string) (*AgentAnalysisResponse, error) {
+    // Query institutional knowledge - this traverses relationships
+    query := dgraph.NewQuery(`
+        query analyzeAgents($since: string) {
+            sightings(func: ge(timestamp, $since)) {
+                sighting_id
+                agent_name
+                location
+                behavior
+                analysis
+                ~agent_encounters {
+                    human_id
+                    escape_method
+                    success_rate
+                }
+            }
+        }
+    `).WithVariable("$since", timeRange)
+
+    response, _ := dgraph.ExecuteQuery("dgraph", query)
+    // ... parse response
+
+    // Generate strategic assessment using AI with graph context
+    assessment, _ := generateAgentAssessment(data)
+
+    return &AgentAnalysisResponse{
+        SightingCount:     sightingCount,
+        ActiveAgents:      activeAgents,
+        ThreatAssessment:  assessment,
+        Recommendations:   recommendations,
+    }, nil
+}
+```
+
+Let's query our Matrix surveillance data:
+
+```graphql
+query {
+  analyzeAgentPatterns(timeRange: "2025-01-01T00:00:00Z") {
+    sightingCount
+    activeAgents
+    threatAssessment
+    recommendations
+  }
+}
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "analyzeAgentPatterns": {
+      "sightingCount": 47,
+      "activeAgents": ["Smith", "Brown", "Jones"],
+      "threatAssessment": "
+        Critical escalation detected. Agent Smith showing unprecedented adaptive behavior patterns.
+        Cross-referencing indicates coordinated search protocols across multiple Matrix sectors.
+        The One may have been detected.",
+      "recommendations": [
+        "Implement emergency extraction protocols for key personnel",
+        "Activate deep cover resistance cells",
+        "Prepare for potential Matrix reset scenario"
+      ]
+    }
+  }
+}
+```
+
+Notice how the AI model provided strategic analysis by examining patterns across
+all related agent encounters in the knowledge graph—something no single sighting
+could reveal.
+
+### Step 3: deploying persistent surveillance agents
+
+For ongoing operations, deploy an agent that maintains continuous Matrix
+surveillance. Unlike functions, agents remember their operational state:
+
+```go
+type SurveillanceAgent struct {
+    agents.AgentBase
+
+    // Persistent agent state (personal operational memory)
+    OperationID        string
+    MonitoredAgents    []string
+    AlertThresholds    map[string]int
+    LastSweep          time.Time
+    OngoingOperations  []OngoingOperation
+}
+
+func (s *SurveillanceAgent) OnReceiveMessage(msgName string, data *string) (*string, error) {
+    switch msgName {
+    case "continuous_surveillance":
+        return s.runContinuousSurveillance()
+    case "agent_correlation":
+        return s.analyzeAgentCorrelations()
+    // ...
+    }
+}
+```
+
+Deploy your surveillance agent:
+
+```graphql
+mutation {
+  deploySurveillanceAgent
+}
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "deploySurveillanceAgent": "agent_neo_001"
+  }
+}
+```
+
+Your agent is now running with its own dedicated execution environment, ready to
+maintain long-term Matrix surveillance operations.
+
+### Step 4: coordinated surveillance operations
+
+Now initiate continuous surveillance. The agent queries the knowledge graph for
+new agent activity and maintains its own operational state:
+
+```graphql
+mutation {
+  initiateMatrixSurveillance(agentId: "agent_neo_001")
+}
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "initiateMatrixSurveillance": "Surveillance sweep completed. 5 new anomalies detected, 3 behavior patterns identified."
+  }
+}
+```
+
+The agent is now continuously monitoring the knowledge graph, using AI to
+identify agent behavior patterns, and maintaining its own operational memory
+about Matrix surveillance.
+
+### Step 5: agent correlation analysis
+
+Let's have the agent perform correlation analysis across Matrix surveillance
+data:
+
+```graphql
+mutation {
+  sendMessage(
+    agentId: "agent_neo_001"
+    message: "agent_correlation"
+    data: null
+  )
+}
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "sendMessage": "Agent correlation analysis completed. 6 behavioral correlations identified."
+  }
+}
+```
+
+Behind the scenes, the agent:
+
+```go
+func (s *SurveillanceAgent) analyzeAgentCorrelations() (*string, error) {
+    // Query institutional knowledge for correlation analysis
+    query := dgraph.NewQuery(`
+        query correlateAgents {
+            all_sightings(func: has(sighting_id)) {
+                sighting_id
+                agent_name
+                behavior
+                analysis
+                ~agent_encounters {
+                    human_id
+                    escape_method
+                }
+            }
+        }
+    `)
+
+    response, _ := dgraph.ExecuteQuery("dgraph", query)
+
+    // Use AI to find correlations in Matrix surveillance data
+    correlations, _ := s.findAgentCorrelationsWithAI(response.Json)
+
+    // Update agent's personal operational state
+    s.updateOngoingOperations(correlations)
+    // ...
+}
+```
+
+### Step 6: checking agent operational status
+
+Check what your surveillance agent has learned and is tracking:
+
+```graphql
+query {
+  getAgentStatus(agentId: "agent_neo_001")
+}
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "getAgentStatus": {
+      "operation_id": "op-matrix-1736985600",
+      "monitored_agents": 3,
+      "ongoing_operations": 4,
+      "last_sweep": "2025-01-15T14:30:00Z",
+      "active_operations": [
+        {
+          "id": "corr-001",
+          "type": "behavioral_correlation",
+          "status": "active",
+          "target": "Smith showing coordinated search pattern with Brown and Jones"
+        }
+      ]
+    }
+  }
+}
+```
+
+## The matrix advantage
+
+What you've just built demonstrates the power of combining all four Modus
+components:
+
+**Functions** rapidly processed incoming agent sightings and provided strategic
+analysis by querying institutional surveillance data
+
+**Knowledge graphs** stored not just the raw sighting data, but the
+relationships between agents, encounters, and behavioral patterns that enabled
+anomaly detection
+
+**AI models** enhanced both the initial behavioral analysis and the strategic
+assessment by understanding context across all related Matrix surveillance data
+
+**Agents** maintained continuous surveillance operations, building personal
+operational memory while leveraging shared institutional knowledge about Matrix
+agent activities
+
+## Key insights from this Matrix operation
+
+**Agent memory vs institutional knowledge**: the surveillance agent maintained
+its own operational state (which Matrix agents it's monitoring, when it last
+swept, what operations it's running) while accessing shared institutional
+surveillance data in the knowledge graph
+
+**Relationship intelligence**: the knowledge graph revealed behavioral
+correlations between Matrix agents that no single sighting could show
+
+**Coordinated operations**: functions handled rapid tactical sighting processing
+while the agent managed strategic, long-term Matrix surveillance
+
+**AI-enhanced analysis**: models provided pattern recognition across both
+personal agent memory and institutional surveillance knowledge
+
+At Hypermode, we've built this integration because we believe knowledge graphs
+are becoming critical infrastructure for next-generation AI systems. Our
+investment in Dgraph ensures enterprise-grade graph capabilities that scale with
+your surveillance operations.
+
+## What you've built
+
+You now have a complete Matrix surveillance network that can:
+
+- **Import** agent sighting data rapidly through functions
+- **Analyze** complex behavioral relationships through graph queries
+- **Monitor** continuously through persistent surveillance agents
+- **Coordinate** responses across multiple resistance operatives
+- **Learn** and adapt through AI-enhanced behavioral analysis
+- **Survive** system failures with persistent state and relationships
+
+This isn't just a database with some AI on top—it's a coordinated surveillance
+network where agents, functions, models, and knowledge graphs work together to
+provide capabilities that none could achieve alone.
+
+## Next steps
+
+Ready to deploy your Matrix surveillance network? Check out:
+
+- [Dgraph integration guide](/modus/modus-dgraph) for advanced graph operations
+- [Agent coordination patterns](/modus/agents) for multi-agent workflows
+- [Production deployment](/modus/deploying) for scaling your surveillance
+  network
