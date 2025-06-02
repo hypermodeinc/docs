@@ -110,6 +110,7 @@
                 "group": "AssemblyScript SDK",
                 "pages": [
                   "modus/sdk/assemblyscript/overview",
+                  "modus/sdk/assemblyscript/agents",
                   "modus/sdk/assemblyscript/collections",
                   "modus/sdk/assemblyscript/console",
                   "modus/sdk/assemblyscript/dgraph",
@@ -126,6 +127,7 @@
                 "group": "Go SDK",
                 "pages": [
                   "modus/sdk/go/overview",
+                  "modus/sdk/go/agents",
                   "modus/sdk/go/collections",
                   "modus/sdk/go/console",
                   "modus/sdk/go/dgraph",
