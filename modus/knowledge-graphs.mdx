@@ -90,9 +90,10 @@ quickly. This is perfect for a stateless function:
 type AgentSighting struct {
     SightingID   string `json:"sighting_id"`
     AgentName    string `json:"agent_name"`
+    Location     string `json:"location"`
     Behavior     string `json:"behavior"`
     ThreatLevel  int    `json:"threat_level"`
-    // ...
+    Timestamp    string `json:"timestamp"`
 }
 
 func ImportAgentSighting(sighting AgentSighting) (*string, error) {
@@ -104,20 +105,20 @@ func ImportAgentSighting(sighting AgentSighting) (*string, error) {
         "dgraph.type": "AgentSighting",
         "sighting_id": "%s",
         "agent_name": "%s",
+        "location": "%s",
         "behavior": "%s",
+        "threat_level": %d,
+        "timestamp": "%s",
         "ai_analysis": "%s"
-        // ...
-    }`, sighting.SightingID, sighting.AgentName, sighting.Behavior, analysis))
+    }`, sighting.SightingID, sighting.AgentName, sighting.Location,
+        sighting.Behavior, sighting.ThreatLevel, sighting.Timestamp, analysis))
 
     dgraph.ExecuteMutations("dgraph", mutation)
-    // ...
+
+    result := fmt.Sprintf("Agent sighting processed: %s", sighting.SightingID)
+    return &result, nil
 }
-```
 
-The key here is using AI to enhance the raw sighting data before storing it.
-Here's how the AI analysis works:
-
-```go
 func analyzeAgentWithAI(behavior string) (string, error) {
     model, _ := models.GetModel[openai.ChatModel]("text-generator")
 
@@ -135,7 +136,8 @@ func analyzeAgentWithAI(behavior string) (string, error) {
 }
 ```
 
-Let's test this with some incoming intelligence:
+Now let's deploy this intelligence import function and test it. Since this
+function creates data, it automatically becomes a GraphQL mutation:
 
 ```graphql
 mutation {
@@ -144,7 +146,9 @@ mutation {
       sightingId: "SIGHT-2025-001"
       agentName: "Smith"
       location: "Downtown Loop - Financial District"
-      behavior: "Unusual pattern recognition algorithm detected. Agent displaying enhanced replication capabilities beyond normal parameters."
+      behavior: "Unusual pattern recognition algorithm detected.
+                Agent displaying enhanced replication capabilities
+                beyond normal parameters."
       threatLevel: 9
       timestamp: "2025-01-15T14:30:00Z"
     }
@@ -169,11 +173,18 @@ network.
 
 ### Step 2: strategic analysis using institutional knowledge
 
-Now that we've Agent sighting data in our knowledge graph, let's analyze the
-broader threat landscape. This function queries relationships across all stored
-Agent data:
+Now that we've got the Agent sighting data in our knowledge graph, let's analyze
+the broader threat landscape. This function queries relationships across all
+stored Agent data:
 
 ```go
+type ThreatAnalysisResponse struct {
+    SightingCount    int      `json:"sighting_count"`
+    ActiveAgents     []string `json:"active_agents"`
+    ThreatAssessment string   `json:"threat_assessment"`
+    Recommendations  []string `json:"recommendations"`
+}
+
 func AnalyzeAgentPatterns(timeRange string) (*ThreatAnalysisResponse, error) {
     // Query institutional knowledge - traverses relationships
     query := dgraph.NewQuery(`
@@ -183,7 +194,6 @@ func AnalyzeAgentPatterns(timeRange string) (*ThreatAnalysisResponse, error) {
                 behavior
                 threat_level
                 ai_analysis
-                ~related_encounters { ... }
             }
         }
     `).WithVariable("$since", timeRange)
@@ -201,34 +211,35 @@ func AnalyzeAgentPatterns(timeRange string) (*ThreatAnalysisResponse, error) {
         SightingCount:    len(data.Sightings),
         ActiveAgents:     extractActiveAgents(data.Sightings),
         ThreatAssessment: assessment,
-        // ...
+        Recommendations:  generateRecommendations(len(data.Sightings)),
     }, nil
 }
-```
 
-Once we've got the institutional data, we use AI to analyze patterns across all
-related sightings:
-
-```go
 func generateThreatAssessment(sightings interface{}) (string, error) {
     model, _ := models.GetModel[openai.ChatModel]("text-generator")
 
-    prompt := `Based on these Agent sightings, provide a strategic threat assessment
-               focusing on behavioral patterns and risks to resistance operations.`
+    prompt := `Based on these Agent sightings, provide a strategic threat
+               assessment focusing on behavioral patterns and risks to
+               resistance operations.`
 
     sightingsJson, _ := json.Marshal(sightings)
     input, _ := model.CreateInput(
         openai.NewSystemMessage(prompt),
-        openai.NewUserMessage(fmt.Sprintf("Agent surveillance data: %s", string(sightingsJson))),
+        openai.NewUserMessage(fmt.Sprintf("Agent surveillance data: %s",
+            string(sightingsJson))),
     )
     input.Temperature = 0.4
 
     output, _ := model.Invoke(input)
     return strings.TrimSpace(output.Choices[0].Message.Content), nil
 }
+
+// Helper functions for data extraction and recommendations
+func extractActiveAgents(sightings []AgentSightingData) []string { /* ... */ }
+func generateRecommendations(count int) []string { /* ... */ }
 ```
 
-Let's query our surveillance intelligence data:
+Let's query our surveillance intelligence data using this analysis function:
 
 ```graphql
 query {
@@ -247,11 +258,18 @@ query {
 {
   "data": {
     "analyzeAgentPatterns": {
-      "sightingCount": 47,
+      "sightingCount": 3,
       "activeAgents": ["Smith", "Brown", "Jones"],
-      "threatAssessment": "Critical escalation detected. Agent Smith showing
-                       unprecedented adaptive behavior patterns...",
-      "recommendations": ["Emergency extraction protocols", "Activate deep cover cells", "..."]
+      "threatAssessment": "Critical escalation detected. Agent Smith
+                          showing unprecedented adaptive behavior patterns
+                          consistent with version upgrades. Behavioral
+                          analysis indicates coordinated search algorithms
+                          across multiple Agent instances.",
+      "recommendations": [
+        "Emergency extraction protocols",
+        "Activate deep cover cells",
+        "Increase surveillance sweeps"
+      ]
     }
   }
 }
@@ -272,34 +290,39 @@ type SurveillanceAgent struct {
     agents.AgentBase
 
     // Persistent agent state (personal operational memory)
-    MonitoredSectors   []string
-    AlertThresholds    map[string]int
-    LastSweepTime      time.Time
-    // ...
+    MonitoredSectors   []string             `json:"monitored_sectors"`
+    AlertThresholds    map[string]int       `json:"alert_thresholds"`
+    LastSweepTime      time.Time            `json:"last_sweep_time"`
+    OperationalStatus  string               `json:"operational_status"`
+    SightingsTracked   int                  `json:"sightings_tracked"`
+}
+
+func (s *SurveillanceAgent) Name() string {
+    return "SurveillanceAgent"
 }
 
 func (s *SurveillanceAgent) OnInitialize() error {
-    s.MonitoredSectors = []string{"Downtown Loop", "Megacity Financial", "Industrial District"}
+    s.MonitoredSectors = []string{
+        "Downtown Loop", "Megacity Financial", "Industrial District"}
     s.AlertThresholds = map[string]int{"Smith": 5, "Brown": 7, "Jones": 7}
     s.OperationalStatus = "Active"
+    s.SightingsTracked = 0
+    s.LastSweepTime = time.Now()
     return nil
 }
 
-func (s *SurveillanceAgent) OnReceiveMessage(msgName string, data *string) (*string, error) {
+func (s *SurveillanceAgent) OnReceiveMessage(
+    msgName string, data *string) (*string, error) {
     switch msgName {
     case "continuous_surveillance":
         return s.runContinuousSurveillance()
     case "get_status":
         return s.getOperationalStatus()
-    // ...
+    default:
+        return nil, fmt.Errorf("unrecognized directive: %s", msgName)
     }
 }
-```
 
-The core surveillance operation queries the knowledge graph and updates the
-agent's memory:
-
-```go
 func (s *SurveillanceAgent) runContinuousSurveillance() (*string, error) {
     // Query knowledge graph for new sightings since last sweep
     query := dgraph.NewQuery(`
@@ -316,19 +339,31 @@ func (s *SurveillanceAgent) runContinuousSurveillance() (*string, error) {
 
     // Update agent's personal operational state
     s.LastSweepTime = time.Now()
+    s.SightingsTracked += 1 // Simplified counting
 
-    result := fmt.Sprintf("Surveillance sweep completed at %s. Monitoring %d sectors...",
-        s.LastSweepTime.Format("15:04:05"), len(s.MonitoredSectors))
+    result := fmt.Sprintf(`Surveillance sweep completed at %s.
+                           Monitoring %d sectors.
+                           Matrix integrity: COMPROMISED`,
+        s.LastSweepTime.Format("15:04:05"),
+        len(s.MonitoredSectors))
     return &result, nil
 }
 
 func (s *SurveillanceAgent) getOperationalStatus() (*string, error) {
-    // Return formatted status of agent's current operational state
     status := fmt.Sprintf(`Surveillance Agent Status:
-    - Operational: %s
-    - Monitoring %d sectors
-    - Last sweep: %s
-    - Tracking %d ongoing sightings`, ...)
+- Operational: %s
+- Monitoring %d sectors: %s
+- Last sweep: %s
+- Tracking %d ongoing sightings
+- Alert thresholds: Smith=%d, Brown=%d, Jones=%d`,
+        s.OperationalStatus,
+        len(s.MonitoredSectors),
+        strings.Join(s.MonitoredSectors, ", "),
+        s.LastSweepTime.Format("2006-01-02 15:04:05"),
+        s.SightingsTracked,
+        s.AlertThresholds["Smith"],
+        s.AlertThresholds["Brown"],
+        s.AlertThresholds["Jones"])
     return &status, nil
 }
 ```
@@ -337,6 +372,11 @@ To make these agent capabilities accessible via GraphQL, we need wrapper
 functions that handle deployment and messaging:
 
 ```go
+// Register your agent type during initialization
+func init() {
+    agents.Register(&SurveillanceAgent{})
+}
+
 // Deploy a new surveillance agent - this becomes a GraphQL mutation
 func DeploySurveillanceAgent() (string, error) {
     agentInfo, _ := agents.Start("SurveillanceAgent")
@@ -394,7 +434,8 @@ mutation {
 {
   "data": {
     "initiateSurveillance": "Surveillance sweep completed at 14:35:22.
-                         Monitoring 3 sectors for anomalous Agent activity."
+                           Monitoring 3 sectors.
+                           Matrix integrity: COMPROMISED"
   }
 }
 ```
@@ -403,9 +444,52 @@ The agent is now continuously monitoring the knowledge graph, tracking Agent
 patterns, and maintaining its own operational memory about the digital
 battleground.
 
-### Step 5: checking agent operational status
+### Step 5: building comprehensive intelligence
 
-Check what your surveillance agent has learned and is tracking:
+Let's add more Agent sightings to see the intelligence network grow. You can run
+this operation multiple times with different data:
+
+```graphql
+mutation {
+  importAgentSighting(
+    sighting: {
+      sightingId: "SIGHT-2025-002"
+      agentName: "Brown"
+      location: "Megacity Financial - Server Room B12"
+      behavior: "Agent Brown detected implementing advanced
+                countermeasures against known resistance
+                encryption protocols. Adaptive learning
+                subroutines active."
+      threatLevel: 8
+      timestamp: "2025-01-15T15:45:00Z"
+    }
+  )
+}
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "importAgentSighting": "Agent sighting processed: SIGHT-2025-002"
+  }
+}
+```
+
+Continue building your intelligence database with activities like:
+
+- **Matrix infiltration detected**: Agent Jones coordinating with Smith on power
+  grid systems
+- **Encryption breakthrough**: Agent Brown has cracked resistance communication
+  protocols
+- **Replication surge**: Agent Smith creating multiple instances across
+  financial networks
+
+### Step 6: comprehensive surveillance report
+
+After building your intelligence network with multiple sightings and operations,
+check your complete surveillance status:
 
 ```graphql
 query {
@@ -419,10 +503,17 @@ query {
 {
   "data": {
     "getSurveillanceStatus": "Surveillance Agent Status:
-                          - Operational: Active
-                          - Monitoring 3 sectors
-                          - Last sweep: 2025-01-15 14:35:22
-                          - Tracking 5 ongoing sightings"
+                            - Operational: Active
+                            - Monitoring 3 sectors: Downtown Loop,
+                              Megacity Financial, Industrial District
+                            - Last sweep: 2025-01-15 16:45:22
+                            - Tracking 12 ongoing sightings
+                            - Recent activities: Matrix infiltration,
+                              encryption breakthrough, replication surge,
+                              pattern adaptation, network synchronization
+                            - Alert thresholds: Smith=5 (EXCEEDED),
+                              Brown=7 (EXCEEDED), Jones=7 (ACTIVE)
+                            - Threat status: CRITICAL - IMMEDIATE EXTRACTION ADVISED"
   }
 }
 ```
