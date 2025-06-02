@@ -136,8 +136,7 @@ func analyzeAgentWithAI(behavior string) (string, error) {
 }
 ```
 
-Now let's deploy this intelligence import function and test it. Since this
-function creates data, it automatically becomes a GraphQL mutation:
+Now let's deploy this intelligence import function and test it:
 
 ```graphql
 mutation {
@@ -166,16 +165,10 @@ mutation {
 }
 ```
 
-Behind the scenes, the AI model analyzed the Agent behavior and the knowledge
-graph now contains both the raw sighting data and the AI-enhanced analysis,
-ready to be connected to other related Agent encounters across the resistance
-network.
-
 ### Step 2: strategic analysis using institutional knowledge
 
 Now that we've got the Agent sighting data in our knowledge graph, let's analyze
-the broader threat landscape. This function queries relationships across all
-stored Agent data:
+the broader threat landscape:
 
 ```go
 type ThreatAnalysisResponse struct {
@@ -239,7 +232,7 @@ func extractActiveAgents(sightings []AgentSightingData) []string { /* ... */ }
 func generateRecommendations(count int) []string { /* ... */ }
 ```
 
-Let's query our surveillance intelligence data using this analysis function:
+Let's query our surveillance intelligence data:
 
 ```graphql
 query {
@@ -258,43 +251,34 @@ query {
 {
   "data": {
     "analyzeAgentPatterns": {
-      "sightingCount": 3,
-      "activeAgents": ["Smith", "Brown", "Jones"],
-      "threatAssessment": "Critical escalation detected. Agent Smith
-                          showing unprecedented adaptive behavior patterns
-                          consistent with version upgrades. Behavioral
-                          analysis indicates coordinated search algorithms
-                          across multiple Agent instances.",
+      "sightingCount": 1,
+      "activeAgents": ["Smith"],
+      "threatAssessment": "Initial Agent Smith sighting shows enhanced
+                          replication capabilities beyond standard parameters.
+                          Requires additional surveillance data for pattern
+                          analysis and threat escalation assessment.",
       "recommendations": [
-        "Emergency extraction protocols",
-        "Activate deep cover cells",
-        "Increase surveillance sweeps"
+        "Continue surveillance monitoring",
+        "Increase Agent activity detection"
       ]
     }
   }
 }
 ```
 
-Notice how the AI model provided strategic analysis by examining patterns across
-all related Agent encounters in the knowledge graph—something no single sighting
-could reveal.
+### Step 3: automated intelligence processing with asynchronous messaging
 
-### Step 3: deploying persistent surveillance agents
-
-For ongoing operations, deploy an agent that maintains continuous surveillance
-of the simulated reality. Unlike functions, agents remember their operational
-state:
+Now let's enhance our system to automatically coordinate surveillance when new
+intelligence arrives. We'll deploy persistent surveillance agents and upgrade
+our import function to trigger them:
 
 ```go
 type SurveillanceAgent struct {
     agents.AgentBase
-
-    // Persistent agent state (personal operational memory)
-    MonitoredSectors   []string             `json:"monitored_sectors"`
-    AlertThresholds    map[string]int       `json:"alert_thresholds"`
-    LastSweepTime      time.Time            `json:"last_sweep_time"`
-    OperationalStatus  string               `json:"operational_status"`
-    SightingsTracked   int                  `json:"sightings_tracked"`
+    MonitoredSectors   []string    `json:"monitored_sectors"`
+    SightingsTracked   int         `json:"sightings_tracked"`
+    RecentActivities   []string    `json:"recent_activities"`
+    LastSweepTime      time.Time   `json:"last_sweep_time"`
 }
 
 func (s *SurveillanceAgent) Name() string {
@@ -304,9 +288,8 @@ func (s *SurveillanceAgent) Name() string {
 func (s *SurveillanceAgent) OnInitialize() error {
     s.MonitoredSectors = []string{
         "Downtown Loop", "Megacity Financial", "Industrial District"}
-    s.AlertThresholds = map[string]int{"Smith": 5, "Brown": 7, "Jones": 7}
-    s.OperationalStatus = "Active"
     s.SightingsTracked = 0
+    s.RecentActivities = []string{}
     s.LastSweepTime = time.Now()
     return nil
 }
@@ -315,16 +298,15 @@ func (s *SurveillanceAgent) OnReceiveMessage(
     msgName string, data *string) (*string, error) {
     switch msgName {
     case "continuous_surveillance":
-        return s.runContinuousSurveillance()
+        return s.processNewIntelligence()
     case "get_status":
         return s.getOperationalStatus()
-    default:
-        return nil, fmt.Errorf("unrecognized directive: %s", msgName)
     }
+    return nil, fmt.Errorf("unrecognized directive: %s", msgName)
 }
 
-func (s *SurveillanceAgent) runContinuousSurveillance() (*string, error) {
-    // Query knowledge graph for new sightings since last sweep
+func (s *SurveillanceAgent) processNewIntelligence() (*string, error) {
+    // Query knowledge graph for latest intelligence since last sweep
     query := dgraph.NewQuery(`
         query getRecentSightings($since: string) {
             sightings(func: ge(timestamp, $since)) {
@@ -337,66 +319,85 @@ func (s *SurveillanceAgent) runContinuousSurveillance() (*string, error) {
 
     dgraph.ExecuteQuery("dgraph", query)
 
-    // Update agent's personal operational state
+    // Update agent's surveillance state
     s.LastSweepTime = time.Now()
-    s.SightingsTracked += 1 // Simplified counting
+    s.SightingsTracked += 1
 
-    result := fmt.Sprintf(`Surveillance sweep completed at %s.
-                           Monitoring %d sectors.
-                           Matrix integrity: COMPROMISED`,
-        s.LastSweepTime.Format("15:04:05"),
-        len(s.MonitoredSectors))
+    activity := fmt.Sprintf("Auto surveillance at %s",
+        s.LastSweepTime.Format("15:04:05"))
+    s.RecentActivities = append(s.RecentActivities, activity)
+
+    // Keep only last 3 activities
+    if len(s.RecentActivities) > 3 {
+        s.RecentActivities = s.RecentActivities[1:]
+    }
+
+    result := fmt.Sprintf(`Intelligence processed automatically.
+                           Tracking %d sightings. Matrix integrity: COMPROMISED`,
+        s.SightingsTracked)
     return &result, nil
 }
 
 func (s *SurveillanceAgent) getOperationalStatus() (*string, error) {
     status := fmt.Sprintf(`Surveillance Agent Status:
-- Operational: %s
+- Operational: Active
 - Monitoring %d sectors: %s
 - Last sweep: %s
 - Tracking %d ongoing sightings
-- Alert thresholds: Smith=%d, Brown=%d, Jones=%d`,
-        s.OperationalStatus,
+- Recent activities: %s`,
         len(s.MonitoredSectors),
         strings.Join(s.MonitoredSectors, ", "),
         s.LastSweepTime.Format("2006-01-02 15:04:05"),
         s.SightingsTracked,
-        s.AlertThresholds["Smith"],
-        s.AlertThresholds["Brown"],
-        s.AlertThresholds["Jones"])
+        strings.Join(s.RecentActivities, ", "))
     return &status, nil
 }
-```
 
-To make these agent capabilities accessible via GraphQL, we need wrapper
-functions that handle deployment and messaging:
+func init() { agents.Register(&SurveillanceAgent{}) }
 
-```go
-// Register your agent type during initialization
-func init() {
-    agents.Register(&SurveillanceAgent{})
-}
-
-// Deploy a new surveillance agent - this becomes a GraphQL mutation
 func DeploySurveillanceAgent() (string, error) {
     agentInfo, _ := agents.Start("SurveillanceAgent")
     return agentInfo.Id, nil
 }
 
-// Initiate continuous surveillance - this becomes a GraphQL mutation
-func InitiateSurveillance(agentId string) (string, error) {
-    result, _ := agents.SendMessage(agentId, "continuous_surveillance")
-    return *result, nil
-}
-
-// Get surveillance status - this becomes a GraphQL query
 func GetSurveillanceStatus(agentId string) (string, error) {
     result, _ := agents.SendMessage(agentId, "get_status")
     return *result, nil
 }
 ```
 
-Deploy your surveillance agent to monitor the Matrix:
+Now let's enhance our original import function to automatically trigger
+surveillance:
+
+```go
+func ImportAgentSighting(sighting AgentSighting) (*string, error) {
+    // AI-powered analysis of the Agent behavior
+    analysis, _ := analyzeAgentWithAI(sighting.Behavior)
+
+    // Store in knowledge graph - builds institutional intelligence
+    mutation := dgraph.NewMutation().WithSetJson(fmt.Sprintf(`{
+        "dgraph.type": "AgentSighting",
+        "sighting_id": "%s",
+        "agent_name": "%s",
+        "location": "%s",
+        "behavior": "%s",
+        "threat_level": %d,
+        "timestamp": "%s",
+        "ai_analysis": "%s"
+    }`, sighting.SightingID, sighting.AgentName, sighting.Location,
+        sighting.Behavior, sighting.ThreatLevel, sighting.Timestamp, analysis))
+
+    dgraph.ExecuteMutations("dgraph", mutation)
+
+    // Automatically trigger surveillance via async message
+    agents.SendMessageAsync("agent_neo_001", "continuous_surveillance")
+
+    result := fmt.Sprintf("Agent sighting processed: %s", sighting.SightingID)
+    return &result, nil
+}
+```
+
+Deploy your surveillance agent:
 
 ```graphql
 mutation {
@@ -414,40 +415,9 @@ mutation {
 }
 ```
 
-Your agent is now running with its own dedicated execution environment, ready to
-maintain long-term surveillance operations against the machine intelligence.
+### Step 4: coordinated intelligence processing
 
-### Step 4: coordinated surveillance operations
-
-Now initiate continuous monitoring. The agent queries the knowledge graph for
-new Agent activity and maintains its own operational state:
-
-```graphql
-mutation {
-  initiateSurveillance(agentId: "agent_neo_001")
-}
-```
-
-**Response:**
-
-```json
-{
-  "data": {
-    "initiateSurveillance": "Surveillance sweep completed at 14:35:22.
-                           Monitoring 3 sectors.
-                           Matrix integrity: COMPROMISED"
-  }
-}
-```
-
-The agent is now continuously monitoring the knowledge graph, tracking Agent
-patterns, and maintaining its own operational memory about the digital
-battleground.
-
-### Step 5: building comprehensive intelligence
-
-Let's add more Agent sightings to see the intelligence network grow. You can run
-this operation multiple times with different data:
+Now when you import new Agent sightings, surveillance automatically triggers:
 
 ```graphql
 mutation {
@@ -477,19 +447,8 @@ mutation {
 }
 ```
 
-Continue building your intelligence database with activities like:
-
-- **Matrix infiltration detected**: Agent Jones coordinating with Smith on power
-  grid systems
-- **Encryption breakthrough**: Agent Brown has cracked resistance communication
-  protocols
-- **Replication surge**: Agent Smith creating multiple instances across
-  financial networks
-
-### Step 6: comprehensive surveillance report
-
-After building your intelligence network with multiple sightings and operations,
-check your complete surveillance status:
+Each import automatically triggers the surveillance agent through asynchronous
+messaging. Check the surveillance status:
 
 ```graphql
 query {
@@ -506,75 +465,72 @@ query {
                             - Operational: Active
                             - Monitoring 3 sectors: Downtown Loop,
                               Megacity Financial, Industrial District
-                            - Last sweep: 2025-01-15 16:45:22
-                            - Tracking 12 ongoing sightings
-                            - Recent activities: Matrix infiltration,
-                              encryption breakthrough, replication surge,
-                              pattern adaptation, network synchronization
-                            - Alert thresholds: Smith=5 (EXCEEDED),
-                              Brown=7 (EXCEEDED), Jones=7 (ACTIVE)
-                            - Threat status: CRITICAL - IMMEDIATE EXTRACTION ADVISED"
+                            - Last sweep: 2025-01-15 15:45:22
+                            - Tracking 2 ongoing sightings
+                            - Recent activities: Auto surveillance at 14:30:05,
+                              Auto surveillance at 15:45:22"
   }
 }
 ```
 
-## The intelligence advantage
+### Step 5: evolved threat analysis
 
-What you've just built demonstrates the power of combining all four Modus
-components in the fight against the machines:
+Query the strategic analysis to see patterns across automatically processed
+intelligence:
 
-**Functions** rapidly processed incoming Agent sightings and provided strategic
-analysis by querying institutional surveillance data
+```graphql
+query {
+  analyzeAgentPatterns(timeRange: "2025-01-15T00:00:00Z") {
+    sightingCount
+    activeAgents
+    threatAssessment
+    recommendations
+  }
+}
+```
 
-**Knowledge graphs** stored not just the raw sighting data, but the
-relationships between Agent encounters, behavioral patterns, and threat
-escalations that enabled sophisticated anomaly detection
+**Response:**
 
-**AI models** enhanced both the initial behavioral analysis and the strategic
-assessment by understanding context across all related surveillance intelligence
+```json
+{
+  "data": {
+    "analyzeAgentPatterns": {
+      "sightingCount": 2,
+      "activeAgents": ["Smith", "Brown"],
+      "threatAssessment": "Critical escalation detected. Agent Smith's
+                          enhanced replication capabilities combined with
+                          Agent Brown's encryption countermeasures indicates
+                          coordinated Matrix defense upgrade. Systematic
+                          pattern suggests machines adapting to resistance
+                          operations.",
+      "recommendations": [
+        "Emergency extraction protocols",
+        "Activate deep cover cells",
+        "Increase surveillance sweeps"
+      ]
+    }
+  }
+}
+```
 
-**Agents** maintained continuous surveillance operations, building personal
-operational memory while leveraging shared institutional knowledge about Agent
-activities throughout the resistance network
+## Conclusion
 
-## Key insights from this operation
+You've just built a complete automated surveillance network that demonstrates
+the power of coordinated intelligence operations. By combining functions for
+rapid data processing, knowledge graphs for institutional memory, AI models for
+enhanced analysis, and agents for persistent surveillance—all coordinated
+through asynchronous messaging—you've created something far more powerful than
+any single component could achieve.
 
-**Agent memory vs institutional knowledge**: the surveillance agent maintained
-its own operational state (which sectors it's monitoring, when it last swept,
-what sightings it's tracking) while accessing shared institutional surveillance
-data in the knowledge graph
-
-**Relationship intelligence**: the knowledge graph revealed behavioral patterns
-across multiple Agent encounters that no single sighting could show
-
-**Coordinated operations**: functions handled rapid tactical sighting processing
-while the agent managed strategic, long-term surveillance of the simulated
-reality
-
-**AI-enhanced analysis**: models provided pattern recognition across both
-personal agent memory and institutional surveillance knowledge
-
-At Hypermode, we've built this integration because we believe knowledge graphs
-are becoming critical infrastructure for next-generation AI systems. Our
-investment in Dgraph ensures enterprise-grade graph capabilities that scale with
-your resistance operations.
-
-## What you've accomplished
-
-You now have a complete surveillance network that can:
-
-- **Import** Agent sighting data rapidly through functions with AI behavioral
-  analysis
-- **Detect** complex threat relationships through graph queries and pattern
-  recognition
-- **Monitor** continuously through persistent surveillance agents
-- **Coordinate** responses across multiple resistance operatives
-- **Learn** and adapt through AI-enhanced behavioral analysis
-- **Survive** system failures with persistent state and relationships
+Your network now automatically processes Agent sightings, triggers surveillance
+operations, builds institutional knowledge over time, and provides AI-enhanced
+threat analysis across all accumulated intelligence. The surveillance agent
+maintains persistent memory across system failures while the knowledge graph
+captures relationships that no single sighting could reveal.
 
 This isn't just a database with some AI on top—it's a coordinated intelligence
-network where agents, functions, models, and knowledge graphs work together to
-provide capabilities that none could achieve alone. Welcome to the real world.
+network where each component enhances the others, creating emergent capabilities
+that scale with your resistance operations. Welcome to the real world.
 
 ## Next steps
 
