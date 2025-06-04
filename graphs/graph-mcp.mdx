@@ -1,7 +1,7 @@
 ---
 title: Hypermode Graph MCP
 description:
-  "Connect your Dgraph database to AI coding assistants using the Model Context
+  "Connect your Hypermode Graph to AI coding assistants using the Model Context
   Protocol for exploratory data analysis and intelligent graph operations"
 mode: "wide"
 sidebarTitle: "Graph MCP"
@@ -10,18 +10,19 @@ sidebarTitle: "Graph MCP"
 
 ## Overview
 
-The Hypermode Graph MCP (Model Context Protocol) server enables seamless
-integration between your graph database and AI coding assistants like Claude
-Desktop, Cursor, and other MCP-compatible tools. Two MCP endpoints are available
-with common tools for AI coding assistants: `mcp` (a server that provides tools
-and data from your Dgraph cluster) and `mcp-ro` (a server that provides tools
-and data from your Dgraph cluster in read-only mode).
+The Hypermode Graph MCP (Model Context Protocol) server enables integration
+between your Hypermode Graph and AI coding assistants like Claude Desktop,
+Cursor, and other MCP-compatible tools. Two MCP endpoints are available with
+common tools for AI coding assistants: `mcp` (an endpoint that provides tools
+and data from your Graph) and `mcp-ro` (an endpoint that provides tools and data
+from your Graph in read-only mode).
 
 <Note>
   **What's MCP?** The Model Context Protocol is an open standard that enables
   developers to build secure, two-way connections between their data sources and
-  AI-powered tools. Think of it as a universal connector that allows AI
-  assistants to understand and interact with your graph data.
+  AI-powered tools. Think of the Hypermode Graph MCP server as a universal
+  connector that allows AI assistants to understand and interact with your graph
+  data.
 </Note>
 
 ## Why use Hypermode Graph MCP?
@@ -50,7 +51,7 @@ and data from your Dgraph cluster in read-only mode).
 
 ## Architecture
 
-The Dgraph MCP server follows the standard MCP architecture:
+The Hypermode Graph MCP server follows the standard MCP architecture:
 
 ```mermaid
 graph LR
@@ -71,8 +72,8 @@ graph LR
 
 ## MCP server types
 
-Dgraph provides two MCP server variants to match your security and usage
-requirements:
+Hypermode Graph provides two MCP server variants to match your security and
+usage requirements:
 
 ### Standard MCP server (`mcp`)
 
@@ -195,7 +196,7 @@ graph TD
 
 Interactive tools for graph operations:
 
-The MCP servers provide the following tools:
+The Hypermode Graph MCP server provide the following tools:
 
 #### `get_schema`
 
@@ -231,7 +232,12 @@ Provides reference queries to aide in query syntax.
 
 ### Resources
 
-The MCP server exposes your graph data as accessible resources:
+The MCP server exposes read only data from your graph as resources:
+
+<Note>
+  Due to current limitations in some MCP clients that don't yet support MCP
+  resources, some tools are exposed as both tools and resources.
+</Note>
 
 #### `dgraph://schema`
 
@@ -244,12 +250,6 @@ Pre-built query patterns for common operations.
 ### Prompts
 
 Pre-configured prompt templates for common graph operations:
-
-- **Data Exploration**: "Analyze the structure and relationships in this graph"
-- **Performance Optimization**: "Suggest improvements for this query
-  performance"
-- **Schema Design**: "Help design an optimal schema for this data model"
-- **Migration Planning**: "Plan a migration strategy for this schema change"
 
 #### `quickstart_prompt`
 
@@ -346,4 +346,3 @@ Join discussions about Graph MCP and get help from the community
 Comprehensive Dgraph documentation and guides
 </Card>
 </CardGroup>
-```
