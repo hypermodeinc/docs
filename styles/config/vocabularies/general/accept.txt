@@ -25,6 +25,7 @@
 [Hh]ypermode
 [Ii]nferencing
 [Ll]og
+[Mm][Cc][Pp]
 [Mm]odus
 [Nn]amespace
 [Nn]amespaces

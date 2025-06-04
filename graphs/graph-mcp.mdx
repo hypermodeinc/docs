@@ -12,13 +12,13 @@ sidebarTitle: "Graph MCP"
 
 The Hypermode Graph MCP (Model Context Protocol) server enables seamless
 integration between your graph database and AI coding assistants like Claude
-Desktop, Cursor, a nd other MCP-compatible tools. Two MCP endpoints are
-available with common tools for AI coding assistants: `mcp` – a server that
-provides tools and data from your Dgraph cluster · `mcp-ro` – a server that
-provides tools and data from your Dgraph cluster in read-only mode
+Desktop, Cursor, and other MCP-compatible tools. Two MCP endpoints are available
+with common tools for AI coding assistants: `mcp` (a server that provides tools
+and data from your Dgraph cluster) and `mcp-ro` (a server that provides tools
+and data from your Dgraph cluster in read-only mode).
 
 <Note>
-  **What is MCP?** The Model Context Protocol is an open standard that enables
+  **What's MCP?** The Model Context Protocol is an open standard that enables
   developers to build secure, two-way connections between their data sources and
   AI-powered tools. Think of it as a universal connector that allows AI
   assistants to understand and interact with your graph data.
@@ -62,13 +62,12 @@ graph LR
 
 **Components:**
 
-- **MCP Host**: Your AI-powered application (Claude Desktop, IDE with AI
-  features)
-- **MCP Client**: Protocol client that maintains connection with the Dgraph
+- **MCP host**: Your AI-powered app (Claude Desktop, IDE with AI features)
+- **MCP client**: Protocol client that maintains connection with the Dgraph
   server
-- **Dgraph MCP Server**: Exposes graph capabilities through standardized MCP
+- **Dgraph MCP server**: Exposes graph capabilities through standardized MCP
   interface
-- **Graph Database**: Your Dgraph cluster (local or on Hypermode)
+- **Graph database**: Your Dgraph cluster (local or on Hypermode)
 
 ## MCP server types
 
@@ -130,7 +129,7 @@ Add the configuration to your AI assistant's settings:
 </Step>
 </Steps>
 
-## Available Capabilities
+## Available capabilities
 
 ```mermaid
 graph TD
@@ -272,21 +271,21 @@ encrypted-media; gyroscope; picture-in-picture"
 
 <Steps>
 <Step title="Understand your data">
-Ask your AI assistant: "What does my graph schema look like and what are the main entity types?"
+Ask your AI assistant: "What does the graph schema look like and what are the main entity types?"
 </Step>
 
-<Step title="Discover Patterns">
-  "Find all users who have more than 10 connections and show me their
-  relationship patterns."
+<Step title="Discover patterns">
+  "Find all users who have more than 10 connections and show their relationship
+  patterns."
 </Step>
 
-<Step title="Analyze Distributions">
-  "What's the distribution of node types in my graph? Are there any outliers or
+<Step title="Analyze distributions">
+  "What's the distribution of node types in the graph? Are there any outliers or
   interesting clusters?"
 </Step>
 
-<Step title="Performance Insights">
-"Which queries are running slowly and how can I optimize them?"
+<Step title="Performance insights">
+"Which queries are running slowly and how can we optimize them?"
 </Step>
 </Steps>
 
@@ -297,16 +296,16 @@ Ask your AI assistant: "What does my graph schema look like and what are the mai
 "I want to model a social network with users, posts, and interactions. What's the optimal schema design?"
 </Step>
 
-<Step title="Query Optimization">
-  "This query is slow: `[paste query]`. How can I improve its performance?"
+<Step title="Query optimization">
+  "This query is slow: `[paste query]`. How can we improve its performance?"
 </Step>
 
-<Step title="Index Recommendations">
-  "Based on my query patterns, what indices should I add to improve
+<Step title="Index recommendations">
+  "Based on the query patterns, what indices should we add to improve
   performance?"
 </Step>
 
-<Step title="Migration Planning">
+<Step title="Migration planning">
 "I need to add a new 'tags' predicate to existing posts. What's the safest migration approach?"
 </Step>
 </Steps>
