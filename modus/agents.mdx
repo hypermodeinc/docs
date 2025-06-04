@@ -18,6 +18,7 @@ operational context.
 - **Resilient**: Graceful recovery from failures
 - **Autonomous**: Can operate independently over extended periods
 - **Actor-based**: Each agent instance runs in isolation
+- **Event-driven**: Streams real-time updates and operational intelligence
 
 ## When to deploy agents
 
@@ -28,6 +29,7 @@ Agents are perfect for:
 - **Stateful operations** that need to remember previous actions
 - **Complex coordination** between different system components
 - **Persistent monitoring** that tracks changes over time
+- **Real-time operations** requiring live status updates and event streaming
 
 ## Agent structure
 
@@ -207,6 +209,191 @@ The agent receives the message, processes it using its internal state and AI
 reasoning, updates its intelligence database, and returns a response—all while
 maintaining persistent memory of every interaction.
 
+## Real-time agent event streaming
+
+For monitoring live operations and receiving real-time intelligence updates,
+agents support event streaming through GraphQL subscriptions. This enables your
+clients to receive instant notifications about operational changes, mission
+progress, and critical alerts.
+
+### Subscribing to agent events
+
+Monitor your agent's real-time activities using the unified event subscription:
+
+```graphql
+subscription {
+  agentEvents(agentId: "agent_abc123xyz") {
+    type
+    payload
+    timestamp
+  }
+}
+```
+
+Your agent streams various types of operational events:
+
+```json
+{
+  "data": {
+    "agentEvents": {
+      "type": "mission_started",
+      "payload": {
+        "missionName": "Deep Intelligence Analysis",
+        "priority": "HIGH",
+        "estimatedDuration": "180s"
+      },
+      "timestamp": "2025-06-04T14:30:00Z"
+    }
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "agentEvents": {
+      "type": "threat_detected",
+      "payload": {
+        "threatLevel": "CRITICAL",
+        "confidence": 0.92,
+        "indicators": ["unusual_traffic", "failed_auth_attempts"],
+        "recommendation": "immediate_investigation"
+      },
+      "timestamp": "2025-06-04T14:31:15Z"
+    }
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "agentEvents": {
+      "type": "analysis_progress",
+      "payload": {
+        "phase": "Processing intelligence data",
+        "progress": 0.65,
+        "briefingsProcessed": 5,
+        "totalBriefings": 8
+      },
+      "timestamp": "2025-06-04T14:32:00Z"
+    }
+  }
+}
+```
+
+### Emitting events from your agent
+
+Agents can broadcast real-time operational intelligence by emitting events
+during their operations:
+
+```go
+func (i *IntelligenceAgent) analyzeIntelligence(
+    data *string,
+) (*string, error) {
+    // Emit mission start event
+    i.EmitEvent("mission_started", map[string]interface{}{
+        "missionName": "Intelligence Analysis",
+        "priority": "HIGH",
+        "briefingData": len(*data),
+    })
+
+    // Store new intelligence in persistent memory
+    i.briefings = append(i.briefings, *data)
+    i.lastContact = time.Now()
+
+    // Emit progress update
+    i.EmitEvent("analysis_progress", map[string]interface{}{
+        "briefingsProcessed": len(i.briefings),
+        "phase": "Processing intelligence data",
+        "progress": 0.3,
+    })
+
+    // Build context from all accumulated intelligence
+    context := strings.Join(i.briefings, "\n")
+
+    // AI analysis using complete operational history
+    model, _ := models.GetModel[openai.ChatModel]("analyst-model")
+
+    systemPrompt := `You are an intelligence analyst.
+        Analyze patterns from accumulated briefings
+        and provide threat assessment.`
+
+    userPrompt := fmt.Sprintf(`All Intelligence:
+        %s
+
+        Provide threat assessment:`,
+        context)
+
+    input, _ := model.CreateInput(
+        openai.NewSystemMessage(systemPrompt),
+        openai.NewUserMessage(userPrompt),
+    )
+
+    // Emit AI processing event
+    i.EmitEvent("ai_analysis_started", map[string]interface{}{
+        "modelName": "analyst-model",
+        "contextSize": len(context),
+        "briefingCount": len(i.briefings),
+    })
+
+    output, _ := model.Invoke(input)
+    analysis := output.Choices[0].Message.Content
+
+    // Update confidence based on data volume
+    i.confidence = float64(len(i.briefings)) / 10.0
+    if i.confidence > 1.0 {
+        i.confidence = 1.0
+    }
+
+    // Check for threat patterns and emit alerts
+    if strings.Contains(strings.ToLower(analysis), "critical") ||
+       strings.Contains(strings.ToLower(analysis), "threat") {
+        i.EmitEvent("threat_detected", map[string]interface{}{
+            "threatLevel": "HIGH",
+            "confidence": i.confidence,
+            "analysis": analysis,
+            "recommendation": "immediate_investigation",
+        })
+    }
+
+    // Emit mission completion
+    i.EmitEvent("mission_completed", map[string]interface{}{
+        "missionName": "Intelligence Analysis",
+        "confidence": i.confidence,
+        "briefingsAnalyzed": len(i.briefings),
+        "status": "SUCCESS",
+    })
+
+    result := fmt.Sprintf(`Analysis complete:
+        %s
+
+        (Confidence: %.2f based on %d briefings)`,
+        analysis,
+        i.confidence,
+        len(i.briefings))
+    return &result, nil
+}
+```
+
+### Event-driven operational patterns
+
+This streaming capability enables sophisticated real-time operational patterns:
+
+**Live Mission Dashboards**: build real-time command centers that show agent
+activities, mission progress, and threat alerts as they happen.
+
+**Reactive Coordination**: other agents or systems can subscribe to events and
+automatically respond to operational changes—enabling true multi-agent
+coordination.
+
+**Operational intelligence**: stream events to monitoring systems, alerting
+platforms, or data lakes for real-time operational awareness and historical
+analysis.
+
+**Progressive Enhancement**: update user interfaces progressively as agents work
+through complex, multi-phase operations without polling or manual refresh.
+
 ### Asynchronous operations
 
 For fire-and-forget operations where you don't need to wait for a response,
@@ -231,10 +418,10 @@ func InitiateBackgroundAnalysis(agentId string, data string) error {
 
 This enables agents to handle long-running operations like:
 
-- Background data processing
-- Scheduled intelligence gathering
-- Multi-phase operations that don't require immediate responses
-- Autonomous monitoring and alerting
+- Background data processing with real-time progress events
+- Scheduled intelligence gathering with status notifications
+- Multi-phase operations that stream intermediate results
+- Autonomous monitoring with instant alert broadcasting
 
 ## Agent message handling
 
@@ -264,99 +451,13 @@ func (i *IntelligenceAgent) OnReceiveMessage(
 ```
 
 Each directive triggers specific operational procedures, with all intelligence
-automatically maintained in the agent's secure memory.
+automatically maintained in the agent's secure memory and real-time events
+streamed to subscribed clients.
 
 ## Processing operations with AI intelligence
 
 Here's how agents handle field operations while maintaining persistent state and
 using AI models for analysis:
-
-```go
-func (i *IntelligenceAgent) analyzeIntelligence(
-    data *string,
-) (*string, error) {
-    if data == nil {
-        return nil, fmt.Errorf("no intelligence data provided")
-    }
-
-    // Store new intelligence in persistent memory
-    i.briefings = append(i.briefings, *data)
-    i.lastContact = time.Now()
-
-    // Build context from all accumulated intelligence
-    context := strings.Join(i.briefings, "\n")
-
-    // AI analysis using complete operational history
-    model, _ := models.GetModel[openai.ChatModel]("analyst-model")
-
-    systemPrompt := `You are an intelligence analyst.
-        Analyze patterns from accumulated briefings
-        and provide threat assessment.`
-
-    userPrompt := fmt.Sprintf(`All Intelligence:
-        %s
-
-        Provide threat assessment:`,
-        context)
-
-    input, _ := model.CreateInput(
-        openai.NewSystemMessage(systemPrompt),
-        openai.NewUserMessage(userPrompt),
-    )
-
-    output, _ := model.Invoke(input)
-    analysis := output.Choices[0].Message.Content
-
-    // Update confidence based on data volume
-    i.confidence = float64(len(i.briefings)) / 10.0
-    if i.confidence > 1.0 {
-        i.confidence = 1.0
-    }
-
-    result := fmt.Sprintf(`Analysis complete:
-        %s
-
-        (Confidence: %.2f based on %d briefings)`,
-        analysis,
-        i.confidence,
-        len(i.briefings))
-    return &result, nil
-}
-
-func (i *IntelligenceAgent) getThreatAssessment() (*string, error) {
-    if len(i.briefings) == 0 {
-        result := `No intelligence processed yet.
-            Deploy to field for analysis.`
-        return &result, nil
-    }
-
-    result := fmt.Sprintf(`Current threat assessment:
-        %d briefings analyzed.
-
-        Confidence level: %.2f.
-        Agent operational.`,
-        len(i.briefings),
-        i.confidence)
-    return &result, nil
-}
-```
-
-What makes this operationally superior:
-
-- No transmission of massive state files on every contact
-- No reconstruction of intelligence history from scratch
-- AI models see complete operational context, not just current input
-- No risk of losing analytical data during communication failures
-- Intelligence quality improves with each briefing processed
-
-The agent maintains its complete operational state and intelligence database in
-secure memory, accessing it instantly when processing new directives and
-invoking AI models.
-
-### Long-running mission operations
-
-For complex multi-phase operations, agents can update their state continuously
-while providing real-time progress tracking:
 
 ```go
 func (i *IntelligenceAgent) analyzeBackgroundIntel(data *string) (*string, error) {
@@ -368,12 +469,30 @@ func (i *IntelligenceAgent) analyzeBackgroundIntel(data *string) (*string, error
     }
     i.missionLog = []string{"Mission initiated: Deep intelligence analysis"}
 
+    // Emit operation start event
+    i.EmitEvent("background_analysis_started", map[string]interface{}{
+        "missionName": i.currentMission.Name,
+        "startTime": i.currentMission.StartTime,
+        "dataSize": len(*data),
+    })
+
     // Phase 1: Data Processing
     i.updateMissionLog("Phase 1: Processing raw intelligence data...")
+    i.EmitEvent("phase_update", map[string]interface{}{
+        "phase": "data_processing",
+        "progress": 0.25,
+        "message": "Processing raw intelligence data",
+    })
+
     i.briefings = append(i.briefings, *data)
 
-    // Phase 2: AI Analysis (simplified for brevity)
+    // Phase 2: AI Analysis
     i.updateMissionLog("Phase 2: Generating threat assessment...")
+    i.EmitEvent("phase_update", map[string]interface{}{
+        "phase": "ai_analysis",
+        "progress": 0.75,
+        "message": "Generating threat assessment using AI models",
+    })
     // ... AI model invocation ...
 
     // Phase 3: Mission Complete
@@ -381,6 +500,15 @@ func (i *IntelligenceAgent) analyzeBackgroundIntel(data *string) (*string, error
     i.currentMission.Duration = time.Since(i.currentMission.StartTime)
     i.updateMissionLog("Mission completed successfully")
 
+    // Emit completion event
+    i.EmitEvent("background_analysis_completed", map[string]interface{}{
+        "missionName": i.currentMission.Name,
+        "duration": i.currentMission.Duration.Seconds(),
+        "briefingsProcessed": len(i.briefings),
+        "status": "SUCCESS",
+    })
+
+    result := "Background analysis completed successfully"
     return &result, nil
 }
 
@@ -388,21 +516,25 @@ func (i *IntelligenceAgent) updateMissionLog(message string) {
     timestamp := time.Now().Format("15:04:05")
     logEntry := fmt.Sprintf("[%s] %s", timestamp, message)
     i.missionLog = append(i.missionLog, logEntry)
+
+    // Stream log updates in real-time
+    i.EmitEvent("mission_log_update", map[string]interface{}{
+        "timestamp": timestamp,
+        "message": message,
+        "logEntry": logEntry,
+    })
 }
 ```
 
 This demonstrates how agents maintain state across complex, multi-step
-operations while providing detailed progress tracking for monitoring systems.
+operations while providing detailed progress tracking and real-time event
+streaming for monitoring systems.
 
 ## Monitoring ongoing operations
 
-<Note>
-  Real-time GraphQL subscriptions for agent monitoring are coming soon. For now,
-  you can monitor agent progress using GraphQL polling.
-</Note>
-
-When you initiate long-running operations with `SendMessageAsync`, you can
-monitor progress by checking the agent's state:
+Real-time GraphQL subscriptions provide instant visibility into agent
+operations. You can monitor agent progress by subscribing to their event
+streams:
 
 ```go
 func CheckAnalysisProgress(agentId string) (*AnalysisStatus, error) {
@@ -458,9 +590,11 @@ func (i *IntelligenceAgent) getOperationalStatus() (*string, error) {
 }
 ```
 
-Your client can poll this status endpoint via GraphQL:
+Your client can either poll this status endpoint via GraphQL or subscribe to
+real-time events for instant updates:
 
 ```graphql
+# Polling approach
 query MonitorAnalysis($agentId: String!) {
   checkAnalysisProgress(agentId: $agentId) {
     phase
@@ -470,30 +604,28 @@ query MonitorAnalysis($agentId: String!) {
     isComplete
   }
 }
-```
 
-Response:
-
-```json
-{
-  "data": {
-    "checkAnalysisProgress": {
-      "phase": "Deep Intelligence Analysis",
-      "progress": 0.75,
-      "currentTask": "[15:42:33] Phase 2: Generating threat assessment...",
-      "estimatedTimeRemaining": 45,
-      "isComplete": false
-    }
+# Real-time streaming approach (recommended)
+subscription LiveAgentMonitoring($agentId: String!) {
+  agentEvents(agentId: $agentId) {
+    type
+    payload
+    timestamp
   }
 }
 ```
 
-This polling approach enables:
+The streaming approach provides superior operational intelligence:
 
-- **Progress tracking**: Monitor completion percentage and current phase
-- **User feedback**: Show progress bars and status updates in your UI
-- **Operation coordination**: Know when to proceed to next steps
-- **Error detection**: Identify when operations stall or fail
+- **Instant Updates**: Receive events the moment they occur, not on polling
+  intervals
+- **Rich Context**: Events include detailed payload data about operational state
+- **Event Filtering**: Subscribe to specific agent IDs and filter event types
+  client-side
+- **Operational History**: Complete timeline of agent activities for audit and
+  debugging
+- **Scalable Monitoring**: Monitor multiple agents simultaneously with
+  individual subscriptions
 
 ## The power of intelligent persistence
 
@@ -512,7 +644,9 @@ This combination creates agents that:
 
 The agent doesn't just remember—it **learns and becomes more intelligent with
 every interaction**. AI models see the complete operational picture, enabling
-sophisticated pattern recognition impossible with stateless functions.
+sophisticated pattern recognition impossible with stateless functions. Real-time
+event streaming ensures operational teams have instant visibility into agent
+intelligence and decision-making processes.
 
 ## State persistence
 
@@ -555,6 +689,14 @@ func (i *IntelligenceAgent) OnInitialize() error {
     // Called when agent is first deployed to the field
     i.lastContact = time.Now()
     i.confidence = 0.0
+
+    // Emit deployment event
+    i.EmitEvent("agent_deployed", map[string]interface{}{
+        "agentId": i.Id(),
+        "deploymentTime": i.lastContact,
+        "status": "OPERATIONAL",
+    })
+
     fmt.Printf(`Intelligence Agent %s deployed
         and ready for analysis`, i.Id())
     return nil
@@ -587,20 +729,21 @@ func (i *IntelligenceAgent) OnTerminate() error {
 
 1. Client calls `DeployAnalyst()` → receives agent ID `"agent_12345"`
 2. Client stores `"agent_12345"` for future communications
-3. Client calls `SubmitIntelligence("agent_12345", "network anomaly detected")`
-   → agent stores data and uses AI to analyze patterns from complete
-   intelligence history
-4. Agent invokes AI model with accumulated context → generates sophisticated
-   threat assessment based on all previous briefings
-5. Client calls `GetThreatAssessment("agent_12345")` → agent returns AI-powered
+3. Client subscribes to real-time events: `agentEvents(agentId: "agent_12345")`
+4. Client calls `SubmitIntelligence("agent_12345", "network anomaly detected")`
+   → agent stores data, emits events, and uses AI to analyze patterns
+5. Client receives real-time events: mission started, analysis progress, threat
+   alerts
+6. Agent invokes AI model with accumulated context → generates sophisticated
+   threat assessment and streams completion events
+7. Client calls `GetThreatAssessment("agent_12345")` → agent returns AI-powered
    analysis from persistent memory
-6. For long-running analysis, client calls
+8. For long-running analysis, client calls
    `InitiateBackgroundAnalysis("agent_12345", data)` → agent processes
-   asynchronously
-7. Client polls `CheckAnalysisProgress("agent_12345")` → monitors progress until
-   complete
-8. Agent persists across system restarts, maintaining complete intelligence
-   database and learned patterns
+   asynchronously while streaming progress events
+9. Client monitors real-time progress through event subscription without polling
+10. Agent persists across system restarts, maintaining complete intelligence
+    database and event streaming capabilities
 
 **Important**: clients must store the agent ID returned from deployment
 functions to communicate with that specific agent instance. Each agent maintains
@@ -618,17 +761,19 @@ functions:
 - **Mission recovery**: Resume operations from last secure checkpoint instead of
   starting over
 - **Network coordination**: Manage complex multi-agent operations with shared
-  intelligence
+  intelligence and real-time event coordination
 - **Adaptive learning**: AI models become more effective as agents accumulate
   operational data
-- **Asynchronous operations**: Handle long-running missions without blocking
-  other operations
-- **Real-time monitoring**: Track progress and status of ongoing operations
+- **Real-time streaming**: Broadcast operational intelligence instantly to
+  monitoring systems and coordinating agents
 - **Event-driven coordination**: React to operational changes and mission
-  updates
+  updates through real-time event streams
+- **Progressive operations**: Update user interfaces and trigger downstream
+  processes as agents work through complex missions
 
 Agents represent the evolution from stateless functions to elite operatives that
-maintain complete operational continuity and build intelligence over time.
-They're the foundation for building intelligence networks that never lose track
-of their missions and become smarter with every interaction, no matter what
-happens in the field.
+maintain complete operational continuity, build intelligence over time, and
+provide real-time operational awareness. They're the foundation for building
+intelligence networks that never lose track of their missions, become smarter
+with every interaction, and keep operational teams informed through live event
+streaming—no matter what happens in the field.
