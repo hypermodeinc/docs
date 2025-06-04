@@ -493,6 +493,7 @@ func (i *IntelligenceAgent) analyzeBackgroundIntel(data *string) (*string, error
         "progress": 0.75,
         "message": "Generating threat assessment using AI models",
     })
+
     // ... AI model invocation ...
 
     // Phase 3: Mission Complete
@@ -689,13 +690,6 @@ func (i *IntelligenceAgent) OnInitialize() error {
     // Called when agent is first deployed to the field
     i.lastContact = time.Now()
     i.confidence = 0.0
-
-    // Emit deployment event
-    i.EmitEvent("agent_deployed", map[string]interface{}{
-        "agentId": i.Id(),
-        "deploymentTime": i.lastContact,
-        "status": "OPERATIONAL",
-    })
 
     fmt.Printf(`Intelligence Agent %s deployed
         and ready for analysis`, i.Id())
