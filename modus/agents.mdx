@@ -50,11 +50,11 @@ import (
 type IntelligenceAgent struct {
     agents.AgentBase
 
-    briefings      []string     // Intelligence history
-    confidence     float64      // Analytical confidence
-    lastContact    time.Time
-    currentMission *MissionPhase // Track long-running operations
-    missionLog     []string     // Operational progress log
+    intelligenceReports []string     // Matrix surveillance data
+    threatLevel         float64      // Current threat assessment
+    lastContact         time.Time
+    currentMission      *MissionPhase // Track long-running operations
+    missionLog          []string     // Operational progress log
 }
 
 type MissionPhase struct {
@@ -64,15 +64,15 @@ type MissionPhase struct {
     Complete    bool
 }
 
-func (i *IntelligenceAgent) Name() string {
+func (r *IntelligenceAgent) Name() string {
     return "IntelligenceAgent"
 }
 ```
 
 The agent embeds `agents.AgentBase`, which provides all the infrastructure for
 state management, secure communications, and mission persistence. Your
-operational data—intelligence briefings, confidence metrics, contact logs—lives
-as fields in the struct, automatically preserved across all interactions.
+operational data—intelligence reports, threat assessments, contact logs—lives as
+fields in the struct, automatically preserved across all interactions.
 
 ## Spawning agents through functions
 
@@ -87,7 +87,7 @@ func init() {
 }
 
 // Deploy a new agent instance - this becomes a GraphQL mutation
-func DeployAnalyst() (string, error) {
+func DeployAgent() (string, error) {
     agentInfo, err := agents.Start("IntelligenceAgent")
     if err != nil {
         return "", err
@@ -102,7 +102,7 @@ When you call this function through GraphQL, it returns a unique agent ID:
 
 ```graphql
 mutation {
-  deployAnalyst
+  deployAgent
 }
 ```
 
@@ -111,7 +111,7 @@ Response:
 ```json
 {
   "data": {
-    "deployAnalyst": "agent_abc123xyz"
+    "deployAgent": "agent_neo_001"
   }
 }
 ```
@@ -135,11 +135,11 @@ Once deployed, you communicate with your agent using its unique ID. Create
 functions that send messages to specific agent instances:
 
 ```go
-func SubmitIntelligence(agentId string, data string) (string, error) {
+func ImportActivity(agentId string, activityData string) (string, error) {
     result, err := agents.SendMessage(
         agentId,
-        "analyze_intelligence",
-        agents.WithData(data),
+        "matrix_surveillance",
+        agents.WithData(activityData),
     )
     if err != nil {
         return "", err
@@ -150,8 +150,8 @@ func SubmitIntelligence(agentId string, data string) (string, error) {
     return *result, nil
 }
 
-func GetThreatAssessment(agentId string) (string, error) {
-    result, err := agents.SendMessage(agentId, "threat_assessment", nil)
+func GetThreatStatus(agentId string) (string, error) {
+    result, err := agents.SendMessage(agentId, "threat_assessment")
     if err != nil {
         return "", err
     }
@@ -166,9 +166,9 @@ These functions become GraphQL mutations that you can call with your agent's ID:
 
 ```graphql
 mutation {
-  submitIntelligence(
-    agentId: "agent_abc123xyz"
-    data: "Suspicious network activity detected"
+  importActivity(
+    agentId: "agent_neo_001"
+    activityData: "Anomalous Agent Smith replication detected in Sector 7"
   )
 }
 ```
@@ -178,17 +178,17 @@ Response:
 ```json
 {
   "data": {
-    "submitIntelligence": "Analysis complete.
-      Threat pattern matches previous incident #7823.
-      Confidence: 0.85 based on 3 briefings.
-      Recommend immediate investigation."
+    "importActivity": "Matrix surveillance complete.
+      Agent Smith pattern matches previous incident in the Loop.
+      Threat level: 0.89 based on 3 intelligence reports.
+      Recommend immediate evasive protocols."
   }
 }
 ```
 
 ```graphql
 query {
-  getThreatAssessment(agentId: "agent_abc123xyz")
+  getThreatStatus(agentId: "agent_neo_001")
 }
 ```
 
@@ -197,10 +197,10 @@ Response:
 ```json
 {
   "data": {
-    "getThreatAssessment": "Current threat assessment:
-      3 briefings analyzed.
-      Confidence level: 0.85.
-      Agent operational."
+    "getThreatStatus": "Current threat assessment:
+      3 intelligence reports analyzed.
+      Threat level: 0.89.
+      Agent operational in the Matrix."
   }
 }
 ```
@@ -208,6 +208,215 @@ Response:
 The agent receives the message, processes it using its internal state and AI
 reasoning, updates its intelligence database, and returns a response—all while
 maintaining persistent memory of every interaction.
+
+## Agent message handling
+
+Agents process operational directives through their secure message handling
+system:
+
+```go
+func (r *IntelligenceAgent) OnReceiveMessage(
+    msgName string,
+    data *string,
+) (*string, error) {
+    switch msgName {
+    case "matrix_surveillance":
+        return r.analyzeMatrixActivity(data)
+    case "background_reconnaissance":
+        return r.performBackgroundRecon(data)
+    case "threat_assessment":
+        return r.getThreatAssessment()
+    case "get_status":
+        return r.getOperationalStatus()
+    case "intelligence_history":
+        return r.getIntelligenceHistory()
+    default:
+        return nil, fmt.Errorf("unrecognized directive: %s", msgName)
+    }
+}
+```
+
+Each directive triggers specific operational procedures, with all intelligence
+automatically maintained in the agent's secure memory.
+
+## Processing operations with AI intelligence
+
+Here's how agents handle field operations while maintaining persistent state and
+using AI models for analysis:
+
+```go
+func (r *IntelligenceAgent) analyzeMatrixActivity(data *string) (*string, error) {
+    // Store new intelligence in persistent memory
+    r.intelligenceReports = append(r.intelligenceReports, *data)
+    r.lastContact = time.Now()
+
+    // Build context from all accumulated intelligence
+    context := strings.Join(r.intelligenceReports, "\n")
+
+    // AI analysis using complete operational history
+    model, _ := models.GetModel[openai.ChatModel]("analyst-model")
+
+    systemPrompt := `You are a resistance operative in the Matrix.
+        Analyze patterns from accumulated surveillance reports
+        and provide threat assessment for anomalous Agent behavior.`
+
+    userPrompt := fmt.Sprintf(`All Matrix Intelligence:
+        %s
+
+        Provide threat assessment:`,
+        context)
+
+    input, _ := model.CreateInput(
+        openai.NewSystemMessage(systemPrompt),
+        openai.NewUserMessage(userPrompt),
+    )
+
+    output, _ := model.Invoke(input)
+    analysis := output.Choices[0].Message.Content
+
+    // Update threat level based on data volume and AI analysis
+    r.threatLevel = float64(len(r.intelligenceReports)) / 10.0
+    if r.threatLevel > 1.0 {
+        r.threatLevel = 1.0
+    }
+
+    // Boost threat level for critical AI analysis
+    if strings.Contains(strings.ToLower(analysis), "critical") ||
+       strings.Contains(strings.ToLower(analysis), "agent smith") {
+        r.threatLevel = math.Min(r.threatLevel + 0.2, 1.0)
+    }
+
+    result := fmt.Sprintf(`Matrix surveillance complete:
+        %s
+
+        (Threat level: %.2f based on %d intelligence reports)`,
+        analysis,
+        r.threatLevel,
+        len(r.intelligenceReports))
+    return &result, nil
+}
+```
+
+This demonstrates how agents maintain state across complex operations while
+using AI models with the full context of accumulated intelligence.
+
+## The power of intelligent persistence
+
+This combination creates agents that:
+
+<Note>
+  **First Analysis:** "Anomalous activity detected. Limited context available.
+  (Threat level: 0.10 based on 1 intelligence report)"
+</Note>
+
+<Note>
+  **After Multiple Reports:** "Pattern confirmed across 5 previous incidents.
+  Agent Smith replication rate exceeding normal parameters. Immediate extraction
+  recommended. (Threat level: 0.89 based on 8 intelligence reports)"
+</Note>
+
+The agent doesn't just remember—it **learns and becomes more intelligent with
+every interaction**. AI models see the complete operational picture, enabling
+sophisticated pattern recognition impossible with stateless functions.
+
+## State persistence
+
+Agents automatically preserve their operational state through Modus's built-in
+intelligence management:
+
+```go
+func (r *IntelligenceAgent) GetState() *string {
+    reportsData := strings.Join(r.intelligenceReports, "|")
+    state := fmt.Sprintf("%.2f|%s|%d",
+        r.threatLevel,
+        reportsData,
+        r.lastContact.Unix())
+    return &state
+}
+
+func (r *IntelligenceAgent) SetState(data *string) {
+    if data == nil {
+        return
+    }
+
+    parts := strings.Split(*data, "|")
+    if len(parts) >= 3 {
+        r.threatLevel, _ = strconv.ParseFloat(parts[0], 64)
+        if parts[1] != "" {
+            r.intelligenceReports = strings.Split(parts[1], "|")
+        }
+        timestamp, _ := strconv.ParseInt(parts[2], 10, 64)
+        r.lastContact = time.Unix(timestamp, 0)
+    }
+}
+```
+
+## Agent lifecycle
+
+Agents have built-in operational protocols for mission continuity:
+
+```go
+func (r *IntelligenceAgent) OnInitialize() error {
+    // Called when agent is first awakened in the Matrix
+    r.lastContact = time.Now()
+    r.threatLevel = 0.0
+
+    fmt.Printf(`Resistance Agent %s awakened
+        and ready for Matrix surveillance`, r.Id())
+    return nil
+}
+
+func (r *IntelligenceAgent) OnResume() error {
+    // Called when agent reestablishes contact with complete intel intact
+    fmt.Printf(`Agent back online in the Matrix.
+        %d intelligence reports processed.
+        Threat level: %.2f`,
+        len(r.intelligenceReports),
+        r.threatLevel)
+    return nil
+}
+
+func (r *IntelligenceAgent) OnSuspend() error {
+    // Called before agent goes dark
+    return nil
+}
+
+func (r *IntelligenceAgent) OnTerminate() error {
+    // Called before final extraction from the Matrix
+    fmt.Printf(`Agent %s extracted from Matrix.
+        Intelligence archive preserved.`, r.Id())
+    return nil
+}
+```
+
+## Asynchronous operations
+
+For fire-and-forget operations where you don't need to wait for a response,
+agents support asynchronous messaging:
+
+```go
+func InitiateBackgroundRecon(agentId string, data string) error {
+    // Send message asynchronously - agent processes in background
+    err := agents.SendMessageAsync(
+        agentId,
+        "background_reconnaissance",
+        agents.WithData(data),
+    )
+    if err != nil {
+        return err
+    }
+
+    // Operation initiated - agent continues processing independently
+    return nil
+}
+```
+
+This enables agents to handle long-running operations like:
+
+- Background Matrix monitoring with status updates
+- Scheduled intelligence gathering
+- Multi-phase operations that continue independently
+- Autonomous surveillance with alert notifications
 
 ## Real-time agent event streaming
 
@@ -222,7 +431,7 @@ Monitor your agent's real-time activities using the unified event subscription:
 
 ```graphql
 subscription {
-  agentEvents(agentId: "agent_abc123xyz") {
+  agentEvents(agentId: "agent_neo_001") {
     type
     payload
     timestamp
@@ -238,7 +447,7 @@ Your agent streams various types of operational events:
     "agentEvents": {
       "type": "mission_started",
       "payload": {
-        "missionName": "Deep Intelligence Analysis",
+        "missionName": "Deep Matrix Surveillance",
         "priority": "HIGH",
         "estimatedDuration": "180s"
       },
@@ -252,12 +461,12 @@ Your agent streams various types of operational events:
 {
   "data": {
     "agentEvents": {
-      "type": "threat_detected",
+      "type": "agent_threat_detected",
       "payload": {
         "threatLevel": "CRITICAL",
         "confidence": 0.92,
-        "indicators": ["unusual_traffic", "failed_auth_attempts"],
-        "recommendation": "immediate_investigation"
+        "indicators": ["agent_smith_replication", "unusual_code_patterns"],
+        "recommendation": "immediate_extraction"
       },
       "timestamp": "2025-06-04T14:31:15Z"
     }
@@ -269,12 +478,12 @@ Your agent streams various types of operational events:
 {
   "data": {
     "agentEvents": {
-      "type": "analysis_progress",
+      "type": "surveillance_progress",
       "payload": {
-        "phase": "Processing intelligence data",
+        "phase": "Processing Matrix surveillance data",
         "progress": 0.65,
-        "briefingsProcessed": 5,
-        "totalBriefings": 8
+        "reportsProcessed": 5,
+        "totalReports": 8
       },
       "timestamp": "2025-06-04T14:32:00Z"
     }
@@ -285,41 +494,41 @@ Your agent streams various types of operational events:
 ### Emitting events from your agent
 
 Agents can broadcast real-time operational intelligence by emitting events
-during their operations:
+during their operations. Let's enhance our Matrix surveillance example:
 
 ```go
-func (i *IntelligenceAgent) analyzeIntelligence(
+func (r *IntelligenceAgent) analyzeMatrixActivity(
     data *string,
 ) (*string, error) {
     // Emit mission start event
-    i.EmitEvent("mission_started", map[string]interface{}{
-        "missionName": "Intelligence Analysis",
+    r.EmitEvent("mission_started", map[string]interface{}{
+        "missionName": "Matrix Surveillance Analysis",
         "priority": "HIGH",
-        "briefingData": len(*data),
+        "activityData": len(*data),
     })
 
     // Store new intelligence in persistent memory
-    i.briefings = append(i.briefings, *data)
-    i.lastContact = time.Now()
+    r.intelligenceReports = append(r.intelligenceReports, *data)
+    r.lastContact = time.Now()
 
     // Emit progress update
-    i.EmitEvent("analysis_progress", map[string]interface{}{
-        "briefingsProcessed": len(i.briefings),
-        "phase": "Processing intelligence data",
+    r.EmitEvent("surveillance_progress", map[string]interface{}{
+        "reportsProcessed": len(r.intelligenceReports),
+        "phase": "Processing Matrix surveillance data",
         "progress": 0.3,
     })
 
     // Build context from all accumulated intelligence
-    context := strings.Join(i.briefings, "\n")
+    context := strings.Join(r.intelligenceReports, "\n")
 
     // AI analysis using complete operational history
     model, _ := models.GetModel[openai.ChatModel]("analyst-model")
 
-    systemPrompt := `You are an intelligence analyst.
-        Analyze patterns from accumulated briefings
-        and provide threat assessment.`
+    systemPrompt := `You are a resistance operative in the Matrix.
+        Analyze patterns from accumulated surveillance reports
+        and provide threat assessment for anomalous Agent behavior.`
 
-    userPrompt := fmt.Sprintf(`All Intelligence:
+    userPrompt := fmt.Sprintf(`All Matrix Intelligence:
         %s
 
         Provide threat assessment:`,
@@ -331,48 +540,120 @@ func (i *IntelligenceAgent) analyzeIntelligence(
     )
 
     // Emit AI processing event
-    i.EmitEvent("ai_analysis_started", map[string]interface{}{
+    r.EmitEvent("ai_analysis_started", map[string]interface{}{
         "modelName": "analyst-model",
         "contextSize": len(context),
-        "briefingCount": len(i.briefings),
+        "reportCount": len(r.intelligenceReports),
     })
 
     output, _ := model.Invoke(input)
     analysis := output.Choices[0].Message.Content
 
-    // Update confidence based on data volume
-    i.confidence = float64(len(i.briefings)) / 10.0
-    if i.confidence > 1.0 {
-        i.confidence = 1.0
+    // Update threat level based on data volume and AI analysis
+    r.threatLevel = float64(len(r.intelligenceReports)) / 10.0
+    if r.threatLevel > 1.0 {
+        r.threatLevel = 1.0
     }
 
-    // Check for threat patterns and emit alerts
+    // Check for Agent threats and emit alerts
     if strings.Contains(strings.ToLower(analysis), "critical") ||
-       strings.Contains(strings.ToLower(analysis), "threat") {
-        i.EmitEvent("threat_detected", map[string]interface{}{
+       strings.Contains(strings.ToLower(analysis), "agent smith") {
+        r.threatLevel = math.Min(r.threatLevel + 0.2, 1.0)
+        r.EmitEvent("agent_threat_detected", map[string]interface{}{
             "threatLevel": "HIGH",
-            "confidence": i.confidence,
+            "confidence": r.threatLevel,
             "analysis": analysis,
-            "recommendation": "immediate_investigation",
+            "recommendation": "immediate_extraction",
         })
     }
 
     // Emit mission completion
-    i.EmitEvent("mission_completed", map[string]interface{}{
-        "missionName": "Intelligence Analysis",
-        "confidence": i.confidence,
-        "briefingsAnalyzed": len(i.briefings),
+    r.EmitEvent("mission_completed", map[string]interface{}{
+        "missionName": "Matrix Surveillance Analysis",
+        "confidence": r.threatLevel,
+        "reportsAnalyzed": len(r.intelligenceReports),
         "status": "SUCCESS",
     })
 
-    result := fmt.Sprintf(`Analysis complete:
+    result := fmt.Sprintf(`Matrix surveillance complete:
         %s
 
-        (Confidence: %.2f based on %d briefings)`,
+        (Threat level: %.2f based on %d intelligence reports)`,
         analysis,
-        i.confidence,
-        len(i.briefings))
+        r.threatLevel,
+        len(r.intelligenceReports))
     return &result, nil
+}
+```
+
+Let's also enhance our background reconnaissance to demonstrate multi-phase
+operations:
+
+```go
+func (r *IntelligenceAgent) performBackgroundRecon(data *string) (*string, error) {
+    // Initialize multi-phase operation
+    r.currentMission = &MissionPhase{
+        Name:      "Deep Matrix Reconnaissance",
+        StartTime: time.Now(),
+        Complete:  false,
+    }
+    r.missionLog = []string{"Mission initiated: Deep Matrix reconnaissance"}
+
+    // Emit operation start event
+    r.EmitEvent("background_recon_started", map[string]interface{}{
+        "missionName": r.currentMission.Name,
+        "startTime": r.currentMission.StartTime,
+        "dataSize": len(*data),
+    })
+
+    // Phase 1: Data Processing
+    r.updateMissionLog("Phase 1: Processing raw Matrix data...")
+    r.EmitEvent("phase_update", map[string]interface{}{
+        "phase": "data_processing",
+        "progress": 0.25,
+        "message": "Processing raw Matrix surveillance data",
+    })
+
+    r.intelligenceReports = append(r.intelligenceReports, *data)
+
+    // Phase 2: AI Analysis
+    r.updateMissionLog("Phase 2: Generating threat assessment...")
+    r.EmitEvent("phase_update", map[string]interface{}{
+        "phase": "ai_analysis",
+        "progress": 0.75,
+        "message": "Generating threat assessment using AI analysis",
+    })
+
+    // ... AI model invocation ...
+
+    // Phase 3: Mission Complete
+    r.currentMission.Complete = true
+    r.currentMission.Duration = time.Since(r.currentMission.StartTime)
+    r.updateMissionLog("Mission completed successfully")
+
+    // Emit completion event
+    r.EmitEvent("background_recon_completed", map[string]interface{}{
+        "missionName": r.currentMission.Name,
+        "duration": r.currentMission.Duration.Seconds(),
+        "reportsProcessed": len(r.intelligenceReports),
+        "status": "SUCCESS",
+    })
+
+    result := "Background Matrix reconnaissance completed successfully"
+    return &result, nil
+}
+
+func (r *IntelligenceAgent) updateMissionLog(message string) {
+    timestamp := time.Now().Format("15:04:05")
+    logEntry := fmt.Sprintf("[%s] %s", timestamp, message)
+    r.missionLog = append(r.missionLog, logEntry)
+
+    // Stream log updates in real-time
+    r.EmitEvent("mission_log_update", map[string]interface{}{
+        "timestamp": timestamp,
+        "message": message,
+        "logEntry": logEntry,
+    })
 }
 ```
 
@@ -394,162 +675,23 @@ analysis.
 **Progressive Enhancement**: update user interfaces progressively as agents work
 through complex, multi-phase operations without polling or manual refresh.
 
-### Asynchronous operations
-
-For fire-and-forget operations where you don't need to wait for a response,
-agents support asynchronous messaging:
-
-```go
-func InitiateBackgroundAnalysis(agentId string, data string) error {
-    // Send message asynchronously - agent processes in background
-    err := agents.SendMessageAsync(
-        agentId,
-        "analyze_background_intel",
-        agents.WithData(data),
-    )
-    if err != nil {
-        return err
-    }
-
-    // Operation initiated - agent continues processing independently
-    return nil
-}
-```
-
-This enables agents to handle long-running operations like:
-
-- Background data processing with real-time progress events
-- Scheduled intelligence gathering with status notifications
-- Multi-phase operations that stream intermediate results
-- Autonomous monitoring with instant alert broadcasting
-
-## Agent message handling
-
-Agents process operational directives through their secure message handling
-system:
-
-```go
-func (i *IntelligenceAgent) OnReceiveMessage(
-    msgName string,
-    data *string,
-) (*string, error) {
-    switch msgName {
-    case "analyze_intelligence":
-        return i.analyzeIntelligence(data)
-    case "analyze_background_intel":
-        return i.analyzeBackgroundIntel(data)
-    case "threat_assessment":
-        return i.getThreatAssessment()
-    case "get_status":
-        return i.getOperationalStatus()
-    case "intelligence_history":
-        return i.getIntelligenceHistory()
-    default:
-        return nil, fmt.Errorf("unrecognized directive: %s", msgName)
-    }
-}
-```
-
-Each directive triggers specific operational procedures, with all intelligence
-automatically maintained in the agent's secure memory and real-time events
-streamed to subscribed clients.
-
-## Processing operations with AI intelligence
-
-Here's how agents handle field operations while maintaining persistent state and
-using AI models for analysis:
-
-```go
-func (i *IntelligenceAgent) analyzeBackgroundIntel(data *string) (*string, error) {
-    // Initialize multi-phase operation
-    i.currentMission = &MissionPhase{
-        Name:      "Deep Intelligence Analysis",
-        StartTime: time.Now(),
-        Complete:  false,
-    }
-    i.missionLog = []string{"Mission initiated: Deep intelligence analysis"}
-
-    // Emit operation start event
-    i.EmitEvent("background_analysis_started", map[string]interface{}{
-        "missionName": i.currentMission.Name,
-        "startTime": i.currentMission.StartTime,
-        "dataSize": len(*data),
-    })
-
-    // Phase 1: Data Processing
-    i.updateMissionLog("Phase 1: Processing raw intelligence data...")
-    i.EmitEvent("phase_update", map[string]interface{}{
-        "phase": "data_processing",
-        "progress": 0.25,
-        "message": "Processing raw intelligence data",
-    })
-
-    i.briefings = append(i.briefings, *data)
-
-    // Phase 2: AI Analysis
-    i.updateMissionLog("Phase 2: Generating threat assessment...")
-    i.EmitEvent("phase_update", map[string]interface{}{
-        "phase": "ai_analysis",
-        "progress": 0.75,
-        "message": "Generating threat assessment using AI models",
-    })
-
-    // ... AI model invocation ...
-
-    // Phase 3: Mission Complete
-    i.currentMission.Complete = true
-    i.currentMission.Duration = time.Since(i.currentMission.StartTime)
-    i.updateMissionLog("Mission completed successfully")
-
-    // Emit completion event
-    i.EmitEvent("background_analysis_completed", map[string]interface{}{
-        "missionName": i.currentMission.Name,
-        "duration": i.currentMission.Duration.Seconds(),
-        "briefingsProcessed": len(i.briefings),
-        "status": "SUCCESS",
-    })
-
-    result := "Background analysis completed successfully"
-    return &result, nil
-}
-
-func (i *IntelligenceAgent) updateMissionLog(message string) {
-    timestamp := time.Now().Format("15:04:05")
-    logEntry := fmt.Sprintf("[%s] %s", timestamp, message)
-    i.missionLog = append(i.missionLog, logEntry)
-
-    // Stream log updates in real-time
-    i.EmitEvent("mission_log_update", map[string]interface{}{
-        "timestamp": timestamp,
-        "message": message,
-        "logEntry": logEntry,
-    })
-}
-```
-
-This demonstrates how agents maintain state across complex, multi-step
-operations while providing detailed progress tracking and real-time event
-streaming for monitoring systems.
-
 ## Monitoring ongoing operations
 
-Real-time GraphQL subscriptions provide instant visibility into agent
-operations. You can monitor agent progress by subscribing to their event
-streams:
+You can also poll agent status directly through dedicated functions:
 
 ```go
-func CheckAnalysisProgress(agentId string) (*AnalysisStatus, error) {
+func CheckMissionProgress(agentId string) (*MissionStatus, error) {
     result, err := agents.SendMessage(agentId, "get_status")
     if err != nil {
         return nil, err
     }
 
-    var status AnalysisStatus
+    var status MissionStatus
     json.Unmarshal([]byte(*result), &status)
     return &status, nil
 }
 
-type AnalysisStatus struct {
+type MissionStatus struct {
     Phase          string    `json:"phase"`
     Progress       float64   `json:"progress"`
     CurrentTask    string    `json:"current_task"`
@@ -562,26 +704,26 @@ The agent tracks its operational status using the mission state we defined
 earlier:
 
 ```go
-func (i *IntelligenceAgent) getOperationalStatus() (*string, error) {
-    var status AnalysisStatus
+func (r *IntelligenceAgent) getOperationalStatus() (*string, error) {
+    var status MissionStatus
 
-    if i.currentMission == nil {
-        status = AnalysisStatus{
+    if r.currentMission == nil {
+        status = MissionStatus{
             Phase:       "Standby",
             Progress:    1.0,
-            CurrentTask: "Awaiting mission directives",
+            CurrentTask: "Awaiting mission directives in the Matrix",
             IsComplete:  true,
         }
     } else {
         // Calculate progress based on mission log entries
-        progress := float64(len(i.missionLog)) / 4.0 // 4 phases expected
+        progress := float64(len(r.missionLog)) / 4.0 // 4 phases expected
         if progress > 1.0 { progress = 1.0 }
 
-        status = AnalysisStatus{
-            Phase:       i.currentMission.Name,
+        status = MissionStatus{
+            Phase:       r.currentMission.Name,
             Progress:    progress,
-            CurrentTask: i.missionLog[len(i.missionLog)-1], // Latest entry
-            IsComplete:  i.currentMission.Complete,
+            CurrentTask: r.missionLog[len(r.missionLog)-1], // Latest entry
+            IsComplete:  r.currentMission.Complete,
         }
     }
 
@@ -596,8 +738,8 @@ real-time events for instant updates:
 
 ```graphql
 # Polling approach
-query MonitorAnalysis($agentId: String!) {
-  checkAnalysisProgress(agentId: $agentId) {
+query MonitorMission($agentId: String!) {
+  checkMissionProgress(agentId: $agentId) {
     phase
     progress
     currentTask
@@ -628,112 +770,23 @@ The streaming approach provides superior operational intelligence:
 - **Scalable Monitoring**: Monitor multiple agents simultaneously with
   individual subscriptions
 
-## The power of intelligent persistence
-
-This combination creates agents that:
-
-<Note>
-  **First Analysis:** "New threat detected. Limited context available.
-  (Confidence: 0.10 based on 1 briefing)"
-</Note>
-
-<Note>
-  **After Multiple Briefings:** "Pattern confirmed across 5 previous incidents.
-  This matches Advanced Persistent Threat signatures. Immediate escalation
-  recommended. (Confidence: 0.85 based on 8 briefings)"
-</Note>
-
-The agent doesn't just remember—it **learns and becomes more intelligent with
-every interaction**. AI models see the complete operational picture, enabling
-sophisticated pattern recognition impossible with stateless functions. Real-time
-event streaming ensures operational teams have instant visibility into agent
-intelligence and decision-making processes.
-
-## State persistence
-
-Agents automatically preserve their operational state through Modus's built-in
-intelligence management:
-
-```go
-func (i *IntelligenceAgent) GetState() *string {
-    briefingsData := strings.Join(i.briefings, "|")
-    state := fmt.Sprintf("%.2f|%s|%d",
-        i.confidence,
-        briefingsData,
-        i.lastContact.Unix())
-    return &state
-}
-
-func (i *IntelligenceAgent) SetState(data *string) {
-    if data == nil {
-        return
-    }
-
-    parts := strings.Split(*data, "|")
-    if len(parts) >= 3 {
-        i.confidence, _ = strconv.ParseFloat(parts[0], 64)
-        if parts[1] != "" {
-            i.briefings = strings.Split(parts[1], "|")
-        }
-        timestamp, _ := strconv.ParseInt(parts[2], 10, 64)
-        i.lastContact = time.Unix(timestamp, 0)
-    }
-}
-```
-
-## Agent lifecycle
-
-Agents have built-in operational protocols for mission continuity:
-
-```go
-func (i *IntelligenceAgent) OnInitialize() error {
-    // Called when agent is first deployed to the field
-    i.lastContact = time.Now()
-    i.confidence = 0.0
-
-    fmt.Printf(`Intelligence Agent %s deployed
-        and ready for analysis`, i.Id())
-    return nil
-}
-
-func (i *IntelligenceAgent) OnResume() error {
-    // Called when agent reestablishes contact with complete intel intact
-    fmt.Printf(`Agent back online.
-        %d briefings processed.
-        Confidence level: %.2f`,
-        len(i.briefings),
-        i.confidence)
-    return nil
-}
-
-func (i *IntelligenceAgent) OnSuspend() error {
-    // Called before agent goes dark
-    return nil
-}
-
-func (i *IntelligenceAgent) OnTerminate() error {
-    // Called before final extraction
-    fmt.Printf(`Agent %s extracted.
-        Intelligence archive preserved.`, i.Id())
-    return nil
-}
-```
-
 ## Agent workflow example
 
-1. Client calls `DeployAnalyst()` → receives agent ID `"agent_12345"`
-2. Client stores `"agent_12345"` for future communications
-3. Client subscribes to real-time events: `agentEvents(agentId: "agent_12345")`
-4. Client calls `SubmitIntelligence("agent_12345", "network anomaly detected")`
+1. Client calls `DeployAgent()` → receives agent ID `"agent_neo_001"`
+2. Client stores `"agent_neo_001"` for future communications
+3. Client subscribes to real-time events:
+   `agentEvents(agentId: "agent_neo_001")`
+4. Client calls
+   `ImportActivity("agent_neo_001", "anomalous Agent Smith replication detected")`
    → agent stores data, emits events, and uses AI to analyze patterns
 5. Client receives real-time events: mission started, analysis progress, threat
    alerts
 6. Agent invokes AI model with accumulated context → generates sophisticated
    threat assessment and streams completion events
-7. Client calls `GetThreatAssessment("agent_12345")` → agent returns AI-powered
+7. Client calls `GetThreatStatus("agent_neo_001")` → agent returns AI-powered
    analysis from persistent memory
 8. For long-running analysis, client calls
-   `InitiateBackgroundAnalysis("agent_12345", data)` → agent processes
+   `InitiateBackgroundRecon("agent_neo_001", data)` → agent processes
    asynchronously while streaming progress events
 9. Client monitors real-time progress through event subscription without polling
 10. Agent persists across system restarts, maintaining complete intelligence
