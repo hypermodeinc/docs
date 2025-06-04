@@ -64,7 +64,7 @@ type MissionPhase struct {
     Complete    bool
 }
 
-func (r *IntelligenceAgent) Name() string {
+func (a *IntelligenceAgent) Name() string {
     return "IntelligenceAgent"
 }
 ```
@@ -215,21 +215,21 @@ Agents process operational directives through their secure message handling
 system:
 
 ```go
-func (r *IntelligenceAgent) OnReceiveMessage(
+func (a *IntelligenceAgent) OnReceiveMessage(
     msgName string,
     data *string,
 ) (*string, error) {
     switch msgName {
     case "matrix_surveillance":
-        return r.analyzeMatrixActivity(data)
+        return a.analyzeMatrixActivity(data)
     case "background_reconnaissance":
-        return r.performBackgroundRecon(data)
+        return a.performBackgroundRecon(data)
     case "threat_assessment":
-        return r.getThreatAssessment()
+        return a.getThreatAssessment()
     case "get_status":
-        return r.getOperationalStatus()
+        return a.getOperationalStatus()
     case "intelligence_history":
-        return r.getIntelligenceHistory()
+        return a.getIntelligenceHistory()
     default:
         return nil, fmt.Errorf("unrecognized directive: %s", msgName)
     }
@@ -245,13 +245,13 @@ Here's how agents handle field operations while maintaining persistent state and
 using AI models for analysis:
 
 ```go
-func (r *IntelligenceAgent) analyzeMatrixActivity(data *string) (*string, error) {
+func (a *IntelligenceAgent) analyzeMatrixActivity(data *string) (*string, error) {
     // Store new intelligence in persistent memory
-    r.intelligenceReports = append(r.intelligenceReports, *data)
-    r.lastContact = time.Now()
+    a.intelligenceReports = append(a.intelligenceReports, *data)
+    a.lastContact = time.Now()
 
     // Build context from all accumulated intelligence
-    context := strings.Join(r.intelligenceReports, "\n")
+    context := strings.Join(a.intelligenceReports, "\n")
 
     // AI analysis using complete operational history
     model, _ := models.GetModel[openai.ChatModel]("analyst-model")
@@ -275,15 +275,15 @@ func (r *IntelligenceAgent) analyzeMatrixActivity(data *string) (*string, error)
     analysis := output.Choices[0].Message.Content
 
     // Update threat level based on data volume and AI analysis
-    r.threatLevel = float64(len(r.intelligenceReports)) / 10.0
-    if r.threatLevel > 1.0 {
-        r.threatLevel = 1.0
+    a.threatLevel = float64(len(a.intelligenceReports)) / 10.0
+    if a.threatLevel > 1.0 {
+        a.threatLevel = 1.0
     }
 
     // Boost threat level for critical AI analysis
     if strings.Contains(strings.ToLower(analysis), "critical") ||
        strings.Contains(strings.ToLower(analysis), "agent smith") {
-        r.threatLevel = math.Min(r.threatLevel + 0.2, 1.0)
+        a.threatLevel = math.Min(a.threatLevel + 0.2, 1.0)
     }
 
     result := fmt.Sprintf(`Matrix surveillance complete:
@@ -291,8 +291,8 @@ func (r *IntelligenceAgent) analyzeMatrixActivity(data *string) (*string, error)
 
         (Threat level: %.2f based on %d intelligence reports)`,
         analysis,
-        r.threatLevel,
-        len(r.intelligenceReports))
+        a.threatLevel,
+        len(a.intelligenceReports))
     return &result, nil
 }
 ```
@@ -325,28 +325,28 @@ Agents automatically preserve their operational state through Modus's built-in
 intelligence management:
 
 ```go
-func (r *IntelligenceAgent) GetState() *string {
-    reportsData := strings.Join(r.intelligenceReports, "|")
+func (a *IntelligenceAgent) GetState() *string {
+    reportsData := strings.Join(a.intelligenceReports, "|")
     state := fmt.Sprintf("%.2f|%s|%d",
-        r.threatLevel,
+        a.threatLevel,
         reportsData,
-        r.lastContact.Unix())
+        a.lastContact.Unix())
     return &state
 }
 
-func (r *IntelligenceAgent) SetState(data *string) {
+func (a *IntelligenceAgent) SetState(data *string) {
     if data == nil {
         return
     }
 
     parts := strings.Split(*data, "|")
     if len(parts) >= 3 {
-        r.threatLevel, _ = strconv.ParseFloat(parts[0], 64)
+        a.threatLevel, _ = strconv.ParseFloat(parts[0], 64)
         if parts[1] != "" {
-            r.intelligenceReports = strings.Split(parts[1], "|")
+            a.intelligenceReports = strings.Split(parts[1], "|")
         }
         timestamp, _ := strconv.ParseInt(parts[2], 10, 64)
-        r.lastContact = time.Unix(timestamp, 0)
+        a.lastContact = time.Unix(timestamp, 0)
     }
 }
 ```
@@ -356,35 +356,35 @@ func (r *IntelligenceAgent) SetState(data *string) {
 Agents have built-in operational protocols for mission continuity:
 
 ```go
-func (r *IntelligenceAgent) OnInitialize() error {
+func (a *IntelligenceAgent) OnInitialize() error {
     // Called when agent is first awakened in the Matrix
-    r.lastContact = time.Now()
-    r.threatLevel = 0.0
+    a.lastContact = time.Now()
+    a.threatLevel = 0.0
 
     fmt.Printf(`Resistance Agent %s awakened
-        and ready for Matrix surveillance`, r.Id())
+        and ready for Matrix surveillance`, a.Id())
     return nil
 }
 
-func (r *IntelligenceAgent) OnResume() error {
+func (a *IntelligenceAgent) OnResume() error {
     // Called when agent reestablishes contact with complete intel intact
     fmt.Printf(`Agent back online in the Matrix.
         %d intelligence reports processed.
         Threat level: %.2f`,
-        len(r.intelligenceReports),
-        r.threatLevel)
+        len(a.intelligenceReports),
+        a.threatLevel)
     return nil
 }
 
-func (r *IntelligenceAgent) OnSuspend() error {
+func (a *IntelligenceAgent) OnSuspend() error {
     // Called before agent goes dark
     return nil
 }
 
-func (r *IntelligenceAgent) OnTerminate() error {
+func (a *IntelligenceAgent) OnTerminate() error {
     // Called before final extraction from the Matrix
     fmt.Printf(`Agent %s extracted from Matrix.
-        Intelligence archive preserved.`, r.Id())
+        Intelligence archive preserved.`, a.Id())
     return nil
 }
 ```
@@ -497,29 +497,29 @@ Agents can broadcast real-time operational intelligence by emitting events
 during their operations. Let's enhance our Matrix surveillance example:
 
 ```go
-func (r *IntelligenceAgent) analyzeMatrixActivity(
+func (a *IntelligenceAgent) analyzeMatrixActivity(
     data *string,
 ) (*string, error) {
     // Emit mission start event
-    r.EmitEvent("mission_started", map[string]interface{}{
+    a.EmitEvent("mission_started", map[string]interface{}{
         "missionName": "Matrix Surveillance Analysis",
         "priority": "HIGH",
         "activityData": len(*data),
     })
 
     // Store new intelligence in persistent memory
-    r.intelligenceReports = append(r.intelligenceReports, *data)
-    r.lastContact = time.Now()
+    a.intelligenceReports = append(a.intelligenceReports, *data)
+    a.lastContact = time.Now()
 
     // Emit progress update
-    r.EmitEvent("surveillance_progress", map[string]interface{}{
-        "reportsProcessed": len(r.intelligenceReports),
+    a.EmitEvent("surveillance_progress", map[string]interface{}{
+        "reportsProcessed": len(a.intelligenceReports),
         "phase": "Processing Matrix surveillance data",
         "progress": 0.3,
     })
 
     // Build context from all accumulated intelligence
-    context := strings.Join(r.intelligenceReports, "\n")
+    context := strings.Join(a.intelligenceReports, "\n")
 
     // AI analysis using complete operational history
     model, _ := models.GetModel[openai.ChatModel]("analyst-model")
@@ -540,38 +540,38 @@ func (r *IntelligenceAgent) analyzeMatrixActivity(
     )
 
     // Emit AI processing event
-    r.EmitEvent("ai_analysis_started", map[string]interface{}{
+    a.EmitEvent("ai_analysis_started", map[string]interface{}{
         "modelName": "analyst-model",
         "contextSize": len(context),
-        "reportCount": len(r.intelligenceReports),
+        "reportCount": len(a.intelligenceReports),
     })
 
     output, _ := model.Invoke(input)
     analysis := output.Choices[0].Message.Content
 
     // Update threat level based on data volume and AI analysis
-    r.threatLevel = float64(len(r.intelligenceReports)) / 10.0
-    if r.threatLevel > 1.0 {
-        r.threatLevel = 1.0
+    a.threatLevel = float64(len(a.intelligenceReports)) / 10.0
+    if a.threatLevel > 1.0 {
+        a.threatLevel = 1.0
     }
 
     // Check for Agent threats and emit alerts
     if strings.Contains(strings.ToLower(analysis), "critical") ||
        strings.Contains(strings.ToLower(analysis), "agent smith") {
-        r.threatLevel = math.Min(r.threatLevel + 0.2, 1.0)
-        r.EmitEvent("agent_threat_detected", map[string]interface{}{
+        a.threatLevel = math.Min(a.threatLevel + 0.2, 1.0)
+        a.EmitEvent("agent_threat_detected", map[string]interface{}{
             "threatLevel": "HIGH",
-            "confidence": r.threatLevel,
+            "confidence": a.threatLevel,
             "analysis": analysis,
             "recommendation": "immediate_extraction",
         })
     }
 
     // Emit mission completion
-    r.EmitEvent("mission_completed", map[string]interface{}{
+    a.EmitEvent("mission_completed", map[string]interface{}{
         "missionName": "Matrix Surveillance Analysis",
-        "confidence": r.threatLevel,
-        "reportsAnalyzed": len(r.intelligenceReports),
+        "confidence": a.threatLevel,
+        "reportsAnalyzed": len(a.intelligenceReports),
         "status": "SUCCESS",
     })
 
@@ -580,80 +580,9 @@ func (r *IntelligenceAgent) analyzeMatrixActivity(
 
         (Threat level: %.2f based on %d intelligence reports)`,
         analysis,
-        r.threatLevel,
-        len(r.intelligenceReports))
+        a.threatLevel,
+        len(a.intelligenceReports))
     return &result, nil
-}
-```
-
-Let's also enhance our background reconnaissance to demonstrate multi-phase
-operations:
-
-```go
-func (r *IntelligenceAgent) performBackgroundRecon(data *string) (*string, error) {
-    // Initialize multi-phase operation
-    r.currentMission = &MissionPhase{
-        Name:      "Deep Matrix Reconnaissance",
-        StartTime: time.Now(),
-        Complete:  false,
-    }
-    r.missionLog = []string{"Mission initiated: Deep Matrix reconnaissance"}
-
-    // Emit operation start event
-    r.EmitEvent("background_recon_started", map[string]interface{}{
-        "missionName": r.currentMission.Name,
-        "startTime": r.currentMission.StartTime,
-        "dataSize": len(*data),
-    })
-
-    // Phase 1: Data Processing
-    r.updateMissionLog("Phase 1: Processing raw Matrix data...")
-    r.EmitEvent("phase_update", map[string]interface{}{
-        "phase": "data_processing",
-        "progress": 0.25,
-        "message": "Processing raw Matrix surveillance data",
-    })
-
-    r.intelligenceReports = append(r.intelligenceReports, *data)
-
-    // Phase 2: AI Analysis
-    r.updateMissionLog("Phase 2: Generating threat assessment...")
-    r.EmitEvent("phase_update", map[string]interface{}{
-        "phase": "ai_analysis",
-        "progress": 0.75,
-        "message": "Generating threat assessment using AI analysis",
-    })
-
-    // ... AI model invocation ...
-
-    // Phase 3: Mission Complete
-    r.currentMission.Complete = true
-    r.currentMission.Duration = time.Since(r.currentMission.StartTime)
-    r.updateMissionLog("Mission completed successfully")
-
-    // Emit completion event
-    r.EmitEvent("background_recon_completed", map[string]interface{}{
-        "missionName": r.currentMission.Name,
-        "duration": r.currentMission.Duration.Seconds(),
-        "reportsProcessed": len(r.intelligenceReports),
-        "status": "SUCCESS",
-    })
-
-    result := "Background Matrix reconnaissance completed successfully"
-    return &result, nil
-}
-
-func (r *IntelligenceAgent) updateMissionLog(message string) {
-    timestamp := time.Now().Format("15:04:05")
-    logEntry := fmt.Sprintf("[%s] %s", timestamp, message)
-    r.missionLog = append(r.missionLog, logEntry)
-
-    // Stream log updates in real-time
-    r.EmitEvent("mission_log_update", map[string]interface{}{
-        "timestamp": timestamp,
-        "message": message,
-        "logEntry": logEntry,
-    })
 }
 ```
 
@@ -704,10 +633,10 @@ The agent tracks its operational status using the mission state we defined
 earlier:
 
 ```go
-func (r *IntelligenceAgent) getOperationalStatus() (*string, error) {
+func (a *IntelligenceAgent) getOperationalStatus() (*string, error) {
     var status MissionStatus
 
-    if r.currentMission == nil {
+    if a.currentMission == nil {
         status = MissionStatus{
             Phase:       "Standby",
             Progress:    1.0,
@@ -716,14 +645,14 @@ func (r *IntelligenceAgent) getOperationalStatus() (*string, error) {
         }
     } else {
         // Calculate progress based on mission log entries
-        progress := float64(len(r.missionLog)) / 4.0 // 4 phases expected
+        progress := float64(len(a.missionLog)) / 4.0 // 4 phases expected
         if progress > 1.0 { progress = 1.0 }
 
         status = MissionStatus{
-            Phase:       r.currentMission.Name,
+            Phase:       a.currentMission.Name,
             Progress:    progress,
-            CurrentTask: r.missionLog[len(r.missionLog)-1], // Latest entry
-            IsComplete:  r.currentMission.Complete,
+            CurrentTask: a.missionLog[len(a.missionLog)-1], // Latest entry
+            IsComplete:  a.currentMission.Complete,
         }
     }
 
