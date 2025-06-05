@@ -1,60 +1,57 @@
 ---
 title: "What is a Function?"
-description: "Learn about your basic operatives in Modus"
+description: "Learn about functions in Modus"
 "og:title": "What is a Function? - Modus"
 ---
 
 ## Functions in Modus
 
-Functions in Modus are your reliable field operatives—specialized agents who
-handle specific missions with precision and speed. Like elite reconnaissance
-units, they get in, complete their objective, and report back. No unnecessary
-complications, no lingering presence, just pure operational efficiency.
+Functions in Modus are stateless, request-response operations that handle
+specific tasks with precision and speed. They get in, complete their objective,
+and report back—no unnecessary complications, no lingering presence, just pure
+operational efficiency.
 
 You can think of a function as an endpoint—each function you write automatically
 becomes a callable API endpoint that external systems can access.
 
-Functions are the backbone of your intelligence network, handling everything
-from data gathering to AI-powered analysis, all while maintaining perfect
-operational discipline.
+Functions are the backbone of your app, handling everything from data gathering
+to AI-powered analysis, all while maintaining clean, predictable behavior.
 
-## Operational profile
+## Core characteristics
 
 Functions are stateless, request-response operations designed for fast,
-predictable missions. They're your go-to operatives when you need quick
-intelligence gathering, data processing, or tactical strikes without maintaining
-ongoing surveillance between operations.
+predictable execution. They're your go-to choice when you need quick data
+processing, external API integration, or computational tasks without maintaining
+state between requests.
 
-### Core capabilities
+### Key capabilities
 
-- **Mission-focused**: Each operation is independent with no memory of previous
-  assignments
-- **Lightning fast**: Optimized for sub-second mission completion
-- **Infinitely scalable**: Deploy as many operatives as needed
-- **Clean operations**: Straightforward request-in, intel-out pattern
+- **Stateless**: Each operation is independent with no memory of previous
+  requests
+- **Lightning fast**: Optimized for sub-second response times
+- **Infinitely scalable**: Deploy as many instances as needed
+- **Clean operations**: Straightforward request-in, response-out pattern
 - **Auto-deployed**: Exposed automatically as GraphQL queries or mutations
 
 ## How functions become endpoints
 
-When you deploy your operatives, Modus automatically exposes them through a
-GraphQL API. Your functions become either **queries** (for gathering
-intelligence) or **mutations** (for operational changes) based on their mission
-type.
+When you deploy your functions, Modus automatically exposes them through a
+GraphQL API. Your functions become either **queries** (for data retrieval) or
+**mutations** (for data modifications) based on their operation type.
 
-### Intelligence gathering queries
+### Data retrieval queries
 
-Most functions become GraphQL queries—perfect for reconnaissance and data
-retrieval:
+Most functions become GraphQL queries—perfect for fetching and processing data:
 
 ```go
 // This function becomes a GraphQL query
 func GatherThreatIntelligence(source string) (*ThreatReport, error) {
-    // Intelligence gathering operation
+    // Data gathering and processing operation
     return fetchThreatData(source)
 }
 ```
 
-Your operatives are now accessible via GraphQL:
+Your functions are now accessible via GraphQL:
 
 ```graphql
 query {
@@ -80,10 +77,10 @@ query {
 }
 ```
 
-### Operational change mutations
+### Data modification mutations
 
 Functions that modify data automatically become GraphQL mutations. Modus detects
-these by their mission prefixes:
+these by their operation prefixes:
 
 ```go
 // This becomes a GraphQL mutation
@@ -93,7 +90,7 @@ func CreateSecurityAlert(data AlertInput) (*SecurityAlert, error) {
 }
 ```
 
-Now you can execute operational changes:
+Now you can execute data modifications:
 
 ```graphql
 mutation {
@@ -128,10 +125,10 @@ mutation {
 Functions starting with `create`, `update`, `delete`, and similar action words
 automatically become mutations.
 
-## Mission example: field conditions intelligence analysis
+## Example: Weather intelligence analysis
 
-Here's a complete tactical operation that demonstrates how functions integrate
-external APIs with AI models for intelligence analysis:
+Here's a complete example that demonstrates how functions integrate external
+APIs with AI models for intelligent data processing:
 
 ```go
 package main
@@ -153,7 +150,7 @@ type WeatherIntel struct {
 
 const modelName = "text-generator"
 
-// Operative: Gather weather intelligence and provide tactical analysis
+// Function: Gather weather data and provide tactical analysis
 func GatherWeatherIntelligence(city string) (*WeatherIntel, error) {
     // Fetch weather data from OpenWeatherMap API
     url := fmt.Sprintf(
@@ -167,7 +164,7 @@ func GatherWeatherIntelligence(city string) (*WeatherIntel, error) {
     }
     if !response.Ok() {
         return nil, fmt.Errorf(
-            "weather intelligence gathering failed: %d %s",
+            "weather data retrieval failed: %d %s",
             response.Status,
             response.StatusText,
         )
@@ -198,7 +195,7 @@ func GatherWeatherIntelligence(city string) (*WeatherIntel, error) {
         conditions,
     )
     if err != nil {
-        fmt.Printf("Tactical analysis failed for %s: %v\n", weatherData.Name, err)
+        fmt.Printf("Analysis failed for %s: %v\n", weatherData.Name, err)
         analysis = "Analysis unavailable - proceed with standard protocols"
     }
 
@@ -247,7 +244,7 @@ func analyzeTacticalConditions(city string, temp float64, conditions string) (st
 }
 ```
 
-This operative automatically becomes available as a GraphQL query:
+This function automatically becomes available as a GraphQL query:
 
 ```graphql
 query {
@@ -260,7 +257,7 @@ query {
 }
 ```
 
-You'll receive a tactical intelligence report like:
+You'll receive an intelligence report like:
 
 ```json
 {
@@ -277,7 +274,7 @@ You'll receive a tactical intelligence report like:
 }
 ```
 
-### Deploying your operative
+### Setting up the function
 
 To use this function, you'll need to:
 
@@ -312,21 +309,20 @@ Set your API key in `.env.dev.local`:
 MODUS_WEATHER_API_API_KEY=your_openweathermap_api_key_here
 ```
 
-## When to deploy agents
+## When to use agents instead
 
-Functions are perfect for most tactical operations, but when you need persistent
-surveillance, complex multi-phase operations, or operatives that remember every
-detail of ongoing investigations, it's time to deploy your
-[agents](/modus/agents).
+Functions are perfect for most computational tasks, but when you need persistent
+state, complex multi-step workflows, or processes that remember details across
+multiple interactions, it's time to consider [agents](/modus/agents).
 
-Consider upgrading to agents when missions require:
+Consider upgrading to agents when your use case requires:
 
-- **Operational memory** across multiple engagements
-- **Conversation intelligence** that builds over time
-- **Multi-phase operations** spanning days or weeks
-- **Recovery protocols** from mission failures
-- **Continuous monitoring** with state preservation
+- **Persistent memory** across multiple requests
+- **Conversation context** that builds over time
+- **Multi-step workflows** spanning extended periods
+- **Recovery from failures** with state preservation
+- **Continuous monitoring** with context retention
 
-Your functions form the tactical backbone of your intelligence operations—fast,
-reliable, and always ready for the next mission. They handle the day-to-day
-operations while your agents manage the long-term strategic initiatives.
+Your functions form the API backbone of your app—fast, reliable, and always
+ready for the next request. They handle the immediate computational needs while
+your agents manage the long-term stateful processes.
