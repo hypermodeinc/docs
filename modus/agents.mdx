@@ -252,7 +252,7 @@ func (a *IntelligenceAgent) analyzeMatrixActivity(data *string) (*string, error)
     a.lastContact = time.Now()
 
     // Build context from all accumulated intelligence
-    context := strings.Join(a.intelligenceReports, "\n")
+    accumulatedReports := strings.Join(a.intelligenceReports, "\n")
 
     // AI analysis using complete operational history
     model, _ := models.GetModel[openai.ChatModel]("analyst-model")
@@ -265,7 +265,7 @@ func (a *IntelligenceAgent) analyzeMatrixActivity(data *string) (*string, error)
         %s
 
         Provide threat assessment:`,
-        context)
+        accumulatedReports)
 
     input, _ := model.CreateInput(
         openai.NewSystemMessage(systemPrompt),
@@ -520,7 +520,7 @@ func (a *IntelligenceAgent) analyzeMatrixActivity(
     })
 
     // Build context from all accumulated intelligence
-    context := strings.Join(a.intelligenceReports, "\n")
+    accumulatedReports := strings.Join(a.intelligenceReports, "\n")
 
     // AI analysis using complete operational history
     model, _ := models.GetModel[openai.ChatModel]("analyst-model")
@@ -533,7 +533,7 @@ func (a *IntelligenceAgent) analyzeMatrixActivity(
         %s
 
         Provide threat assessment:`,
-        context)
+        accumulatedReports)
 
     input, _ := model.CreateInput(
         openai.NewSystemMessage(systemPrompt),
@@ -543,7 +543,7 @@ func (a *IntelligenceAgent) analyzeMatrixActivity(
     // Emit AI processing event
     a.EmitEvent("ai_analysis_started", any{
         "modelName": "analyst-model",
-        "contextSize": len(context),
+        "contextSize": len(accumulatedReports),
         "reportCount": len(a.intelligenceReports),
     })
 
