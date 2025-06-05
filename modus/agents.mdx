@@ -727,32 +727,6 @@ The streaming approach provides superior operational intelligence:
 - **Scalable Monitoring**: Monitor multiple agents simultaneously with
   individual subscriptions
 
-## Agent workflow example
-
-1. Client calls `DeployAgent()` → receives agent ID `"agent_neo_001"`
-2. Client stores `"agent_neo_001"` for future communications
-3. Client subscribes to real-time events:
-   `agentEvents(agentId: "agent_neo_001")`
-4. Client calls
-   `ImportActivity("agent_neo_001", "anomalous Agent Smith replication detected")`
-   → agent stores data, emits events, and uses AI to analyze patterns
-5. Client receives real-time events: mission started, analysis progress, threat
-   alerts
-6. Agent invokes AI model with accumulated context → generates sophisticated
-   threat assessment and streams completion events
-7. Client calls `GetThreatStatus("agent_neo_001")` → agent returns AI-powered
-   analysis from persistent memory
-8. For long-running analysis, client calls
-   `InitiateBackgroundRecon("agent_neo_001", data)` → agent processes
-   asynchronously while streaming progress events
-9. Client monitors real-time progress through event subscription without polling
-10. Agent persists across system restarts, maintaining complete intelligence
-    database and event streaming capabilities
-
-**Important**: clients must store the agent ID returned from deployment
-functions to communicate with that specific agent instance. Each agent maintains
-its own independent state and can only be accessed through its unique ID.
-
 ## Beyond simple operations
 
 Agents enable sophisticated operational patterns impossible with stateless
