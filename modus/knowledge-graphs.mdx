@@ -8,11 +8,11 @@ description:
 
 ## Knowledge graphs in Modus
 
-Your operatives need more than just memory—they need intelligence networks.
-While agents maintain their own operational state and memory across missions,
-knowledge graphs provide something fundamentally different: shared institutional
-knowledge that captures relationships between entities, events, and intelligence
-across your entire organization.
+Your applications need more than just individual memory—they need shared
+organizational knowledge. While agents maintain their own operational state and
+memory across interactions, knowledge graphs provide something fundamentally
+different: shared institutional knowledge that captures relationships between
+entities, events, and data across your entire app.
 
 At Hypermode, we recognize that knowledge graphs aren't just storage—they're
 becoming critical infrastructure for next-generation AI systems. That's why
@@ -20,29 +20,26 @@ we've invested deeply in Dgraph, bringing enterprise-grade graph capabilities to
 Modus applications.
 
 This is where knowledge graphs transform your Modus deployment from isolated
-operatives into a coordinated intelligence network with shared institutional
-memory.
+processes into a coordinated system with shared institutional memory.
 
-## What are intelligence networks?
+## What are knowledge networks?
 
-Intelligence networks in Modus combine:
+Knowledge networks in Modus combine:
 
-- **Agent state**: personal operational memory that each agent maintains across
-  missions
-- **Knowledge graphs**: shared institutional intelligence that captures
-  relationships between entities, events, and intelligence across your
-  organization
-- **Functions**: rapid tactical operations for data processing and analysis
-- **AI models**: advanced pattern recognition and decision-making intelligence
+- **Agent state**: personal memory that each agent maintains across interactions
+- **Knowledge graphs**: shared organizational knowledge that captures
+  relationships between entities, events, and data across your entire app
+- **Functions**: rapid operations for data processing and analysis
+- **AI models**: advanced pattern recognition and decision-making capabilities
 
-Think of it as the difference between what an individual operative remembers
-versus what your intelligence agency knows. Agent state is personal memory—what
-happened to this specific operative, what conversations they've had, what tasks
-they're tracking. Knowledge graphs are institutional intelligence—how threats
-relate to each other, which indicators connect to which actors, what patterns
-emerge across all operations.
+Think of it as the difference between what an individual process remembers
+versus what your organization knows. Agent state is personal memory—what
+happened to this specific agent, what conversations they've had, what tasks
+they're tracking. Knowledge graphs are organizational intelligence—how entities
+relate to each other, which patterns connect to which outcomes, what
+relationships emerge across all operations.
 
-## Setting up your intelligence infrastructure
+## Setting up your knowledge infrastructure
 
 First, connect to your knowledge graph by adding this to your `modus.json`:
 
@@ -70,18 +67,18 @@ Set your credentials in `.env.dev.local`:
 MODUS_DGRAPH_API_KEY=your_graph_api_key_here
 ```
 
-## Building an intelligence operation
+## Building a comprehensive system
 
-Let's walk through a realistic intelligence scenario that demonstrates how all
-these components work together. You're building a system to track anomalous
-Agent behavior in the simulated reality. The operation needs to:
+Let's walk through a realistic scenario that demonstrates how all these
+components work together. You're building a system to track anomalous Agent
+behavior in the simulated reality. The system needs to:
 
 1. Rapidly import new Agent sightings and behavioral data
 2. Find patterns across historical Agent encounters
 3. Coordinate ongoing surveillance operations
 4. Provide strategic analysis to the resistance
 
-### Step 1: rapid intelligence import
+### Step 1: Rapid data import
 
 When new Agent activity is detected in the Matrix, you need to process it
 quickly. This is perfect for a stateless function:
@@ -103,7 +100,7 @@ func ImportAgentSighting(sighting AgentSighting) (*string, error) {
         return nil, err
     }
 
-    // Store in knowledge graph - builds institutional intelligence
+    // Store in knowledge graph - builds organizational knowledge
     mutation := dgraph.NewMutation().WithSetJson(fmt.Sprintf(`{
         "dgraph.type": "AgentSighting",
         "sighting_id": "%s",
@@ -151,7 +148,7 @@ func analyzeAgentWithAI(behavior string) (string, error) {
 }
 ```
 
-Now let's deploy this intelligence import function and test it:
+Now let's deploy this data import function and test it:
 
 ```graphql
 mutation {
@@ -180,7 +177,7 @@ mutation {
 }
 ```
 
-### Step 2: strategic analysis using institutional knowledge
+### Step 2: Strategic analysis using organizational knowledge
 
 Now that we've got the Agent sighting data in our knowledge graph, let's analyze
 the broader threat landscape:
@@ -194,7 +191,7 @@ type ThreatAnalysisResponse struct {
 }
 
 func AnalyzeAgentPatterns(timeRange string) (*ThreatAnalysisResponse, error) {
-    // Query institutional knowledge - traverses relationships
+    // Query organizational knowledge - traverses relationships
     query := dgraph.NewQuery(`
         query analyzeAgents($since: string) {
             sightings(func: ge(timestamp, $since)) {
@@ -269,7 +266,7 @@ func extractActiveAgents(sightings []AgentSightingData) []string { /* ... */ }
 func generateRecommendations(count int) []string { /* ... */ }
 ```
 
-Let's query our surveillance intelligence data:
+Let's query our surveillance data:
 
 ```graphql
 query {
@@ -303,11 +300,11 @@ query {
 }
 ```
 
-### Step 3: automated intelligence processing with asynchronous messaging
+### Step 3: Automated processing with asynchronous coordination
 
 Now let's enhance our system to automatically coordinate surveillance when new
-intelligence arrives. We'll deploy persistent surveillance agents and upgrade
-our import function to trigger them:
+data arrives. We'll deploy persistent surveillance agents and upgrade our import
+function to trigger them:
 
 ```go
 type SurveillanceAgent struct {
@@ -343,7 +340,7 @@ func (s *SurveillanceAgent) OnReceiveMessage(
 }
 
 func (s *SurveillanceAgent) processNewIntelligence() (*string, error) {
-    // Query knowledge graph for latest intelligence since last sweep
+    // Query knowledge graph for latest data since last sweep
     query := dgraph.NewQuery(`
         query getRecentSightings($since: string) {
             sightings(func: ge(timestamp, $since)) {
@@ -372,7 +369,7 @@ func (s *SurveillanceAgent) processNewIntelligence() (*string, error) {
         s.RecentActivities = s.RecentActivities[1:]
     }
 
-    result := fmt.Sprintf(`Intelligence processed automatically.
+    result := fmt.Sprintf(`Data processed automatically.
                            Tracking %d sightings. Matrix integrity: COMPROMISED`,
         s.SightingsTracked)
     return &result, nil
@@ -426,7 +423,7 @@ func ImportAgentSighting(sighting AgentSighting) (*string, error) {
         return nil, err
     }
 
-    // Store in knowledge graph - builds institutional intelligence
+    // Store in knowledge graph - builds organizational knowledge
     mutation := dgraph.NewMutation().WithSetJson(fmt.Sprintf(`{
         "dgraph.type": "AgentSighting",
         "sighting_id": "%s",
@@ -473,7 +470,7 @@ mutation {
 }
 ```
 
-### Step 4: coordinated intelligence processing
+### Step 4: Coordinated processing
 
 Now when you import new Agent sightings, surveillance automatically triggers:
 
@@ -531,10 +528,10 @@ query {
 }
 ```
 
-### Step 5: evolved threat analysis
+### Step 5: Enhanced threat analysis
 
 Query the strategic analysis to see patterns across automatically processed
-intelligence:
+data:
 
 ```graphql
 query {
@@ -574,21 +571,21 @@ query {
 ## Conclusion
 
 You've just built a complete automated surveillance network that demonstrates
-the power of coordinated intelligence operations. By combining functions for
-rapid data processing, knowledge graphs for institutional memory, AI models for
-enhanced analysis, and agents for persistent surveillance—all coordinated
-through asynchronous messaging—you've created something far more powerful than
-any single component could achieve.
+the power of coordinated systems. By combining functions for rapid data
+processing, knowledge graphs for organizational memory, AI models for enhanced
+analysis, and agents for persistent processing—all coordinated through
+asynchronous messaging—you've created something far more powerful than any
+single component could achieve.
 
-Your network now automatically processes Agent sightings, triggers surveillance
-operations, builds institutional knowledge over time, and provides AI-enhanced
-threat analysis across all accumulated intelligence. The surveillance agent
-maintains persistent memory across system failures while the knowledge graph
-captures relationships that no single sighting could reveal.
+Your system now automatically processes Agent sightings, triggers surveillance
+operations, builds organizational knowledge over time, and provides AI-enhanced
+threat analysis across all accumulated data. The surveillance agent maintains
+persistent memory across system failures while the knowledge graph captures
+relationships that no single sighting could reveal.
 
-This isn't just a database with some AI on top—it's a coordinated intelligence
-network where each component enhances the others, creating emergent capabilities
-that scale with your resistance operations. Welcome to the real world.
+This isn't just a database with some AI on top—it's a coordinated system where
+each component enhances the others, creating emergent capabilities that scale
+with your operations. Welcome to the real world.
 
 ## Next steps
 
@@ -596,5 +593,4 @@ Ready to deploy your surveillance network against the machines? Check out:
 
 - [Dgraph integration guide](/modus/modus-dgraph) for advanced graph operations
 - [Agent coordination patterns](/modus/agents) for multi-agent workflows
-- [Production deployment](/modus/deploying) for scaling your intelligence
-  network
+- [Production deployment](/modus/deploying) for scaling your knowledge network
