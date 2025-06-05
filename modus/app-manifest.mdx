@@ -20,9 +20,6 @@ resources for your functions at runtime. You define the manifest in the
   <Card title="Models" icon="cube" href="#models">
     Define inference services for use in your functions
   </Card>
-  <Card title="Collections" icon="table" href="#collections">
-    Define sets of text data to enable natural language search
-  </Card>
 </CardGroup>
 
 ### Base manifest
@@ -516,46 +513,3 @@ dedicated instance of the model. Your project's functions securely access the
 hosted model, with no further configuration required.
 
 </Tip>
-
-## Collections
-
-Collections simplify the usage of vector embeddings to build natural language
-search features. The `collections` object allows you to define indexed data
-types that are automatically embedded and searchable based on the search method
-you define.
-
-Each collection requires a unique name, specified as a key, containing only
-alphanumeric characters and hyphens.
-
-For more detail on implementing Collections, see [Search](/modus/search).
-
-```json modus.json
-{
-  "collections": {
-    "myProducts": {
-      "searchMethods": {
-        "searchMethod": {
-          "embedder": "myEmbedder",
-          "index": {
-            "type": "sequential"
-          }
-        }
-      }
-    }
-  }
-}
-```
-
-<ResponseField name="searchMethods" type="object" required>
-  Search methods define a pair of an embedder and index to make available for
-  searching the data in your collection.
-</ResponseField>
-
-<ResponseField name="embedder" type="string" required>
-  The function name to embed text added to the collection.
-</ResponseField>
-
-<ResponseField name="index" type="string">
-  If provided, describes the index mechanism used by the search method. `type`:
-  specifies the type of the index. For example, `sequential` (default).
-</ResponseField>
