@@ -1,0 +1,344 @@
+---
+title: "Agents APIs"
+sidebarTitle: "Agents"
+description:
+  "Build stateful agents that maintain persistent memory across interactions"
+icon: "circle-small"
+iconType: "solid"
+---
+
+import { SdkHeader } from "/snippets/sdk-header.mdx"
+import SdkTip from "/snippets/sdk-tip.mdx"
+
+<SdkHeader language="AssemblyScript" feature="Agents" />
+
+The Modus Agents APIs allow you to create stateful agents that maintain
+persistent memory across interactions, survive system failures, and coordinate
+complex multi-step operations.
+
+## Import
+
+To begin, import the `agents` namespace and `Agent` base class from the SDK:
+
+```ts
+import { agents, Agent, AgentInfo } from "@hypermode/modus-sdk-as"
+```
+
+## Agent APIs
+
+{/* vale Google.Headings = NO */}
+
+The APIs in the `agents` namespace are below, organized by category.
+
+<SdkTip />
+
+### Agent Management Functions
+
+#### register
+
+Register an agent class with the Modus runtime before it can be instantiated.
+
+```ts
+function register<T extends Agent>(): void
+```
+
+<ResponseField name="T" required>
+  The agent class type that extends the `Agent` base class.
+</ResponseField>
+
+<Note>
+  Agent registration must be done at the module level, outside of any function.
+</Note>
+
+#### start
+
+Create and start a new agent instance.
+
+```ts
+function start(agentName: string): AgentInfo
+```
+
+<ResponseField name="agentName" type="string" required>
+  The name of the agent class to instantiate. This must match the `name`
+  property returned by the agent class.
+</ResponseField>
+
+#### stop
+
+Stop an agent instance. Once stopped, the agent can't be resumed.
+
+```ts
+function stop(agentId: string): AgentInfo
+```
+
+<ResponseField name="agentId" type="string" required>
+  The unique identifier of the agent instance to stop.
+</ResponseField>
+
+#### get info
+
+Get information about a specific agent instance.
+
+```ts
+function getInfo(agentId: string): AgentInfo
+```
+
+<ResponseField name="agentId" type="string" required>
+  The unique identifier of the agent instance.
+</ResponseField>
+
+#### list all
+
+List all active agent instances.
+
+```ts
+function listAll(): AgentInfo[]
+```
+
+### Communication Functions
+
+#### send message
+
+Send a synchronous message to an agent and wait for a response.
+
+```ts
+function sendMessage(
+  agentId: string,
+  messageName: string,
+  data: string | null = null,
+): string | null
+```
+
+<ResponseField name="agentId" type="string" required>
+  The unique identifier of the target agent instance.
+</ResponseField>
+
+<ResponseField name="messageName" type="string" required>
+  The name of the message to send to the agent.
+</ResponseField>
+
+<ResponseField name="data" type="string | null">
+  Optional data payload to send with the message.
+</ResponseField>
+
+#### sendMessageAsync
+
+Send an asynchronous message to an agent without waiting for a response.
+
+```ts
+function sendMessageAsync(
+  agentId: string,
+  messageName: string,
+  data: string | null = null,
+): void
+```
+
+<ResponseField name="agentId" type="string" required>
+  The unique identifier of the target agent instance.
+</ResponseField>
+
+<ResponseField name="messageName" type="string" required>
+  The name of the message to send to the agent.
+</ResponseField>
+
+<ResponseField name="data" type="string | null">
+  Optional data payload to send with the message.
+</ResponseField>
+
+### Agent Base Class
+
+#### Agent
+
+The base class that all agents must extend.
+
+```ts
+abstract class Agent {
+  abstract get name(): string
+  abstract onReceiveMessage(
+    messageName: string,
+    data: string | null,
+  ): string | null
+
+  getState(): string | null
+  setState(data: string | null): void
+  onInitialize(): void
+  onSuspend(): void
+  onResume(): void
+  onTerminate(): void
+}
+```
+
+<ResponseField name="name" type="string" required>
+  Abstract property that must return a unique name for the agent class.
+</ResponseField>
+
+<ResponseField
+  name="onReceiveMessage(messageName, data)"
+  type="method"
+  required
+>
+  Abstract method that handles incoming messages to the agent. Must be
+  implemented by all agent classes.
+</ResponseField>
+
+<ResponseField name="getState()" type="method">
+  Optional method that returns the agent's current state as a string for
+  persistence. Called automatically when the agent needs to be suspended or
+  migrated.
+</ResponseField>
+
+<ResponseField name="setState(data)" type="method">
+  Optional method that restores the agent's state from a string. Called
+  automatically when the agent is resumed or migrated.
+</ResponseField>
+
+<ResponseField name="onInitialize()" type="method">
+  Optional lifecycle method called when the agent is first created.
+</ResponseField>
+
+<ResponseField name="onSuspend()" type="method">
+  Optional lifecycle method called when the agent is about to be suspended.
+</ResponseField>
+
+<ResponseField name="onResume()" type="method">
+  Optional lifecycle method called when the agent is resumed from suspension.
+</ResponseField>
+
+<ResponseField name="onTerminate()" type="method">
+  Optional lifecycle method called when the agent is about to be terminated.
+</ResponseField>
+
+### Types
+
+#### AgentInfo
+
+Information about an agent instance.
+
+```ts
+class AgentInfo {
+  id: string
+  name: string
+  status: string
+}
+```
+
+<ResponseField name="id" type="string">
+  The unique identifier of the agent instance.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  The name of the agent class.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  The current status of the agent instance.
+</ResponseField>
+
+## Example Usage
+
+Here's a complete example of a simple counter agent:
+
+### Agent Implementation
+
+```ts
+import { Agent } from "@hypermode/modus-sdk-as"
+
+export class CounterAgent extends Agent {
+  get name(): string {
+    return "Counter"
+  }
+
+  private count: i32 = 0
+
+  getState(): string | null {
+    return this.count.toString()
+  }
+
+  setState(data: string | null): void {
+    if (data == null) {
+      return
+    }
+    this.count = i32.parse(data)
+  }
+
+  onInitialize(): void {
+    console.info("Counter agent started")
+  }
+
+  onReceiveMessage(name: string, data: string | null): string | null {
+    if (name == "count") {
+      return this.count.toString()
+    }
+
+    if (name == "increment") {
+      if (data != null) {
+        this.count += i32.parse(data)
+      } else {
+        this.count++
+      }
+      return this.count.toString()
+    }
+
+    return null
+  }
+}
+```
+
+### Function Integration
+
+```ts
+import { agents, AgentInfo } from "@hypermode/modus-sdk-as"
+import { CounterAgent } from "./counterAgent"
+
+// Register the agent
+agents.register<CounterAgent>()
+
+export function startCounterAgent(): AgentInfo {
+  return agents.start("Counter")
+}
+
+export function getCount(agentId: string): i32 {
+  const count = agents.sendMessage(agentId, "count")
+  if (count == null) {
+    return 0
+  }
+  return i32.parse(count)
+}
+
+export function updateCount(agentId: string): i32 {
+  const count = agents.sendMessage(agentId, "increment")
+  if (count == null) {
+    return 0
+  }
+  return i32.parse(count)
+}
+
+export function updateCountAsync(agentId: string, qty: i32): void {
+  agents.sendMessageAsync(agentId, "increment", qty.toString())
+}
+```
+
+### GraphQL Usage
+
+Once deployed, your agent functions become available via GraphQL:
+
+```graphql
+# Start a new agent
+mutation {
+  startCounterAgent {
+    id
+    name
+    status
+  }
+}
+
+# Get the current count
+query {
+  getCount(agentId: "agent_abc123")
+}
+
+# Increment the count
+mutation {
+  updateCount(agentId: "agent_abc123")
+}
+```
