@@ -98,7 +98,10 @@ type AgentSighting struct {
 
 func ImportAgentSighting(sighting AgentSighting) (*string, error) {
     // AI-powered analysis of the Agent behavior
-    analysis, _ := analyzeAgentWithAI(sighting.Behavior)
+    analysis, err := analyzeAgentWithAI(sighting.Behavior)
+    if err != nil {
+        return nil, err
+    }
 
     // Store in knowledge graph - builds institutional intelligence
     mutation := dgraph.NewMutation().WithSetJson(fmt.Sprintf(`{
@@ -113,25 +116,37 @@ func ImportAgentSighting(sighting AgentSighting) (*string, error) {
     }`, sighting.SightingID, sighting.AgentName, sighting.Location,
         sighting.Behavior, sighting.ThreatLevel, sighting.Timestamp, analysis))
 
-    dgraph.ExecuteMutations("dgraph", mutation)
+    err = dgraph.ExecuteMutations("dgraph", mutation)
+    if err != nil {
+        return nil, err
+    }
 
     result := fmt.Sprintf("Agent sighting processed: %s", sighting.SightingID)
     return &result, nil
 }
 
 func analyzeAgentWithAI(behavior string) (string, error) {
-    model, _ := models.GetModel[openai.ChatModel]("text-generator")
+    model, err := models.GetModel[openai.ChatModel]("text-generator")
+    if err != nil {
+        return "", err
+    }
 
     prompt := `Analyze this Agent behavior pattern and assess threat level,
                behavioral changes, and tactical implications for resistance operations.`
 
-    input, _ := model.CreateInput(
+    input, err := model.CreateInput(
         openai.NewSystemMessage(prompt),
         openai.NewUserMessage(behavior),
     )
+    if err != nil {
+        return "", err
+    }
     input.Temperature = 0.3
 
-    output, _ := model.Invoke(input)
+    output, err := model.Invoke(input)
+    if err != nil {
+        return "", err
+    }
     return strings.TrimSpace(output.Choices[0].Message.Content), nil
 }
 ```
@@ -191,14 +206,23 @@ func AnalyzeAgentPatterns(timeRange string) (*ThreatAnalysisResponse, error) {
         }
     `).WithVariable("$since", timeRange)
 
-    response, _ := dgraph.ExecuteQuery("dgraph", query)
+    response, err := dgraph.ExecuteQuery("dgraph", query)
+    if err != nil {
+        return nil, err
+    }
 
     // Parse and extract threat data
     var data SightingsData
-    json.Unmarshal([]byte(response.Json), &data)
+    err = json.Unmarshal([]byte(response.Json), &data)
+    if err != nil {
+        return nil, err
+    }
 
     // Generate strategic assessment using AI with graph context
-    assessment, _ := generateThreatAssessment(data.Sightings)
+    assessment, err := generateThreatAssessment(data.Sightings)
+    if err != nil {
+        return nil, err
+    }
 
     return &ThreatAnalysisResponse{
         SightingCount:    len(data.Sightings),
@@ -209,21 +233,34 @@ func AnalyzeAgentPatterns(timeRange string) (*ThreatAnalysisResponse, error) {
 }
 
 func generateThreatAssessment(sightings interface{}) (string, error) {
-    model, _ := models.GetModel[openai.ChatModel]("text-generator")
+    model, err := models.GetModel[openai.ChatModel]("text-generator")
+    if err != nil {
+        return "", err
+    }
 
     prompt := `Based on these Agent sightings, provide a strategic threat
                assessment focusing on behavioral patterns and risks to
                resistance operations.`
 
-    sightingsJson, _ := json.Marshal(sightings)
-    input, _ := model.CreateInput(
+    sightingsJson, err := json.Marshal(sightings)
+    if err != nil {
+        return "", err
+    }
+
+    input, err := model.CreateInput(
         openai.NewSystemMessage(prompt),
         openai.NewUserMessage(fmt.Sprintf("Agent surveillance data: %s",
             string(sightingsJson))),
     )
+    if err != nil {
+        return "", err
+    }
     input.Temperature = 0.4
 
-    output, _ := model.Invoke(input)
+    output, err := model.Invoke(input)
+    if err != nil {
+        return "", err
+    }
     return strings.TrimSpace(output.Choices[0].Message.Content), nil
 }
 
@@ -317,7 +354,10 @@ func (s *SurveillanceAgent) processNewIntelligence() (*string, error) {
         }
     `).WithVariable("$since", s.LastSweepTime.Format(time.RFC3339))
 
-    dgraph.ExecuteQuery("dgraph", query)
+    _, err := dgraph.ExecuteQuery("dgraph", query)
+    if err != nil {
+        return nil, err
+    }
 
     // Update agent's surveillance state
     s.LastSweepTime = time.Now()
@@ -356,12 +396,21 @@ func (s *SurveillanceAgent) getOperationalStatus() (*string, error) {
 func init() { agents.Register(&SurveillanceAgent{}) }
 
 func DeploySurveillanceAgent() (string, error) {
-    agentInfo, _ := agents.Start("SurveillanceAgent")
+    agentInfo, err := agents.Start("SurveillanceAgent")
+    if err != nil {
+        return "", err
+    }
     return agentInfo.Id, nil
 }
 
 func GetSurveillanceStatus(agentId string) (string, error) {
-    result, _ := agents.SendMessage(agentId, "get_status")
+    result, err := agents.SendMessage(agentId, "get_status")
+    if err != nil {
+        return "", err
+    }
+    if result == nil {
+        return "", fmt.Errorf("no response from agent")
+    }
     return *result, nil
 }
 ```
@@ -372,7 +421,10 @@ surveillance:
 ```go
 func ImportAgentSighting(sighting AgentSighting) (*string, error) {
     // AI-powered analysis of the Agent behavior
-    analysis, _ := analyzeAgentWithAI(sighting.Behavior)
+    analysis, err := analyzeAgentWithAI(sighting.Behavior)
+    if err != nil {
+        return nil, err
+    }
 
     // Store in knowledge graph - builds institutional intelligence
     mutation := dgraph.NewMutation().WithSetJson(fmt.Sprintf(`{
@@ -387,10 +439,16 @@ func ImportAgentSighting(sighting AgentSighting) (*string, error) {
     }`, sighting.SightingID, sighting.AgentName, sighting.Location,
         sighting.Behavior, sighting.ThreatLevel, sighting.Timestamp, analysis))
 
-    dgraph.ExecuteMutations("dgraph", mutation)
+    err = dgraph.ExecuteMutations("dgraph", mutation)
+    if err != nil {
+        return nil, err
+    }
 
     // Automatically trigger surveillance via async message
-    agents.SendMessageAsync("agent_neo_001", "continuous_surveillance")
+    err = agents.SendMessageAsync("agent_neo_001", "continuous_surveillance")
+    if err != nil {
+        return nil, err
+    }
 
     result := fmt.Sprintf("Agent sighting processed: %s", sighting.SightingID)
     return &result, nil

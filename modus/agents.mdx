@@ -255,7 +255,10 @@ func (a *IntelligenceAgent) analyzeMatrixActivity(data *string) (*string, error)
     accumulatedReports := strings.Join(a.intelligenceReports, "\n")
 
     // AI analysis using complete operational history
-    model, _ := models.GetModel[openai.ChatModel]("analyst-model")
+    model, err := models.GetModel[openai.ChatModel]("analyst-model")
+    if err != nil {
+        return nil, err
+    }
 
     systemPrompt := `You are a resistance operative in the Matrix.
         Analyze patterns from accumulated surveillance reports
@@ -267,12 +270,18 @@ func (a *IntelligenceAgent) analyzeMatrixActivity(data *string) (*string, error)
         Provide threat assessment:`,
         accumulatedReports)
 
-    input, _ := model.CreateInput(
+    input, err := model.CreateInput(
         openai.NewSystemMessage(systemPrompt),
         openai.NewUserMessage(userPrompt),
     )
+    if err != nil {
+        return nil, err
+    }
 
-    output, _ := model.Invoke(input)
+    output, err := model.Invoke(input)
+    if err != nil {
+        return nil, err
+    }
     analysis := output.Choices[0].Message.Content
 
     // Update threat level based on data volume and AI analysis
@@ -523,7 +532,10 @@ func (a *IntelligenceAgent) analyzeMatrixActivity(
     accumulatedReports := strings.Join(a.intelligenceReports, "\n")
 
     // AI analysis using complete operational history
-    model, _ := models.GetModel[openai.ChatModel]("analyst-model")
+    model, err := models.GetModel[openai.ChatModel]("analyst-model")
+    if err != nil {
+        return nil, err
+    }
 
     systemPrompt := `You are a resistance operative in the Matrix.
         Analyze patterns from accumulated surveillance reports
@@ -535,10 +547,13 @@ func (a *IntelligenceAgent) analyzeMatrixActivity(
         Provide threat assessment:`,
         accumulatedReports)
 
-    input, _ := model.CreateInput(
+    input, err := model.CreateInput(
         openai.NewSystemMessage(systemPrompt),
         openai.NewUserMessage(userPrompt),
     )
+    if err != nil {
+        return nil, err
+    }
 
     // Emit AI processing event
     a.EmitEvent("ai_analysis_started", any{
@@ -547,7 +562,10 @@ func (a *IntelligenceAgent) analyzeMatrixActivity(
         "reportCount": len(a.intelligenceReports),
     })
 
-    output, _ := model.Invoke(input)
+    output, err := model.Invoke(input)
+    if err != nil {
+        return nil, err
+    }
     analysis := output.Choices[0].Message.Content
 
     // Update threat level based on data volume and AI analysis
@@ -615,9 +633,15 @@ func CheckMissionProgress(agentId string) (*MissionStatus, error) {
     if err != nil {
         return nil, err
     }
+    if result == nil {
+        return nil, fmt.Errorf("no response from agent")
+    }
 
     var status MissionStatus
-    json.Unmarshal([]byte(*result), &status)
+    err = json.Unmarshal([]byte(*result), &status)
+    if err != nil {
+        return nil, err
+    }
     return &status, nil
 }
 
@@ -657,7 +681,10 @@ func (a *IntelligenceAgent) getOperationalStatus() (*string, error) {
         }
     }
 
-    statusJson, _ := json.Marshal(status)
+    statusJson, err := json.Marshal(status)
+    if err != nil {
+        return nil, err
+    }
     result := string(statusJson)
     return &result, nil
 }
