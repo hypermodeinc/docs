@@ -6,9 +6,9 @@ description: "Learn about stateful agents in Modus"
 
 ## Agents in Modus
 
-Agents in Modus are elite operatives that maintain persistent memory across
-missions. Unlike stateless functions that lose everything when operations end,
-agents remember every detail, survive system failures, and never lose their
+Agents in Modus are persistent background processes that maintain memory across
+interactions. Unlike stateless functions that lose everything when operations
+end, agents remember every detail, survive system failures, and never lose their
 operational context.
 
 ## Key characteristics
@@ -20,7 +20,7 @@ operational context.
 - **Actor-based**: Each agent instance runs in isolation
 - **Event-driven**: Streams real-time updates and operational intelligence
 
-## When to deploy agents
+## When to use agents
 
 Agents are perfect for:
 
@@ -33,7 +33,7 @@ Agents are perfect for:
 
 ## Agent structure
 
-Every agent starts with the essential operational framework:
+Every agent starts with the essential framework:
 
 ```go
 package main
@@ -71,15 +71,14 @@ func (a *IntelligenceAgent) Name() string {
 ```
 
 The agent embeds `agents.AgentBase`, which provides all the infrastructure for
-state management, secure communications, and mission persistence. Your
-operational data—intelligence reports, threat assessments, contact logs—lives as
-fields in the struct, automatically preserved across all interactions.
+state management, secure communications, and persistence. Your app
+data—intelligence reports, threat assessments, contact logs—lives as fields in
+the struct, automatically preserved across all interactions.
 
-## Spawning agents through functions
+## Creating agents through functions
 
-Agents are deployed through regular Modus functions that become part of your
-GraphQL API. These deployment functions create and manage agent instances on
-demand:
+Agents are created and managed through regular Modus functions that become part
+of your GraphQL API. These functions handle agent lifecycle operations:
 
 ```go
 // Register your agent type during initialization
@@ -87,7 +86,7 @@ func init() {
     agents.Register(&IntelligenceAgent{})
 }
 
-// Deploy a new agent instance - this becomes a GraphQL mutation
+// Create a new agent instance - this becomes a GraphQL mutation
 func DeployAgent() (string, error) {
     agentInfo, err := agents.Start("IntelligenceAgent")
     if err != nil {
@@ -118,21 +117,21 @@ Response:
 ```
 
 You can think of an Agent as a persistent server process with durable memory.
-Once deployed, you can reference your agent by its ID across sessions, page
+Once created, you can reference your agent by its ID across sessions, page
 reloads, and even system restarts. The agent maintains its complete state and
 continues operating exactly where it left off.
 
 <Note>
   **Agent builders and visual workflows:** We're actively developing Agent
-  Builder tools and "eject to code" feature that generates complete agent
+  Builder tools and "eject to code" features that generate complete agent
   deployments from visual workflows. These tools automatically create the
   deployment functions and agent management code for complex multi-agent
   systems.
 </Note>
 
-## Communicating with your agent
+## Communicating with agents
 
-Once deployed, you communicate with your agent using its unique ID. Create
+Once created, you communicate with agents using their unique ID. Create
 functions that send messages to specific agent instances:
 
 ```go
@@ -163,7 +162,8 @@ func GetThreatStatus(agentId string) (string, error) {
 }
 ```
 
-These functions become GraphQL mutations that you can call with your agent's ID:
+These functions become GraphQL operations that you can call with your agent's
+ID:
 
 ```graphql
 mutation {
@@ -212,8 +212,7 @@ maintaining persistent memory of every interaction.
 
 ## Agent message handling
 
-Agents process operational directives through their secure message handling
-system:
+Agents process requests through their message handling system:
 
 ```go
 func (a *IntelligenceAgent) OnReceiveMessage(
@@ -237,13 +236,13 @@ func (a *IntelligenceAgent) OnReceiveMessage(
 }
 ```
 
-Each directive triggers specific operational procedures, with all intelligence
-automatically maintained in the agent's secure memory.
+Each message type triggers specific operations, with all data automatically
+maintained in the agent's persistent memory.
 
 ## Processing operations with AI intelligence
 
-Here's how agents handle field operations while maintaining persistent state and
-using AI models for analysis:
+Here's how agents handle operations while maintaining persistent state and using
+AI models for analysis:
 
 ```go
 func (a *IntelligenceAgent) analyzeMatrixActivity(data string) (*string, error) {
@@ -331,8 +330,8 @@ sophisticated pattern recognition impossible with stateless functions.
 
 ## State persistence
 
-Agents automatically preserve their operational state through Modus's built-in
-intelligence management:
+Agents automatically preserve their state through Modus's built-in persistence
+system:
 
 ```go
 func (a *IntelligenceAgent) GetState() *string {
@@ -363,11 +362,11 @@ func (a *IntelligenceAgent) SetState(data string) {
 
 ## Agent lifecycle
 
-Agents have built-in operational protocols for mission continuity:
+Agents have built-in lifecycle management protocols:
 
 ```go
 func (a *IntelligenceAgent) OnInitialize() error {
-    // Called when agent is first awakened in the Matrix
+    // Called when agent is first created
     a.lastContact = time.Now()
     a.threatLevel = 0.0
 
@@ -377,7 +376,7 @@ func (a *IntelligenceAgent) OnInitialize() error {
 }
 
 func (a *IntelligenceAgent) OnResume() error {
-    // Called when agent reestablishes contact with complete intel intact
+    // Called when agent reconnects with complete state intact
     fmt.Printf(`Agent back online in the Matrix.
         %d intelligence reports processed.
         Threat level: %.2f`,
@@ -387,12 +386,12 @@ func (a *IntelligenceAgent) OnResume() error {
 }
 
 func (a *IntelligenceAgent) OnSuspend() error {
-    // Called before agent goes dark
+    // Called before agent goes offline
     return nil
 }
 
 func (a *IntelligenceAgent) OnTerminate() error {
-    // Called before final extraction from the Matrix
+    // Called before final shutdown
     fmt.Printf(`Agent %s extracted from Matrix.
         Intelligence archive preserved.`, a.Id())
     return nil
@@ -729,15 +728,14 @@ The streaming approach provides superior operational intelligence:
 
 ## Beyond simple operations
 
-Agents enable sophisticated operational patterns impossible with stateless
-functions:
+Agents enable sophisticated patterns impossible with stateless functions:
 
-- **Operational continuity**: Maintain mission state across system failures and
+- **Operational continuity**: Maintain state across system failures and
   re-deployments
 - **Intelligence building**: Accumulate understanding across multiple
   assignments through AI-powered analysis
-- **Mission recovery**: Resume operations from last secure checkpoint instead of
-  starting over
+- **Recovery protocols**: Resume operations from last secure checkpoint instead
+  of starting over
 - **Network coordination**: Manage complex multi-agent operations with shared
   intelligence and real-time event coordination
 - **Adaptive learning**: AI models become more effective as agents accumulate
@@ -747,11 +745,11 @@ functions:
 - **Event-driven coordination**: React to operational changes and mission
   updates through real-time event streams
 - **Progressive operations**: Update user interfaces and trigger downstream
-  processes as agents work through complex missions
+  processes as agents work through complex workflows
 
-Agents represent the evolution from stateless functions to elite operatives that
-maintain complete operational continuity, build intelligence over time, and
-provide real-time operational awareness. They're the foundation for building
-intelligence networks that never lose track of their missions, become smarter
-with every interaction, and keep operational teams informed through live event
-streaming—no matter what happens in the field.
+Agents represent the evolution from stateless functions to persistent background
+processes that maintain complete operational continuity, build intelligence over
+time, and provide real-time operational awareness. They're the foundation for
+building systems that never lose track of their work, become smarter with every
+interaction, and keep teams informed through live event streaming—no matter what
+happens in the infrastructure.
