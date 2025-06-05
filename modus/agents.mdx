@@ -502,7 +502,7 @@ func (a *IntelligenceAgent) analyzeMatrixActivity(
     data *string,
 ) (*string, error) {
     // Emit mission start event
-    a.EmitEvent("mission_started", map[string]interface{}{
+    a.EmitEvent("mission_started", any{
         "missionName": "Matrix Surveillance Analysis",
         "priority": "HIGH",
         "activityData": len(*data),
@@ -513,7 +513,7 @@ func (a *IntelligenceAgent) analyzeMatrixActivity(
     a.lastContact = time.Now()
 
     // Emit progress update
-    a.EmitEvent("surveillance_progress", map[string]interface{}{
+    a.EmitEvent("surveillance_progress", any{
         "reportsProcessed": len(a.intelligenceReports),
         "phase": "Processing Matrix surveillance data",
         "progress": 0.3,
@@ -541,7 +541,7 @@ func (a *IntelligenceAgent) analyzeMatrixActivity(
     )
 
     // Emit AI processing event
-    a.EmitEvent("ai_analysis_started", map[string]interface{}{
+    a.EmitEvent("ai_analysis_started", any{
         "modelName": "analyst-model",
         "contextSize": len(context),
         "reportCount": len(a.intelligenceReports),
@@ -560,7 +560,7 @@ func (a *IntelligenceAgent) analyzeMatrixActivity(
     if strings.Contains(strings.ToLower(analysis), "critical") ||
        strings.Contains(strings.ToLower(analysis), "agent smith") {
         a.threatLevel = math.Min(a.threatLevel + 0.2, 1.0)
-        a.EmitEvent("agent_threat_detected", map[string]interface{}{
+        a.EmitEvent("agent_threat_detected", any{
             "threatLevel": "HIGH",
             "confidence": a.threatLevel,
             "analysis": analysis,
@@ -569,7 +569,7 @@ func (a *IntelligenceAgent) analyzeMatrixActivity(
     }
 
     // Emit mission completion
-    a.EmitEvent("mission_completed", map[string]interface{}{
+    a.EmitEvent("mission_completed", any{
         "missionName": "Matrix Surveillance Analysis",
         "confidence": a.threatLevel,
         "reportsAnalyzed": len(a.intelligenceReports),
