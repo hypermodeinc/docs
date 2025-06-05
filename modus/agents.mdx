@@ -50,6 +50,7 @@ import (
 type IntelligenceAgent struct {
     agents.AgentBase
 
+    // The rest of the fields make up the agent's state and can be customized per agent
     intelligenceReports []string     // Matrix surveillance data
     threatLevel         float64      // Current threat assessment
     lastContact         time.Time
