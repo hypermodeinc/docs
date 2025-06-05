@@ -332,7 +332,7 @@ func (s *SurveillanceAgent) OnInitialize() error {
 }
 
 func (s *SurveillanceAgent) OnReceiveMessage(
-    msgName string, data *string) (*string, error) {
+    msgName string, data string) (*string, error) {
     switch msgName {
     case "continuous_surveillance":
         return s.processNewIntelligence()

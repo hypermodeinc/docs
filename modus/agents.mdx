@@ -218,7 +218,7 @@ system:
 ```go
 func (a *IntelligenceAgent) OnReceiveMessage(
     msgName string,
-    data *string,
+    data string,
 ) (*string, error) {
     switch msgName {
     case "matrix_surveillance":
@@ -246,7 +246,7 @@ Here's how agents handle field operations while maintaining persistent state and
 using AI models for analysis:
 
 ```go
-func (a *IntelligenceAgent) analyzeMatrixActivity(data *string) (*string, error) {
+func (a *IntelligenceAgent) analyzeMatrixActivity(data string) (*string, error) {
     // Store new intelligence in persistent memory
     a.intelligenceReports = append(a.intelligenceReports, *data)
     a.lastContact = time.Now()
@@ -344,7 +344,7 @@ func (a *IntelligenceAgent) GetState() *string {
     return &state
 }
 
-func (a *IntelligenceAgent) SetState(data *string) {
+func (a *IntelligenceAgent) SetState(data string) {
     if data == nil {
         return
     }
@@ -508,7 +508,7 @@ during their operations. Let's enhance our Matrix surveillance example:
 
 ```go
 func (a *IntelligenceAgent) analyzeMatrixActivity(
-    data *string,
+    data string,
 ) (*string, error) {
     // Emit mission start event
     a.EmitEvent("mission_started", any{

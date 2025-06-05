@@ -162,9 +162,9 @@ The interface that all agents must implement.
 ```go
 type Agent interface {
     Name() string
-    OnReceiveMessage(messageName string, data *string) (*string, error)
+    OnReceiveMessage(messageName string, data string) (*string, error)
     GetState() *string
-    SetState(data *string)
+    SetState(data string)
     OnInitialize() error
     OnSuspend() error
     OnResume() error
@@ -219,7 +219,7 @@ methods.
 type AgentBase struct{}
 
 func (AgentBase) GetState() *string { return nil }
-func (AgentBase) SetState(data *string) {}
+func (AgentBase) SetState(data string) {}
 func (AgentBase) OnInitialize() error { return nil }
 func (AgentBase) OnSuspend() error { return nil }
 func (AgentBase) OnResume() error { return nil }
@@ -295,7 +295,7 @@ func (c *CounterAgent) GetState() *string {
     return &state
 }
 
-func (c *CounterAgent) SetState(data *string) {
+func (c *CounterAgent) SetState(data string) {
     if data == nil {
         return
     }
@@ -309,7 +309,7 @@ func (c *CounterAgent) OnInitialize() error {
     return nil
 }
 
-func (c *CounterAgent) OnReceiveMessage(messageName string, data *string) (*string, error) {
+func (c *CounterAgent) OnReceiveMessage(messageName string, data string) (*string, error) {
     switch messageName {
     case "count":
         result := strconv.Itoa(c.count)
