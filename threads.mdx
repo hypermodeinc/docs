@@ -68,11 +68,27 @@ Everything you build in Threads can be **deployed to production**:
 
 ## Getting started: your first agent
 
+<div style={{ display: "flex", justifyContent: "center" }}>
+  <img
+    src="/images/threads/agent-card.png"
+    alt="Your First Agent"
+    style={{
+      width: "60%",
+      maxWidth: "60%",
+      height: "auto",
+      display: "block",
+      margin: "0 auto",
+    }}
+  />
+</div>
+
 Let's build a **Code Review Agent** that helps catch bugs and suggest
 improvements. This example shows how Threads transforms a simple idea into a
 working agent.
 
 ### Step 1: start with intent
+
+![Your First Thread](/images/threads/minimal-chat.png)
 
 ```text
 You: "I need an agent that reviews pull requests, checks for security issues,
@@ -91,6 +107,12 @@ agent with:
 - Customized instructions for your workflow
 
 ### Step 2: train through conversation
+
+Through iterative dialogue, you refine your agent's behavior in real-time—each
+exchange teaches it to better understand your specific requirements and workflow
+preferences.
+
+![Train through conversation](/images/threads/training-chat.png)
 
 ```text
 You: "Here's a PR with a potential SQL injection vulnerability"
@@ -113,6 +135,8 @@ You: "Perfect. Now I want to deploy this agent"
 
 When your agent works exactly how you want:
 
+![Deploy agent through conversation](/images/threads/deploy-chat.png)
+
 ```text
 You: "I want to deploy this agent to handle our GitHub PRs automatically"
 
@@ -124,6 +148,54 @@ Threads: *Agent is now available for deployment through Hypermode*
 ```
 
 Your conversation just became a **production-ready agent**.
+
+### Step 4: iterate and enhance
+
+Your agent is working, but now you want to streamline your team's workflow.
+Through continued conversation, you can enhance your agent's capabilities in
+real-time.
+
+![Iterate and enhance](/images/threads/training-chat-2.png)
+
+```text
+You: "When you find issues in PRs, can you create Linear tickets automatically?
+     That would save us a lot of manual work."
+
+Agent: "Absolutely! I can integrate with Linear to create tickets for issues I find.
+        I'll need access to your Linear workspace. What priority should I set for
+        security issues vs. code quality issues?"
+
+You: "Security issues should be High priority, code quality Medium.
+     Tag them with 'code-review-bot' so we know the source."
+
+Agent: "Perfect! I'm now connecting to Linear and updating my workflow:
+        • Security vulnerabilities → High priority Linear tickets
+        • Code quality issues → Medium priority tickets
+        • All tickets tagged with 'code-review-bot'
+        Ready to test! Try submitting a PR with issues."
+```
+
+Now your agent has evolved into a **fully automated workflow** that not only
+reviews code but takes action on what it finds:
+
+![Enhanced workflow](/images/threads/workflow-diagram.png)
+
+**Your enhanced agent now**:
+
+- Analyzes every new pull request automatically
+- Detects security vulnerabilities and code quality issues
+- Creates prioritized Linear tickets with appropriate tags
+- Comments on PRs with detailed feedback and ticket links
+- Maintains context about your team's priorities and conventions
+
+**What changed**: through a simple 3-message conversation, your agent learned to
+integrate with Linear, understand your priority system, and automate ticket
+creation. No configuration files, no API documentation—just natural language
+instruction.
+
+**The result**: your team's code review process is now fully automated, from
+detection to ticket creation, saving hours of manual work while ensuring nothing
+falls through the cracks.
 
 ## Real-world examples
 
