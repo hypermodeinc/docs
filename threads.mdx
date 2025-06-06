@@ -1,0 +1,428 @@
+---
+title: "Threads: your AI agent workbench"
+sidebarTitle: "Threads"
+description:
+  "Build, train, and iterate on AI agents through natural conversation—then
+  deploy to production-ready code"
+---
+
+**Threads is where ideas become agents.** it's a conversational interface that
+lets you build, train, and refine AI agents through natural language—no coding
+required. When you're ready, deploy your agent as production-ready code.
+
+Unlike traditional chat interfaces that forget everything when you close the
+tab, Threads creates **persistent, purpose-built agents** that remember their
+training and can be deployed as real software.
+
+## Why threads matters
+
+Most AI agent development follows a painful pattern:
+
+1. **Business expert** describes what they need
+2. **Developer** interprets and codes a solution
+3. **Back-and-forth** to get it right
+4. **Weeks later**, maybe you have what you wanted
+
+**Threads eliminates this translation loss.** Domain experts work directly with
+agents, training them through conversation, seeing immediate results, and
+iterating in real-time.
+
+```text
+Traditional: Idea → Requirements → Code → Deploy → Test → Repeat
+Threads:     Idea → Conversation → Working Agent → Deploy
+```
+
+## Core concepts
+
+### Agents, not chats
+
+Every conversation in Threads is building toward a **reusable agent**. Unlike
+ChatGPT where conversations disappear, your Threads interactions create agents
+that can:
+
+- Remember their training across sessions
+- Be deployed as production code through Hypermode's infrastructure
+- Work with your specific tools and data through Connections
+- Handle complex, multi-step workflows
+
+### Tools, not just text
+
+Agents in Threads don't just chat—they **act**. Through Connections, your agents
+can:
+
+- Read your Slack channels and manage team communications
+- Create Linear issues when bugs are found
+- Query GitHub repositories and analyze pull requests
+- Access your deployment platform deployments and build logs
+- Search the web for up-to-date information
+- Integrate with custom tools through Model Context Protocol (MCP) servers
+
+### Natural language to production code
+
+Everything you build in Threads can be **deployed to production**:
+
+- Your agent's personality and instructions
+- The tools it has access to
+- Its conversation patterns and responses
+- Ready-to-deploy Modus applications
+
+## Getting started: your first agent
+
+Let's build a **Code Review Agent** that helps catch bugs and suggest
+improvements. This example shows how Threads transforms a simple idea into a
+working agent.
+
+### Step 1: start with intent
+
+```text
+You: "I need an agent that reviews pull requests, checks for security issues,
+     and suggests better variable names"
+
+Hypermode Concierge: "I'll help you build a Code Review Agent. Let me set up the basic
+                      structure and tools..."
+```
+
+The Hypermode Concierge (Hypermode's agent-building agent) scaffolds your new
+agent with:
+
+- A focused system prompt
+- Access to GitHub tools through Connections
+- Code analysis capabilities
+- Customized instructions for your workflow
+
+### Step 2: train through conversation
+
+```text
+You: "Here's a PR with a potential SQL injection vulnerability"
+[Pastes code snippet]
+
+Agent: *Analyzes code using GitHub tools*
+"I found a SQL injection risk on line 23. The user input isn't sanitized
+before being passed to the query. I'd recommend using parameterized queries."
+
+You: "Good catch! But also check variable naming conventions"
+
+Agent: *Updates behavior based on your feedback*
+"You're right. I also notice variables like 'data1' and 'temp_thing'
+should be more descriptive. I'll include naming suggestions in future reviews."
+
+You: "Perfect. Now I want to deploy this agent"
+```
+
+### Step 3: deploy to production
+
+When your agent works exactly how you want:
+
+```text
+You: "I want to deploy this agent to handle our GitHub PRs automatically"
+
+Threads: *Agent is now available for deployment through Hypermode*
+- Agent configuration and prompts saved
+- Tool integrations and permissions configured
+- Ready for production deployment
+- Accessible through Hypermode's infrastructure
+```
+
+Your conversation just became a **production-ready agent**.
+
+## Real-world examples
+
+### Development workflow agent
+
+**What it does**: monitors GitHub pull requests, provides code reviews, and
+manages Linear issues.
+
+```text
+Training conversation:
+
+You: "When a new PR is created, analyze it for security issues and code quality"
+
+Agent: "I'll check each PR for common vulnerabilities and style issues.
+        Should I also verify tests are included?"
+
+You: "Yes, and if tests are missing, create a Linear issue"
+
+Agent: "Got it. I'll analyze PRs, check for tests, and create Linear tickets
+        when needed."
+
+You: "Also check commit messages for our convention"
+
+Agent: "Perfect. I'll verify commit messages follow your team's standards
+        and suggest improvements."
+```
+
+**Current capabilities**:
+
+- GitHub repository analysis
+- Pull request review and feedback
+- Linear issue creation and management
+- Code quality assessment
+- Git commit analysis
+
+### Slack productivity agent
+
+**What it does**: monitors Slack channels, manages team communications, and
+tracks project updates.
+
+```text
+Training conversation:
+
+You: "Monitor #engineering channel for deployment mentions and summarize
+     weekly progress"
+
+Agent: "I'll watch for deployment keywords. Should I track specific projects?"
+
+You: "Yes, look for mentions of our main products and their status updates"
+
+Agent: "I'll categorize updates by project and create weekly summaries."
+
+You: "Also respond to direct questions about project status"
+
+Agent: "I'll maintain context about recent discussions and provide helpful
+        responses when asked."
+```
+
+**Current capabilities**:
+
+- Slack channel monitoring
+- Message analysis and categorization
+- User profile and status tracking
+- Team communication facilitation
+- Automated status reporting
+
+### Infrastructure monitoring agent
+
+**What it does**: monitors deployment platform deployments, analyzes build logs,
+and reports on app health.
+
+```text
+Training conversation:
+
+You: "Watch our deployment platform deployments and alert me when builds fail"
+
+Agent: "I'll monitor your deployment status. Should I analyze the error logs?"
+
+You: "Yes, and suggest potential fixes when possible"
+
+Agent: "I'll examine build logs, identify common failure patterns, and
+        recommend solutions."
+
+You: "Also track deployment frequency and success rates"
+
+Agent: "I'll maintain metrics on your deployment pipeline and provide
+        regular health reports."
+```
+
+**Current capabilities**:
+
+- Deployment platform project monitoring
+- Deployment status tracking
+- Build log analysis
+- Error pattern recognition
+- Infrastructure health reporting
+
+## Advanced patterns
+
+### Agent specialization
+
+Agents can be built for specific domains with tailored tool access:
+
+```text
+GitHub Agent → Specialized for code review and repository management
+     ↓
+Slack Agent → Focused on team communication and coordination
+     ↓
+Deployment Agent → Optimized for deployment monitoring and infrastructure
+```
+
+Each agent excels in its domain while maintaining consistent behavior patterns.
+
+### Task automation
+
+Turn any conversation into automated workflows:
+
+```text
+You: "Create a task that analyzes our weekly GitHub activity"
+
+Threads: *Generates structured task definition*
+- Captures conversation context
+- Defines repeatable workflow
+- Maintains agent configuration
+```
+
+### Context persistence
+
+Agents remember training across sessions:
+
+```text
+Agent: "Based on our previous conversations, I remember you prefer detailed
+        code reviews with security focus. Should I continue with that approach?"
+
+You: "Yes, but also add performance considerations"
+
+Agent: "I'll update my review criteria to include performance analysis
+        alongside security and code quality."
+```
+
+## Model flexibility
+
+Threads works with **multiple models** through Hypermode's Model Router:
+
+- **Generative Pre-trained Transformer (GPT)-4.1**: Latest OpenAI model for
+  complex reasoning and code analysis
+- **Claude 4**: Anthropic's advanced model for writing and analysis tasks
+- **Gemini**: Google's model for multi-modal tasks and data processing
+- **O1/O3**: OpenAI's reasoning models for complex problem-solving
+- **Open source models**: Llama, Mistral, and other community models
+
+Switch models to optimize for different tasks:
+
+```text
+You: "Use Claude for the writing tasks and Generative Pre-trained Transformer (GPT)-4.1 for code analysis"
+
+Agent: *Adapts model usage based on task type*
+"I'm now using Claude for documentation and Generative Pre-trained Transformer (GPT)-4.1 for technical analysis.
+The combination provides better results for both areas."
+```
+
+## Security and governance
+
+### Tool access control
+
+Agents only get the tools they need:
+
+- **GitHub Agent**: Repository access only (no deployment permissions)
+- **Slack Agent**: Communication tools only (no code access)
+- **Deployment Agent**: Deployment monitoring only (no user data access)
+
+### Team collaboration
+
+- **Domain experts** build and train agents through conversation
+- **Platform teams** manage deployment and infrastructure
+- **Security teams** audit tool permissions and data access
+
+### Full observability
+
+Every agent action is traceable:
+
+- Tool calls and responses logged
+- Message history preserved
+- Agent behavior patterns tracked
+- Performance metrics collected
+
+## Best practices
+
+### Start specific
+
+```text
+❌ "Build me a general assistant"
+✅ "Build an agent that monitors our GitHub PRs and creates Linear issues for bugs"
+```
+
+### Train iteratively
+
+```text
+❌ "Here's a 500-line requirements document"
+✅ "Let's start with basic PR reviews and add complexity through conversation"
+```
+
+### Deploy early
+
+```text
+❌ "Perfect every detail before deploying"
+✅ "Deploy working versions and iterate based on real usage"
+```
+
+### Document context
+
+```text
+❌ "Figure out what I mean"
+✅ "When I say 'urgent', treat it as high priority and notify the team lead"
+```
+
+## Current capabilities
+
+Threads currently supports:
+
+### Integrated tools
+
+- **GitHub**: Repository management, pull request analysis, commit tracking
+- **Slack**: Channel monitoring, user management, message handling
+- **Linear**: Issue creation and tracking
+- **Deployment platform**: Deployment monitoring, build log analysis
+- **Web search**: Web search and content discovery
+- **Time functions**: UTC time, scheduling capabilities
+
+### Agent features
+
+- **Persistent memory**: Agents remember training across sessions
+- **Tool integration**: Seamless connection to external services
+- **Multi-model support**: Choose the best model for each task
+- **Structured outputs**: Agents can generate formatted responses
+- **Error handling**: Robust error recovery and user feedback
+
+### Development workflow
+
+- **Real-time training**: Immediate feedback and iteration
+- **Context preservation**: Conversation history maintained
+- **Task generation**: Convert conversations into reusable workflows
+- **Production deployment**: Direct path from conversation to live agent
+
+## Roadmap features
+
+Features planned for future releases:
+
+### Enhanced automation (coming soon)
+
+More sophisticated workflow automation:
+
+```text
+Agent: "I notice we've done this GitHub workflow 3 times. Should I save it
+        as a standard automation?"
+
+You: "Yes, make it available to the whole team"
+
+Agent: "Automation created: 'PR Review Process' - available in your
+        team workspace"
+```
+
+### Multi-agent orchestration (coming soon)
+
+Agents that coordinate with each other:
+
+```text
+GitHub Agent: "Found 5 PRs needing review. Delegating to Code Review Agent..."
+Review Agent: "Analysis complete. Passing results to Linear Agent for issue creation..."
+Linear Agent: "Issues created. Notifying team through Slack Agent..."
+```
+
+### Advanced scheduling (coming soon)
+
+Time-based agent triggers:
+
+```text
+- Daily GitHub activity summaries
+- Weekly deployment health reports
+- Monthly team productivity analysis
+- Real-time alert responses
+```
+
+## Get started today
+
+Ready to build your first agent? Here's how:
+
+1. **[Sign up for Hypermode](https://hypermode.com)** and access Threads
+2. **Start a conversation** with the Hypermode Concierge about what you want to
+   build
+3. **Train your agent** through natural language iteration
+4. **Configure tool access** through Connections
+5. **Deploy and monitor** with Hypermode's infrastructure
+
+**Threads transforms how you think about AI**—from disposable conversations to
+persistent, capable agents that integrate seamlessly with your existing tools
+and workflows.
+
+---
+
+_Ready to turn your ideas into agents?
+[Start building in Threads →](https://hypermode.com/threads)_

@@ -15,15 +15,6 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Hypermode Agents (waitlist)",
-          "icon": "code-simple",
-          "color": {
-            "light": "#FF00EE",
-            "dark": "#CC00BE"
-          },
-          "href": "https://hypermode.typeform.com/agents-waitlist"
-        },
-        {
           "anchor": "Hypermode Graphs (preview)",
           "icon": "chart-network",
           "color": {
@@ -48,8 +39,8 @@
         "tab": "Hypermode",
         "groups": [
           {
-            "group": "Getting Started",
-            "pages": ["introduction", "semantic-search"]
+            "group": "Hypermode",
+            "pages": ["introduction", "threads", "developers"]
           },
           {
             "group": "Graphs",
@@ -61,6 +52,10 @@
               "graphs/manage-data",
               "graphs/manage-graph"
             ]
+          },
+          {
+            "group": "Tutorials",
+            "pages": ["semantic-search"]
           },
           {
             "group": "Tools",
