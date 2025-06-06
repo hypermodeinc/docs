@@ -96,6 +96,8 @@ usage requirements:
 
 ## Setup guide
 
+### Running with Hypermode Graphs
+
 When using Hypermode Graphs, the MCP configuration is available on the graph
 details screen in the console:
 
@@ -129,6 +131,68 @@ Add the configuration to your AI assistant's settings:
 
 </Step>
 </Steps>
+
+### Running with local Dgraph
+
+You can also run MCP with your local Dgraph instance by starting the Alpha
+server with the `--mcp` flag:
+
+#### Starting Dgraph Alpha with MCP
+
+```bash
+# Start Dgraph Zero
+dgraph zero --my=localhost:5080
+
+# Start Dgraph Alpha with MCP enabled
+dgraph alpha --my=localhost:7080 --zero=localhost:5080 --mcp
+```
+
+This enables two MCP endpoints on your Alpha server:
+
+- **Full access**: `http://localhost:8080/mcp/sse`
+- **Read-only**: `http://localhost:8080/mcp-ro/sse`
+
+#### Configure AI assistant for local Dgraph
+
+```json
+{
+  "mcpServers": {
+    "dgraph-local": {
+      "command": "npx",
+      "args": ["mcp-remote", "http://localhost:8080/mcp/sse"]
+    },
+    "dgraph-local-readonly": {
+      "command": "npx",
+      "args": ["mcp-remote", "http://localhost:8080/mcp-ro/sse"]
+    }
+  }
+}
+```
+
+#### Standalone MCP server
+
+For development or testing, you can also run a standalone MCP server:
+
+```bash
+# Run standalone MCP server
+dgraph mcp --conn-str="dgraph://localhost:9080"
+
+# Run in read-only mode
+dgraph mcp --conn-str="dgraph://localhost:9080" --read-only
+```
+
+For standalone servers, configure your AI assistant with:
+
+```json
+{
+  "mcpServers": {
+    "dgraph-standalone": {
+      "command": "dgraph",
+      "args": ["mcp", "--conn-str=dgraph://localhost:9080"]
+    }
+  }
+}
+```
 
 ## Available capabilities
 
@@ -202,6 +266,60 @@ The Hypermode Graph MCP server provide the following tools:
 
 Retrieve the current schema of your graph database.
 
+##### Example schema query
+
+**User request:**
+
+```text
+"What's the current schema for our financial data model?"
+```
+
+**Tool call:**
+
+```json
+{
+  "name": "get_schema",
+  "arguments": {}
+}
+```
+
+**Response:**
+
+```json
+{
+  "schema": [
+    {
+      "predicate": "account_number",
+      "type": "string",
+      "index": true,
+      "tokenizer": ["exact"]
+    },
+    {
+      "predicate": "balance",
+      "type": "float"
+    },
+    {
+      "predicate": "amount",
+      "type": "float"
+    },
+    {
+      "predicate": "status",
+      "type": "string",
+      "index": true,
+      "tokenizer": ["exact"]
+    },
+    {
+      "predicate": "from_account",
+      "type": "uid"
+    },
+    {
+      "predicate": "to_account",
+      "type": "uid"
+    }
+  ]
+}
+```
+
 #### `run_query`
 
 Run a DQL query on your graph database.
@@ -209,6 +327,63 @@ Run a DQL query on your graph database.
 **Parameters:**
 
 - `query` (string): DQL query to execute
+
+##### Example query
+
+**User request:**
+
+```text
+"Show me all pending transactions and their amounts"
+```
+
+**Tool call:**
+
+```json
+{
+  "name": "run_query",
+  "arguments": {
+    "query": "{
+      transactions(func: eq(status, \"pending\")) {
+        uid
+        amount
+        status
+        timestamp
+        from_account {
+          account_number
+          balance
+        }
+        to_account {
+          account_number
+          balance
+        }
+      }
+    }"
+  }
+}
+```
+
+**Response:**
+
+```json
+{
+  "transactions": [
+    {
+      "uid": "0x1a",
+      "amount": 150.5,
+      "status": "pending",
+      "timestamp": "2024-06-06T10:30:00Z",
+      "from_account": {
+        "account_number": "ACC001",
+        "balance": 2500.0
+      },
+      "to_account": {
+        "account_number": "ACC002",
+        "balance": 1800.0
+      }
+    }
+  ]
+}
+```
 
 #### `run_mutation`
 
@@ -218,6 +393,47 @@ Run a DQL mutation on your graph database.
 
 - `mutation` (string): DQL mutation to execute
 
+##### Example mutation
+
+**User request:**
+
+```text
+"Process a $500 transfer from account ACC001 to account ACC003"
+```
+
+**Tool call:**
+
+```json
+{
+  "name": "run_mutation",
+  "arguments": {
+    "mutation": "{
+      \"set\": [
+        {
+          \"uid\": \"_:txn\",
+          \"dgraph.type\": \"Transaction\",
+          \"amount\": 500.00,
+          \"status\": \"pending\",
+          \"timestamp\": \"2024-06-06T11:15:00Z\",
+          \"from_account\": {
+            \"uid\": \"0x10\"
+          },
+          \"to_account\": {
+            \"uid\": \"0x11\"
+          }
+        }
+      ]
+    }"
+  }
+}
+```
+
+**Response:**
+
+```text
+Mutation completed, 1 UIDs created
+```
+
 #### `alter_schema`
 
 Modify the DQL schema of your graph database.
@@ -225,6 +441,34 @@ Modify the DQL schema of your graph database.
 **Parameters:**
 
 - `schema` (string): DQL schema to apply
+
+##### Example schema update
+
+**User request:**
+
+```text
+"Add support for transaction fees and currency types to our payment system"
+```
+
+**Tool call:**
+
+```json
+{
+  "name": "alter_schema",
+  "arguments": {
+    "schema": "transaction_fee: float .
+      currency: string @index(exact) .
+      exchange_rate: float .
+      fee_type: string @index(term) ."
+  }
+}
+```
+
+**Response:**
+
+```text
+Schema updated successfully
+```
 
 #### `get_common_queries`
 
@@ -254,6 +498,108 @@ Pre-configured prompt templates for common graph operations:
 #### `quickstart_prompt`
 
 A quickstart prompt for getting started with graph MCP.
+
+## Example tool interactions
+
+Here are additional examples of AI assistant interactions with the MCP tools
+using a financial transaction theme:
+
+### Complex transaction analysis
+
+**User request:**
+
+```text
+"Find all high-value transactions over $1000 from the last week and show
+which accounts were involved"
+```
+
+**Tool call:**
+
+```json
+{
+  "name": "run_query",
+  "arguments": {
+    "query": "{
+      high_value_txns(func: ge(amount, 1000.0))
+      @filter(ge(timestamp, \"2024-05-30T00:00:00Z\")) {
+        uid
+        amount
+        timestamp
+        status
+        from_account {
+          account_number
+          account_holder
+          balance
+        }
+        to_account {
+          account_number
+          account_holder
+          balance
+        }
+      }
+    }"
+  }
+}
+```
+
+**Response:**
+
+```json
+{
+  "high_value_txns": [
+    {
+      "uid": "0x2b",
+      "amount": 2500.0,
+      "timestamp": "2024-06-05T14:22:00Z",
+      "status": "completed",
+      "from_account": {
+        "account_number": "ACC005",
+        "account_holder": "Tech Corp Ltd",
+        "balance": 45000.0
+      },
+      "to_account": {
+        "account_number": "ACC007",
+        "account_holder": "Supplier Inc",
+        "balance": 12000.0
+      }
+    }
+  ]
+}
+```
+
+### Account balance updates
+
+**User request:**
+
+```text
+"Update account ACC001's balance to $3000 after processing pending
+transactions"
+```
+
+**Tool call:**
+
+```json
+{
+  "name": "run_mutation",
+  "arguments": {
+    "mutation": "{
+      \"set\": [
+        {
+          \"uid\": \"0x10\",
+          \"balance\": 3000.00,
+          \"last_updated\": \"2024-06-06T11:30:00Z\"
+        }
+      ]
+    }"
+  }
+}
+```
+
+**Response:**
+
+```text
+Mutation completed, 1 UIDs created
+```
 
 ## Example workflows
 
