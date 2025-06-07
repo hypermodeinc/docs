@@ -134,3 +134,10 @@ WebSocket
 USA
 
 [Gg]raphs
+
+Vercel
+Exa
+Pipedream
+Mailchimp
+Shopify
+Sandboxing
