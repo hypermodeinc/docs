@@ -6,13 +6,15 @@ description:
   deploy to production-ready code"
 ---
 
-**Threads is where ideas become agents.** it's a conversational interface that
+**Threads is where ideas become agents.** It's a conversational interface that
 lets you build, train, and refine AI agents through natural language—no coding
 required. When you're ready, deploy your agent as production-ready code.
 
 Unlike traditional chat interfaces that forget everything when you close the
 tab, Threads creates **persistent, purpose-built agents** that remember their
 training and can be deployed as real software.
+
+![Agents Intro](/images/threads/intro-workflow.png)
 
 ## Why threads matters
 
@@ -50,10 +52,10 @@ that can:
 Agents in Threads don't just chat—they **act**. Through Connections, your agents
 can:
 
-- Read your Slack channels and manage team communications
+- Access your Slack channels and manage team communications
 - Create Linear issues when bugs are found
 - Query GitHub repositories and analyze pull requests
-- Access your deployment platform deployments and build logs
+- Check your Vercel deployments and build logs
 - Search the web for up-to-date information
 - Integrate with custom tools through Model Context Protocol (MCP) servers
 
@@ -65,6 +67,53 @@ Everything you build in Threads can be **deployed to production**:
 - The tools it has access to
 - Its conversation patterns and responses
 - Ready-to-deploy Modus applications
+
+## Connections
+
+**Hypermode Agents get access to a vast ecosystem of tools and integrations by
+default.** Through Connections, your agents can seamlessly integrate with
+popular services and your own custom APIs.
+
+![Agent Connections Ecosystem](/images/threads/agent-ecosystem.png)
+
+### Built-in integrations
+
+Hypermode provides native, production-ready connections to essential business
+tools:
+
+- **GitHub** for repository management and pull request analysis
+- **Linear** for project management and issue tracking
+- **Slack** for team communication and notifications
+- **Vercel** for deployment monitoring and build log analysis
+- **Notion** for documentation and knowledge management
+- **Exa** for enhanced web search capabilities
+
+### Model Context Protocol (MCP) support
+
+Hypermode fully supports the **Model Context Protocol**, an open standard for
+secure, structured tool integration. Your agents can connect to any
+MCP-compatible service and integrate with custom MCP servers you build for
+internal tools.
+
+### Pipedream's 2000+ integrations
+
+Through **Pipedream Connect**, your agents gain instant access to over **2000
+pre-built integrations** across the software ecosystem. This includes:
+
+- CRM platforms like Salesforce and HubSpot
+- Marketing tools like Mailchimp and Google Analytics
+- Communication platforms such as Discord and Microsoft Teams
+- E-commerce solutions like Shopify and Stripe
+- Cloud services and productivity suites
+
+### Security and permissions
+
+All connections are secured by default with:
+
+- **Scoped access** so agents only get tools relevant to their role
+- **Encrypted credentials** for all API keys and tokens
+- **Audit logging** to track every tool interaction
+- **Team controls** for admins to manage connection access
 
 ## Getting started: your first agent
 
@@ -199,99 +248,179 @@ falls through the cracks.
 
 ## Real-world examples
 
-### Development workflow agent
+### Sales pipeline agent
 
-**What it does**: monitors GitHub pull requests, provides code reviews, and
-manages Linear issues.
+<div style={{ display: "flex", justifyContent: "center" }}>
+  <img
+    src="/images/threads/sales-agent-card.png"
+    alt="Sales Pipeline Agent"
+    style={{
+      width: "60%",
+      maxWidth: "60%",
+      height: "auto",
+      display: "block",
+      margin: "0 auto",
+    }}
+  />
+</div>
 
-```text
-Training conversation:
-
-You: "When a new PR is created, analyze it for security issues and code quality"
-
-Agent: "I'll check each PR for common vulnerabilities and style issues.
-        Should I also verify tests are included?"
-
-You: "Yes, and if tests are missing, create a Linear issue"
-
-Agent: "Got it. I'll analyze PRs, check for tests, and create Linear tickets
-        when needed."
-
-You: "Also check commit messages for our convention"
-
-Agent: "Perfect. I'll verify commit messages follow your team's standards
-        and suggest improvements."
-```
-
-**Current capabilities**:
-
-- GitHub repository analysis
-- Pull request review and feedback
-- Linear issue creation and management
-- Code quality assessment
-- Git commit analysis
-
-### Slack productivity agent
-
-**What it does**: monitors Slack channels, manages team communications, and
-tracks project updates.
+**What it does**: analyzes your sales data and manages pipeline activities when
+you ask, integrating Stripe, HubSpot, and Slack.
 
 ```text
 Training conversation:
 
-You: "Monitor #engineering channel for deployment mentions and summarize
-     weekly progress"
+You: "Check our HubSpot pipeline and tell me which deals need follow-up this week"
 
-Agent: "I'll watch for deployment keywords. Should I track specific projects?"
+Agent: "I'll analyze your pipeline and identify deals requiring attention.
+        What criteria should I use to prioritize follow-ups?"
 
-You: "Yes, look for mentions of our main products and their status updates"
+You: "Deals over $10k that haven't been contacted in 5+ days, and any deals in 'proposal sent' stage for more than a week"
 
-Agent: "I'll categorize updates by project and create weekly summaries."
+Agent: "Got it. I'll check those criteria and provide a prioritized list.
+        Should I also draft follow-up messages for the sales team?"
 
-You: "Also respond to direct questions about project status"
+You: "Yes, and check our Stripe data to see if any recent payments need to be updated in HubSpot"
 
-Agent: "I'll maintain context about recent discussions and provide helpful
-        responses when asked."
+Agent: "I'll analyze both systems, suggest follow-ups, and flag any data sync issues between Stripe and HubSpot."
+
+You: "This will save me hours each week. Can I deploy this sales agent for my team?"
+
+Agent: "Absolutely! Would you like to deploy this sales pipeline agent so your team can use it for deal analysis?"
+
+You: "Yes, deploy it now"
+
+Agent: *Agent is now deployed and ready for your sales team to use*
 ```
 
 **Current capabilities**:
 
-- Slack channel monitoring
-- Message analysis and categorization
-- User profile and status tracking
-- Team communication facilitation
-- Automated status reporting
+- **Pipeline analysis** for deal status and follow-up recommendations
+- **HubSpot deal review** with updates and notifications
+- **Stripe payment reconciliation** to check for sync issues
+- **Slack reporting** to share insights with your sales team
+- **Deal prioritization** based on your criteria for pipeline review
+- **Follow-up suggestions** with draft messages for outreach
 
-### Infrastructure monitoring agent
+**Business impact**: A marketing agency reduced pipeline review time from 2
+hours to 15 minutes and improved follow-up consistency with their agent's
+pipeline analysis.
 
-**What it does**: monitors deployment platform deployments, analyzes build logs,
-and reports on app health.
+### Customer support agent
+
+<div style={{ display: "flex", justifyContent: "center" }}>
+  <img
+    src="/images/threads/customer-support-agent-card.png"
+    alt="Sales Pipeline Agent"
+    style={{
+      width: "60%",
+      maxWidth: "60%",
+      height: "auto",
+      display: "block",
+      margin: "0 auto",
+    }}
+  />
+</div>
+
+**What it does**: analyzes support tickets and customer inquiries when you ask,
+providing insights and suggested responses across email and support platforms.
 
 ```text
 Training conversation:
 
-You: "Watch our deployment platform deployments and alert me when builds fail"
+You: "Check our support emails from today and categorize the urgent issues"
 
-Agent: "I'll monitor your deployment status. Should I analyze the error logs?"
+Agent: "I'll review your support inbox and identify urgent items by keywords and sender history.
+        What makes an issue urgent for your team?"
 
-You: "Yes, and suggest potential fixes when possible"
+You: "Billing problems, system outages, and angry customers. Group them by type and draft responses"
 
-Agent: "I'll examine build logs, identify common failure patterns, and
-        recommend solutions."
+Agent: "I'll categorize today's emails by urgency and type, then suggest appropriate responses for each category."
 
-You: "Also track deployment frequency and success rates"
+You: "Great, and check if any tickets in our system need escalation to engineering"
 
-Agent: "I'll maintain metrics on your deployment pipeline and provide
-        regular health reports."
+Agent: "I'll review open tickets, identify technical issues that need engineering attention, and draft escalation summaries."
+
+You: "This is going to streamline our entire support process. Can I deploy this agent?"
+
+Agent: "Absolutely! Would you like to deploy this customer support agent so your team can use it for ticket analysis?"
+
+You: "Yes, deploy it now"
+
+Agent: *Agent is now deployed and ready for your support team to use*
 ```
 
 **Current capabilities**:
 
-- Deployment platform project monitoring
-- Deployment status tracking
-- Build log analysis
-- Error pattern recognition
-- Infrastructure health reporting
+- **Email analysis** for inbox review and categorization
+- **Ticket prioritization** based on your criteria for support queue analysis
+- **Response drafting** for common issues and customer communication
+- **Escalation identification** for issues that need team attention
+- **Customer sentiment analysis** to check satisfaction levels
+- **Knowledge base suggestions** for relevant help articles
+
+**Business impact**: A SaaS company reduced support triage time from 2 hours to
+20 minutes with their agent's daily support request analysis and categorization.
+
+### Marketing insights agent
+
+<div style={{ display: "flex", justifyContent: "center" }}>
+  <img
+    src="/images/threads/marketing-agent-card.png"
+    alt="Sales Pipeline Agent"
+    style={{
+      width: "60%",
+      maxWidth: "60%",
+      height: "auto",
+      display: "block",
+      margin: "0 auto",
+    }}
+  />
+</div>
+
+**What it does**: analyzes marketing performance across channels when you ask,
+providing campaign insights and optimization recommendations.
+
+```text
+Training conversation:
+
+You: "Check how our email campaign performed last week and compare it to our social media posts"
+
+Agent: "I'll pull data from Mailchimp and your social platforms to compare performance.
+        What metrics matter most for your campaigns?"
+
+You: "Email open rates, click-through rates, and social engagement. Also check which content drove the most website traffic"
+
+Agent: "I'll analyze those metrics and identify your top-performing content across channels."
+
+You: "Perfect, and give me recommendations for next week's campaigns based on what worked best"
+
+Agent: "I'll review the data patterns and suggest content types, timing, and messaging for your upcoming campaigns."
+
+You: "This is exactly what I need for my weekly marketing reviews. Can I deploy this agent?"
+
+Agent: "Absolutely! Would you like to deploy this marketing insights agent so your team can access it?"
+
+You: "Yes, deploy it now"
+
+Agent: *Agent is now deployed and ready for your team to use for marketing analysis*
+```
+
+**Current capabilities**:
+
+- **Campaign analysis** for performance reviews across email and social
+  platforms
+- **Cross-channel comparison** to see how different platforms are performing
+- **Content performance insights** to understand what resonates with your
+  audience
+- **Optimization recommendations** based on data analysis for campaign
+  improvements
+- **Audience segmentation analysis** to understand engagement patterns
+- **ROI calculations** to measure campaign effectiveness
+
+**Business impact**: An e-commerce brand improved campaign ROI by 60% and
+reduced campaign analysis time from 4 hours to 30 minutes with their agent's
+weekly performance reviews.
 
 ## Advanced patterns
 
@@ -304,7 +433,7 @@ GitHub Agent → Specialized for code review and repository management
      ↓
 Slack Agent → Focused on team communication and coordination
      ↓
-Deployment Agent → Optimized for deployment monitoring and infrastructure
+Vercel Agent → Optimized for deployment analysis and infrastructure
 ```
 
 Each agent excels in its domain while maintaining consistent behavior patterns.
@@ -340,8 +469,7 @@ Agent: "I'll update my review criteria to include performance analysis
 
 Threads works with **multiple models** through Hypermode's Model Router:
 
-- **Generative Pre-trained Transformer (GPT)-4.1**: Latest OpenAI model for
-  complex reasoning and code analysis
+- **GPT-4.1**: Latest OpenAI model for complex reasoning and code analysis
 - **Claude 4**: Anthropic's advanced model for writing and analysis tasks
 - **Gemini**: Google's model for multi-modal tasks and data processing
 - **O1/O3**: OpenAI's reasoning models for complex problem-solving
@@ -350,10 +478,10 @@ Threads works with **multiple models** through Hypermode's Model Router:
 Switch models to optimize for different tasks:
 
 ```text
-You: "Use Claude for the writing tasks and Generative Pre-trained Transformer (GPT)-4.1 for code analysis"
+You: "Use Claude for the writing tasks and GPT-4.1 for code analysis"
 
 Agent: *Adapts model usage based on task type*
-"I'm now using Claude for documentation and Generative Pre-trained Transformer (GPT)-4.1 for technical analysis.
+"I'm now using Claude for documentation and GPT-4.1 for technical analysis.
 The combination provides better results for both areas."
 ```
 
@@ -365,7 +493,7 @@ Agents only get the tools they need:
 
 - **GitHub Agent**: Repository access only (no deployment permissions)
 - **Slack Agent**: Communication tools only (no code access)
-- **Deployment Agent**: Deployment monitoring only (no user data access)
+- **Vercel Agent**: Deployment analysis only (no user data access)
 
 ### Team collaboration
 
@@ -388,7 +516,7 @@ Every agent action is traceable:
 
 ```text
 ❌ "Build me a general assistant"
-✅ "Build an agent that monitors our GitHub PRs and creates Linear issues for bugs"
+✅ "Build an agent that analyzes our GitHub PRs and creates Linear issues for bugs"
 ```
 
 ### Train iteratively
@@ -410,73 +538,6 @@ Every agent action is traceable:
 ```text
 ❌ "Figure out what I mean"
 ✅ "When I say 'urgent', treat it as high priority and notify the team lead"
-```
-
-## Current capabilities
-
-Threads currently supports:
-
-### Integrated tools
-
-- **GitHub**: Repository management, pull request analysis, commit tracking
-- **Slack**: Channel monitoring, user management, message handling
-- **Linear**: Issue creation and tracking
-- **Deployment platform**: Deployment monitoring, build log analysis
-- **Web search**: Web search and content discovery
-- **Time functions**: UTC time, scheduling capabilities
-
-### Agent features
-
-- **Persistent memory**: Agents remember training across sessions
-- **Tool integration**: Seamless connection to external services
-- **Multi-model support**: Choose the best model for each task
-- **Structured outputs**: Agents can generate formatted responses
-- **Error handling**: Robust error recovery and user feedback
-
-### Development workflow
-
-- **Real-time training**: Immediate feedback and iteration
-- **Context preservation**: Conversation history maintained
-- **Task generation**: Convert conversations into reusable workflows
-- **Production deployment**: Direct path from conversation to live agent
-
-## Roadmap features
-
-Features planned for future releases:
-
-### Enhanced automation (coming soon)
-
-More sophisticated workflow automation:
-
-```text
-Agent: "I notice we've done this GitHub workflow 3 times. Should I save it
-        as a standard automation?"
-
-You: "Yes, make it available to the whole team"
-
-Agent: "Automation created: 'PR Review Process' - available in your
-        team workspace"
-```
-
-### Multi-agent orchestration (coming soon)
-
-Agents that coordinate with each other:
-
-```text
-GitHub Agent: "Found 5 PRs needing review. Delegating to Code Review Agent..."
-Review Agent: "Analysis complete. Passing results to Linear Agent for issue creation..."
-Linear Agent: "Issues created. Notifying team through Slack Agent..."
-```
-
-### Advanced scheduling (coming soon)
-
-Time-based agent triggers:
-
-```text
-- Daily GitHub activity summaries
-- Weekly deployment health reports
-- Monthly team productivity analysis
-- Real-time alert responses
 ```
 
 ## Get started today
