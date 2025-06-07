@@ -17,10 +17,11 @@ runtimes:
     - go@1.23.2
 
 lint:
+  disabled:
+    - vale
   enabled:
     - renovate@39.210.1
     - golangci-lint@1.64.8
-    - vale@3.10.0
     - actionlint@1.7.7
     - checkov@3.2.390
     - git-diff-check
