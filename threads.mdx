@@ -27,11 +27,12 @@ Most AI agent development follows a painful pattern:
 
 **Threads eliminates this translation loss.** Domain experts work directly with
 agents, training them through conversation, seeing immediate results, and
-iterating in real-time.
+iterating in real-time. When ready, **eject to code** exports your trained agent
+as a complete Modus application.
 
 ```text
 Traditional: Idea → Requirements → Code → Deploy → Test → Repeat
-Threads:     Idea → Conversation → Working Agent → Deploy
+Threads:     Idea → Conversation → Working Agent → Eject to Code
 ```
 
 ## Core concepts
@@ -59,14 +60,14 @@ can:
 - Search the web for up-to-date information
 - Integrate with custom tools through Model Context Protocol (MCP) servers
 
-### Natural language to production code
+### Natural language to deployable code
 
-Everything you build in Threads can be **deployed to production**:
+Everything you build in Threads can be **exported as real software**:
 
 - Your agent's personality and instructions
 - The tools it has access to
 - Its conversation patterns and responses
-- Ready-to-deploy Modus applications
+- Complete Modus applications through **eject to code**
 
 ## Connections
 
@@ -192,11 +193,11 @@ You: "I want to deploy this agent to handle our GitHub PRs automatically"
 Threads: *Agent is now available for deployment through Hypermode*
 - Agent configuration and prompts saved
 - Tool integrations and permissions configured
-- Ready for production deployment
+- Ready for deployment
 - Accessible through Hypermode's infrastructure
 ```
 
-Your conversation just became a **production-ready agent**.
+Your conversation just became a **deployable agent**.
 
 ### Step 4: iterate and enhance
 
@@ -245,6 +246,134 @@ instruction.
 **The result**: your team's code review process is now fully automated, from
 detection to ticket creation, saving hours of manual work while ensuring nothing
 falls through the cracks.
+
+## Eject to Code: From Conversation to Deployable Software
+
+Your Code Review Agent works perfectly in Threads—automatically hosted and
+maintained. But if you want to hand it off to your development team or integrate
+it into larger systems, **eject to code** lets you export everything you built
+through natural language as a complete Modus application.
+
+### From Threads to Modus Code
+
+Remember your Code Review Agent that analyzes pull requests and creates Linear
+tickets? Here's what that conversation becomes when exported:
+
+```go
+// Your Threads conversation becomes this structured agent
+type CodeReviewAgent struct {
+    agents.AgentBase
+
+    // Persistent memory - remembers your training
+    ReviewHistory     []CodeReview
+    TeamPreferences   TeamSettings
+    SecurityRules     []SecurityCheck
+    NamingConventions []NamingRule
+}
+
+// Your natural language instructions become system prompts
+func (a *CodeReviewAgent) analyzePullRequest(prData string) (*string, error) {
+    systemPrompt := buildPromptFromThreadsTraining(
+        a.TeamPreferences,    // "Security issues are high priority"
+        a.NamingConventions,  // "Avoid names like 'data1', 'temp_thing'"
+        a.ReviewHistory,      // Learns from previous reviews
+    )
+
+    // AI analysis with your trained context
+    analysis := model.Invoke(systemPrompt, prData)
+
+    // Tool integrations you configured in Connections
+    for issue := range extractIssues(analysis) {
+        if issue.Type == "security" {
+            linearAPI.CreateTicket(issue, priority="High", tag="code-review-bot")
+        }
+    }
+
+    // State persists across sessions automatically
+    a.ReviewHistory = append(a.ReviewHistory, newReview)
+
+    return formatResponse(analysis, ticketsCreated)
+}
+
+// GraphQL API generated automatically
+func ReviewPullRequest(agentId string, prData string) (string, error) {
+    return agents.SendMessage(agentId, "review_pull_request", prData)
+}
+```
+
+### The Power of Eject to Code
+
+#### **From Conversation to Real Software**
+
+**What you built in Threads:**
+
+- "Check for security issues and suggest better variable names"
+- "Create Linear tickets with high priority for security, medium for quality"
+- "Tag everything with 'code-review-bot'"
+
+**What gets exported:**
+
+- Complete Modus agent with persistent memory
+- Your exact training becomes structured system prompts
+- Tool integrations (GitHub, Linear) configured and functional
+- GraphQL API ready for deployment
+
+#### **Built on Open Source Modus**
+
+Your exported agent runs on **Modus**, Hypermode's open-source agent runtime:
+
+```bash
+# Your agent becomes a standard Modus app
+git clone your-exported-agent
+cd code-review-agent
+modus dev      # Local development
+modus deploy   # Production deployment
+```
+
+**Key advantages:**
+
+- **No vendor lock-in**: Your code runs anywhere Modus runs
+- **Open source ecosystem**: Extend with community tools and integrations
+- **Standard DevOps**: CI/CD, testing, monitoring work normally
+- **Full transparency**: Complete visibility into agent behavior
+
+#### **Enterprise-Grade Architecture**
+
+The exported code isn't a prototype—it's enterprise-grade software:
+
+- **Persistent State**: Agent memory survives restarts and failures
+- **Concurrency**: Handle thousands of simultaneous operations
+- **Sandboxing**: Each agent instance runs in isolation
+- **Observability**: Built-in logging, tracing, and debugging
+- **Security**: Tool access scoped to agent roles
+
+#### **Developer-Friendly Handoff**
+
+Platform teams get real software they can audit and extend while preserving all
+the natural language training from Threads.
+
+### Ready to Build Sophisticated Agents?
+
+**This is just the beginning.** The pseudo-code above shows the concept, but
+Modus provides a complete framework for building sophisticated, stateful agents
+that scale.
+
+**Your agent works perfectly in Threads.** For many use cases, keeping your
+agent hosted automatically in Threads is ideal—it handles deployment, scaling,
+and maintenance for you.
+
+**Ready for more control?** If you're looking to hand off to other engineers,
+integrate with existing systems, or build coordinated multi-agent workflows, you
+can eject to code and get a complete Modus application that your development
+team can own, extend, and deploy anywhere.
+
+**Learn more about building agents with Modus:** For complete documentation on
+agent development, tool integration, and deployment, visit our
+[Developer Documentation](/developers).
+
+**Your Threads conversation was just the design phase.** With Modus, you can
+build agents that become as reliable and scalable as any microservice in your
+infrastructure.
 
 ## Real-world examples
 
