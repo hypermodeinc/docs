@@ -21,7 +21,7 @@ complex multi-step operations.
 To begin, import the `agents` namespace and `Agent` base class from the SDK:
 
 ```ts
-import { agents, Agent, AgentInfo } from "@hypermode/modus-sdk-as"
+import { agents, Agent, AgentInfo, AgentEvent } from "@hypermode/modus-sdk-as"
 ```
 
 ## Agent APIs
@@ -165,6 +165,7 @@ abstract class Agent {
   onSuspend(): void
   onResume(): void
   onTerminate(): void
+  publishEvent(event: AgentEvent): void
 }
 ```
 
@@ -208,6 +209,42 @@ abstract class Agent {
   Optional lifecycle method called when the agent is about to be terminated.
 </ResponseField>
 
+<ResponseField name="publishEvent(event)" type="method">
+  Publishes an event from this agent to any subscribers. The event must extend
+  the `AgentEvent` base class.
+</ResponseField>
+
+### Event Classes
+
+#### AgentEvent
+
+Base class for agent events that can be published to subscribers.
+
+```ts
+abstract class AgentEvent {
+  readonly eventName: string
+
+  constructor(eventName: string)
+}
+```
+
+<ResponseField name="eventName" type="string" required>
+  The name of the event type. Must be provided in the constructor and can't be
+  empty.
+</ResponseField>
+
+Custom events should extend this class and include any additional data as
+properties:
+
+```ts
+@json
+class CountUpdated extends AgentEvent {
+  constructor(public count: i32) {
+    super("countUpdated")
+  }
+}
+```
+
 ### Types
 
 #### AgentInfo
@@ -236,12 +273,12 @@ class AgentInfo {
 
 ## Example Usage
 
-Here's a complete example of a simple counter agent:
+Here's a complete example of a simple counter agent with event streaming:
 
 ### Agent Implementation
 
 ```ts
-import { Agent } from "@hypermode/modus-sdk-as"
+import { Agent, AgentEvent } from "@hypermode/modus-sdk-as"
 
 export class CounterAgent extends Agent {
   get name(): string {
@@ -276,10 +313,22 @@ export class CounterAgent extends Agent {
       } else {
         this.count++
       }
+
+      // Publish an event to subscribers
+      this.publishEvent(new CountUpdated(this.count))
+
       return this.count.toString()
     }
 
     return null
+  }
+}
+
+// Custom event for count updates
+@json
+class CountUpdated extends AgentEvent {
+  constructor(public count: i32) {
+    super("countUpdated")
   }
 }
 ```
@@ -341,4 +390,85 @@ query {
 mutation {
   updateCount(agentId: "agent_abc123")
 }
+
+# Subscribe to real-time events
+subscription {
+  agentEvent(agentId: "agent_abc123") {
+    name
+    data
+    timestamp
+  }
+}
+```
+
+### Event Subscription
+
+To receive real-time events from your agent, subscribe using GraphQL
+subscriptions over Server-Sent Events:
+
+```graphql
+subscription CounterEvents($agentId: String!) {
+  agentEvent(agentId: $agentId) {
+    name
+    data
+    timestamp
+  }
+}
+```
+
+Example events you might receive:
+
+```json
+{
+  "data": {
+    "agentEvent": {
+      "name": "countUpdated",
+      "data": {
+        "count": 5
+      },
+      "timestamp": "2025-06-08T14:30:00Z"
+    }
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "agentEvent": {
+      "name": "status",
+      "data": {
+        "status": "running"
+      },
+      "timestamp": "2025-06-08T14:30:05Z"
+    }
+  }
+}
+```
+
+### Client Integration
+
+Use appropriate GraphQL Server-Sent Events (SSE) clients such as:
+
+- [graphql-sse](https://the-guild.dev/graphql/sse) for vanilla JavaScript
+- [urql](https://formidable.com/open-source/urql/docs/basics/subscriptions/)
+  with Server-Sent Events (SSE) exchange
+- EventSource API directly for simple use cases
+
+Example with EventSource:
+
+```javascript
+const eventSource = new EventSource(
+  '/graphql?query=subscription{agentEvent(agentId:"agent_abc123"){name,data,timestamp}}',
+  {
+    headers: {
+      Accept: "text/event-stream",
+    },
+  },
+)
+
+eventSource.addEventListener("next", (event) => {
+  const data = JSON.parse(event.data)
+  console.log("Agent event:", data)
+})
 ```

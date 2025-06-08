@@ -213,7 +213,7 @@ type Agent interface {
 #### AgentBase
 
 A convenient base struct that provides default implementations for optional
-methods.
+methods and includes event publishing capabilities.
 
 ```go
 type AgentBase struct{}
@@ -224,12 +224,47 @@ func (AgentBase) OnInitialize() error { return nil }
 func (AgentBase) OnSuspend() error { return nil }
 func (AgentBase) OnResume() error { return nil }
 func (AgentBase) OnTerminate() error { return nil }
+func (a *AgentBase) PublishEvent(event AgentEvent) error
 ```
 
 <Note>
   You can embed `AgentBase` in your agent struct to automatically implement the
   optional methods, then override only the ones you need.
 </Note>
+
+<ResponseField name="PublishEvent(event)" type="method">
+  Publishes an event from this agent to any subscribers. The event must
+  implement the `AgentEvent` interface.
+</ResponseField>
+
+### Event Interface
+
+#### AgentEvent
+
+Interface that custom events must implement to be published from agents.
+
+```go
+type AgentEvent interface {
+    EventName() string
+}
+```
+
+<ResponseField name="EventName()" type="method" required>
+  Must return the name/type of the event as a string.
+</ResponseField>
+
+Custom events should implement this interface and include any additional data as
+struct fields:
+
+```go
+type CountUpdated struct {
+    Count int `json:"count"`
+}
+
+func (e CountUpdated) EventName() string {
+    return "countUpdated"
+}
+```
 
 ### Types
 
@@ -269,7 +304,7 @@ type MessageOption interface {
 
 ## Example Usage
 
-Here's a complete example of a simple counter agent:
+Here's a complete example of a simple counter agent with event streaming:
 
 ### Agent Implementation
 
@@ -323,11 +358,26 @@ func (c *CounterAgent) OnReceiveMessage(messageName string, data string) (*strin
         } else {
             c.count++
         }
+
+        // Publish an event to subscribers
+        if err := c.PublishEvent(CountUpdated{Count: c.count}); err != nil {
+            return nil, err
+        }
+
         result := strconv.Itoa(c.count)
         return &result, nil
     }
 
     return nil, nil
+}
+
+// Custom event for count updates
+type CountUpdated struct {
+    Count int `json:"count"`
+}
+
+func (e CountUpdated) EventName() string {
+    return "countUpdated"
 }
 
 // Register the agent in init function
@@ -412,5 +462,148 @@ mutation {
 # Increment asynchronously
 mutation {
   updateCountAsync(agentId: "agent_abc123", qty: 5)
+}
+
+# Subscribe to real-time events
+subscription {
+  agentEvent(agentId: "agent_abc123") {
+    name
+    data
+    timestamp
+  }
+}
+```
+
+### Event Subscription
+
+To receive real-time events from your agent, subscribe using GraphQL
+subscriptions over Server-Sent Events:
+
+```graphql
+subscription CounterEvents($agentId: String!) {
+  agentEvent(agentId: $agentId) {
+    name
+    data
+    timestamp
+  }
+}
+```
+
+Example events you might receive:
+
+```json
+{
+  "data": {
+    "agentEvent": {
+      "name": "countUpdated",
+      "data": {
+        "count": 5
+      },
+      "timestamp": "2025-06-08T14:30:00Z"
+    }
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "agentEvent": {
+      "name": "status",
+      "data": {
+        "status": "running"
+      },
+      "timestamp": "2025-06-08T14:30:05Z"
+    }
+  }
+}
+```
+
+### Multiple Event Types
+
+You can define multiple event types for different scenarios:
+
+```go
+// Mission events
+type MissionStarted struct {
+    MissionName string `json:"missionName"`
+    Priority    string `json:"priority"`
+}
+
+func (e MissionStarted) EventName() string {
+    return "missionStarted"
+}
+
+type MissionCompleted struct {
+    MissionName string `json:"missionName"`
+    Success     bool   `json:"success"`
+    Duration    int    `json:"duration"`
+}
+
+func (e MissionCompleted) EventName() string {
+    return "missionCompleted"
+}
+
+// Error events
+type ErrorOccurred struct {
+    Message string `json:"message"`
+    Code    string `json:"code"`
+}
+
+func (e ErrorOccurred) EventName() string {
+    return "errorOccurred"
+}
+```
+
+### Client Integration
+
+Use appropriate GraphQL Server-Sent Events (SSE) clients such as:
+
+- [graphql-sse](https://the-guild.dev/graphql/sse) for JavaScript/TypeScript
+- [gqlgen](https://gqlgen.com/recipes/subscriptions/) for Go clients
+- Standard HTTP libraries with Server-Sent Events (SSE) support
+
+Example with curl:
+
+```bash
+curl -N -H "accept: text/event-stream" \
+     -H "content-type: application/json" \
+     -X POST http://localhost:8080/graphql \
+     -d '{"query":"subscription { agentEvent(agentId: \"agent_abc123\") { name data timestamp } }"}'
+```
+
+Example with Go client:
+
+```go
+import (
+    "bufio"
+    "encoding/json"
+    "fmt"
+    "net/http"
+    "strings"
+)
+
+func subscribeToAgentEvents(agentId string) {
+    query := fmt.Sprintf(`{"query":"subscription { agentEvent(agentId: \"%s\") { name data timestamp } }"}`, agentId)
+
+    req, _ := http.NewRequest("POST", "http://localhost:8080/graphql", strings.NewReader(query))
+    req.Header.Set("Accept", "text/event-stream")
+    req.Header.Set("Content-Type", "application/json")
+
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    if err != nil {
+        panic(err)
+    }
+    defer resp.Body.Close()
+
+    scanner := bufio.NewScanner(resp.Body)
+    for scanner.Scan() {
+        line := scanner.Text()
+        if strings.HasPrefix(line, "data: ") {
+            data := strings.TrimPrefix(line, "data: ")
+            fmt.Printf("Received event: %s\n", data)
+        }
+    }
 }
 ```

@@ -440,9 +440,9 @@ Monitor your agent's real-time activities using the unified event subscription:
 
 ```graphql
 subscription {
-  agentEvents(agentId: "agent_neo_001") {
-    type
-    payload
+  agentEvent(agentId: "agent_neo_001") {
+    name
+    data
     timestamp
   }
 }
@@ -453,9 +453,9 @@ Your agent streams various types of operational events:
 ```json
 {
   "data": {
-    "agentEvents": {
-      "type": "mission_started",
-      "payload": {
+    "agentEvent": {
+      "name": "mission_started",
+      "data": {
         "missionName": "Deep Matrix Surveillance",
         "priority": "HIGH",
         "estimatedDuration": "180s"
@@ -469,9 +469,9 @@ Your agent streams various types of operational events:
 ```json
 {
   "data": {
-    "agentEvents": {
-      "type": "agent_threat_detected",
-      "payload": {
+    "agentEvent": {
+      "name": "agent_threat_detected",
+      "data": {
         "threatLevel": "CRITICAL",
         "confidence": 0.92,
         "indicators": ["agent_smith_replication", "unusual_code_patterns"],
@@ -486,9 +486,9 @@ Your agent streams various types of operational events:
 ```json
 {
   "data": {
-    "agentEvents": {
-      "type": "surveillance_progress",
-      "payload": {
+    "agentEvent": {
+      "name": "surveillance_progress",
+      "data": {
         "phase": "Processing Matrix surveillance data",
         "progress": 0.65,
         "reportsProcessed": 5,
@@ -500,31 +500,47 @@ Your agent streams various types of operational events:
 }
 ```
 
-### Emitting events from your agent
+### Publishing events from your agent
 
-Agents can broadcast real-time operational intelligence by emitting events
-during their operations. Let's enhance our Matrix surveillance example:
+Agents can broadcast real-time operational intelligence by publishing events
+during their operations. Use the `PublishEvent` method to emit custom events:
 
 ```go
+// Custom event types implement the AgentEvent interface
+type ThreatDetected struct {
+    ThreatLevel string `json:"threatLevel"`
+    Confidence  float64 `json:"confidence"`
+    Analysis    string `json:"analysis"`
+}
+
+func (e ThreatDetected) EventName() string {
+    return "threat_detected"
+}
+
+// Other event types can be defined similarly...
+
 func (a *IntelligenceAgent) analyzeMatrixActivity(
     data string,
 ) (*string, error) {
     // Emit mission start event
-    a.EmitEvent("mission_started", any{
-        "missionName": "Matrix Surveillance Analysis",
-        "priority": "HIGH",
-        "activityData": len(*data),
+    err := a.PublishEvent(MissionStarted{
+        MissionName: "Matrix Surveillance Analysis",
+        Priority: "HIGH",
+        ActivityData: len(*data),
     })
+    if err != nil {
+        return nil, err
+    }
 
     // Store new intelligence in persistent memory
     a.intelligenceReports = append(a.intelligenceReports, *data)
     a.lastContact = time.Now()
 
     // Emit progress update
-    a.EmitEvent("surveillance_progress", any{
-        "reportsProcessed": len(a.intelligenceReports),
-        "phase": "Processing Matrix surveillance data",
-        "progress": 0.3,
+    a.PublishEvent(SurveillanceProgress{
+        ReportsProcessed: len(a.intelligenceReports),
+        Phase: "Processing Matrix surveillance data",
+        Progress: 0.3,
     })
 
     // Build context from all accumulated intelligence
@@ -555,10 +571,10 @@ func (a *IntelligenceAgent) analyzeMatrixActivity(
     }
 
     // Emit AI processing event
-    a.EmitEvent("ai_analysis_started", any{
-        "modelName": "analyst-model",
-        "contextSize": len(accumulatedReports),
-        "reportCount": len(a.intelligenceReports),
+    a.PublishEvent(AIAnalysisStarted{
+        ModelName: "analyst-model",
+        ContextSize: len(accumulatedReports),
+        ReportCount: len(a.intelligenceReports),
     })
 
     output, err := model.Invoke(input)
@@ -577,20 +593,19 @@ func (a *IntelligenceAgent) analyzeMatrixActivity(
     if strings.Contains(strings.ToLower(analysis), "critical") ||
        strings.Contains(strings.ToLower(analysis), "agent smith") {
         a.threatLevel = math.Min(a.threatLevel + 0.2, 1.0)
-        a.EmitEvent("agent_threat_detected", any{
-            "threatLevel": "HIGH",
-            "confidence": a.threatLevel,
-            "analysis": analysis,
-            "recommendation": "immediate_extraction",
+        a.PublishEvent(ThreatDetected{
+            ThreatLevel: "HIGH",
+            Confidence: a.threatLevel,
+            Analysis: analysis,
         })
     }
 
     // Emit mission completion
-    a.EmitEvent("mission_completed", any{
-        "missionName": "Matrix Surveillance Analysis",
-        "confidence": a.threatLevel,
-        "reportsAnalyzed": len(a.intelligenceReports),
-        "status": "SUCCESS",
+    a.PublishEvent(MissionCompleted{
+        MissionName: "Matrix Surveillance Analysis",
+        Confidence: a.threatLevel,
+        ReportsAnalyzed: len(a.intelligenceReports),
+        Status: "SUCCESS",
     })
 
     result := fmt.Sprintf(`Matrix surveillance complete:
@@ -621,6 +636,27 @@ analysis.
 
 **Progressive Enhancement**: update user interfaces progressively as agents work
 through complex, multi-phase operations without polling or manual refresh.
+
+### Subscription protocol
+
+Modus uses GraphQL subscriptions over Server-Sent Events (SSE) following the
+[GraphQL-SSE specification](https://the-guild.dev/graphql/sse). To consume these
+subscriptions:
+
+1. **From a web browser**: Use the EventSource API or a GraphQL client that
+   supports SSE subscriptions
+2. **From Postman**: Set Accept header to `text/event-stream` and make a POST
+   request
+3. **From curl**: Use `-N` flag and appropriate headers for streaming
+
+Example with curl:
+
+```bash
+curl -N -H "accept: text/event-stream" \
+     -H "content-type: application/json" \
+     -X POST http://localhost:8080/graphql \
+     -d '{"query":"subscription { agentEvent(agentId: \"agent_neo_001\") { name data timestamp } }"}'
+```
 
 ## Monitoring ongoing operations
 
@@ -706,9 +742,9 @@ query MonitorMission($agentId: String!) {
 
 # Real-time streaming approach (recommended)
 subscription LiveAgentMonitoring($agentId: String!) {
-  agentEvents(agentId: $agentId) {
-    type
-    payload
+  agentEvent(agentId: $agentId) {
+    name
+    data
     timestamp
   }
 }
