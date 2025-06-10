@@ -59,10 +59,6 @@
             ]
           },
           {
-            "group": "Tutorials",
-            "pages": ["semantic-search"]
-          },
-          {
             "group": "Tools",
             "pages": ["model-router", "hyp-cli"]
           },
