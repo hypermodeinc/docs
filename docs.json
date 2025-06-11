@@ -44,7 +44,7 @@
           },
           {
             "group": "Agents",
-            "pages": ["/agents/introduction", "agents/threads", "agents/modus"]
+            "pages": ["/agents/introduction", "agents/threads"]
           },
           {
             "group": "Graphs",
