@@ -5,6 +5,7 @@
 [Cc]omputeDistance
 [Cc]omputeSimilarity
 [Cc]onsole
+CRM
 [Dd]eserialize
 [Dd]istilbert
 [Dd]ropAll
@@ -24,6 +25,7 @@
 [Hh]ypercategories
 [Hh]ypermode
 [Ii]nferencing
+Jira
 [Ll]og
 maxWidth
 (?i)mcp
@@ -31,6 +33,7 @@ maxWidth
 [Nn]amespace
 [Nn]amespaces
 [Nn]nClassify
+OAuth
 [Oo]nboarding
 [Pp]arams
 [Qq]ueryScalar
@@ -84,6 +87,8 @@ UUID
 Warnf
 WASM
 waitlist
+Xero
+Zendesk
 
 # Dgraph terms
 Alpha
