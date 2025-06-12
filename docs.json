@@ -45,16 +45,16 @@
           {
             "group": "Agents",
             "pages": [
-              "/agents/introduction",
-              "agents/threads",
-              "agents/concierge",
+              "agents/introduction",
+              "agents/create-agent",
+              "agents/work",
               "agents/connections",
               "agents/tasks",
               {
                 "group": "Example Agents",
                 "pages": [
                   "agents/example-agents",
-                  "agents/agent-gallery/social-media-intern"
+                  "agents/agent-gallery/social-media"
                 ]
               },
               "agents/faq"
