@@ -1,0 +1,159 @@
+---
+title: "Connections"
+sidebarTitle: "Connections"
+description:
+  "Build AI agents that act, not just chat—from natural conversation to
+  production-ready code"
+---
+
+# Connections
+
+**Connections** enable Hypermode Agents to securely access and interact with
+external tools, APIs, and services. With over 2,000+ available integrations,
+agents can execute tasks across your entire technology stack.
+
+## Overview
+
+Hypermode Agents are built for execution, not just conversation. Connections
+provide the bridge between your agents and the tools they need to complete
+tasks, from internal APIs to third-party applications and public resources.
+
+## Key Features
+
+<CardGroup cols={2}>
+  <Card title="2,000+ Integrations" icon="plug">
+    Access to popular tools, APIs, and services including GitHub, Stripe,
+    Snowflake, and custom internal systems.
+  </Card>
+
+<Card title="Role-Based Access" icon="shield-check">
+  Agents only access tools relevant to their specific role and responsibilities.
+</Card>
+
+<Card title="Secure Authentication" icon="lock">
+  Industry-standard security protocols protect your credentials and data.
+</Card>
+
+  <Card title="Model Context Protocol" icon="code">
+    Tools are structured, typed, and traceable for sophisticated agent
+    reasoning.
+  </Card>
+</CardGroup>
+
+## How Connections Work
+
+### Domain-Specific Tool Assignment
+
+Rather than providing agents with access to all available tools, Connections
+uses a curated approach based on the agent's role and domain:
+
+**Frontend Development Agent**
+
+- GitHub (code repository management)
+- Linear (issue tracking)
+- Vercel (deployment and hosting)
+
+**Revenue Operations Agent**
+
+- Snowflake (data warehousing)
+- Stripe (payment processing)
+- Internal ticketing API (customer support)
+
+**Marketing Agent**
+
+- HubSpot (CRM and automation)
+- Google Analytics (website analytics)
+- Mailchimp (email marketing)
+
+### Role-Based Access Control
+
+<Info>
+  Agents are granted access only to tools that align with their designated role,
+  improving both security and decision-making clarity.
+</Info>
+
+1. **Define agent role** and primary responsibilities
+2. **Select relevant tools** from the curated toolkit
+3. **Configure permissions** for each integration
+4. **Monitor usage** and adjust access as needed
+
+## Model Context Protocol (MCP)
+
+Connections leverage the Model Context Protocol to provide agents with enhanced
+tool interaction capabilities:
+
+### Structured Tool Definitions
+
+### Benefits of MCP Integration
+
+<CardGroup cols={1}>
+  <Card title="Enhanced Reasoning" icon="brain">
+    Agents understand tool capabilities and parameters as clearly as they
+    understand text, enabling better planning and execution.
+  </Card>
+
+<Card title="Sophisticated Planning" icon="route">
+  Multi-step workflows can be planned and executed with tools working together
+  seamlessly.
+</Card>
+
+<Card title="Improved Debugging" icon="bug">
+  Structured tool calls provide clear audit trails and error diagnosis
+  capabilities.
+</Card>
+
+  <Card title="Tool Reusability" icon="recycle">
+    Consistent tool definitions enable agents to reuse and combine tools
+    effectively.
+  </Card>
+</CardGroup>
+
+## Security and Compliance
+
+<Warning>
+  All connections use secure authentication methods including OAuth 2.0, API
+  keys, and service account credentials. Credentials are encrypted and never
+  exposed to the agent's reasoning process.
+</Warning>
+
+### Security Features
+
+- **Encrypted credential storage** with enterprise-grade security
+- **Audit logging** for all tool interactions
+- **Permission scoping** to limit access to necessary resources only
+- **Regular security updates** and compliance monitoring
+
+## Getting Started
+
+## Add a new Connections
+
+![](/images/agents/connections-sidebar.png)
+
+## Manage connections
+
+![](/images/agents/connections-manage.png)
+
+<Tip>
+  Start with a small set of essential tools for your agent's role, then expand
+  as you identify additional needs through usage patterns.
+</Tip>
+
+## Available Integrations
+
+Popular integration categories include:
+
+- **Development Tools**: GitHub, GitLab, Jira, Linear
+- **Data & Analytics**: Snowflake, BigQuery, Tableau, Looker
+- **Customer Success**: Salesforce, HubSpot, Zendesk, Intercom
+- **Finance**: Stripe, QuickBooks, Xero, PayPal
+- **Marketing**: Mailchimp, Constant Contact, Google Ads, Facebook Ads
+- **Productivity**: Slack, Microsoft Teams, Google Workspace, Notion
+
+### Test Integration
+
+Verify that connections work correctly by testing basic operations first.
+
+<Info>
+  Custom integrations can be built for internal APIs and proprietary systems.
+  Contact support for assistance with custom connection development.
+</Info>

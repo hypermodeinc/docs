@@ -44,7 +44,21 @@
           },
           {
             "group": "Agents",
-            "pages": ["/agents/introduction", "agents/threads"]
+            "pages": [
+              "/agents/introduction",
+              "agents/threads",
+              "agents/concierge",
+              "agents/connections",
+              "agents/tasks",
+              {
+                "group": "Example Agents",
+                "pages": [
+                  "agents/example-agents",
+                  "agents/agent-gallery/social-media-intern"
+                ]
+              },
+              "agents/faq"
+            ]
           },
           {
             "group": "Graphs",
