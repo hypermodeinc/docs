@@ -26,59 +26,68 @@ minutes to complete.
 
 <Step title="Start a new thread with Concierge">
 
-![Start a new thread with Concierge](/images/agents/concierge1.png)
+Select the "Start a new thread" option from the left navigation bar under the
+Hypermode Concierge agent.
+
+![Start a new thread with Concierge](/images/agents/concierge-1.png)
 
 </Step>
 
 <Step title="Describe your agent requirements">
 
-![Describe your agent requirements](/images/agents/concierge2.png)
+The Concierge agent asks some basic questions about what kind of agent you'd
+like to create and the tasks you'd like the agent to take on your behalf.
 
-<Tip></Tip>
+![Describe your agent requirements](/images/agents/concierge-2.png)
 
 </Step>
 
 <Step title="Refine your agent description">
 
-![Refine your agent description](/images/agents/concierge3.png)
+Follow the Concierge agent's guided steps to fully refine your agents role,
+background, and instructions. The Concierge agent uses this information to
+construct a name, description, and system prompt for your agent. Once you've
+fully specified the details, your new agent is created and added to the left
+navigation bar alongside the other agents in your workspace.
+
+![Refine your agent description](/images/agents/concierge-3.png)
+
+<Tip>
+  Traditional hand-written prompts often suffer from inconsistency, verbosity,
+  or vagueness. Concierge solves this by using AI to author structured prompts
+  that follow best practices for models.
+</Tip>
 
 </Step>
 
 <Step title="Enable connections and start working with your agent">
 
-![Enable connections and start working with your agent](/images/agents/concierge4.png)
+To take actions on your behalf, such as updating your calendar or submitting
+code updates as pull requests, your agent needs access to connections with
+services to act on your behalf. Which connections you enable for your agent
+depends on the type and scope of agent to be created. For example, our product
+marketing agent might need access to GitHub to be able to submit website changes
+as pull requests and access to Notion to read internal messaging and product
+documents.
+
+![Enable connections and start working with your agent](/images/agents/concierge-4.png)
+
+Once you've added connections, start chatting with your agent by asking what
+they can help you with or what connections they have access to.
 
 </Step>
 
 </Steps>
 
-<Tip>
-  Traditional hand-written prompts often suffer from inconsistency, verbosity,
-  or vagueness. Concierge solves this by using AI to author structured prompts
-  that follow best practices for reasoning models.
-</Tip>
-
-### Traditional Approach Challenges
-
-- **Inconsistent formatting** across different prompts
-- **Verbose instructions** that can confuse models
-- **Vague requirements** leading to unpredictable behavior
-- **Manual optimization** required for each agent
-
-### Concierge Advantages
-
-- **Structured syntax** that reasoning models interpret effectively
-- **Consistent formatting** across all generated agents
-- **Semantic clarity** in instructions and objectives
-- **Automated optimization** based on best practices
-
 ## Create an agent manually
 
-<Tip>TODO: tip on creating an agent manually</Tip>
+Agents can also be created manually by following the steps below.
 
 <Steps>
 
 <Step title="Create new agent">
+
+Select the "Create new agent" option from the left navigation bar.
 
 ![Create new agent](/images/agents/manual-create-1.png)
 
@@ -86,31 +95,61 @@ minutes to complete.
 
 <Step title="Describe your agent">
 
-![Describe your agent](/images/agents/manual-create-2.png)
-
 Choose a name, title, and description for your agent. An agent avatar is
-generated
+generated randomly but you can also upload your own avatar.
+
+<img
+  height="200"
+  src="/images/agents/manual-create-2.png"
+  alt="Describe your agent"
+  style={{ width: "100%", maxWidth: "400px" }}
+/>
 
 </Step>
 
 <Step title="Add your agent instructions">
 
-![Add your agent instructions](/images/agents/manual-create-3.png)
+The agent instructions are the system prompt that's used to guide the agent's
+behavior. This is where you define the agent's role and objectives.
 
-<Tip>TODO: tips for writing agent instructions</Tip>
+<img
+  height="200"
+  src="/images/agents/manual-create-3.png"
+  alt="Add your agent instructions"
+  style={{ width: "100%", maxWidth: "400px" }}
+/>
 
 </Step>
 
 <Step title="Select your agent's model">
 
-![Select your agent's model](/images/agents/manual-create-5.png)
+Select the model that you want to use for your agent. The model is used to run
+the agent's instructions, including choosing how to leverage tools.
+
+<img
+  height="200"
+  src="/images/agents/manual-create-4.png"
+  alt="Select your agent's model"
+  style={{ width: "100%", maxWidth: "400px" }}
+/>
 
 </Step>
 
 <Step title="Enable connections and start working with your agent">
 
-![Enable connections and start working with your agent](/images/agents/manual-create-4.png)
+Enable connections to allow your agent to access tools and data. This is where
+you define the tools that your agent has access to.
+
+<img
+  height="200"
+  src="/images/agents/manual-create-5.png"
+  alt="Enable connections and start working with your agent"
+  style={{ width: "100%", maxWidth: "400px" }}
+/>
 
 </Step>
 
 </Steps>
+
+See the [Agent Gallery](/agents/example-agents) for more examples of agents that
+you can create.

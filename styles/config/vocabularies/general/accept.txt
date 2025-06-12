@@ -25,6 +25,7 @@
 [Hh]ypermode
 [Ii]nferencing
 [Ll]og
+maxWidth
 (?i)mcp
 [Mm]odus
 [Nn]amespace
