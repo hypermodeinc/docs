@@ -59,7 +59,8 @@
               "graphs/connect",
               "graphs/manage-schema",
               "graphs/manage-data",
-              "graphs/manage-graph"
+              "graphs/manage-graph",
+              "graphs/graph-mcp"
             ]
           },
           {
@@ -93,7 +94,6 @@
               "modus/app-manifest",
               "modus/data-fetching",
               "modus/model-invoking",
-              "modus/search",
               "modus/api-generation",
               "modus/authentication",
               "modus/error-handling",
@@ -111,7 +111,6 @@
                 "group": "AssemblyScript SDK",
                 "pages": [
                   "modus/sdk/assemblyscript/overview",
-                  "modus/sdk/assemblyscript/collections",
                   "modus/sdk/assemblyscript/console",
                   "modus/sdk/assemblyscript/dgraph",
                   "modus/sdk/assemblyscript/graphql",
@@ -127,7 +126,6 @@
                 "group": "Go SDK",
                 "pages": [
                   "modus/sdk/go/overview",
-                  "modus/sdk/go/collections",
                   "modus/sdk/go/console",
                   "modus/sdk/go/dgraph",
                   "modus/sdk/go/graphql",
@@ -506,10 +504,6 @@
       "source": "/",
       "destination": "/introduction",
       "permanent": true
-    },
-    {
-      "source": "/modus/sdk/collections",
-      "destination": "/modus/sdk/assemblyscript/collections"
     },
     {
       "source": "/modus/sdk/console",
