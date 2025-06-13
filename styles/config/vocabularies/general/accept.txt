@@ -1,5 +1,6 @@
 [Aa]gentic
 [Aa]lterSchema
+Attio
 [Bb]oolean
 [Cc]ollections
 [Cc]omputeDistance

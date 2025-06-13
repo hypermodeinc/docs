@@ -54,6 +54,8 @@
                 "group": "Example Agents",
                 "pages": [
                   "agents/example-agents",
+                  "agents/agent-gallery/gtm-engineer",
+                  "agents/agent-gallery/market-researcher",
                   "agents/agent-gallery/social-media",
                   "agents/agent-gallery/workout-scheduling",
                   "agents/agent-gallery/music-recommendation"
