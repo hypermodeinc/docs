@@ -52,6 +52,15 @@
             "pages": ["introduction", "semantic-search"]
           },
           {
+            "group": "Apps",
+            "pages": [
+              "apps/overview",
+              "apps/develop",
+              "apps/deploy",
+              "apps/monitor"
+            ]
+          },
+          {
             "group": "Graphs",
             "pages": [
               "graphs/overview",
@@ -62,10 +71,6 @@
               "graphs/manage-graph",
               "graphs/graph-mcp"
             ]
-          },
-          {
-            "group": "Apps",
-            "pages": ["apps/overview"]
           },
           {
             "group": "Tools",

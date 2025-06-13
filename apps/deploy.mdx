@@ -1,0 +1,215 @@
+title: "Deploy" description: "Deploy your Apps to production with Hypermode"
+"og:title": "Deploy - Apps" Deploying Apps to Production Once you've developed
+and tested your App locally, you're ready to deploy it to production on
+Hypermode. Hypermode provides a seamless deployment pipeline that takes your
+Modus code and makes it available as a scalable, production-ready service.
+Prerequisites Before deploying, ensure you have:
+
+- A Modus app with a valid modus.json configuration
+- Authentication with Hypermode via the Hyp CLI
+- A linked GitHub repository (for automatic deployments) Authentication Setup
+  First, authenticate with Hypermode using the Hyp CLI:
+
+# Install the Hyp CLI if you haven't already
+
+npm install -g @hypermode/hyp-cli
+
+# Log into your Hypermode account
+
+hyp login This opens your browser and authenticates you with Hypermode, storing
+your credentials locally for future deployments. Linking Your Repository To
+enable automatic deployments, link your Modus app repository to Hypermode:
+
+# Navigate to your Modus app directory
+
+cd my-modus-app
+
+# Link the repository to Hypermode
+
+hyp link This process:
+
+- Connects your GitHub repository to your Hypermode workspace
+- Sets up the necessary webhooks for automatic deployments
+- Creates a Hypermode app linked to your repository Deployment Methods Automatic
+  Deployment via Git The recommended approach is automatic deployment through
+  Git. When you link your repository, Hypermode automatically deploys your app
+  when you push to the main branch.
+
+# Make your changes and commit them
+
+git add . git commit -m "Update app logic"
+
+# Push to trigger deployment
+
+git push origin main Manual Deployment For immediate deployments or testing, you
+can deploy directly from your local environment:
+
+# Deploy your current working directory
+
+modus deploy
+
+# Deploy a specific branch
+
+modus deploy --branch feature-branch
+
+# Deploy with custom environment variables
+
+modus deploy --env production Deployment Configuration Environment Variables
+Configure environment variables for your production deployment in your
+modus.json: { "connections": { "external-api": { "type": "http", "baseUrl":
+"https://api.example.com/", "headers": { "Authorization": "Bearer {{API_KEY}}" }
+} } } Set production environment variables through the Hypermode console or via
+the CLI:
+
+# Set environment variables for production
+
+hyp env set API_KEY=your_production_api_key hyp env set
+DATABASE_URL=your_production_db_url Build Configuration Ensure your modus.json
+is properly configured for production: { "functions": "./functions", "models": {
+"text-generator": { "sourceModel": "meta-llama/Llama-3.2-3B-Instruct",
+"provider": "hugging-face", "connection": "hypermode" } }, "connections": {
+"hypermode": { "type": "hypermode", "host": "https://api.hypermode.com" } } }
+Deployment Pipeline When you deploy, Hypermode follows this process:
+
+1. Code Analysis: Validates your Modus configuration and code structure
+2. Compilation: Compiles your Go or AssemblyScript code to WebAssembly
+3. Model Setup: Configures and validates all specified AI models
+4. Function Registration: Makes your functions available via GraphQL
+5. Agent Deployment: Deploys any stateful agents with persistent memory
+6. Health Checks: Verifies the deployment is healthy and responsive Production
+   Features Automatic Scaling Your deployed Apps automatically scale based on
+   demand:
+
+- Functions: Scale to zero when not in use, instant cold starts
+- Agents: Maintain persistent memory while scaling compute resources
+- Models: Shared model infrastructure with automatic load balancing Built-in
+  Observability Production deployments include comprehensive observability:
+- Function Logs: Real-time logs for all function executions
+- Performance Metrics: Response times, error rates, and throughput
+- Agent Monitoring: Memory usage and state transitions
+- Model Analytics: Token usage and inference performance Security and Compliance
+  Production deployments are secured by default:
+- Automatic HTTPS: All endpoints served over secure connections
+- API Authentication: Secure API key management
+- Environment Isolation: Complete separation between development and production
+- Audit Logging: Complete audit trail of all deployments and changes Managing
+  Deployments Viewing Deployment Status Monitor your deployments through the
+  Hypermode console or CLI:
+
+# Check deployment status
+
+hyp status
+
+# View recent deployments
+
+hyp deployments list
+
+# Get detailed logs
+
+hyp logs --follow Rolling Back Deployments If issues arise, quickly roll back to
+a previous deployment:
+
+# List available versions
+
+hyp deployments list
+
+# Roll back to a specific deployment
+
+hyp rollback --version v1.2.3
+
+# Roll back to the previous version
+
+hyp rollback --previous Blue-Green Deployments For zero-downtime deployments,
+Hypermode supports blue-green deployment patterns:
+
+# Deploy to staging environment
+
+modus deploy --env staging
+
+# Promote staging to production after testing
+
+hyp promote staging production Custom Domains Configure custom domains for your
+production Apps:
+
+# Add a custom domain
+
+hyp domain add api.mycompany.com
+
+# Configure SSL certificates (automatic with Let's Encrypt)
+
+hyp domain ssl enable api.mycompany.com CI/CD Integration For advanced
+deployment workflows, integrate with your CI/CD pipeline:
+
+# .github/workflows/deploy.yml
+
+name: Deploy to Hypermode
+
+on: push: branches: [main]
+
+jobs: deploy: runs-on: ubuntu-latest steps: - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Hyp CLI
+        run: npm install -g @hypermode/hyp-cli
+
+      - name: Deploy to Hypermode
+        run: modus deploy
+        env:
+          HYP_API_KEY: ${{ secrets.HYP_API_KEY }}
+
+Production Best Practices Performance Optimization
+
+- Use appropriate model sizes for your use case
+- Implement proper error handling and retries
+- Cache frequently accessed data
+- Monitor memory usage in stateful agents Security
+- Never commit API keys or secrets to version control
+- Use environment variables for all sensitive configuration
+- Regularly rotate API keys and credentials
+- Implement proper input validation Monitoring
+- Set up alerts for error rates and performance degradation
+- Monitor agent memory usage and state persistence
+- Track model inference costs and usage patterns
+- Implement health checks for critical dependencies Cost Management
+- Monitor token usage for AI models
+- Use appropriate compute resources for your workload
+- Implement rate limiting to prevent unexpected costs
+- Consider model selection based on cost vs. performance trade-offs
+  Troubleshooting Deployments Common Issues Build Failures
+
+# Check build logs
+
+hyp logs --build
+
+# Validate configuration locally
+
+modus build --validate Environment Variable Issues
+
+# List current environment variables
+
+hyp env list
+
+# Test with local environment
+
+modus dev --env production-like Model Configuration Problems
+
+# Test model connections
+
+hyp models test
+
+# Check model availability
+
+hyp models list --available Getting Help If you encounter deployment issues:
+
+- Check the deployment troubleshooting guide
+- View real-time logs in the Hypermode console
+- Contact support through the Hypermode dashboard
+- Join the community Discord for peer support Your Apps are now ready for
+  production use, with automatic scaling, built-in observability, and
+  enterprise-grade security. The deployment process ensures your Modus code runs
+  reliably in a production environment while maintaining the same development
+  experience you're familiar with locally.
