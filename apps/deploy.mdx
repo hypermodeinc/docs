@@ -12,10 +12,13 @@ Hypermode console and deploying your Modus code.
 
 Before deploying, ensure you have:
 
-- A completed Modus app (see the [Develop guide](/develop) for setup)
+- A completed Modus app (see the [Develop guide](/apps/develop) for setup)
 - A GitHub account and repository
 
-## Step 1: Create Your Workspace
+## Step 1: Create your workspace
+
+> **Note:** The `hyp link` command is currently turned off during migration.
+> Manual configuration through the Hypermode console is required.
 
 First, go to [hypermode.com](https://hypermode.com) and create your workspace.
 
@@ -24,12 +27,15 @@ First, go to [hypermode.com](https://hypermode.com) and create your workspace.
   alt="Create workspace interface showing workspace name input field"
 />
 
-Enter a name for your workspace and click "Create workspace". Workspaces are
+Enter a name for your workspace and click `Create workspace`. Workspaces are
 where you and your team manage apps in Hypermode.
 
 ## Step 2: Create a New App
 
-From the dashboard, click on "Apps":
+> **Note:** The `hyp link` command is currently turned during migration. Manual
+> configuration through the Hypermode console is required.
+
+From the dashboard, click 'Apps'
 
 <img
   src="/images/apps/workspace-landing.png"
@@ -49,13 +55,13 @@ Fill in the app configuration details:
 
 Configure your app settings:
 
-- **Modus app name**: Enter your app name (e.g., `my-modus-app`)
+- **Modus app name**: Enter your app name, for example `my-modus-app`
 - **GitHub Repository**: Select your existing repository from the dropdown
-- **Modus app location**: Choose your deployment region (e.g., Portland)
+- **Modus app location**: Choose your deployment region
 
 If you don't have a repository yet, you can create one first.
 
-## Step 4: Create Your GitHub Repository (if needed)
+## Step 4: Create your GitHub repository
 
 If you need to create a new repository:
 
@@ -67,12 +73,12 @@ If you need to create a new repository:
 Fill in your repository details:
 
 - Choose the repository owner (your organization or personal account)
-- Enter a memorable repository name (e.g., `my-modus-app`)
+- Enter a memorable repository name for example `my-modus-app`
 - Add an optional description
 
 Then return to the app configuration and select your newly created repository.
 
-## Step 5: View Your App Configuration
+## Step 5: View your App configuration
 
 Once your app is created, you'll see your app's configuration:
 
@@ -89,11 +95,11 @@ Your app is now configured with:
 - **GitHub repository**: Connected repository for deployments
 - **API key**: Authentication key for your app
 
-## Deployment Options
+## Deployment options
 
-You have two ways to deploy your app to Hypermode:
+You have one primary way to deploy your app to Hypermode:
 
-### Option 1: Automatic Deployment via GitHub Actions
+### Automatic deployment via GitHub Actions
 
 Add a GitHub Actions workflow to your repository for automatic deployments.
 
@@ -145,37 +151,15 @@ git commit -m "Deploy my Modus app"
 git push origin main
 ```
 
-### Option 2: Deploy with Hyp CLI
+The deployment automatically:
 
-You can also deploy directly using the Hyp CLI for immediate deployments:
-
-```bash
-# Install the Hyp CLI
-npm install -g @hypermode/hyp-cli
-
-# Login to Hypermode
-hyp login
-
-# Deploy your current app
-hyp deploy
-```
-
-The Hyp CLI deployment:
-
-- Builds your app locally
-- Uploads it directly to Hypermode
-- Provides immediate feedback and logs
-- Useful for testing or urgent deployments
-
-Both methods automatically:
-
-1. Build your Modus app via GitHub Actions or locally
-2. Deploy to your Hypermode endpoint
-3. Make your functions available via GraphQL
+1. Builds your Modus app via GitHub Actions
+2. Deploys to your Hypermode endpoint
+3. Makes your functions available via GraphQL
 
 Deployment output:
 
-```
+```text
 🚀 Deployment started for commit abc123d
 📦 Building application...
 ✓ Functions compiled successfully
@@ -186,7 +170,7 @@ Deployment output:
 Endpoint: https://my-modus-app-my-workspace-hurx1.hypermode.app/graphql
 ```
 
-## Production Features
+## Production features
 
 Your deployed app includes:
 
@@ -196,7 +180,7 @@ Your deployed app includes:
 - **Real-time logs**: Monitor function execution in the Activity tab
 - **Environment variables**: Manage secrets and configuration
 
-### Viewing Function Activity
+### Viewing function activity
 
 Monitor your function executions in the Activity tab:
 
@@ -212,7 +196,7 @@ You can see:
 - Success/error status
 - Execution timestamps
 
-### Environment Variables
+### Environment variables
 
 Configure environment variables in the Environment variables tab:
 
@@ -228,7 +212,7 @@ Set production environment variables for:
 - Feature flags
 - External service configurations
 
-## Testing Your Deployment
+## Testing your deployment
 
 Test your deployed functions via GraphQL:
 
@@ -239,7 +223,7 @@ curl -X POST https://your-app-endpoint.hypermode.app/graphql \
   -d '{"query": "{ sayHello(name: \"Production\") }"}'
 ```
 
-## Next Steps
+## Next steps
 
 With your app deployed, your development workflow becomes:
 
