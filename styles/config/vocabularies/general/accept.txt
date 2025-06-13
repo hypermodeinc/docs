@@ -79,6 +79,7 @@ RDF
 REST|[Rr]est
 Scattergories
 SDK|sdk
+[Ss]idekick
 Spotify
 Strava
 TLS

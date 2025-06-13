@@ -40,7 +40,11 @@
         "groups": [
           {
             "group": "Hypermode",
-            "pages": ["introduction", "semantic-search"]
+            "pages": [
+              "introduction",
+              "first-hypermode-agent",
+              "semantic-search"
+            ]
           },
           {
             "group": "Agents",
