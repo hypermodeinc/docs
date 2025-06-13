@@ -1,44 +1,42 @@
 ---
 title: Hypermode
 description:
-  An AI development platform that provides hosting and management capabilities
-  for agents and knowledge graphs
+  An AI agent development platform that provides natural language
+  experimentation for anyone.
 mode: "wide"
 sidebarTitle: Introduction
 "og:title": "Hypermode Docs - The AI Development Platform"
 ---
 
-{/* vale Google.Contractions = NO */}
+<Frame>
+  <img
+    className="block dark:hidden"
+    src="/images/overview-light.png"
+    alt="Hypermode's overview, comprising natural language agents and code-first apps, graphs, and models."
+  />
+  <img
+    className="hidden dark:block"
+    src="/images/overview-dark.png"
+    alt="Hypermode's overview, comprising natural language agents and code-first apps, graphs, and models."
+  />
+</Frame>
 
-## What is Hypermode?
-
-{/* vale Google.Contractions = YES */}
-
-Hypermode is a managed service that provides the workbench and infrastructure to
-create powerful, engaging, and secure agentic flows, AI features, and backend
-services.
-
-With a suite of tools and services, start with one Hypermode component or all of
-them together as your complete backend.
+Hypermode is a complete workbench for rapidly building agents with natural
+language. When you're ready to embed an agent into your app, eject to code and
+manage it as a backend service.
 
 <CardGroup cols={2}>
-  <Card
-    title="Apps"
-    icon="rectangle-code"
-    href="https://hypermode.typeform.com/agents-waitlist"
-  >
-    Build and deploy agentic flows, agents, and AI-enabled services | Join our
-    waitlist →
+  <Card title="Agents" icon="robot" href="agents/introduction">
+    Craft powerful agents in natural language with access to your tools and data
+  </Card>
+  <Card title="Apps" icon="code" href="apps/introduction">
+    Build and deploy agents, flows, and AI-enabled services with more control
   </Card>
   <Card title="Graphs" icon="chart-network" href="graphs/overview">
     Organize your knowledge in a natural structure of nodes and relationships
   </Card>
   <Card title="Models" icon="cube" href="/model-router">
     Experiment rapidly with the most popular open source and commercial models
-  </Card>
-  <Card title="Integrated Console" icon="display">
-    Understand and control the end-to-end flow of your agents, data, and
-    inferences
   </Card>
 </CardGroup>
 
