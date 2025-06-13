@@ -53,12 +53,7 @@
           },
           {
             "group": "Apps",
-            "pages": [
-              "apps/overview",
-              "apps/develop",
-              "apps/deploy",
-              "apps/monitor"
-            ]
+            "pages": ["apps/overview", "apps/develop", "apps/deploy"]
           },
           {
             "group": "Graphs",

@@ -5,56 +5,46 @@ description: "Deploy your Apps to production with Hypermode"
 ---
 
 Once you've developed and tested your App locally, you're ready to deploy it to
-production on Hypermode. Hypermode provides a seamless deployment pipeline that
-takes your Modus code and makes it available as a scalable, production-ready
-service.
+production on Hypermode. This guide walks you through creating an app in the
+Hypermode console and deploying your Modus code.
 
 ## Prerequisites
 
 Before deploying, ensure you have:
 
-- A Modus app with a valid `modus.json` configuration
+- A completed Modus app (see the [Develop guide](/develop) for setup)
 - A GitHub account and repository
-- The Modus CLI installed (`npm install -g @hypermode/modus-cli`)
 
-## Getting Started with Hypermode
+## Step 1: Create Your Workspace
 
-First, go to [hypermode.com](https://hypermode.com) and create your workspace by
-connecting to a GitHub repository.
-
-### Step 1: Create Your Workspace
-
-Navigate to Hypermode and create a new workspace. Workspaces are where you and
-your team get things done in Hypermode.
+First, go to [hypermode.com](https://hypermode.com) and create your workspace.
 
 <img
-  src="/images/apps/console-1.png"
+  src="/images/console-1.png"
   alt="Create workspace interface showing workspace name input field"
 />
 
-Enter a name for your workspace and click "Create workspace" to continue.
+Enter a name for your workspace and click "Create workspace". Workspaces are
+where you and your team manage apps in Hypermode.
 
-### Step 2: Choose Your Development Path
+## Step 2: Create a New App
 
-After creating your workspace, you'll see the main dashboard with options to get
-started:
+From the dashboard, click on "Apps":
 
 <img
-  src="/images/apps/console-2.png"
-  alt="Hypermode dashboard showing three options: Apps, Graphs, and Model router"
+  src="/images/console-2.png"
+  alt="Hypermode dashboard showing Apps option"
 />
 
-Click on "Apps" and then "Import your Modus app" to connect your existing
-repository or create a new one.
+Click "Import your Modus app" to connect your repository.
 
-### Step 3: Connect Your GitHub Repository
+## Step 3: Connect Your GitHub Repository
 
-Create a new repository or import an existing one. If you're starting fresh, you
-can create a new repository directly from Hypermode:
+Create a new repository or import an existing one:
 
 <img
-  src="/images/apps/github-create.png"
-  alt="GitHub repository creation interface with repository name field and template options"
+  src="/images/github-create.png"
+  alt="GitHub repository creation interface with repository name field"
 />
 
 Fill in your repository details:
@@ -63,402 +53,55 @@ Fill in your repository details:
 - Enter a memorable repository name (e.g., `my-modus-app`)
 - Add an optional description
 
-### Step 4: App Configuration
+## Step 4: Configure Your App
 
-Once your repository is connected, you'll see your app's configuration panel:
+Once your repository is connected, you'll see your app's configuration:
 
 <img
-  src="/images/apps/console-3.png"
+  src="/images/console-3.png"
   alt="App details panel showing endpoint, GitHub repository, and API key information"
 />
 
-Your app will be automatically configured with:
+Your app is now configured with:
 
-- **Endpoint**: Your app's GraphQL endpoint URL
-- **GitHub repository**: Link to your connected repository
-- **API key**: Authentication key for your app (click to reveal)
+- **Endpoint**: Your production GraphQL endpoint
+- **GitHub repository**: Connected repository for deployments
+- **API key**: Authentication key for your app
 
-## Local Development Setup
+## Deployment Options
 
-With your repository connected, clone it locally and set up your development
-environment:
+You have two ways to deploy your app to Hypermode:
 
-```bash
-# Clone your repository
-git clone https://github.com/your-username/my-modus-app.git
-cd my-modus-app
+### Option 1: Automatic Deployment via GitHub Actions
 
-# Initialize a new Modus app
-modus new
-```
+Add a GitHub Actions workflow to your repository for automatic deployments.
 
-The Modus CLI will guide you through creating your app:
-
-<img
-  src="/images/apps/console-5.png"
-  alt="Modus CLI interface showing SDK selection and app name input"
-/>
-
-The CLI will:
-
-1. Let you select your preferred SDK (Go, AssemblyScript, etc.)
-2. Prompt for your app name
-3. Generate the initial project structure
-
-Example output:
-
-```
-✓ Select a SDK: Go
-? Pick a name for your app: my-modus-app
-
-Creating new Modus app...
-✓ Created project structure
-✓ Installed dependencies
-✓ Generated sample functions
-
-Your Modus app is ready! Run 'modus dev' to start developing.
-```
-
-## Development Workflow
-
-### Local Development
-
-Start your development server to test your app locally:
-
-```bash
-# Start the development server
-modus dev
-```
-
-This will:
-
-- Compile your functions to WebAssembly
-- Start a local GraphQL server
-- Enable hot reload for rapid development
-- Provide real-time logs and debugging
-
-Example development output:
-
-```
-🚀 Starting Modus development server...
-📦 Compiling functions...
-✓ Compiled 3 functions successfully
-🌐 GraphQL endpoint: http://localhost:8686/graphql
-📊 GraphQL Playground: http://localhost:8686/
-🔄 Watching for changes...
-
-[12:34:56] INFO: Function 'generateText' loaded
-[12:34:56] INFO: Function 'processData' loaded
-[12:34:56] INFO: Function 'analyzeContent' loaded
-[12:34:56] INFO: Development server ready
-```
-
-### Building for Production
-
-Before deploying, ensure your app builds successfully:
-
-```bash
-# Build your app for production
-modus build
-```
-
-Expected build output:
-
-```
-📦 Building Modus app for production...
-🔍 Validating modus.json configuration...
-✓ Configuration valid
-🏗️  Compiling Go functions to WebAssembly...
-✓ generateText.wasm (1.2MB)
-✓ processData.wasm (890KB)
-✓ analyzeContent.wasm (1.1MB)
-📋 Generating function manifests...
-✓ Build completed successfully
-
-Build artifacts:
-- build/functions/
-- build/manifests/
-- build/modus.json
-```
-
-## Deployment Methods
-
-### Automatic Deployment via Git
-
-The recommended approach is automatic deployment through Git. When you push to
-the `main` branch, Hypermode automatically deploys your app.
-
-```bash
-# Make your changes and commit them
-git add .
-git commit -m "Add new AI-powered function"
-
-# Push to trigger deployment
-git push origin main
-```
-
-Deployment logs will show:
-
-```
-🚀 Deployment started for commit abc123d
-📦 Building application...
-✓ Functions compiled successfully
-🤖 Configuring AI models...
-✓ Model connections validated
-🌐 Deploying to production...
-✓ Health checks passed
-🎉 Deployment complete!
-
-Endpoint: https://my-modus-app-my-workspace-hurx1.hypermode.app/graphql
-```
-
-### Manual Deployment
-
-For immediate deployments or testing, you can deploy directly:
-
-```bash
-# Deploy your current working directory
-modus deploy
-
-# Deploy a specific branch
-modus deploy --branch feature-branch
-
-# Deploy with environment variables
-modus deploy --env production
-```
-
-## Authentication Setup
-
-For CLI deployments, authenticate with Hypermode:
-
-```bash
-# Install the Hyp CLI
-npm install -g @hypermode/hyp-cli
-
-# Log into your Hypermode account
-hyp login
-```
-
-This opens your browser and authenticates you with Hypermode:
-
-```
-🔐 Opening login page...
-✓ Authentication complete!
-✓ Successfully logged in as user@example.com! 🎉
-```
-
-## Deployment Configuration
-
-### Environment Variables
-
-Configure environment variables for your production deployment in your
-`modus.json`:
-
-```json
-{
-  "functions": "./functions",
-  "models": {
-    "text-generator": {
-      "sourceModel": "meta-llama/Llama-3.2-3B-Instruct",
-      "provider": "hugging-face",
-      "connection": "hypermode"
-    }
-  },
-  "connections": {
-    "hypermode": {
-      "type": "hypermode",
-      "host": "https://api.hypermode.com"
-    },
-    "external-api": {
-      "type": "http",
-      "baseUrl": "https://api.example.com/",
-      "headers": {
-        "Authorization": "Bearer {{API_KEY}}"
-      }
-    }
-  }
-}
-```
-
-Set production environment variables through the Hypermode console or via the
-CLI:
-
-```bash
-# Set environment variables for production
-hyp env set API_KEY=your_production_api_key
-hyp env set DATABASE_URL=your_production_db_url
-```
-
-## Deployment Pipeline
-
-When you deploy, Hypermode follows this process:
-
-1. **Code Analysis**: Validates your Modus configuration and code structure
-
-   ```
-   🔍 Analyzing code structure...
-   ✓ modus.json configuration valid
-   ✓ Function signatures verified
-   ✓ Dependencies resolved
-   ```
-
-2. **Compilation**: Compiles your Go or AssemblyScript code to WebAssembly
-
-   ```
-   🏗️  Compiling functions...
-   ✓ generateText.go → generateText.wasm
-   ✓ processData.go → processData.wasm
-   ✓ All functions compiled successfully
-   ```
-
-3. **Model Setup**: Configures and validates all specified AI models
-
-   ```
-   🤖 Setting up AI models...
-   ✓ text-generator model configured
-   ✓ Model endpoints validated
-   ✓ Connection to Hypermode established
-   ```
-
-4. **Function Registration**: Makes your functions available via GraphQL
-
-   ```
-   📡 Registering GraphQL endpoints...
-   ✓ generateText → Query.generateText
-   ✓ processData → Mutation.processData
-   ✓ GraphQL schema generated
-   ```
-
-5. **Health Checks**: Verifies the deployment is healthy and responsive
-   ```
-   🏥 Running health checks...
-   ✓ Endpoint responding (200ms)
-   ✓ Model connections active
-   ✓ Function execution test passed
-   ```
-
-## Production Features
-
-### Automatic Scaling
-
-Your deployed Apps automatically scale based on demand:
-
-- **Functions**: Scale to zero when not in use, instant cold starts
-- **Models**: Shared model infrastructure with automatic load balancing
-- **Connections**: Persistent connections with automatic failover
-
-### Built-in Observability
-
-Production deployments include comprehensive observability:
-
-```
-📊 Deployment metrics:
-- Function invocations: 1,247 (last 24h)
-- Average response time: 150ms
-- Error rate: 0.1%
-- Model token usage: 125,430 tokens
-```
-
-- **Function Logs**: Real-time logs for all function executions
-- **Performance Metrics**: Response times, error rates, and throughput
-- **Model Analytics**: Token usage and inference performance
-
-### Security and Compliance
-
-Production deployments are secured by default:
-
-- **Automatic HTTPS**: All endpoints served over secure connections
-- **API Authentication**: Secure API key management
-- **Environment Isolation**: Complete separation between development and
-  production
-- **Audit Logging**: Complete audit trail of all deployments and changes
-
-## Managing Deployments
-
-### Viewing Deployment Status
-
-Monitor your deployments through the Hypermode console or CLI:
-
-```bash
-# Check deployment status
-hyp status
-```
-
-Output:
-
-```
-📊 Deployment Status
-App: my-modus-app
-Status: ✓ Healthy
-Last deployed: 2 hours ago (v1.2.3)
-Endpoint: https://my-modus-app-my-workspace-hurx1.hypermode.app/graphql
-
-Recent activity:
-- 14:30: Deployment v1.2.3 completed successfully
-- 14:25: Build started for commit abc123d
-- 14:20: Push to main branch detected
-```
-
-```bash
-# View recent deployments
-hyp deployments list
-
-# Get detailed logs
-hyp logs --follow
-```
-
-### Rolling Back Deployments
-
-If issues arise, quickly roll back to a previous deployment:
-
-```bash
-# List available versions
-hyp deployments list
-
-# Roll back to a specific deployment
-hyp rollback --version v1.2.3
-
-# Roll back to the previous version
-hyp rollback --previous
-```
-
-## Custom Domains
-
-Configure custom domains for your production Apps:
-
-```bash
-# Add a custom domain
-hyp domain add api.mycompany.com
-
-# Configure SSL certificates (automatic with Let's Encrypt)
-hyp domain ssl enable api.mycompany.com
-```
-
-## CI/CD Integration
-
-For advanced deployment workflows, integrate with your CI/CD pipeline:
+Create `.github/workflows/ci-modus-build.yml`:
 
 ```yaml
-# .github/workflows/deploy.yml
-name: Deploy to Hypermode
+name: ci-modus-build
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "22"
 
       - name: Setup Go
         uses: actions/setup-go@v5
+        with:
+          go-version: "1.23.1"
 
       - name: Setup TinyGo
         uses: acifani/setup-tinygo@v2
@@ -467,93 +110,129 @@ jobs:
 
       - name: Build project
         run: npx -p @hypermode/modus-cli -y modus build
-
-      - name: Deploy to Hypermode
-        run: npx -p @hypermode/modus-cli -y modus deploy
-        env:
-          HYP_API_KEY: ${{ secrets.HYP_API_KEY }}
 ```
 
-## Production Best Practices
-
-### Performance Optimization
-
-- Use appropriate model sizes for your use case
-- Implement proper error handling and retries
-- Cache frequently accessed data
-- Monitor function execution times
-
-### Security
-
-- Never commit API keys or secrets to version control
-- Use environment variables for all sensitive configuration
-- Regularly rotate API keys and credentials
-- Implement proper input validation
-
-### Monitoring
-
-- Set up alerts for error rates and performance degradation
-- Monitor model token usage and costs
-- Track function execution patterns
-- Implement health checks for critical dependencies
-
-### Cost Management
-
-- Monitor token usage for AI models
-- Use appropriate compute resources for your workload
-- Implement rate limiting to prevent unexpected costs
-- Consider model selection based on cost vs. performance trade-offs
-
-## Troubleshooting Deployments
-
-### Common Issues
-
-**Build Failures**
+Once the workflow is added, **any push to the `main` branch automatically
+deploys your app**:
 
 ```bash
-# Check build logs
-hyp logs --build
+# Commit your changes
+git add .
+git commit -m "Deploy my Modus app"
+
+# Push to trigger deployment
+git push origin main
 ```
 
-Example build error resolution:
+### Option 2: Deploy with Hyp CLI
 
-```
-❌ Build failed: Function 'generateText' compilation error
-💡 Solution: Check Go syntax in functions/generateText.go
-📝 Error details: undefined variable 'ctx' on line 15
-```
-
-**Environment Variable Issues**
+You can also deploy directly using the Hyp CLI for immediate deployments:
 
 ```bash
-# List current environment variables
-hyp env list
+# Install the Hyp CLI
+npm install -g @hypermode/hyp-cli
 
-# Test with local environment
-modus dev --env production-like
+# Login to Hypermode
+hyp login
+
+# Deploy your current app
+hyp deploy
 ```
 
-**Model Configuration Problems**
+The Hyp CLI deployment:
+
+- Builds your app locally
+- Uploads it directly to Hypermode
+- Provides immediate feedback and logs
+- Useful for testing or urgent deployments
+
+Both methods automatically:
+
+1. Build your Modus app via GitHub Actions or locally
+2. Deploy to your Hypermode endpoint
+3. Make your functions available via GraphQL
+
+Deployment output:
+
+```
+🚀 Deployment started for commit abc123d
+📦 Building application...
+✓ Functions compiled successfully
+🌐 Deploying to production...
+✓ Health checks passed
+🎉 Deployment complete!
+
+Endpoint: https://my-modus-app-my-workspace-hurx1.hypermode.app/graphql
+```
+
+## Production Features
+
+Your deployed app includes:
+
+- **Automatic scaling**: Functions scale to zero when not in use
+- **HTTPS endpoints**: Secure GraphQL API
+- **Bearer token auth**: API key authentication
+- **Real-time logs**: Monitor function execution in the Activity tab
+- **Environment variables**: Manage secrets and configuration
+
+<img
+  src="/images/console-4.png"
+  alt="Activity logs showing function execution history"
+/>
+
+## Managing Your Deployment
+
+### Viewing Function Activity
+
+Monitor your function executions in the Activity tab:
+
+<img
+  src="/images/console-5.png"
+  alt="Function logs showing execution times and status"
+/>
+
+You can see:
+
+- Function execution history
+- Response times and duration
+- Success/error status
+- Execution timestamps
+
+### Environment Variables
+
+Configure environment variables in the Environment variables tab:
+
+<img
+  src="/images/console-6.png"
+  alt="Environment variables configuration panel"
+/>
+
+Set production environment variables for:
+
+- API keys and secrets
+- Database connection strings
+- Feature flags
+- External service configurations
+
+## Testing Your Deployment
+
+Test your deployed functions via GraphQL:
 
 ```bash
-# Test model connections
-hyp models test
-
-# Check model availability
-hyp models list --available
+curl -X POST https://your-app-endpoint.hypermode.app/graphql \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "{ sayHello(name: \"Production\") }"}'
 ```
 
-### Getting Help
+## Next Steps
 
-If you encounter deployment issues:
+With your app deployed, your development workflow becomes:
 
-- Check the
-  [deployment troubleshooting guide](https://docs.hypermode.com/troubleshooting)
-- View real-time logs in the Hypermode console
-- Contact support through the Hypermode dashboard
-- Join the community Discord for peer support
+1. Develop and test locally with `modus dev`
+2. Commit and push changes to GitHub
+3. Automatic deployment to production
+4. Monitor via Hypermode console
 
-Your Apps are now ready for production use, with automatic scaling, built-in
-observability, and enterprise-grade security. The deployment process ensures
-your Modus code runs reliably in a production environment while maintaining the
-same development experience you're familiar with locally.
+Your Modus app is now live and ready to handle production traffic with automatic
+scaling, built-in observability, and secure endpoints.
