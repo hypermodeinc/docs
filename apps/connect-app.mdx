@@ -1,0 +1,137 @@
+---
+title: "Connect Your App"
+description: "Integrate your App with external services and databases"
+"og:title": "Connect Your App - Apps"
+---
+
+Apps become powerful when they can connect to external systems. Hypermode
+supports connecting your app to APIs, databases, and model providers through
+secure, manageable integrations.
+
+## Connection Examples
+
+### OpenAI API connection
+
+Connect to OpenAI for language models:
+
+```json modus.json
+{
+  "models": {
+    "text-generator": {
+      "sourceModel": "gpt-4o-mini",
+      "connection": "openai",
+      "path": "v1/chat/completions"
+    }
+  },
+  "connections": {
+    "openai": {
+      "type": "http",
+      "baseUrl": "https://api.openai.com/",
+      "headers": {
+        "Authorization": "Bearer {{API_KEY}}"
+      }
+    }
+  }
+}
+```
+
+### PostgreSQL database
+
+Connect to a PostgreSQL database:
+
+```json modus.json
+{
+  "connections": {
+    "postgres": {
+      "type": "postgresql",
+      "connStr": "{{DATABASE_URL}}"
+    }
+  }
+}
+```
+
+### Dgraph database
+
+Connect to a Dgraph database for graph operations:
+
+```json modus.json
+{
+  "connections": {
+    "dgraph": {
+      "type": "dgraph",
+      "grpcTarget": "{{DGRAPH_ENDPOINT}}"
+    }
+  }
+}
+```
+
+## Environment variables
+
+### Naming convention
+
+Hypermode uses a consistent naming pattern for environment variables:
+`MODUS_<CONNECTION_NAME>_<PLACEHOLDER>`
+
+For a connection named `openai` with placeholder `{{API_KEY}}`:
+
+- Environment variable: `MODUS_OPENAI_API_KEY`
+
+### Local development
+
+Set environment variables in `.env.dev.local`:
+
+```text .env.dev.local
+MODUS_OPENAI_API_KEY="your_openai_api_key"
+MODUS_POSTGRES_DATABASE_URL="postgresql://localhost:5432/mydb"
+MODUS_DGRAPH_DGRAPH_ENDPOINT="localhost:9080"
+```
+
+### Production environment
+
+Configure production environment variables in the Hypermode console:
+
+<img
+  src="/images/apps/console-envs.png"
+  alt="Environment variables configuration panel"
+/>
+
+1. Navigate to your app in the console
+2. Click on the **Environment Variables** tab
+3. Add your environment variables with the proper naming convention
+4. Save the configuration
+
+## Testing connections
+
+### Local testing
+
+Test connections during development:
+
+```bash
+# Start development server
+modus dev
+
+# Test connections in the API Explorer
+# Navigate to http://localhost:8686/explorer
+```
+
+### Production testing
+
+Verify connections in production:
+
+```bash
+# Test your deployed app's connections
+curl -X POST https://your-app-endpoint.hypermode.app/graphql \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "{ testConnection }"}'
+```
+
+## Best practices
+
+- **Never commit secrets**: Use environment variables for all sensitive data
+- **Use least privilege**: Grant minimal necessary permissions to API tokens
+- **Test locally first**: Use `modus dev` to debug connection issues before
+  deploying
+- **Monitor usage**: Track API calls and database connections in production
+
+Your app can now securely connect to external services and databases.
