@@ -1,12 +1,13 @@
 ---
 title: "Deploy"
+sidebarTitle: "Deploy your App"
 description: "Deploy your Apps to production with Hypermode"
 "og:title": "Deploy - Apps"
 ---
 
 Once you've developed and tested your App locally, you're ready to deploy it to
-production on Hypermode. This guide walks you through creating an app in the
-Hypermode console and deploying your Modus code.
+production on Hypermode. This guide walks you through setting up automatic
+deployment for your Modus app.
 
 ## Prerequisites
 
@@ -14,92 +15,10 @@ Before deploying, ensure you have:
 
 - A completed Modus app (see the [Develop guide](/apps/develop) for setup)
 - A GitHub account and repository
+- Your app configured in the Hypermode console (see the
+  [Create Your App guide](/apps/create))
 
-## Step 1: Create your workspace
-
-> **Note:** The `hyp link` command is currently turned off during migration.
-> Manual configuration through the Hypermode console is required.
-
-First, go to [hypermode.com](https://hypermode.com) and create your workspace.
-
-<img
-  src="/images/apps/workspace-creation.png"
-  alt="Create workspace interface showing workspace name input field"
-/>
-
-Enter a name for your workspace and click `Create workspace`. Workspaces are
-where you and your team manage apps in Hypermode.
-
-## Step 2: Create a New App
-
-> **Note:** The `hyp link` command is currently turned during migration. Manual
-> configuration through the Hypermode console is required.
-
-From the dashboard, click 'Apps'
-
-<img
-  src="/images/apps/workspace-landing.png"
-  alt="Hypermode dashboard showing Apps option"
-/>
-
-Click "Import your Modus app" to start creating your app.
-
-## Step 3: Configure Your App
-
-Fill in the app configuration details:
-
-<img
-  src="/images/apps/app-create.png"
-  alt="Import Modus app configuration form with app name, GitHub repository, and location fields"
-/>
-
-Configure your app settings:
-
-- **Modus app name**: Enter your app name, for example `my-modus-app`
-- **GitHub Repository**: Select your existing repository from the dropdown
-- **Modus app location**: Choose your deployment region
-
-If you don't have a repository yet, you can create one first.
-
-## Step 4: Create your GitHub repository
-
-If you need to create a new repository:
-
-<img
-  src="/images/apps/github-create.png"
-  alt="GitHub repository creation interface with repository name field"
-/>
-
-Fill in your repository details:
-
-- Choose the repository owner (your organization or personal account)
-- Enter a memorable repository name for example `my-modus-app`
-- Add an optional description
-
-Then return to the app configuration and select your newly created repository.
-
-## Step 5: View your App configuration
-
-Once your app is created, you'll see your app's configuration:
-
-Once your app is created, you'll see your app's configuration:
-
-<img
-  src="/images/apps/console-app.png"
-  alt="App details panel showing endpoint, GitHub repository, and API key information"
-/>
-
-Your app is now configured with:
-
-- **Endpoint**: Your production GraphQL endpoint
-- **GitHub repository**: Connected repository for deployments
-- **API key**: Authentication key for your app
-
-## Deployment options
-
-You have one primary way to deploy your app to Hypermode:
-
-### Automatic deployment via GitHub Actions
+## Automatic deployment via GitHub Actions
 
 Add a GitHub Actions workflow to your repository for automatic deployments.
 

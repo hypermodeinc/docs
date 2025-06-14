@@ -74,7 +74,8 @@
               "apps/overview",
               "apps/create-app",
               "apps/connect-app",
-              "apps/develop"
+              "apps/develop-app",
+              "apps/deploy-app"
             ]
           },
           {
