@@ -1,10 +1,12 @@
 [Aa]gentic
 [Aa]lterSchema
+Attio
 [Bb]oolean
 [Cc]ollections
 [Cc]omputeDistance
 [Cc]omputeSimilarity
 [Cc]onsole
+CRM
 [Dd]eserialize
 [Dd]istilbert
 [Dd]ropAll
@@ -24,12 +26,15 @@
 [Hh]ypercategories
 [Hh]ypermode
 [Ii]nferencing
+Jira
 [Ll]og
+maxWidth
 (?i)mcp
 [Mm]odus
 [Nn]amespace
 [Nn]amespaces
 [Nn]nClassify
+OAuth
 [Oo]nboarding
 [Pp]arams
 [Qq]ueryScalar
@@ -74,6 +79,9 @@ RDF
 REST|[Rr]est
 Scattergories
 SDK|sdk
+[Ss]idekick
+Spotify
+Strava
 TLS
 tokenizer
 URL|url
@@ -83,6 +91,8 @@ UUID
 Warnf
 WASM
 waitlist
+Xero
+Zendesk
 
 # Dgraph terms
 Alpha
@@ -137,3 +147,9 @@ USA
 [Gg]raphs
 
 gqlgen
+Vercel
+Exa
+Pipedream
+Mailchimp
+Shopify
+Sandboxing

@@ -1,0 +1,152 @@
+---
+title: "Create Your Agent"
+sidebarTitle: "Create Your Agent"
+description:
+  "Create your Hypermode Agent using natural language descriptions of the
+  agent's role and objectives."
+---
+
+Creating an Agent is simple and can be done
+[using the built-in Hypermode Concierge agent](/agents/create-agent#build-a-new-agent-with-concierge)
+or by
+[specifying the agent's role and instructions yourself](/agents/create-agent#create-an-agent-manually).
+
+## Build a new agent with Concierge
+
+![Hypermode Concierge agent](/images/agents/concierge.png)
+
+**Concierge** is Hypermode's AI-powered agent that transforms natural language
+descriptions into fully functional agents. No coding experience required.
+
+### Overview
+
+Concierge streamlines agent creation by converting your requirements into
+structured, working agent scaffolds through a guided process that takes just
+minutes to complete.
+
+<Steps>
+
+<Step title="Start a new thread with Concierge">
+
+Select the "Start a new thread" option from the left navigation bar under the
+Hypermode Concierge agent.
+
+![Start a new thread with Concierge](/images/agents/concierge-1.png)
+
+</Step>
+
+<Step title="Describe your agent requirements">
+
+The Concierge agent asks some basic questions about what kind of agent you'd
+like to create and the tasks you'd like the agent to take on your behalf.
+
+![Describe your agent requirements](/images/agents/concierge-2.png)
+
+</Step>
+
+<Step title="Refine your agent description">
+
+Follow the Concierge agent's guided steps to fully refine your agents role,
+background, and instructions. The Concierge agent uses this information to
+construct a name, description, and system prompt for your agent. Once you've
+fully specified the details, your new agent is created and added to the left
+navigation bar alongside the other agents in your workspace.
+
+![Refine your agent description](/images/agents/concierge-3.png)
+
+<Tip>
+  Traditional hand-written prompts often suffer from inconsistency, verbosity,
+  or vagueness. Concierge solves this by using AI to author structured prompts
+  that follow best practices for models.
+</Tip>
+
+</Step>
+
+<Step title="Enable connections and start working with your agent">
+
+To take actions on your behalf, such as updating your calendar or submitting
+code updates as pull requests, your agent needs access to connections with
+services to act on your behalf. Which connections you enable for your agent
+depends on the type and scope of agent to be created. For example, our product
+marketing agent might need access to GitHub to be able to submit website changes
+as pull requests and access to Notion to read internal messaging and product
+documents.
+
+![Enable connections and start working with your agent](/images/agents/concierge-4.png)
+
+Once you've added connections, start chatting with your agent by asking what
+they can help you with or what connections they have access to.
+
+</Step>
+
+</Steps>
+
+## Create an agent manually
+
+Agents can also be created manually by following the steps below.
+
+<Steps>
+
+<Step title="Create new agent">
+
+Select the "Create new agent" option from the left navigation bar.
+
+![Create new agent](/images/agents/manual-create-1.png)
+
+</Step>
+
+<Step title="Describe your agent">
+
+Choose a name, title, and description for your agent. An agent avatar is
+generated randomly but you can also upload your own avatar.
+
+<img
+  height="200"
+  src="/images/agents/manual-create-2.png"
+  alt="Describe your agent"
+  style={{ width: "100%", maxWidth: "400px" }}
+/>
+
+</Step>
+
+<Step title="Add your agent instructions">
+
+The agent instructions are the system prompt that's used to guide the agent's
+behavior. This is where you define the agent's role and objectives.
+
+<img
+  height="200"
+  src="/images/agents/manual-create-3.png"
+  alt="Add your agent instructions"
+  style={{ width: "100%", maxWidth: "400px" }}
+/>
+
+</Step>
+
+<Step title="Select your agent's model">
+
+Select the model that you want to use for your agent. The model is used to run
+the agent's instructions, including choosing how to leverage tools.
+
+<img
+  height="200"
+  src="/images/agents/manual-create-4.png"
+  alt="Select your agent's model"
+  style={{ width: "100%", maxWidth: "400px" }}
+/>
+
+</Step>
+
+<Step title="Enable connections and start working with your agent">
+
+Enable connections to allow your agent to access tools and data. This is where
+you define the tools that your agent has access to.
+
+![Enable connections and start working with your agent](/images/agents/manual-create-5.png)
+
+</Step>
+
+</Steps>
+
+See the [Agent Gallery](/agents/example-agents) for more examples of agents that
+you can create.
