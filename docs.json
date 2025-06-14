@@ -70,7 +70,12 @@
           },
           {
             "group": "Apps",
-            "pages": ["apps/overview", "apps/develop", "apps/deploy"]
+            "pages": [
+              "apps/overview",
+              "apps/create-app",
+              "apps/connect-app",
+              "apps/develop"
+            ]
           },
           {
             "group": "Graphs",
