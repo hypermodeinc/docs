@@ -100,7 +100,7 @@
             "group": "Getting Started",
             "pages": [
               "modus/overview",
-              "modus/quickstart",
+              "modus/first-modus-agent",
               "modus/functions",
               "modus/agents",
               "modus/knowledge-graphs"
