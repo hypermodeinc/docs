@@ -1,0 +1,527 @@
+---
+title: "Model Selection Guide"
+sidebarTitle: "Choose the Right Model"
+description:
+  "Select the optimal model for your agent based on task complexity, performance
+  requirements, and cost considerations."
+---
+
+When building agents in Hypermode Threads, choosing the right model is crucial
+for optimal performance, cost efficiency, and user experience. This guide helps
+you select the best model based on your agent's specific role and requirements.
+
+![Select your model](/images/agents/model-selection.png)
+
+<Note>
+  Hypermode provides access to the most popular open source and commercial
+  models through our [Model Router](/model-router). We're constantly evaluating
+  model usage and adding new models to our catalog based on demand.
+</Note>
+
+## Quick start: find your agent type
+
+Most business use cases fall into these common patterns. Find your match and get
+started immediately:
+
+<CardGroup cols={2}>
+  <Card title="Code & Development" icon="code">
+    **Best for:** GitHub bots, code reviews, API development
+    <br/>
+    **Recommended:** `GPT-4.1` or `Claude-sonnet-4-20250514`
+    <br/>
+    **Why:** Strong code comprehension, security focus, fewer hallucinations
+  </Card>
+
+<Card title="Sales & CRM Operations" icon="chart-line">
+  **Best for:** Lead qualification, call analysis, CRM updates
+  <br />
+  **Recommended:** `GPT-4o` or `Claude-3-5-sonnet-latest`
+  <br />
+  **Why:** excellent structured data extraction, business context understanding
+</Card>
+
+<Card title="Research & Analysis" icon="magnifying-glass">
+  **Best for:** Market research, competitor analysis, strategic insights
+  <br />
+  **Recommended:** `o3` or `Claude-opus-4-20250514`
+  <br />
+  **Why:** Advanced reasoning, multi-source synthesis, deep analysis
+</Card>
+
+<Card title="Content & Marketing" icon="pen-fancy">
+  **Best for:** Social media, blogs, marketing campaigns
+  <br />
+  **Recommended:** `GPT-4o` or `Claude-3-5-sonnet-latest`
+  <br />
+  **Why:** Creative writing, brand voice consistency, platform optimization
+</Card>
+
+<Card title="Data & Operations" icon="table">
+  **Best for:** Inventory tracking, spreadsheet analysis, reporting
+  <br />
+  **Recommended:** `GPT-4o-mini` or `Gemini-1.5-flash-latest`
+  <br />
+  **Why:** fast processing, cost-effective, reliable for routine tasks
+</Card>
+
+  <Card title="Customer Support" icon="headset">
+    **Best for:** scheduling, support tickets, real-time chat
+    <br />
+    **Recommended:** `GPT-4o-mini` or `Gemini-1.5-flash-latest`
+    <br />
+    **Why:** low latency, consistent performance, natural conversation
+  </Card>
+</CardGroup>
+
+## Model selection process
+
+Follow this step-by-step process to choose the right model for your specific
+needs:
+
+<Steps>
+  <Step title="Identify Your Agent's Primary Function">
+    Start by clearly defining what your agent does most often:
+    - **Analyze and reason** (research, complex decisions)
+    - **Create content** (writing, marketing, creative work)
+    - **Process data** (spreadsheets, databases, routine operations)
+    - **Interact with users** (support, scheduling, real-time chat)
+    - **Work with code** (development, reviews, technical tasks)
+  </Step>
+
+  <Step title="Estimate Your Volume and Budget">
+    Consider how often your agent is used:
+    - **High volume** (1000+ interactions/day): choose efficient models like `GPT-4o-mini`
+    - **Medium volume** (100-1000/day): balanced models like `GPT-4o` work well
+    - **Low volume** (less than 100/day): any model based on complexity needs
+
+    **Budget considerations:** premium models cost more but deliver better results for complex tasks
+
+  </Step>
+
+<Step title="Assess Task Complexity">
+  Match your complexity needs to model capabilities: - **Simple, routine
+  tasks**: mini/Flash variants for cost efficiency - **Moderate complexity**:
+  standard models like `GPT-4o`, `Claude-3-5-sonnet-latest` - **Complex
+  reasoning**: advanced models like `o3`, `Claude-opus-4-20250514`
+</Step>
+
+<Step title="Consider Performance Requirements">
+  Determine what matters most for your use case: - **Speed critical**: fast
+  models like `GPT-4o-mini`, `Gemini-1.5-flash-latest` - **Accuracy critical**:
+  premium models like `o3`, `Claude-opus-4-20250514` - **Balanced needs**:
+  mid-tier models like `GPT-4o`, `Claude-3-5-sonnet-latest`
+</Step>
+
+  <Step title="Test and Optimize">
+    Start with the recommended model, then optimize:
+    - Test with real examples from your use case
+    - Monitor cost and performance metrics
+    - Adjust based on actual usage patterns
+    - Consider dynamic routing for optimal cost-performance balance
+  </Step>
+</Steps>
+
+## Business-focused model recommendations
+
+### For sales and go-to-market teams
+
+<Card title="GTM Operations Agent" icon="handshake">
+  **Use Case:** Analyze sales calls, update CRM, qualify leads
+
+**Primary Choice:** `GPT-4o` - Excellent at structured data extraction from call
+transcripts
+
+**Alternative:** `Claude-3-5-sonnet-latest` - Superior business context
+understanding
+
+**Why These Work:**
+
+- Strong performance with sales terminology and CRM integration
+- Reliable field mapping and data accuracy
+- Professional communication tone
+
+**Example:** [Go-to-market Engineer](/agents/agent-gallery/gtm-engineer)
+updating Attio CRM from call transcripts
+
+</Card>
+
+### For development and technical teams
+
+<Card title="Code Review Agent" icon="code-branch">
+**Use Case:** Automated PR reviews, security analysis, code quality
+
+**Primary Choice:** `GPT-4.1` - Latest optimizations for development workflows
+
+**Alternative:** `Claude-sonnet-4-20250514` - Superior security focus and
+detailed feedback
+
+**Why These Work:**
+
+- Low hallucination rates critical for code accuracy
+- Excellent adherence to coding standards
+- Strong security vulnerability detection
+
+**Example:** [GitHub Review Bot](/agents/agent-gallery/github-review-bot)
+providing automated code analysis
+
+</Card>
+
+### For research and strategy teams
+
+<Card title="Market Research Agent" icon="chart-bar">
+**Use Case:** Competitive analysis, industry trends, strategic insights
+
+**Primary Choice:** `o3` - Advanced reasoning with chain-of-thought processing
+
+**Alternative:** `Claude-opus-4-20250514` - Excellent synthesis of multiple
+sources
+
+**Why These Work:** - Superior multi-step reasoning for complex analysis - Large
+context windows for extensive document processing - Strong capability for
+strategic insights
+
+**Example:** [Market Research Expert](/agents/agent-gallery/market-researcher)
+analyzing company intelligence
+
+</Card>
+
+### For marketing and content teams
+
+<Card title="Content Creation Agent" icon="pen-to-square">
+**Use Case:** Social media posts, blog content, marketing campaigns
+
+**Primary Choice:** `GPT-4o` - Strong creative capabilities with broad knowledge
+**Alternative:** `Claude-3-5-sonnet-latest` - Nuanced tone and style
+understanding
+
+**Why These Work:**
+
+- High-quality, engaging content generation
+- Brand voice consistency across platforms
+- Platform-specific content optimization
+
+**Example:** [Social Media Expert](/agents/agent-gallery/social-media) creating
+targeted content campaigns
+
+</Card>
+
+### For operations and data teams
+
+<Card title="Data Processing Agent" icon="database">
+**Use Case:** Inventory management, spreadsheet analysis, operational reporting 
+  
+**Primary Choice:** `GPT-4o-mini` - Cost-effective with reliable data handling
+
+**Alternative:** `Gemini-1.5-flash-latest` - Excellent speed-to-cost ratio
+
+**Why These Work:**
+
+- Fast processing for large volumes of data
+- Low cost per operation for routine tasks
+- Consistent performance fornautomated workflows
+
+**Example:** [Inventory Tracker](/agents/agent-gallery/inventory-tracker)
+monitoring stock levels and sales patterns
+
+</Card>
+
+### For customer success teams
+
+<Card title="Support and Scheduling Agent" icon="calendar-clock">
+**Use Case:** Customer support, appointment scheduling, real-time assistance
+
+**Primary Choice:** `GPT-4o-mini` - Fast response times with natural language
+understanding
+
+**Alternative:** `Gemini-1.5-flash-latest` - Excellent for real-time
+interactions
+
+**Why These Work:**
+
+- Sub-second response times for real-time interactions
+- Reliable performance under varying loads
+- Natural conversation flow and context understanding
+
+**Example:**
+[Workout Scheduling Agent](/agents/agent-gallery/workout-scheduling) managing
+calendar integration
+
+</Card>
+
+## Cost and performance tiers
+
+Understanding the three main performance tiers helps you balance capability with
+budget:
+
+### Premium tier - complex reasoning
+
+**Models:** `o3`, `Claude-opus-4-20250514`, `o1`, `Gemini-2.5-pro-exp-03-25`
+
+**Best for:**
+
+- Strategic planning and complex analysis
+- Multi-step reasoning workflows
+- High-stakes decision support
+- Advanced research and insights
+
+**Cost:** higher per interaction, justified for critical business decisions
+
+**When to choose:** complex reasoning required, accuracy is paramount,
+low-to-medium volume
+
+---
+
+### Balanced tier - general purpose
+
+**Models:** `GPT-4.1`, `GPT-4o`, `Claude-sonnet-4-20250514`,
+`Claude-3-5-sonnet-latest`, `Gemini-2.0-flash`
+
+**Best for:**
+
+- Most business applications
+- Code development and reviews
+- Content creation and marketing
+- Moderate complexity analysis
+
+**Cost:** moderate pricing with excellent capability-to-cost ratio
+
+**When to choose:** most use cases, balanced needs, regular daily usage
+
+---
+
+### Efficient tier - high volume operations
+
+**Models:** `GPT-4o-mini`, `Gemini-1.5-flash-latest`, `Claude-3-5-haiku-latest`,
+`o4-mini`
+
+**Best for:**
+
+- High-volume operations
+- Customer support and scheduling
+- Data processing and routine tasks
+- Real-time applications requiring speed
+
+**Cost:** low per interaction, ideal for frequent use
+
+**When to choose:** high volume (1000+ daily), cost optimization critical,
+simple-to-moderate tasks
+
+## Advanced strategies for business users
+
+### Dynamic model routing
+
+Optimize both cost and performance by automatically selecting models based on
+query complexity:
+
+**Example Strategy:**
+
+- Simple queries (data searches, basic scheduling) → `GPT-4o-mini`
+- Moderate complexity (analysis, content creation) → `GPT-4o`
+- Complex reasoning (strategic planning, research) → `o3`
+
+**Benefits:**
+
+- 27-55% cost savings in multi-agent workflows
+- Maintained quality while reducing expenses
+- Automatic scaling based on business needs
+
+### Multi-model architecture
+
+Design agent systems that leverage different models strategically:
+
+**Preprocessing Layer:** use efficient models for initial query classification
+
+**Specialist Models:** Deploy domain-specific models for specialized business
+tasks
+
+**Quality Review:** Implement checking with different models for critical
+outputs
+
+**Fallback Options:** maintain backup models for high-availability requirements
+
+## Decision framework
+
+Use this business-focused decision tree:
+
+1. **What's your primary business function?**
+
+   - Revenue operations (sales, CRM) → GPT-4o or Claude-3-5-sonnet-latest
+   - Product development (code, APIs) → GPT-4.1 or Claude-sonnet-4-20250514
+   - Strategic planning (research, analysis) → o3 or Claude-opus-4-20250514
+   - Marketing operations (content, campaigns) → GPT-4o or
+     Claude-3-5-sonnet-latest
+   - Customer operations (support, scheduling) → GPT-4o-mini or
+     Gemini-1.5-flash-latest
+   - Data operations (reporting, analysis) → GPT-4o-mini or
+     Gemini-1.5-flash-latest
+
+2. **What's your expected usage volume?**
+
+   - High volume (> 1000/day) → Consider mini/flash variants for cost control
+   - Medium volume (100-1000/day) → Balanced tier models
+   - Low volume (< 100/day) → Any model based on complexity
+
+3. **What's your complexity requirement?**
+
+   - Simple, routine business tasks → Efficient tier models
+   - Moderate complexity workflows → Balanced tier models
+   - Complex strategic work → Premium tier models
+
+4. **What are your performance priorities?**
+   - Speed critical (real-time customer facing) → GPT-4o-mini,
+     Gemini-1.5-flash-latest
+   - Balanced performance (most business apps) → GPT-4o,
+     Claude-3-5-sonnet-latest
+   - Maximum capability (strategic decisions) → o3, Claude-opus-4-20250514
+   - Cost optimization → Dynamic routing between tiers
+
+## Getting started and best practices
+
+### Start high, optimize down
+
+Begin with a premium model to establish your accuracy baseline, then
+systematically optimize for cost while maintaining performance standards.
+
+**Recommended Approach:**
+
+1. Start with `GPT-4o` or `Claude-3-5-sonnet-latest` for most business use cases
+2. Test with real examples from your workflow
+3. Monitor both quality metrics and costs
+4. Optimize to more efficient models if performance remains acceptable
+
+### Set clear success metrics
+
+Define specific, measurable goals for your agent:
+
+**Quality Metrics:**
+
+- Accuracy rates for your specific tasks
+- User satisfaction scores
+- Task completion rates
+
+**Operational Metrics:**
+
+- Response time requirements
+- Cost per interaction targets
+- Uptime and reliability standards
+
+### Test with real business data
+
+Create comprehensive test datasets that represent actual usage:
+
+- Diverse examples covering your full range of business scenarios
+- Edge cases and challenging situations
+- Domain-specific tests for your industry
+- Both successful and failure case examples
+
+## Model provider strengths
+
+Understanding each provider's strengths helps inform your choice:
+
+### Anthropic Claude models
+
+**Strengths:** Safety, nuanced reasoning, detailed analysis, professional
+communication
+
+**Best for:** Business-critical applications, complex analysis, content
+requiring safety considerations
+
+### OpenAI GPT models
+
+**Strengths:** Broad knowledge, fast inference, established ecosystem, reliable
+performance
+
+**Best for:** General-purpose business applications, rapid prototyping,
+widespread compatibility
+
+### Google Gemini models
+
+**Strengths:** Multi-modal capabilities, long context, competitive pricing,
+logical reasoning
+
+**Best for:** Data-heavy applications, cost-sensitive deployments, multi-modal
+business needs
+
+### Meta Llama models
+
+**Strengths:** open source flexibility, customization potential, cost control
+
+**Best for:** Organizations requiring model customization, specific compliance
+needs
+
+## Monitoring and optimization
+
+### Key performance indicators
+
+Track these metrics to optimize your model selection over time:
+
+**Response Quality:**
+
+- Accuracy rates for your specific business tasks
+- Consistency in output format and style
+- User satisfaction and feedback scores
+
+**Operational Efficiency:**
+
+- Average response time and latency patterns
+- Cost per interaction and total monthly spend
+- System reliability and uptime metrics
+
+**Business Impact:**
+
+- Task completion rates and automation success
+- Time saved compared to manual processes
+- Business outcomes achieved through agent deployment
+
+### Continuous improvement process
+
+**Monthly Reviews:**
+
+- Analyze usage patterns and cost trends
+- Review quality metrics and user feedback
+- Assess new model releases and capabilities
+
+**Quarterly Optimization:**
+
+- Compare performance across different models
+- Implement cost optimization strategies
+- Plan for scaling and new use cases
+
+**Annual Strategic Planning:**
+
+- Evaluate provider relationships and contracts
+- Plan for emerging model capabilities
+- Assess competitive landscape and alternatives
+
+<Tip>
+  Use the [Model Router](/model-router) to easily experiment with models from
+  different providers without changing your integration code. The unified API
+  makes it simple to switch between OpenAI, Anthropic, Google, and Meta models
+  for systematic comparison and implement dynamic routing strategies.
+</Tip>
+
+---
+
+## References and additional resources
+
+This guide is based on industry best practices and community insights from
+leading AI development communities. For deeper technical insights and ongoing
+discussions about model selection, see:
+
+- [LLM Developers: How Do You Pick the Right LLM?](https://www.reddit.com/r/LLMDevs/comments/1k6phix/how_do_you_guys_pick_the_right_llm_for_your/)
+- [Generative AI: How to Select an LLM for a Use Case](https://www.reddit.com/r/generativeAI/comments/1ay5drl/how_to_select_a_llm_for_a_use_case/)
+- [Choosing the Right Language Model for Your Use Case](https://medium.com/data-science/choosing-the-right-language-model-for-your-nlp-use-case-1288ef3c4929)
+- [GitHub Copilot AI Model Selection](https://docs.github.com/en/copilot/using-github-copilot/ai-models/choosing-the-right-ai-model-for-your-task)
+- [JetBrains AI: How to Choose the Right LLM](https://blog.jetbrains.com/ai/2025/03/how-to-choose-the-right-llm/#)
+- [How to Choose Right LLM for Your Organisation](https://www.linkedin.com/pulse/how-choose-right-llm-your-organisation-gagan-agrawal-ms0oc/)
+- [OpenAI Model Selection Guide](https://platform.openai.com/docs/guides/model-selection)
+- [How to Select Right LLM Model for Your Use Case](https://masteringllm.medium.com/how-to-select-right-llm-model-for-your-use-case-d4d9670e06f3)
+- [How to Choose an AI Model for Your Business](https://www.leewayhertz.com/how-to-choose-an-ai-model/)
+- [Choosing the Right LLM](https://www.labellerr.com/blog/chosing-the-right-llm/)
+- [Choosing the Best LLM Model: A Strategic Guide](https://medium.com/@social_65128/choosing-the-best-llm-model-a-strategic-guide-for-your-organizations-needs-f64794ead5e9)
+- [DataRobot: How to Choose the Right LLM for Your Use Case](https://www.datarobot.com/blog/how-to-choose-the-right-llm-for-your-use-case/)
+- [TechTarget: How to Choose the Right LLM for Your Needs](https://www.techtarget.com/searchenterpriseai/tip/How-to-choose-the-right-LLM-for-your-needs)
+- [LangDB: Choosing the Right LLM for the Job](https://blog.langdb.ai/choosing-the-right-llm-for-the-job-with-langdb)
+
+For the most current model availability and pricing, always refer to the
+[Hypermode Model Router documentation](/model-router).
