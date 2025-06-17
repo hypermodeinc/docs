@@ -54,6 +54,7 @@
               "agents/work",
               "agents/connections",
               "agents/tasks",
+              "agents/model-selection",
               {
                 "group": "Example Agents",
                 "pages": [
