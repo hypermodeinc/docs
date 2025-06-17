@@ -1,0 +1,596 @@
+---
+title: "What about knowledge graphs?"
+description:
+  "Build persistent intelligence networks using agents, functions, and knowledge
+  graphs"
+"og:title": "What about knowledge graphs? - Modus"
+---
+
+## Knowledge graphs in Modus
+
+Your applications need more than just individual memory—they need shared
+organizational knowledge. While agents maintain their own operational state and
+memory across interactions, knowledge graphs provide something fundamentally
+different: shared institutional knowledge that captures relationships between
+entities, events, and data across your entire app.
+
+At Hypermode, we recognize that knowledge graphs aren't just storage—they're
+becoming critical infrastructure for next-generation AI systems. That's why
+we've invested deeply in Dgraph, bringing enterprise-grade graph capabilities to
+Modus applications.
+
+This is where knowledge graphs transform your Modus deployment from isolated
+processes into a coordinated system with shared institutional memory.
+
+## What are knowledge networks?
+
+Knowledge networks in Modus combine:
+
+- **Agent state**: personal memory that each agent maintains across interactions
+- **Knowledge graphs**: shared organizational knowledge that captures
+  relationships between entities, events, and data across your entire app
+- **Functions**: rapid operations for data processing and analysis
+- **AI models**: advanced pattern recognition and decision-making capabilities
+
+Think of it as the difference between what an individual process remembers
+versus what your organization knows. Agent state is personal memory—what
+happened to this specific agent, what conversations they've had, what tasks
+they're tracking. Knowledge graphs are organizational intelligence—how entities
+relate to each other, which patterns connect to which outcomes, what
+relationships emerge across all operations.
+
+## Setting up your knowledge infrastructure
+
+First, connect to your knowledge graph by adding this to your `modus.json`:
+
+```json
+{
+  "connections": {
+    "dgraph": {
+      "type": "dgraph",
+      "connString": "dgraph://your-graph.hypermode.host:443?sslmode=verify-ca&bearertoken={{API_KEY}}"
+    }
+  },
+  "models": {
+    "text-generator": {
+      "sourceModel": "meta-llama/Llama-3.2-3B-Instruct",
+      "provider": "hugging-face",
+      "connection": "hypermode"
+    }
+  }
+}
+```
+
+Set your credentials in `.env.dev.local`:
+
+```sh
+MODUS_DGRAPH_API_KEY=your_graph_api_key_here
+```
+
+## Building a comprehensive system
+
+Let's walk through a realistic scenario that demonstrates how all these
+components work together. You're building a system to track anomalous Agent
+behavior in the simulated reality. The system needs to:
+
+1. Rapidly import new Agent sightings and behavioral data
+2. Find patterns across historical Agent encounters
+3. Coordinate ongoing surveillance operations
+4. Provide strategic analysis to the resistance
+
+### Step 1: Rapid data import
+
+When new Agent activity is detected in the Matrix, you need to process it
+quickly. This is perfect for a stateless function:
+
+```go
+type AgentSighting struct {
+    SightingID   string `json:"sighting_id"`
+    AgentName    string `json:"agent_name"`
+    Location     string `json:"location"`
+    Behavior     string `json:"behavior"`
+    ThreatLevel  int    `json:"threat_level"`
+    Timestamp    string `json:"timestamp"`
+}
+
+func ImportAgentSighting(sighting AgentSighting) (*string, error) {
+    // AI-powered analysis of the Agent behavior
+    analysis, err := analyzeAgentWithAI(sighting.Behavior)
+    if err != nil {
+        return nil, err
+    }
+
+    // Store in knowledge graph - builds organizational knowledge
+    mutation := dgraph.NewMutation().WithSetJson(fmt.Sprintf(`{
+        "dgraph.type": "AgentSighting",
+        "sighting_id": "%s",
+        "agent_name": "%s",
+        "location": "%s",
+        "behavior": "%s",
+        "threat_level": %d,
+        "timestamp": "%s",
+        "ai_analysis": "%s"
+    }`, sighting.SightingID, sighting.AgentName, sighting.Location,
+        sighting.Behavior, sighting.ThreatLevel, sighting.Timestamp, analysis))
+
+    err = dgraph.ExecuteMutations("dgraph", mutation)
+    if err != nil {
+        return nil, err
+    }
+
+    result := fmt.Sprintf("Agent sighting processed: %s", sighting.SightingID)
+    return &result, nil
+}
+
+func analyzeAgentWithAI(behavior string) (string, error) {
+    model, err := models.GetModel[openai.ChatModel]("text-generator")
+    if err != nil {
+        return "", err
+    }
+
+    prompt := `Analyze this Agent behavior pattern and assess threat level,
+               behavioral changes, and tactical implications for resistance operations.`
+
+    input, err := model.CreateInput(
+        openai.NewSystemMessage(prompt),
+        openai.NewUserMessage(behavior),
+    )
+    if err != nil {
+        return "", err
+    }
+    input.Temperature = 0.3
+
+    output, err := model.Invoke(input)
+    if err != nil {
+        return "", err
+    }
+    return strings.TrimSpace(output.Choices[0].Message.Content), nil
+}
+```
+
+Now let's deploy this data import function and test it:
+
+```graphql
+mutation {
+  importAgentSighting(
+    sighting: {
+      sightingId: "SIGHT-2025-001"
+      agentName: "Smith"
+      location: "Downtown Loop - Financial District"
+      behavior: "Unusual pattern recognition algorithm detected.
+                Agent displaying enhanced replication capabilities
+                beyond normal parameters."
+      threatLevel: 9
+      timestamp: "2025-01-15T14:30:00Z"
+    }
+  )
+}
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "importAgentSighting": "Agent sighting processed: SIGHT-2025-001"
+  }
+}
+```
+
+### Step 2: Strategic analysis using organizational knowledge
+
+Now that we've got the Agent sighting data in our knowledge graph, let's analyze
+the broader threat landscape:
+
+```go
+type ThreatAnalysisResponse struct {
+    SightingCount    int      `json:"sighting_count"`
+    ActiveAgents     []string `json:"active_agents"`
+    ThreatAssessment string   `json:"threat_assessment"`
+    Recommendations  []string `json:"recommendations"`
+}
+
+func AnalyzeAgentPatterns(timeRange string) (*ThreatAnalysisResponse, error) {
+    // Query organizational knowledge - traverses relationships
+    query := dgraph.NewQuery(`
+        query analyzeAgents($since: string) {
+            sightings(func: ge(timestamp, $since)) {
+                agent_name
+                behavior
+                threat_level
+                ai_analysis
+            }
+        }
+    `).WithVariable("$since", timeRange)
+
+    response, err := dgraph.ExecuteQuery("dgraph", query)
+    if err != nil {
+        return nil, err
+    }
+
+    // Parse and extract threat data
+    var data SightingsData
+    err = json.Unmarshal([]byte(response.Json), &data)
+    if err != nil {
+        return nil, err
+    }
+
+    // Generate strategic assessment using AI with graph context
+    assessment, err := generateThreatAssessment(data.Sightings)
+    if err != nil {
+        return nil, err
+    }
+
+    return &ThreatAnalysisResponse{
+        SightingCount:    len(data.Sightings),
+        ActiveAgents:     extractActiveAgents(data.Sightings),
+        ThreatAssessment: assessment,
+        Recommendations:  generateRecommendations(len(data.Sightings)),
+    }, nil
+}
+
+func generateThreatAssessment(sightings interface{}) (string, error) {
+    model, err := models.GetModel[openai.ChatModel]("text-generator")
+    if err != nil {
+        return "", err
+    }
+
+    prompt := `Based on these Agent sightings, provide a strategic threat
+               assessment focusing on behavioral patterns and risks to
+               resistance operations.`
+
+    sightingsJson, err := json.Marshal(sightings)
+    if err != nil {
+        return "", err
+    }
+
+    input, err := model.CreateInput(
+        openai.NewSystemMessage(prompt),
+        openai.NewUserMessage(fmt.Sprintf("Agent surveillance data: %s",
+            string(sightingsJson))),
+    )
+    if err != nil {
+        return "", err
+    }
+    input.Temperature = 0.4
+
+    output, err := model.Invoke(input)
+    if err != nil {
+        return "", err
+    }
+    return strings.TrimSpace(output.Choices[0].Message.Content), nil
+}
+
+// Helper functions for data extraction and recommendations
+func extractActiveAgents(sightings []AgentSightingData) []string { /* ... */ }
+func generateRecommendations(count int) []string { /* ... */ }
+```
+
+Let's query our surveillance data:
+
+```graphql
+query {
+  analyzeAgentPatterns(timeRange: "2025-01-01T00:00:00Z") {
+    sightingCount
+    activeAgents
+    threatAssessment
+    recommendations
+  }
+}
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "analyzeAgentPatterns": {
+      "sightingCount": 1,
+      "activeAgents": ["Smith"],
+      "threatAssessment": "Initial Agent Smith sighting shows enhanced
+                          replication capabilities beyond standard parameters.
+                          Requires additional surveillance data for pattern
+                          analysis and threat escalation assessment.",
+      "recommendations": [
+        "Continue surveillance monitoring",
+        "Increase Agent activity detection"
+      ]
+    }
+  }
+}
+```
+
+### Step 3: Automated processing with asynchronous coordination
+
+Now let's enhance our system to automatically coordinate surveillance when new
+data arrives. We'll deploy persistent surveillance agents and upgrade our import
+function to trigger them:
+
+```go
+type SurveillanceAgent struct {
+    agents.AgentBase
+    MonitoredSectors   []string    `json:"monitored_sectors"`
+    SightingsTracked   int         `json:"sightings_tracked"`
+    RecentActivities   []string    `json:"recent_activities"`
+    LastSweepTime      time.Time   `json:"last_sweep_time"`
+}
+
+func (s *SurveillanceAgent) Name() string {
+    return "SurveillanceAgent"
+}
+
+func (s *SurveillanceAgent) OnInitialize() error {
+    s.MonitoredSectors = []string{
+        "Downtown Loop", "Megacity Financial", "Industrial District"}
+    s.SightingsTracked = 0
+    s.RecentActivities = []string{}
+    s.LastSweepTime = time.Now()
+    return nil
+}
+
+func (s *SurveillanceAgent) OnReceiveMessage(
+    msgName string, data string) (*string, error) {
+    switch msgName {
+    case "continuous_surveillance":
+        return s.processNewIntelligence()
+    case "get_status":
+        return s.getOperationalStatus()
+    }
+    return nil, fmt.Errorf("unrecognized directive: %s", msgName)
+}
+
+func (s *SurveillanceAgent) processNewIntelligence() (*string, error) {
+    // Query knowledge graph for latest data since last sweep
+    query := dgraph.NewQuery(`
+        query getRecentSightings($since: string) {
+            sightings(func: ge(timestamp, $since)) {
+                agent_name
+                threat_level
+                location
+            }
+        }
+    `).WithVariable("$since", s.LastSweepTime.Format(time.RFC3339))
+
+    _, err := dgraph.ExecuteQuery("dgraph", query)
+    if err != nil {
+        return nil, err
+    }
+
+    // Update agent's surveillance state
+    s.LastSweepTime = time.Now()
+    s.SightingsTracked += 1
+
+    activity := fmt.Sprintf("Auto surveillance at %s",
+        s.LastSweepTime.Format("15:04:05"))
+    s.RecentActivities = append(s.RecentActivities, activity)
+
+    // Keep only last 3 activities
+    if len(s.RecentActivities) > 3 {
+        s.RecentActivities = s.RecentActivities[1:]
+    }
+
+    result := fmt.Sprintf(`Data processed automatically.
+                           Tracking %d sightings. Matrix integrity: COMPROMISED`,
+        s.SightingsTracked)
+    return &result, nil
+}
+
+func (s *SurveillanceAgent) getOperationalStatus() (*string, error) {
+    status := fmt.Sprintf(`Surveillance Agent Status:
+- Operational: Active
+- Monitoring %d sectors: %s
+- Last sweep: %s
+- Tracking %d ongoing sightings
+- Recent activities: %s`,
+        len(s.MonitoredSectors),
+        strings.Join(s.MonitoredSectors, ", "),
+        s.LastSweepTime.Format("2006-01-02 15:04:05"),
+        s.SightingsTracked,
+        strings.Join(s.RecentActivities, ", "))
+    return &status, nil
+}
+
+func init() { agents.Register(&SurveillanceAgent{}) }
+
+func DeploySurveillanceAgent() (string, error) {
+    agentInfo, err := agents.Start("SurveillanceAgent")
+    if err != nil {
+        return "", err
+    }
+    return agentInfo.Id, nil
+}
+
+func GetSurveillanceStatus(agentId string) (string, error) {
+    result, err := agents.SendMessage(agentId, "get_status")
+    if err != nil {
+        return "", err
+    }
+    if result == nil {
+        return "", fmt.Errorf("no response from agent")
+    }
+    return *result, nil
+}
+```
+
+Now let's enhance our original import function to automatically trigger
+surveillance:
+
+```go
+func ImportAgentSighting(sighting AgentSighting) (*string, error) {
+    // AI-powered analysis of the Agent behavior
+    analysis, err := analyzeAgentWithAI(sighting.Behavior)
+    if err != nil {
+        return nil, err
+    }
+
+    // Store in knowledge graph - builds organizational knowledge
+    mutation := dgraph.NewMutation().WithSetJson(fmt.Sprintf(`{
+        "dgraph.type": "AgentSighting",
+        "sighting_id": "%s",
+        "agent_name": "%s",
+        "location": "%s",
+        "behavior": "%s",
+        "threat_level": %d,
+        "timestamp": "%s",
+        "ai_analysis": "%s"
+    }`, sighting.SightingID, sighting.AgentName, sighting.Location,
+        sighting.Behavior, sighting.ThreatLevel, sighting.Timestamp, analysis))
+
+    err = dgraph.ExecuteMutations("dgraph", mutation)
+    if err != nil {
+        return nil, err
+    }
+
+    // Automatically trigger surveillance via async message
+    err = agents.SendMessageAsync("agent_neo_001", "continuous_surveillance")
+    if err != nil {
+        return nil, err
+    }
+
+    result := fmt.Sprintf("Agent sighting processed: %s", sighting.SightingID)
+    return &result, nil
+}
+```
+
+Deploy your surveillance agent:
+
+```graphql
+mutation {
+  deploySurveillanceAgent
+}
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "deploySurveillanceAgent": "agent_neo_001"
+  }
+}
+```
+
+### Step 4: Coordinated processing
+
+Now when you import new Agent sightings, surveillance automatically triggers:
+
+```graphql
+mutation {
+  importAgentSighting(
+    sighting: {
+      sightingId: "SIGHT-2025-002"
+      agentName: "Brown"
+      location: "Megacity Financial - Server Room B12"
+      behavior: "Agent Brown detected implementing advanced
+                countermeasures against known resistance
+                encryption protocols. Adaptive learning
+                subroutines active."
+      threatLevel: 8
+      timestamp: "2025-01-15T15:45:00Z"
+    }
+  )
+}
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "importAgentSighting": "Agent sighting processed: SIGHT-2025-002"
+  }
+}
+```
+
+Each import automatically triggers the surveillance agent through asynchronous
+messaging. Check the surveillance status:
+
+```graphql
+query {
+  getSurveillanceStatus(agentId: "agent_neo_001")
+}
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "getSurveillanceStatus": "Surveillance Agent Status:
+                            - Operational: Active
+                            - Monitoring 3 sectors: Downtown Loop,
+                              Megacity Financial, Industrial District
+                            - Last sweep: 2025-01-15 15:45:22
+                            - Tracking 2 ongoing sightings
+                            - Recent activities: Auto surveillance at 14:30:05,
+                              Auto surveillance at 15:45:22"
+  }
+}
+```
+
+### Step 5: Enhanced threat analysis
+
+Query the strategic analysis to see patterns across automatically processed
+data:
+
+```graphql
+query {
+  analyzeAgentPatterns(timeRange: "2025-01-15T00:00:00Z") {
+    sightingCount
+    activeAgents
+    threatAssessment
+    recommendations
+  }
+}
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "analyzeAgentPatterns": {
+      "sightingCount": 2,
+      "activeAgents": ["Smith", "Brown"],
+      "threatAssessment": "Critical escalation detected. Agent Smith's
+                          enhanced replication capabilities combined with
+                          Agent Brown's encryption countermeasures indicates
+                          coordinated Matrix defense upgrade. Systematic
+                          pattern suggests machines adapting to resistance
+                          operations.",
+      "recommendations": [
+        "Emergency extraction protocols",
+        "Activate deep cover cells",
+        "Increase surveillance sweeps"
+      ]
+    }
+  }
+}
+```
+
+## Conclusion
+
+You've just built a complete automated surveillance network that demonstrates
+the power of coordinated systems. By combining functions for rapid data
+processing, knowledge graphs for organizational memory, AI models for enhanced
+analysis, and agents for persistent processing—all coordinated through
+asynchronous messaging—you've created something far more powerful than any
+single component could achieve.
+
+Your system now automatically processes Agent sightings, triggers surveillance
+operations, builds organizational knowledge over time, and provides AI-enhanced
+threat analysis across all accumulated data. The surveillance agent maintains
+persistent memory across system failures while the knowledge graph captures
+relationships that no single sighting could reveal.
+
+This isn't just a database with some AI on top—it's a coordinated system where
+each component enhances the others, creating emergent capabilities that scale
+with your operations. Welcome to the real world.
+
+## Next steps
+
+Ready to deploy your surveillance network against the machines? Check out:
+
+- [Dgraph integration guide](/modus/modus-dgraph) for advanced graph operations
+- [Agent coordination patterns](/modus/agents) for multi-agent workflows
+- [Production deployment](/modus/deploying) for scaling your knowledge network

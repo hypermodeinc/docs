@@ -1,56 +1,81 @@
 ---
-title: Modus
+title: What's Modus?
 description: "Welcome to the Modus docs!"
 mode: "wide"
 sidebarTitle: "Overview"
 "og:title": "Overview - Modus"
 ---
 
-## What is Modus? {/* vale Google.Contractions = NO */}
+Modus is an open source, serverless framework for building intelligent agents
+and APIs in Go or AssemblyScript (a TypeScript-like language). Modus is a
+runtime purpose-built for orchestrating autonomous AI agents that operate as
+first-class citizens in your stack.
 
-Modus is an open source, serverless framework for building functions and APIs,
-powered by WebAssembly.
+You write your app logic in Go or AssemblyScript—whichever you prefer—and Modus
+compiles everything to WebAssembly for fast performance at scale and at the
+edge. Each agent instance gets a dedicated execution environment, sand-boxed for
+resiliency, scalability, and security.
 
-You write your app logic in Go or AssemblyScript, and Modus provides additional
-features to easily integrate models, data, and external services.
+Modus enables both stateless functions for quick API responses and stateful
+agents that maintain persistent memory across interactions. This eliminates the
+need to parse conversation histories, rebuild context from scratch, or lose
+state when errors occur.
 
-To **build apps that are thoughtful, fun, and effective**, we often need to
-integrate models in different forms, whether generative large language models or
-classical machine/deep learning models.
+Modus provides a complete toolkit for building intelligent applications:
 
-Your app might be a simple create, read, update, and delete (CRUD) function that
-has a single model to identify similar entries. Or, it could be a complex
-agentic reasoning system that chains dozens of models and data sources together.
-**Modus creates a way of working with models that scales with your needs.**
+- **Functions**: Stateless operations that automatically become shareable skills
+  via auto-generated APIs
+- **Agents**: Stateful entities with short-term and long-term memory that
+  coordinate models, tools, and data
+- **Models**: Domain-specific AI models with the ability to easily swap in
+  different providers or versions
+- **Knowledge Graphs**: Organizational memory that scales context across
+  multi-agent architectures
 
-Modus exists to make it easier for you to build the apps of your dreams.
+Built-in observability provides automatic inference logging and tracing, while
+secure-by-default authorization ensures risk-appropriate access to tools and
+data. Following modern best practices for AI-native architectures, Modus
+implements principles from the 12-factor agentic app methodology for
+maintainable, scalable intelligent systems.
 
-<Note>
-  Modus is a multi-language framework. It currently includes support for Go and
-  AssemblyScript, a WebAssembly compatible TypeScript-like language. Additional
-  language support is in development.
-</Note>
+You can run Modus locally for development or deploy it in seconds to Hypermode
+for production.
 
 ## What is Modus good for? {/* vale Google.Contractions = NO */}
 
-We designed Modus primarily as a general-purpose app framework, it just happens
-to treat models as a first-class component. With Modus you can use models, as
-appropriate, without additional complexity.
+Modus is designed for building applications where AI is at its core capability.
+It supports sub-second response times for stateless operations and long-running,
+autonomous workflows that maintain state over time.
 
-However, Modus is best for apps that require sub-second response times. We've
-made trade-offs to optimize for speed and simplicity.
+**Beyond demo prompt apps**: we've all built apps with prompts and AI tool
+integrations. When you're ready to take your project to the next level, Modus
+serves as your AI component in the stack. Modus can sit right alongside your
+existing app, handling the intelligent workflows while your main app focuses on
+what it does best.
+
+Both functions and agents can be deployed in the same app, allowing you to
+choose the right abstraction for each use case.
 
 For more inspiration, check out the
 [Modus recipes](https://github.com/hypermodeinc/modus-recipes).
 
-## Main features
+## Where to next?
 
-A few of the core Modus features include:
-
-| Feature                                     | Description                                                                                  |
-| ------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| [Multi-Language](/modus/project-structure)  | Write functions in Go and AssemblyScript, with additional language support in development    |
-| [Auto-Generated API](/modus/api-generation) | A secure API is automatically generated from your function signatures                        |
-| [Model Integration](/modus/model-invoking)  | Connect and invoke AI models from different providers, without learning a new SDK            |
-| [Authentication](/modus/authentication)     | Secure your API endpoints with minimal configuration                                         |
-| **WebAssembly Runtime**                     | Small and portable execution engine for deployment across server, edge, and desktop computes |
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/modus/first-modus-agent">
+    Build your first Modus app in minutes with our quickstart guide
+  </Card>
+  <Card title="What is a Function?" icon="function" href="/modus/functions">
+    Learn about stateless functions for APIs and data processing
+  </Card>
+  <Card title="What is an Agent?" icon="robot" href="/modus/agents">
+    Discover stateful agents that maintain memory across interactions
+  </Card>
+  <Card
+    title="What about knowledge graphs?"
+    icon="network-wired"
+    href="/modus/knowledge-graphs"
+  >
+    Build intelligence networks with persistent institutional memory
+  </Card>
+</CardGroup>

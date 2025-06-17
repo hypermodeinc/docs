@@ -1,0 +1,328 @@
+---
+title: "What's a Function?"
+description: "Learn about functions in Modus"
+"og:title": "What's a Function? - Modus"
+---
+
+## Functions in Modus
+
+Functions in Modus are stateless, request-response operations that handle
+specific tasks with precision and speed. They get in, complete their objective,
+and report back—no unnecessary complications, no lingering presence, just pure
+operational efficiency.
+
+You can think of a function as an endpoint—each function you write automatically
+becomes a callable API endpoint that external systems can access.
+
+Functions are the backbone of your app, handling everything from data gathering
+to AI-powered analysis, all while maintaining clean, predictable behavior.
+
+## Core characteristics
+
+Functions are stateless, request-response operations designed for fast,
+predictable execution. They're your go-to choice when you need quick data
+processing, external API integration, or computational tasks without maintaining
+state between requests.
+
+### Key capabilities
+
+- **Stateless**: Each operation is independent with no memory of previous
+  requests
+- **Lightning fast**: Optimized for sub-second response times
+- **Infinitely scalable**: Deploy as many instances as needed
+- **Clean operations**: Straightforward request-in, response-out pattern
+- **Auto-deployed**: Exposed automatically as GraphQL queries or mutations
+
+## How functions become endpoints
+
+When you deploy your functions, Modus automatically exposes them through a
+GraphQL API. Your functions become either **queries** (for data retrieval) or
+**mutations** (for data modifications) based on their operation type.
+
+### Data retrieval queries
+
+Most functions become GraphQL queries—perfect for fetching and processing data:
+
+```go
+// This function becomes a GraphQL query
+func GatherThreatIntelligence(source string) (*ThreatReport, error) {
+    // Data gathering and processing operation
+    return fetchThreatData(source)
+}
+```
+
+Your functions are now accessible via GraphQL:
+
+```graphql
+query {
+  gatherThreatIntelligence(source: "network_logs") {
+    threatLevel
+    indicators
+    recommendations
+  }
+}
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "gatherThreatIntelligence": {
+      "threatLevel": "HIGH",
+      "indicators": ["unusual_traffic", "failed_auth_attempts"],
+      "recommendations": ["immediate_investigation", "block_suspicious_ips"]
+    }
+  }
+}
+```
+
+### Data modification mutations
+
+Functions that modify data automatically become GraphQL mutations. Modus detects
+these by their operation prefixes:
+
+```go
+// This becomes a GraphQL mutation
+func CreateSecurityAlert(data AlertInput) (*SecurityAlert, error) {
+    // Create new security alert
+    return deploySecurityAlert(data)
+}
+```
+
+Now you can execute data modifications:
+
+```graphql
+mutation {
+  createSecurityAlert(
+    data: {
+      type: "INTRUSION_ATTEMPT"
+      severity: "CRITICAL"
+      source: "firewall_logs"
+    }
+  ) {
+    alertId
+    status
+    timestamp
+  }
+}
+```
+
+**Response:**
+
+```json
+{
+  "data": {
+    "createSecurityAlert": {
+      "alertId": "alert_20250115_001",
+      "status": "ACTIVE",
+      "timestamp": "2025-01-15T14:30:00Z"
+    }
+  }
+}
+```
+
+Functions starting with `create`, `update`, `delete`, and similar action words
+automatically become mutations.
+
+## Example: Weather intelligence analysis
+
+Here's a complete example that demonstrates how functions integrate external
+APIs with AI models for intelligent data processing:
+
+```go
+package main
+
+import (
+    "fmt"
+    "strings"
+    "github.com/hypermodeinc/modus/sdk/go/pkg/http"
+    "github.com/hypermodeinc/modus/sdk/go/pkg/models"
+    "github.com/hypermodeinc/modus/sdk/go/pkg/models/openai"
+)
+
+type WeatherIntel struct {
+    City        string  `json:"city"`
+    Temperature float64 `json:"temperature"`
+    Conditions  string  `json:"conditions"`
+    Analysis    string  `json:"analysis"`
+}
+
+const modelName = "text-generator"
+
+// Function: Gather weather data and provide tactical analysis
+func GatherWeatherIntelligence(city string) (*WeatherIntel, error) {
+    // Fetch weather data from OpenWeatherMap API
+    url := fmt.Sprintf(
+        "https://api.openweathermap.org/data/2.5/weather?q=%s&appid={{API_KEY}}&units=metric",
+        city,
+    )
+
+    response, err := http.Fetch(url)
+    if err != nil {
+        return nil, err
+    }
+    if !response.Ok() {
+        return nil, fmt.Errorf(
+            "weather data retrieval failed: %d %s",
+            response.Status,
+            response.StatusText,
+        )
+    }
+
+    // Parse weather data
+    var weatherData struct {
+        Name string `json:"name"`
+        Main struct {
+            Temp float64 `json:"temp"`
+        } `json:"main"`
+        Weather []struct {
+            Description string `json:"description"`
+        } `json:"weather"`
+    }
+
+    response.JSON(&weatherData)
+
+    conditions := "unknown"
+    if len(weatherData.Weather) > 0 {
+        conditions = weatherData.Weather[0].Description
+    }
+
+    // Generate tactical analysis
+    analysis, err := analyzeTacticalConditions(
+        weatherData.Name,
+        weatherData.Main.Temp,
+        conditions,
+    )
+    if err != nil {
+        fmt.Printf("Analysis failed for %s: %v\n", weatherData.Name, err)
+        analysis = "Analysis unavailable - proceed with standard protocols"
+    }
+
+    return &WeatherIntel{
+        City:        weatherData.Name,
+        Temperature: weatherData.Main.Temp,
+        Conditions:  conditions,
+        Analysis:    analysis,
+    }, nil
+}
+
+// Analyze weather conditions for tactical implications
+func analyzeTacticalConditions(city string, temp float64, conditions string) (string, error) {
+    model, err := models.GetModel[openai.ChatModel](modelName)
+    if err != nil {
+        return "", err
+    }
+
+    prompt := `You are a tactical analyst evaluating weather conditions for field operations.
+    Provide a brief tactical assessment of how these weather conditions might impact
+    outdoor activities, visibility, and operational considerations in 1-2 sentences.`
+
+    content := fmt.Sprintf(
+        "Location: %s, Temperature: %.1f°C, Conditions: %s",
+        city,
+        temp,
+        conditions,
+    )
+
+    input, err := model.CreateInput(
+        openai.NewSystemMessage(prompt),
+        openai.NewUserMessage(content),
+    )
+    if err != nil {
+        return "", err
+    }
+
+    input.Temperature = 0.7
+
+    output, err := model.Invoke(input)
+    if err != nil {
+        return "", err
+    }
+
+    return strings.TrimSpace(output.Choices[0].Message.Content), nil
+}
+```
+
+This function automatically becomes available as a GraphQL query:
+
+```graphql
+query {
+  gatherWeatherIntelligence(city: "London") {
+    city
+    temperature
+    conditions
+    analysis
+  }
+}
+```
+
+You'll receive an intelligence report like:
+
+```json
+{
+  "data": {
+    "gatherWeatherIntelligence": {
+      "city": "London",
+      "temperature": 12.3,
+      "conditions": "light rain",
+      "analysis": "
+        Light rain conditions will reduce visibility for surveillance operations and may impact equipment performance.
+        Recommend waterproof gear and consider delayed outdoor activities requiring clear sight lines."
+    }
+  }
+}
+```
+
+### Setting up the function
+
+To use this function, you'll need to:
+
+Sign up for a free API key at [OpenWeatherMap](https://openweathermap.org/api)
+
+Add the connections and models to your `modus.json`:
+
+```json
+{
+  "models": {
+    "text-generator": {
+      "sourceModel": "meta-llama/Llama-3.2-3B-Instruct",
+      "provider": "hugging-face",
+      "connection": "hypermode"
+    }
+  },
+  "connections": {
+    "weather-api": {
+      "type": "http",
+      "baseUrl": "https://api.openweathermap.org/",
+      "queryParameters": {
+        "appid": "{{API_KEY}}"
+      }
+    }
+  }
+}
+```
+
+Set your API key in `.env.dev.local`:
+
+```sh
+MODUS_WEATHER_API_API_KEY=your_openweathermap_api_key_here
+```
+
+## When to use agents instead
+
+Functions are perfect for most computational tasks, but when you need persistent
+state, complex multi-step workflows, or processes that remember details across
+multiple interactions, it's time to consider [agents](/modus/agents).
+
+Consider upgrading to agents when your use case requires:
+
+- **Persistent memory** across multiple requests
+- **Conversation context** that builds over time
+- **Multi-step workflows** spanning extended periods
+- **Recovery from failures** with state preservation
+- **Continuous monitoring** with context retention
+
+Your functions form the API backbone of your app—fast, reliable, and always
+ready for the next request. They handle the immediate computational needs while
+your agents manage the long-term stateful processes.
