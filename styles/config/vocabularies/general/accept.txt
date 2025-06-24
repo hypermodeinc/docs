@@ -153,3 +153,4 @@ Mailchimp
 Shopify
 Sandboxing
 SEO
+Typeform
