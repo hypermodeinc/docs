@@ -65,7 +65,8 @@
                   "agents/agent-gallery/music-recommendation",
                   "agents/agent-gallery/github-review-bot",
                   "agents/agent-gallery/linkedin-intelligence",
-                  "agents/agent-gallery/inventory-tracker"
+                  "agents/agent-gallery/inventory-tracker",
+                  "agents/agent-gallery/channelpulse"
                 ]
               },
               "agents/faq"
