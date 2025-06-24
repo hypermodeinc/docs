@@ -146,6 +146,7 @@ USA
 
 [Gg]raphs
 
+gqlgen
 Vercel
 Exa
 Pipedream
