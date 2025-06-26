@@ -146,6 +146,7 @@ USA
 
 [Gg]raphs
 
+gqlgen
 Vercel
 Exa
 Pipedream
@@ -156,3 +157,7 @@ GPT
 Gemini
 Claude
 Llama
+SEO
+Eventbrite
+Typeform
+Bluesky

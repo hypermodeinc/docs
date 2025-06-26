@@ -1,0 +1,276 @@
+---
+title: Your First Modus Agent
+description: "Build your first Modus Agent in a few minutes"
+mode: "wide"
+sidebarTitle: "Your First Modus Agent"
+"og:title": "Your First Modus Agent"
+---
+
+In this quickstart, you'll learn to build your first Modus App with a single
+function that demonstrates how to integrate external APIs with AI models. We'll
+start with this stateless function, and later you can learn about building
+stateful agents that maintain memory and coordinate complex operations.
+
+Our examples use Go, which we recommend for new projects. You can also choose
+AssemblyScript if you prefer. For AssemblyScript usage, refer to the
+[AssemblyScript SDK overview](/modus/sdk/assemblyscript/overview).
+
+## Prerequisites
+
+- [Node.js](https://nodejs.org/en/download/package-manager) - v22 or higher
+- Text editor - we recommend [VS Code](https://code.visualstudio.com/)
+- Terminal - access Modus through a command-line interface (CLI)
+
+## Building your first Modus app
+
+<Steps>
+  <Step title="Install the Modus CLI">
+    Install the Modus CLI to manage your Modus applications.
+
+    ```sh
+    npm install -g @hypermode/modus-cli
+    ```
+
+  </Step>
+
+  <Step title="Create a new app">
+    Create your first Modus app.
+
+    ```sh
+    modus new
+    ```
+
+    Choose between Go and AssemblyScript. Both compile to WebAssembly for fast performance.
+
+  </Step>
+  <Step title="Run your app locally">
+    Start your local development server:
+
+    ```sh
+    modus dev
+    ```
+
+    This starts your app and provides a URL to access the API.
+    </Step>
+
+  <Step title="Add external connections">
+    To connect to external services, add this to your `modus.json`:
+
+    ```json modus.json
+    {
+      "connections": {
+        "zenquotes": {
+          "type": "http",
+          "baseUrl": "https://zenquotes.io/"
+        }
+      }
+    }
+    ```
+
+  </Step>
+  <Step title="Add an AI model">
+    Add an AI model to your manifest:
+
+      ```json
+      {
+        "models": {
+          "text-generator": {
+            "sourceModel": "meta-llama/Llama-3.2-3B-Instruct",
+            "provider": "hugging-face",
+            "connection": "hypermode"
+          }
+        }
+      }
+      ```
+
+  </Step>
+  <Step title="Set up model access">
+    Install and authenticate with the Hyp CLI to access Hypermode-hosted models:
+
+    ```sh
+      npm install -g @hypermode/hyp-cli
+    ```
+
+    Authenticate with your Hypermode account:
+
+    ```sh
+      hyp login
+    ```
+
+    This connects your local development environment to Hypermode's model infrastructure.
+
+  </Step>
+  <Step title="Create your first function">
+    Create a function that fetches data from an external API and uses AI for analysis:
+
+    <Tab title="Go">
+        Create `intelligence.go`:
+
+        ```go intelligence.go
+        package main
+
+        import (
+          "errors"
+          "fmt"
+          "strings"
+
+          "github.com/hypermodeinc/modus/sdk/go/pkg/http"
+          "github.com/hypermodeinc/modus/sdk/go/pkg/models"
+          "github.com/hypermodeinc/modus/sdk/go/pkg/models/openai"
+        )
+
+        type IntelReport struct {
+          Quote   string `json:"quote"`
+          Author  string `json:"author"`
+          Analysis string `json:"analysis,omitempty"`
+        }
+
+        const modelName = "text-generator"
+
+        // Fetch a random quote and provide AI analysis
+        func GatherIntelligence() (*IntelReport, error) {
+          request := http.NewRequest("https://zenquotes.io/api/random")
+
+          response, err := http.Fetch(request)
+          if err != nil {
+            return nil, err
+          }
+          if !response.Ok() {
+            return nil, fmt.Errorf("request failed: %d %s", response.Status, response.StatusText)
+          }
+
+          // Parse the API response
+          var quotes []IntelReport
+          response.JSON(&quotes)
+          if len(quotes) == 0 {
+            return nil, errors.New("no data received")
+          }
+
+          // Get the quote
+          intel := quotes[0]
+
+          // Generate AI analysis
+          analysis, err := analyzeIntelligence(intel.Quote, intel.Author)
+          if err != nil {
+            fmt.Printf("AI analysis failed for %s: %v\n", intel.Author, err)
+            intel.Analysis = "Analysis unavailable"
+          } else {
+            intel.Analysis = analysis
+          }
+
+          return &intel, nil
+        }
+
+        // Use AI to analyze the quote
+        func analyzeIntelligence(quote, author string) (string, error) {
+          model, err := models.GetModel[openai.ChatModel](modelName)
+          if err != nil {
+            return "", err
+          }
+
+          prompt := `You are an analyst.
+          Provide a brief insight that captures the core meaning
+          and practical application of this wisdom in 1-2 sentences.`
+          content := fmt.Sprintf("Quote: \"%s\" - %s", quote, author)
+
+          input, err := model.CreateInput(
+            openai.NewSystemMessage(prompt),
+            openai.NewUserMessage(content),
+          )
+          if err != nil {
+            return "", err
+          }
+
+          input.Temperature = 0.7
+
+          output, err := model.Invoke(input)
+          if err != nil {
+            return "", err
+          }
+
+          return strings.TrimSpace(output.Choices[0].Message.Content), nil
+        }
+        ```
+    </Tab>
+
+  </Step>
+  <Step title="Test your function">
+    Restart your development server:
+
+    ```sh
+    modus dev
+    ```
+
+    Modus automatically generates a GraphQL API from your functions.
+    Since your function is named `GatherIntelligence()`, it becomes a GraphQL query field called `gatherIntelligence`.
+
+    Open the Modus API Explorer at `http://localhost:8686/explorer` to test your function.
+    The explorer is fully GraphQL-compatible, so you can issue this query:
+
+    ```graphql
+    query {
+      gatherIntelligence {
+        quote
+        author
+        analysis
+      }
+    }
+    ```
+
+    You'll receive a response like:
+
+    ```json
+    {
+      "data": {
+        "gatherIntelligence": {
+          "quote": "The only way to do great work is to love what you do.",
+          "author": "Steve Jobs",
+          "analysis": "
+            This emphasizes that passion and genuine interest in your work are fundamental drivers of excellence.
+            When you love what you do, the effort required for mastery feels less burdensome and innovation flows more naturally.
+          "
+        }
+      }
+    }
+    ```
+
+    Your function now:
+    - Fetches data from external APIs
+    - Uses AI models for analysis
+    - Provides intelligent responses
+    - Handles errors gracefully
+
+  </Step>
+  <Step title="Monitor AI calls">
+    When running locally, Modus records every AI model call for monitoring and debugging.
+    You can see this in the Modus explorer.
+
+    <Note>
+      Local inference tracking is supported on Linux and macOS. Windows
+      support is incoming.
+    </Note>
+
+    You can monitor:
+    - Requests sent to AI models
+    - Response times and token usage
+    - Model performance metrics
+    - Error rates and debugging info
+
+  </Step>
+</Steps>
+
+## What's next?
+
+You've successfully built your first Modus function. But this is just the
+beginning. Real agents maintain memory, coordinate complex operations, and never
+lose their context.
+
+Ready to upgrade from simple functions to stateful agents? Check out
+[What's an Agent?](/modus/agents) to learn how to build persistent,
+memory-enabled agents that remember every interaction and can coordinate
+sophisticated multi-step operations.
+
+<Tip>
+  For more mission templates and advanced operations, explore the [Modus
+  recipes](https://github.com/hypermodeinc/modus-recipes).
+</Tip>

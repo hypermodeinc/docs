@@ -1,0 +1,609 @@
+---
+title: "Agents APIs"
+sidebarTitle: "Agents"
+description:
+  "Build stateful agents that maintain persistent memory across interactions"
+icon: "circle-small"
+iconType: "solid"
+---
+
+import { SdkHeader } from "/snippets/sdk-header.mdx"
+import SdkTip from "/snippets/sdk-tip.mdx"
+
+<SdkHeader language="Go" feature="Agents" />
+
+The Modus Agents APIs allow you to create stateful agents that maintain
+persistent memory across interactions, survive system failures, and coordinate
+complex multi-step operations.
+
+## Import
+
+To begin, import the `agents` package from the SDK:
+
+```go
+import "github.com/hypermodeinc/modus/sdk/go/pkg/agents"
+```
+
+## Agent APIs
+
+{/* vale Google.Headings = NO */}
+
+The APIs in the `agents` package are below, organized by category.
+
+<SdkTip />
+
+### Agent Management Functions
+
+#### Register
+
+Register an agent struct with the Modus runtime before it can be instantiated.
+
+```go
+func Register(agent Agent)
+```
+
+<ResponseField name="agent" type="Agent" required>
+  A pointer to an instance of the agent struct that implements the `Agent`
+  interface.
+</ResponseField>
+
+<Note>
+  Agent registration must be done in an `init()` function to ensure it happens
+  before any agent operations.
+</Note>
+
+#### Start
+
+Create and start a new agent instance.
+
+```go
+func Start(agentName string) (AgentInfo, error)
+```
+
+<ResponseField name="agentName" type="string" required>
+  The name of the agent to instantiate. This must match the `Name()` method
+  returned by the agent implementation.
+</ResponseField>
+
+#### Stop
+
+Stop an agent instance. Once stopped, the agent can't be resumed.
+
+```go
+func Stop(agentId string) (AgentInfo, error)
+```
+
+<ResponseField name="agentId" type="string" required>
+  The unique identifier of the agent instance to stop.
+</ResponseField>
+
+#### GetInfo
+
+Get information about a specific agent instance.
+
+```go
+func GetInfo(agentId string) (AgentInfo, error)
+```
+
+<ResponseField name="agentId" type="string" required>
+  The unique identifier of the agent instance.
+</ResponseField>
+
+#### ListAll
+
+List all active agent instances.
+
+```go
+func ListAll() ([]AgentInfo, error)
+```
+
+### Communication Functions
+
+#### SendMessage
+
+Send a synchronous message to an agent and wait for a response.
+
+```go
+func SendMessage(agentId, messageName string, opts ...MessageOption) (*string, error)
+```
+
+<ResponseField name="agentId" type="string" required>
+  The unique identifier of the target agent instance.
+</ResponseField>
+
+<ResponseField name="messageName" type="string" required>
+  The name of the message to send to the agent.
+</ResponseField>
+
+<ResponseField name="opts" type="...MessageOption">
+  Optional message options. Use `WithData(data string)` to include a data
+  payload.
+</ResponseField>
+
+#### SendMessageAsync
+
+Send an asynchronous message to an agent without waiting for a response.
+
+```go
+func SendMessageAsync(agentId, messageName string, opts ...MessageOption) error
+```
+
+<ResponseField name="agentId" type="string" required>
+  The unique identifier of the target agent instance.
+</ResponseField>
+
+<ResponseField name="messageName" type="string" required>
+  The name of the message to send to the agent.
+</ResponseField>
+
+<ResponseField name="opts" type="...MessageOption">
+  Optional message options. Use `WithData(data string)` to include a data
+  payload.
+</ResponseField>
+
+#### WithData
+
+Create a message option that includes a data payload.
+
+```go
+func WithData(data string) MessageOption
+```
+
+<ResponseField name="data" type="string" required>
+  The data payload to include with the message.
+</ResponseField>
+
+### Agent Interface
+
+#### Agent
+
+The interface that all agents must implement.
+
+```go
+type Agent interface {
+    Name() string
+    OnReceiveMessage(messageName string, data string) (*string, error)
+    GetState() *string
+    SetState(data string)
+    OnInitialize() error
+    OnSuspend() error
+    OnResume() error
+    OnTerminate() error
+}
+```
+
+<ResponseField name="Name()" type="method" required>
+  Must return a unique name for the agent implementation.
+</ResponseField>
+
+<ResponseField
+  name="OnReceiveMessage(messageName, data)"
+  type="method"
+  required
+>
+  Handles incoming messages to the agent. Must be implemented by all agents.
+</ResponseField>
+
+<ResponseField name="GetState()" type="method">
+  Returns the agent's current state as a string for persistence. Called
+  automatically when the agent needs to be suspended or migrated.
+</ResponseField>
+
+<ResponseField name="SetState(data)" type="method">
+  Restores the agent's state from a string. Called automatically when the agent
+  is resumed or migrated.
+</ResponseField>
+
+<ResponseField name="OnInitialize()" type="method">
+  Lifecycle method called when the agent is first created.
+</ResponseField>
+
+<ResponseField name="OnSuspend()" type="method">
+  Lifecycle method called when the agent is about to be suspended.
+</ResponseField>
+
+<ResponseField name="OnResume()" type="method">
+  Lifecycle method called when the agent is resumed from suspension.
+</ResponseField>
+
+<ResponseField name="OnTerminate()" type="method">
+  Lifecycle method called when the agent is about to be terminated.
+</ResponseField>
+
+#### AgentBase
+
+A convenient base struct that provides default implementations for optional
+methods and includes event publishing capabilities.
+
+```go
+type AgentBase struct{}
+
+func (AgentBase) GetState() *string { return nil }
+func (AgentBase) SetState(data string) {}
+func (AgentBase) OnInitialize() error { return nil }
+func (AgentBase) OnSuspend() error { return nil }
+func (AgentBase) OnResume() error { return nil }
+func (AgentBase) OnTerminate() error { return nil }
+func (a *AgentBase) PublishEvent(event AgentEvent) error
+```
+
+<Note>
+  You can embed `AgentBase` in your agent struct to automatically implement the
+  optional methods, then override only the ones you need.
+</Note>
+
+<ResponseField name="PublishEvent(event)" type="method">
+  Publishes an event from this agent to any subscribers. The event must
+  implement the `AgentEvent` interface.
+</ResponseField>
+
+### Event Interface
+
+#### AgentEvent
+
+Interface that custom events must implement to be published from agents.
+
+```go
+type AgentEvent interface {
+    EventName() string
+}
+```
+
+<ResponseField name="EventName()" type="method" required>
+  Must return the name/type of the event as a string.
+</ResponseField>
+
+Custom events should implement this interface and include any additional data as
+struct fields:
+
+```go
+type CountUpdated struct {
+    Count int `json:"count"`
+}
+
+func (e CountUpdated) EventName() string {
+    return "countUpdated"
+}
+```
+
+### Types
+
+#### AgentInfo
+
+Information about an agent instance.
+
+```go
+type AgentInfo struct {
+    Id     string
+    Name   string
+    Status string
+}
+```
+
+<ResponseField name="Id" type="string">
+  The unique identifier of the agent instance.
+</ResponseField>
+
+<ResponseField name="Name" type="string">
+  The name of the agent implementation.
+</ResponseField>
+
+<ResponseField name="Status" type="string">
+  The current status of the agent instance.
+</ResponseField>
+
+#### MessageOption
+
+Options for customizing agent messages.
+
+```go
+type MessageOption interface {
+    // internal implementation
+}
+```
+
+## Example Usage
+
+Here's a complete example of a simple counter agent with event streaming:
+
+### Agent Implementation
+
+```go
+package main
+
+import (
+    "strconv"
+    "github.com/hypermodeinc/modus/sdk/go/pkg/agents"
+)
+
+type CounterAgent struct {
+    agents.AgentBase
+    count int
+}
+
+func (c *CounterAgent) Name() string {
+    return "Counter"
+}
+
+func (c *CounterAgent) GetState() *string {
+    state := strconv.Itoa(c.count)
+    return &state
+}
+
+func (c *CounterAgent) SetState(data string) {
+    if data == nil {
+        return
+    }
+    if count, err := strconv.Atoi(*data); err == nil {
+        c.count = count
+    }
+}
+
+func (c *CounterAgent) OnInitialize() error {
+    fmt.Printf("Counter agent started\n")
+    return nil
+}
+
+func (c *CounterAgent) OnReceiveMessage(messageName string, data string) (*string, error) {
+    switch messageName {
+    case "count":
+        result := strconv.Itoa(c.count)
+        return &result, nil
+
+    case "increment":
+        if data != nil {
+            if increment, err := strconv.Atoi(*data); err == nil {
+                c.count += increment
+            }
+        } else {
+            c.count++
+        }
+
+        // Publish an event to subscribers
+        if err := c.PublishEvent(CountUpdated{Count: c.count}); err != nil {
+            return nil, err
+        }
+
+        result := strconv.Itoa(c.count)
+        return &result, nil
+    }
+
+    return nil, nil
+}
+
+// Custom event for count updates
+type CountUpdated struct {
+    Count int `json:"count"`
+}
+
+func (e CountUpdated) EventName() string {
+    return "countUpdated"
+}
+
+// Register the agent in init function
+func init() {
+    agents.Register(&CounterAgent{})
+}
+```
+
+### Function Integration
+
+```go
+// Start a counter agent and return its info
+func StartCounterAgent() (agents.AgentInfo, error) {
+    return agents.Start("Counter")
+}
+
+// Get the current count from an agent
+func GetCount(agentId string) (int, error) {
+    count, err := agents.SendMessage(agentId, "count")
+    if err != nil {
+        return 0, err
+    }
+    if count == nil {
+        return 0, nil
+    }
+    return strconv.Atoi(*count)
+}
+
+// Increment the count and return the new value
+func UpdateCount(agentId string) (int, error) {
+    count, err := agents.SendMessage(agentId, "increment")
+    if err != nil {
+        return 0, err
+    }
+    if count == nil {
+        return 0, nil
+    }
+    return strconv.Atoi(*count)
+}
+
+// Increment the count asynchronously by a specific amount
+func UpdateCountAsync(agentId string, qty int) error {
+    return agents.SendMessageAsync(agentId, "increment",
+        agents.WithData(strconv.Itoa(qty)))
+}
+
+// Stop an agent
+func StopAgent(agentId string) (agents.AgentInfo, error) {
+    return agents.Stop(agentId)
+}
+
+// List all active agents
+func ListAgents() ([]agents.AgentInfo, error) {
+    return agents.ListAll()
+}
+```
+
+### GraphQL Usage
+
+Once deployed, your agent functions become available via GraphQL:
+
+```graphql
+# Start a new agent
+mutation {
+  startCounterAgent {
+    id
+    name
+    status
+  }
+}
+
+# Get the current count
+query {
+  getCount(agentId: "agent_abc123")
+}
+
+# Increment the count
+mutation {
+  updateCount(agentId: "agent_abc123")
+}
+
+# Increment asynchronously
+mutation {
+  updateCountAsync(agentId: "agent_abc123", qty: 5)
+}
+
+# Subscribe to real-time events
+subscription {
+  agentEvent(agentId: "agent_abc123") {
+    name
+    data
+    timestamp
+  }
+}
+```
+
+### Event Subscription
+
+To receive real-time events from your agent, subscribe using GraphQL
+subscriptions over Server-Sent Events:
+
+```graphql
+subscription CounterEvents($agentId: String!) {
+  agentEvent(agentId: $agentId) {
+    name
+    data
+    timestamp
+  }
+}
+```
+
+Example events you might receive:
+
+```json
+{
+  "data": {
+    "agentEvent": {
+      "name": "countUpdated",
+      "data": {
+        "count": 5
+      },
+      "timestamp": "2025-06-08T14:30:00Z"
+    }
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "agentEvent": {
+      "name": "status",
+      "data": {
+        "status": "running"
+      },
+      "timestamp": "2025-06-08T14:30:05Z"
+    }
+  }
+}
+```
+
+### Multiple Event Types
+
+You can define multiple event types for different scenarios:
+
+```go
+// Mission events
+type MissionStarted struct {
+    MissionName string `json:"missionName"`
+    Priority    string `json:"priority"`
+}
+
+func (e MissionStarted) EventName() string {
+    return "missionStarted"
+}
+
+type MissionCompleted struct {
+    MissionName string `json:"missionName"`
+    Success     bool   `json:"success"`
+    Duration    int    `json:"duration"`
+}
+
+func (e MissionCompleted) EventName() string {
+    return "missionCompleted"
+}
+
+// Error events
+type ErrorOccurred struct {
+    Message string `json:"message"`
+    Code    string `json:"code"`
+}
+
+func (e ErrorOccurred) EventName() string {
+    return "errorOccurred"
+}
+```
+
+### Client Integration
+
+Use appropriate GraphQL Server-Sent Events (SSE) clients such as:
+
+- [graphql-sse](https://the-guild.dev/graphql/sse) for JavaScript/TypeScript
+- [gqlgen](https://gqlgen.com/recipes/subscriptions/) for Go clients
+- Standard HTTP libraries with Server-Sent Events (SSE) support
+
+Example with curl:
+
+```bash
+curl -N -H "accept: text/event-stream" \
+     -H "content-type: application/json" \
+     -X POST http://localhost:8080/graphql \
+     -d '{"query":"subscription { agentEvent(agentId: \"agent_abc123\") { name data timestamp } }"}'
+```
+
+Example with Go client:
+
+```go
+import (
+    "bufio"
+    "encoding/json"
+    "fmt"
+    "net/http"
+    "strings"
+)
+
+func subscribeToAgentEvents(agentId string) {
+    query := fmt.Sprintf(`{"query":"subscription { agentEvent(agentId: \"%s\") { name data timestamp } }"}`, agentId)
+
+    req, _ := http.NewRequest("POST", "http://localhost:8080/graphql", strings.NewReader(query))
+    req.Header.Set("Accept", "text/event-stream")
+    req.Header.Set("Content-Type", "application/json")
+
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    if err != nil {
+        panic(err)
+    }
+    defer resp.Body.Close()
+
+    scanner := bufio.NewScanner(resp.Body)
+    for scanner.Scan() {
+        line := scanner.Text()
+        if strings.HasPrefix(line, "data: ") {
+            data := strings.TrimPrefix(line, "data: ")
+            fmt.Printf("Received event: %s\n", data)
+        }
+    }
+}
+```
