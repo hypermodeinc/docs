@@ -24,6 +24,12 @@ Add a GitHub Actions workflow to your repository for automatic deployments.
 
 Create `.github/workflows/ci-modus-build.yml`:
 
+<Note>
+  This workflow can stray out of date as new Golang releases are made. If you
+  encounter issues, checkout our [open source recipes
+  repo](https://github.com/hypermodeinc/modus-recipes/blob/main/.github/workflows/build.yml).
+</Note>
+
 ```yaml
 name: ci-modus-build
 
@@ -47,12 +53,12 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.23.1"
+          go-version: "1.24.4"
 
       - name: Setup TinyGo
         uses: acifani/setup-tinygo@v2
         with:
-          tinygo-version: "0.34.0"
+          tinygo-version: "0.38.0"
 
       - name: Build project
         run: npx -p @hypermode/modus-cli -y modus build
