@@ -1,0 +1,182 @@
+---
+title: "Develop"
+sidebarTitle: "Develop with Your App"
+description: "Build and iterate on your Apps locally or in Threads"
+"og:title": "Develop - Apps"
+---
+
+Hypermode supports two complementary approaches for building Apps: **code-first
+development** using Modus locally and **conversational development** using
+Threads. For conversational development, see our Threads documentation.
+
+## Code-first development with Modus
+
+For developers who prefer working with code, Modus provides a complete local
+development environment. This approach gives you full control over your App's
+structure, version control integration, and the ability to work within your
+existing development tools.
+
+### Setting up local development
+
+Install the Modus CLI to start building Apps locally:
+
+```bash
+npm install -g @hypermode/modus-cli
+```
+
+Create a new App:
+
+```bash
+modus new my-app
+cd my-app
+```
+
+This scaffolds a complete App structure with:
+
+- Agent definitions and configurations
+- Function definitions for custom tools
+- Model integrations and connections
+- Environment configuration
+- Testing framework
+
+### Local development workflow
+
+When developing locally, you get the full Modus runtime experience:
+
+```bash
+# Start local development server
+modus dev
+
+# Build your app
+modus build
+```
+
+Your local environment includes:
+
+- **Hot reload** for rapid iteration with fast refresh
+- **Built-in debugging** with full observability
+- **API Explorer** for testing functions and agents interactively
+- **Model experimentation** with easy model swapping via Model Router
+- **Environment management** with `.env` files
+
+### Local development environment
+
+When you run `modus dev`, you get:
+
+- **Local server** running at `http://localhost:8686`
+- **API Explorer** at `http://localhost:8686/explorer` for interactive testing
+- **Automatic compilation** of your Go or AssemblyScript code to WebAssembly
+- **Fast refresh** that preserves app state during development
+- **Environment variable substitution** from `.env.dev.local` files
+
+### Code structure
+
+Apps follow the Modus project structure that scales from simple functions to
+complex agent systems:
+
+```text
+my-app/
+├── main.go              # Functions and agent definitions
+├── modus.json           # App configuration and manifest
+├── .env.dev.local       # Local environment variables
+├── go.mod               # Dependencies (Go projects)
+└── README.md            # Project documentation
+```
+
+### Environment and secrets management
+
+Modus handles environment variables and secrets securely:
+
+```json modus.json
+{
+  "connections": {
+    "external-api": {
+      "type": "http",
+      "baseUrl": "https://api.example.com/",
+      "headers": {
+        "Authorization": "Bearer {{API_KEY}}"
+      }
+    }
+  }
+}
+```
+
+Set your environment variables in `.env.dev.local`:
+
+```text .env.dev.local
+MODUS_EXTERNAL_API_API_KEY="your_api_key_here"
+```
+
+Modus automatically substitutes `{{API_KEY}}` with `MODUS_EXTERNAL_API_API_KEY`
+following the naming convention: `MODUS_<CONNECTION_NAME>_<PLACEHOLDER>`.
+
+### Using Hypermode-hosted models
+
+To access Hypermode's Model Router and hosted models locally:
+
+```bash
+# Install Hyp CLI for authentication
+npm install -g @hypermode/hyp-cli
+
+# Authenticate with Hypermode
+hyp login
+```
+
+Once authenticated, your local Modus environment automatically connects to
+Hypermode's model infrastructure, giving you access to multiple AI models for
+development and testing.
+
+## Collaborative development
+
+Both approaches support team collaboration:
+
+### Code-first teams
+
+- Standard Git workflows with branching and pull requests
+- Shared development environments
+- Code reviews for agent logic and function implementations
+- Automated testing and CI/CD integration
+
+### Mixed teams
+
+- Subject matter experts build and refine using Threads (see our Threads
+  documentation)
+- Developers enhance and ship Modus code
+- Seamless handoff between exploration and implementation
+- Shared testing environments using `modus dev`
+
+## Testing and debugging
+
+Hypermode provides comprehensive testing tools for both development approaches:
+
+### Built-in testing with Modus
+
+- **API Explorer**: Interactive testing of functions and agents
+- **Agent behavior tests**: Verify reasoning and decision-making
+- **Function integration tests**: Test external API calls and data processing
+- **Memory tests**: Validate state persistence and retrieval
+- **End-to-end scenarios**: Test complete workflows
+
+### Observability and debugging
+
+- **Execution tracing**: See every step of agent reasoning
+- **Function call monitoring**: Track all external interactions
+- **Memory access logs**: Understand how agents use context
+- **Performance metrics**: Monitor response times and resource usage
+- **Real-time logs**: Debug issues as they happen during development
+
+## Environment management
+
+Apps support multiple environments throughout development:
+
+### Local development
+
+- Full-featured Modus runtime with `modus dev`
+- Mock external services for testing
+- Hot reload and instant feedback
+- Local memory persistence
+- API Explorer for interactive testing
+
+Whether you're a developer who prefers code, Hypermode's development experience
+provides the tools you need to build production-ready Apps using the power of
+the Modus runtime.

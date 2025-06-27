@@ -1,0 +1,161 @@
+---
+title: "Deploy"
+sidebarTitle: "Deploy your App"
+description: "Deploy your Apps to production with Hypermode"
+"og:title": "Deploy - Apps"
+---
+
+Once you've developed and tested your App locally, you're ready to deploy it to
+production on Hypermode. This guide walks you through setting up automatic
+deployment for your Modus app.
+
+## Prerequisites
+
+Before deploying, ensure you have:
+
+- A completed Modus app (see the [Develop guide](/apps/develop-app) for setup)
+- A GitHub account and repository
+- Your app configured in the Hypermode console (see the
+  [Create Your App guide](/apps/create-app))
+
+## Automatic deployment via GitHub Actions
+
+Add a GitHub Actions workflow to your repository for automatic deployments.
+
+Create `.github/workflows/ci-modus-build.yml`:
+
+<Note>
+  This workflow can stray out of date as new Golang releases are made. If you
+  encounter issues, checkout our [open source recipes
+  repo](https://github.com/hypermodeinc/modus-recipes/blob/main/.github/workflows/build.yml).
+</Note>
+
+```yaml
+name: ci-modus-build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.24.4"
+
+      - name: Setup TinyGo
+        uses: acifani/setup-tinygo@v2
+        with:
+          tinygo-version: "0.38.0"
+
+      - name: Build project
+        run: npx -p @hypermode/modus-cli -y modus build
+```
+
+Once the workflow is added, **any push to the `main` branch automatically
+deploys your app**:
+
+```bash
+# Commit your changes
+git add .
+git commit -m "Deploy my Modus app"
+
+# Push to trigger deployment
+git push origin main
+```
+
+The deployment automatically:
+
+1. Builds your Modus app via GitHub Actions
+2. Deploys to your Hypermode endpoint
+3. Makes your functions available via GraphQL
+
+Deployment output:
+
+```text
+🚀 Deployment started for commit abc123d
+📦 Building application...
+✓ Functions compiled successfully
+🌐 Deploying to production...
+✓ Health checks passed
+🎉 Deployment complete!
+
+Endpoint: https://my-modus-app-my-workspace-hurx1.hypermode.app/graphql
+```
+
+## Production features
+
+Your deployed app includes:
+
+- **Automatic scaling**: Functions scale to zero when not in use
+- **HTTPS endpoints**: Secure GraphQL API
+- **Bearer token auth**: API key authentication
+- **Real-time logs**: Monitor function execution in the Activity tab
+- **Environment variables**: Manage secrets and configuration
+
+### Viewing function activity
+
+Monitor your function executions in the Activity tab:
+
+<img
+  src="/images/apps/console-logs.png"
+  alt="Function logs showing execution times and status"
+/>
+
+You can see:
+
+- Function execution history
+- Response times and duration
+- Success/error status
+- Execution timestamps
+
+### Environment variables
+
+Configure environment variables in the Environment variables tab:
+
+<img
+  src="/images/apps/console-envs.png"
+  alt="Environment variables configuration panel"
+/>
+
+Set production environment variables for:
+
+- API keys and secrets
+- Database connection strings
+- Feature flags
+- External service configurations
+
+## Testing your deployment
+
+Test your deployed functions via GraphQL:
+
+```bash
+curl -X POST https://your-app-endpoint.hypermode.app/graphql \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "{ sayHello(name: \"Production\") }"}'
+```
+
+## Next steps
+
+With your app deployed, your development workflow becomes:
+
+1. Develop and test locally with `modus dev`
+2. Commit and push changes to GitHub
+3. Automatic deployment to production
+4. Monitor via Hypermode console
+
+Your Modus app is now live and ready to handle production traffic with automatic
+scaling, built-in observability, and secure endpoints.
