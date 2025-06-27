@@ -146,9 +146,14 @@ USA
 
 [Gg]raphs
 
+gqlgen
 Vercel
 Exa
 Pipedream
 Mailchimp
 Shopify
 Sandboxing
+SEO
+Eventbrite
+Typeform
+Bluesky
