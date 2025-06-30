@@ -157,9 +157,9 @@ export function getPerson(name: string): Person {
   const vars = new dgraph.Variables()
   vars.set("$name", name)
 
-  const resp = dgraph.execute(
+  const resp = dgraph.executeQuery(
     connection,
-    new dgraph.Request(new dgraph.Query(statement, vars)),
+    new dgraph.Query(statement, vars),
   )
   const persons = JSON.parse<GetPersonResponse>(resp.Json).persons
   return persons[0]
@@ -468,7 +468,7 @@ class Person {
 }
 @json
 class GetPersonResponse {
-  getPerson: Person | null
+  getPerson: Person | null = null
 }
 
 export function getPerson(name: string): Person | null {

@@ -159,7 +159,6 @@ func GenerateText(instruction, prompt string) (string, error) {
 import { models } from "@hypermode/modus-sdk-as"
 import {
   OpenAIChatModel,
-  ResponseFormat,
   SystemMessage,
   UserMessage,
 } from "@hypermode/modus-sdk-as/models/openai/chat"
@@ -225,12 +224,8 @@ func ClassifyText(text string, threshold float32) (string, error) {
 
 ```ts AssemblyScript
 import { models } from "@hypermode/modus-sdk-as"
-import {
-  ClassificationModel,
-  ClassifierResult,
-} from "@hypermode/modus-sdk-as/models/experimental/classification"
+import { ClassificationModel } from "@hypermode/modus-sdk-as/models/experimental/classification"
 
-// this model name should match the one defined in the modus.json manifest file
 const modelName: string = "my-classifier"
 
 // this function takes input text and a probability threshold, and returns the
@@ -241,12 +236,14 @@ export function classifyText(text: string, threshold: f32): string {
   const input = model.createInput([text])
   const output = model.invoke(input)
 
-  const prediction = output.predictions[0]
-  if (prediction.confidence >= threshold) {
-    return prediction.label
+  const predictions = output.predictions
+
+  const prediction = predictions[0]
+  if (prediction.confidence < threshold) {
+    return ""
   }
 
-  return ""
+  return prediction.label
 }
 ```
 

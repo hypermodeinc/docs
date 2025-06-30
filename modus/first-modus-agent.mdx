@@ -103,104 +103,162 @@ AssemblyScript if you prefer. For AssemblyScript usage, refer to the
   <Step title="Create your first function">
     Create a function that fetches data from an external API and uses AI for analysis:
 
-    <Tab title="Go">
-        Create `intelligence.go`:
+    <Tabs>
+      <Tab title="Go">
+          Create `intelligence.go`:
 
-        ```go intelligence.go
-        package main
+          ```go intelligence.go
+          package main
 
-        import (
-          "errors"
-          "fmt"
-          "strings"
+          import (
+            "errors"
+            "fmt"
+            "strings"
 
-          "github.com/hypermodeinc/modus/sdk/go/pkg/http"
-          "github.com/hypermodeinc/modus/sdk/go/pkg/models"
-          "github.com/hypermodeinc/modus/sdk/go/pkg/models/openai"
-        )
-
-        type IntelReport struct {
-          Quote   string `json:"quote"`
-          Author  string `json:"author"`
-          Analysis string `json:"analysis,omitempty"`
-        }
-
-        const modelName = "text-generator"
-
-        // Fetch a random quote and provide AI analysis
-        func GatherIntelligence() (*IntelReport, error) {
-          request := http.NewRequest("https://zenquotes.io/api/random")
-
-          response, err := http.Fetch(request)
-          if err != nil {
-            return nil, err
-          }
-          if !response.Ok() {
-            return nil, fmt.Errorf("request failed: %d %s", response.Status, response.StatusText)
-          }
-
-          // Parse the API response
-          var quotes []IntelReport
-          response.JSON(&quotes)
-          if len(quotes) == 0 {
-            return nil, errors.New("no data received")
-          }
-
-          // Get the quote
-          intel := quotes[0]
-
-          // Generate AI analysis
-          analysis, err := analyzeIntelligence(intel.Quote, intel.Author)
-          if err != nil {
-            fmt.Printf("AI analysis failed for %s: %v\n", intel.Author, err)
-            intel.Analysis = "Analysis unavailable"
-          } else {
-            intel.Analysis = analysis
-          }
-
-          return &intel, nil
-        }
-
-        // Use AI to analyze the quote
-        func analyzeIntelligence(quote, author string) (string, error) {
-          model, err := models.GetModel[openai.ChatModel](modelName)
-          if err != nil {
-            return "", err
-          }
-
-          prompt := `You are an analyst.
-          Provide a brief insight that captures the core meaning
-          and practical application of this wisdom in 1-2 sentences.`
-          content := fmt.Sprintf("Quote: \"%s\" - %s", quote, author)
-
-          input, err := model.CreateInput(
-            openai.NewSystemMessage(prompt),
-            openai.NewUserMessage(content),
+            "github.com/hypermodeinc/modus/sdk/go/pkg/http"
+            "github.com/hypermodeinc/modus/sdk/go/pkg/models"
+            "github.com/hypermodeinc/modus/sdk/go/pkg/models/openai"
           )
-          if err != nil {
-            return "", err
+
+          type IntelReport struct {
+            Quote   string `json:"quote"`
+            Author  string `json:"author"`
+            Analysis string `json:"analysis,omitempty"`
           }
 
-          input.Temperature = 0.7
+          const modelName = "text-generator"
 
-          output, err := model.Invoke(input)
-          if err != nil {
-            return "", err
+          // Fetch a random quote and provide AI analysis
+          func GatherIntelligence() (*IntelReport, error) {
+            request := http.NewRequest("https://zenquotes.io/api/random")
+
+            response, err := http.Fetch(request)
+            if err != nil {
+              return nil, err
+            }
+            if !response.Ok() {
+              return nil, fmt.Errorf("request failed: %d %s", response.Status, response.StatusText)
+            }
+
+            // Parse the API response
+            var quotes []IntelReport
+            response.JSON(&quotes)
+            if len(quotes) == 0 {
+              return nil, errors.New("no data received")
+            }
+
+            // Get the quote
+            intel := quotes[0]
+
+            // Generate AI analysis
+            analysis, err := analyzeIntelligence(intel.Quote, intel.Author)
+            if err != nil {
+              fmt.Printf("AI analysis failed for %s: %v\n", intel.Author, err)
+              intel.Analysis = "Analysis unavailable"
+            } else {
+              intel.Analysis = analysis
+            }
+
+            return &intel, nil
           }
 
-          return strings.TrimSpace(output.Choices[0].Message.Content), nil
+          // Use AI to analyze the quote
+          func analyzeIntelligence(quote, author string) (string, error) {
+            model, err := models.GetModel[openai.ChatModel](modelName)
+            if err != nil {
+              return "", err
+            }
+
+            prompt := `You are an analyst.
+            Provide a brief insight that captures the core meaning
+            and practical application of this wisdom in 1-2 sentences.`
+            content := fmt.Sprintf("Quote: \"%s\" - %s", quote, author)
+
+            input, err := model.CreateInput(
+              openai.NewSystemMessage(prompt),
+              openai.NewUserMessage(content),
+            )
+            if err != nil {
+              return "", err
+            }
+
+            input.Temperature = 0.7
+
+            output, err := model.Invoke(input)
+            if err != nil {
+              return "", err
+            }
+
+            return strings.TrimSpace(output.Choices[0].Message.Content), nil
+          }
+          ```
+      </Tab>
+      <Tab title="AssemblyScript">
+        Modify `index.ts`
+
+        ```ts
+        import { http, models } from "@hypermode/modus-sdk-as";
+        import { OpenAIChatModel, SystemMessage, UserMessage } from "@hypermode/modus-sdk-as/models/openai/chat";
+
+        export function sayHello(name: string | null = null): string {
+          return `Hello, ${name || "World"}!`;
+        }
+
+        @json
+        class IntelReport {
+          @alias("q")
+          quote!: string;
+          @alias("a")
+          author!: string;
+          analysis!: string;
+        }
+
+        const modelName = "text-generator";
+
+        export function gatherIntelligence(): IntelReport {
+          const response = http.fetch("https://zenquotes.io/api/random");
+
+          if (response.status !== 200)
+            throw new Error("Request failed with status: " + response.status.toString() + " " + response.statusText);
+
+          const quotes = response.json<IntelReport[]>();
+
+          if (!quotes.length)
+            throw new Error("No data recieved");
+
+          const quote = quotes[0];
+          const analysis = analyzeIntelligence(quote.quote, quote.author);
+
+          quote.analysis = analysis;
+
+          return quote;
+        }
+
+        function analyzeIntelligence(quote: string, author: string): string {
+          const model = models.getModel<OpenAIChatModel>(modelName);
+
+          const prompt = `You are an analyst.
+          Provide a brief insight that captures the core meaning
+          and practical application of this wisdom in 1-2 sentences.`;
+          const content = "Quote: " + quote + " - " + author;
+
+          const input = model.createInput([
+            new SystemMessage(prompt),
+            new UserMessage(content)
+          ]);
+
+          input.temperature = 0.7;
+
+          const output = model.invoke(input);
+
+          return output.choices[0].message.content.trim();
         }
         ```
-    </Tab>
+      </Tab>
+    </Tabs>
 
   </Step>
   <Step title="Test your function">
-    Restart your development server:
-
-    ```sh
-    modus dev
-    ```
-
     Modus automatically generates a GraphQL API from your functions.
     Since your function is named `GatherIntelligence()`, it becomes a GraphQL query field called `gatherIntelligence`.
 
@@ -208,13 +266,13 @@ AssemblyScript if you prefer. For AssemblyScript usage, refer to the
     The explorer is fully GraphQL-compatible, so you can issue this query:
 
     ```graphql
-    query {
-      gatherIntelligence {
-        quote
-        author
-        analysis
+      query {
+        gatherIntelligence {
+          quote
+          author
+          analysis
+        }
       }
-    }
     ```
 
     You'll receive a response like:
