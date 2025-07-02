@@ -1,181 +1,158 @@
 ---
-title: "Day 2: Morning Stand-up Automation with Sidekick"
-sidebarTitle: "Day 2: Stand-up automation"
+title: "Day 2: Meet Your AI Assistant - Research and Calendar Integration"
+sidebarTitle: "Day 2: Meet your AI assistant"
 description:
-  "Connect your Google Calendar and have Sidekick draft your morning stand-up
-  updates automatically. Learn how agents understand your schedule and
-  priorities."
+  "Put Sidekick to work with real tasks. Research contacts, prep for meetings,
+  and connect your calendar—all through natural conversation."
 ---
 
-<Card title="Day 2 challenge" icon="calendar-check">
-  **Goal**: automate your daily stand-up preparation
+<Card title="Day 2 challenge" icon="calendar">
+  **Goal**: show value with real productivity tasks
 
-**Theme**: foundation week - calendar intelligence
+**Theme**: foundation week - agent productivity in action
 
 **Time investment**: ~10 minutes
 
 </Card>
 
-Welcome back! Yesterday you experienced how Sidekick researches and creates
-calendar events. Today we're going deeper into calendar intelligence—having
-Sidekick understand your schedule and automatically draft your daily stand-up
-updates.
+Welcome to Day 2! Yesterday you explored Sidekick's interface and search
+capabilities. Today you'll get Sidekick to work on real productivity
+tasks—researching contacts for meetings, connecting your Google Calendar, and
+experiencing how agents handle actual work scenarios.
 
-This is where you see the power of agents that understand context, not just
-commands.
+Building on yesterday's foundation, you'll see how agent capabilities translate
+into immediate productivity gains.
+
+![Sidekick Interface - Placeholder](/images/agents/30-days-of-agents/sidekick-about.png)
 
 ## What you'll accomplish today
 
-- Ensure your Google Calendar connection is active
-- Have Sidekick analyze your day's schedule
-- Generate a draft stand-up update based on your meetings
-- Experience how agents interpret calendar context
+- Research a contact for an upcoming meeting
+- Connect your Google Calendar
+- Create a calendar event through conversation
+- Experience how agents think and respond to real work tasks
 
 <Warning>
-  This isn't about reading your calendar aloud. Sidekick analyzes meeting
-  patterns, identifies priorities, and suggests talking points for your
-  stand-up.
+  This builds on yesterday's introduction. You'll now see Sidekick in action
+  with real productivity scenarios, not just exploration.
 </Warning>
 
-## Step 1: verify your calendar connection
+## Step 1: research your contact
 
-If you completed Day 1, your Google Calendar should already be connected. Let's
-verify and explore what Sidekick can see:
+Let's start with a classic scenario: you have a meeting with someone, and you
+want to be prepared. We'll use Sam Altman, CEO of OpenAI, as our example.
 
-**Ask Sidekick:**
-
-```text
-What meetings do I have today? Can you see my calendar?
-```
-
-![Calendar Connection Status - Placeholder](/images/agents/30-days-of-agents/day2-calendar-check.png)
-
-Sidekick should be able to:
-
-- List your meetings for today
-- Show meeting times and attendees
-- Identify meeting types (1:1&nbsp;s, team meetings, external calls)
-
-<Info>
-  If your calendar isn't connected, follow the connection steps from Day 1.
-  Sidekick guides you through the OAuth flow.
-</Info>
-
-## Step 2: request your stand-up draft
-
-Now for the magic. Instead of manually reviewing your calendar and thinking
-about what to share in stand-up, let Sidekick do the analysis:
+**Start a new conversation with Sidekick** and try this prompt:
 
 ```text
-Based on my calendar today, can you draft my morning stand-up update?
-Include what I'm working on, any blockers you can identify from my schedule, and what I focus on today.
+I am meeting with Sam Altman from OpenAI tomorrow.
+Can you research him and prepare some notes for me?
 ```
 
-![Stand-up Draft Generation - Placeholder](/images/agents/30-days-of-agents/day2-standup-draft.png)
+![Sidekick Research - Placeholder](/images/agents/30-days-of-agents/day2-research.png)
 
 Watch how Sidekick:
 
-- Analyzes your meeting types and identifies work streams
-- Spots potential scheduling conflicts or back-to-back meetings
-- Suggests priorities based on meeting importance and attendees
-- Drafts talking points in a natural, conversational tone
+- Searches for current information about Sam Altman (building on yesterday's web
+  search learning)
+- Organizes findings into actionable meeting notes
+- Provides context that's actually useful for conversation
+- Includes recent developments and OpenAI updates
 
 <Tip>
-  **Agent learning moment**: notice how Sidekick infers context from calendar
-  data, and how it's interpreting patterns and making intelligent suggestions.
+  **Agent learning moment**: notice how Sidekick structures information for
+  practical use, not just information dump. This is the difference between
+  search and intelligence.
 </Tip>
 
-## Step 3: refine your stand-up style
+## Step 2: connect Google calendar
 
-Your stand-up format might be different from Sidekick's initial draft. Let's
-teach it your team's style:
+Now let's connect your Google Calendar so Sidekick can manage your schedule.
 
-```text
-Our stand-ups follow this format:
-- Yesterday's accomplishments
-- Today's priorities (max 3 items)
-- Any blockers or help needed
+1. **Add the Google Calendar connection** from the connections panel
+2. **Complete the OAuth flow** when prompted
+3. **Confirm connection** in your workspace settings
 
-Can you redraft my update in this format? Also, our team prefers bullet points over paragraphs.
-```
+![Google Calendar Connection - Placeholder](/images/agents/30-days-of-agents/day2-calendar-connect.png)
 
-![Stand-up Format Refinement - Placeholder](/images/agents/30-days-of-agents/day2-format-update.png)
+<Info>
+  Google Calendar is already configured in Sidekick. Want access to 2,000+ more
+  connections? [Upgrade to Hypermode Pro](/agents/connections).
+</Info>
 
-Sidekick adapts the content to match your team's preferred structure and
-communication style.
+## Step 3: create your meeting
 
-## Step 4: identify intelligent insights
-
-Ask Sidekick to go beyond basic calendar reading:
+With your calendar connected, let's schedule that meeting with Sam Altman:
 
 ```text
-Looking at my schedule, what patterns do you notice?
-Are there any potential issues or opportunities for improving my day?
+Create an event tomorrow at 2pm PT for my meeting with Sam Altman.
+Title it "Meeting with Sam Altman - OpenAI Discussion" and add the research notes you prepared as the description.
+Since we don't have Sam's actual email, please use [YOUR_EMAIL_HERE] as a placeholder for the attendee.
 ```
 
-Sidekick might identify:
+![Calendar Event Creation - Placeholder](/images/agents/30-days-of-agents/day2-create-event.png)
 
-- **Time blocks**: "You have three 1:1&nbsp;s back-to-back 2–3:30 PM"
-- **Preparation needs**: "Your client presentation at 4 PM follows immediately
-  after your team planning session"
-- **Travel time**: "Note the location change between your 10 AM and 11 AM
-  meetings"
-- **Energy management**: "Consider scheduling buffer time before your most
-  important calls"
+Sidekick:
+
+- Creates the calendar event at the specified time
+- Includes your research notes in the description
+- Confirms the meeting details
 
 ## What just happened?
 
-In just 10 minutes, you've experienced sophisticated calendar intelligence:
+Building on yesterday's exploration, you've now experienced practical agent
+productivity:
 
-**Context understanding** Sidekick doesn't just read calendar entries—it
-interprets meeting types, identifies work streams, and understands priorities
+**Applied intelligence** - Sidekick didn't just search—it prepared actionable
+meeting notes with current information about Sam Altman and OpenAI
 
-**Pattern recognition** It spots scheduling conflicts, preparation
-opportunities, and ways to optimize your approach
+**Real integration** - Connected to your actual tools (Google Calendar)
 
-**Communication intelligence** It adapts content format and tone to match your
-team's communication style
+**Seamless action** - Created the calendar event with research included, not
+just provide suggestions
 
-**Proactive insights** Beyond the immediate request, it offers strategic
-suggestions for time management
+**Natural workflow** - All through conversation, no forms or complex interfaces
 
-## The power of calendar intelligence
+**Current information** - Used web search (from yesterday's learning) to get the
+latest information about your contact
 
-Unlike static calendar apps, Sidekick understands the story your schedule tells.
-It can identify when you're overbooked, suggest optimal meeting prep time, and
-even recognize when you need buffer time between high-stakes meetings.
+## The power of integrated workflow
+
+Unlike yesterday's exploratory interactions, today you've seen how Sidekick
+connects multiple capabilities—research, calendar integration, and intelligent
+action—into seamless workflows that mirror how you actually work.
 
 <Card
   title="Tomorrow - Day 3"
   icon="arrow-right"
   href="/agents/30-days-of-agents/day-3"
 >
-  Daily agenda preparation with contextual notes. Learn to have Sidekick prep
-  your entire day with meeting insights and action item tracking.
+  Connect more deeply with your schedule. Learn to have Sidekick draft your
+  morning stand-up updates based on your calendar.
 </Card>
 
 ## Pro tip for today
 
-Before tomorrow's session, try this experiment:
+Before tomorrow's session, try asking Sidekick:
 
 ```text
-If you were managing my calendar, what changes would you suggest for tomorrow to make it more productive?
+What did you learn about my work style and preferences from our interactions yesterday and today?
 ```
 
-This teaches Sidekick to think strategically about your time management, not
-just report what's scheduled.
+This begins training Sidekick to understand your specific needs and
+communication style across multiple sessions.
 
 ---
 
 **Time to complete**: ~10 minutes
 
-**Skills learned**: calendar intelligence, automated content generation, context
-interpretation, communication style adaptation
+**Skills learned**: practical agent research, calendar integration, workflow
+automation, real-world task delegation
 
-**Next** day 3 - Daily agenda preparation with contextual insights
+**Next** day 3 - Morning stand-up automation with calendar intelligence
 
 <Tip>
-  **Remember** every interaction teaches Sidekick more about your work patterns,
-  communication style, and priorities. The agent is learning your preferences to
-  become more helpful over time.
+  **Remember** you're not just using a tool—you're training an assistant. Every
+  interaction teaches Sidekick more about how you work, building on the
+  foundation from Day 1.
 </Tip>
