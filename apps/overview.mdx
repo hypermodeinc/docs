@@ -1,0 +1,86 @@
+---
+title: Apps
+description:
+  "Build and deploy AI agents and agentic applications with Hypermode Apps"
+mode: "wide"
+sidebarTitle: "Overview"
+"og:title": "Overview - Apps"
+---
+
+Apps in Hypermode are how you package and deploy agents and AI-native apps.
+
+An App is a collection of related agents, tools, and memory, working together to
+perform a cohesive set of tasks towards an outcome. Whether you're coordinating
+a team of agents or creating multi-step agentic flows, Apps are the top-level
+construct that unifies your AI system.
+
+## Why Apps?
+
+Building an agent is powerful. But real-world use cases rarely stop at one. As
+your AI system grows, you'll often need to:
+
+- **Coordinate multiple agents** with different roles
+- **Share tools and context** across flows
+- **Persist memory** and long-term learning for a domain
+- **Deploy and version** your system as a single unit
+
+That's where Apps come in. Apps give structure to your agentic architecture.
+They let you group related components - agents, tools, memories, and APIs- into
+one deployable unit.
+
+## What's in an App?
+
+Apps in Hypermode are modular and flexible, designed to let you build complex
+systems by assembling reusable components.
+
+Every App on Hypermode is made up of the following components:
+
+### Agents
+
+Agents are the workers that reason, plan, and act. Apps can include one or many
+agents, each with their own role. You can assign different models, tools, and
+memory configurations to each agent, or allow them to collaborate via shared
+context.
+
+### Tools
+
+Tools are how agents take action. These include custom functions, external APIs,
+or built-in Hypermode tools (like data fetching or search). Apps define which
+tools are available to which agents and can scope tools to specific tasks or
+agent roles.
+
+### Memory
+
+Apps can define long-term and short-term memory for agents using Hypermode's
+memory primitives. This allows your agents to remember past interactions, user
+preferences, task outcomes, and more to enable persistent, contextual behavior
+over time.
+
+### Connections
+
+Apps can include third-party integrations like GitHub, Slack, or internal APIs
+via the Model Context Protocol (MCP). These integrations allow agents to
+interact with external systems in a structured, secure way.
+
+### Decision interface
+
+Apps use a decision interface to let you work asynchronously with agents. This
+is useful for long-running tasks, approvals, or cases where agent actions need
+to be reviewed before execution.
+
+### Runtime
+
+Each App includes metadata for tracking versions, environments, and ownership.
+You can define environment variables, set up deployment environment (staging vs
+production), and manage runtime settings that affect how agents are executed.
+
+## Agent development lifecycle
+
+Apps support the full development lifecycle:
+
+- **Develop locally** using the [Hyp CLI](/hyp-cli) or in a **conversational
+  interface** using Threads
+- **Test and debug** agent behavior
+- **Deploy to production** with versioning and rollback support
+- **Monitor and trace** interactions using built-in observability
+- **Collaborate and share** across teams with access controls and roles
