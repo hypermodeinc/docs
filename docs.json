@@ -33,7 +33,7 @@
           "href": "https://cloud.dgraph.io"
         },
         {
-          "anchor": "30 Days of Agents",
+          "anchor": "Agents Bootcamp",
           "icon": "calendar",
           "color": {
             "light": "#FF00EE",
@@ -83,7 +83,7 @@
                 ]
               },
               {
-                "group": "30 Days of Agents",
+                "group": "Agents Bootcamp",
                 "pages": [
                   "agents/30-days-of-agents/overview",
                   "agents/30-days-of-agents/day-1",
