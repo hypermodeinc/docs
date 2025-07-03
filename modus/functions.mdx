@@ -43,13 +43,22 @@ GraphQL API. Your functions become either **queries** (for data retrieval) or
 
 Most functions become GraphQL queries—perfect for fetching and processing data:
 
-```go
+<CodeGroup>
+```go Go
 // This function becomes a GraphQL query
 func GatherThreatIntelligence(source string) (*ThreatReport, error) {
-    // Data gathering and processing operation
-    return fetchThreatData(source)
+  // Data gathering and processing operation
+  return fetchThreatData(source)
 }
 ```
+```ts AssemblyScript
+// This function becomes a GraphQL query
+export function gatherThreatIntelligence(source: string): ThreatReport {
+  // Data gathering and processing operation
+  return fetchThreatData(source)
+}
+```
+</CodeGroup>
 
 Your functions are now accessible via GraphQL:
 
@@ -82,13 +91,22 @@ query {
 Functions that modify data automatically become GraphQL mutations. Modus detects
 these by their operation prefixes:
 
-```go
+<CodeGroup>
+```go Go
 // This becomes a GraphQL mutation
 func CreateSecurityAlert(data AlertInput) (*SecurityAlert, error) {
     // Create new security alert
     return deploySecurityAlert(data)
 }
 ```
+```ts AssemblyScript
+// This becomes a GraphQL mutation
+export function createSecurityAlert(data: AlertInput): SecurityAlert {
+  // Create new security alert
+  return deploySecurityAlert(data)
+}
+```
+</CodeGroup>
 
 Now you can execute data modifications:
 
@@ -130,119 +148,193 @@ automatically become mutations.
 Here's a complete example that demonstrates how functions integrate external
 APIs with AI models for intelligent data processing:
 
-```go
-package main
+<CodeGroup>
+  ```go Go
+  package main
 
-import (
-    "fmt"
-    "strings"
-    "github.com/hypermodeinc/modus/sdk/go/pkg/http"
-    "github.com/hypermodeinc/modus/sdk/go/pkg/models"
-    "github.com/hypermodeinc/modus/sdk/go/pkg/models/openai"
-)
+import ( "fmt" "strings" "github.com/hypermodeinc/modus/sdk/go/pkg/http"
+"github.com/hypermodeinc/modus/sdk/go/pkg/models"
+"github.com/hypermodeinc/modus/sdk/go/pkg/models/openai" )
 
-type WeatherIntel struct {
-    City        string  `json:"city"`
-    Temperature float64 `json:"temperature"`
-    Conditions  string  `json:"conditions"`
-    Analysis    string  `json:"analysis"`
-}
+type WeatherIntel struct { City string `json:"city"` Temperature float64
+`json:"temperature"` Conditions string `json:"conditions"` Analysis string
+`json:"analysis"` }
 
 const modelName = "text-generator"
 
-// Function: Gather weather data and provide tactical analysis
-func GatherWeatherIntelligence(city string) (*WeatherIntel, error) {
-    // Fetch weather data from OpenWeatherMap API
-    url := fmt.Sprintf(
-        "https://api.openweathermap.org/data/2.5/weather?q=%s&appid={{API_KEY}}&units=metric",
-        city,
-    )
+// Function: Gather weather data and provide tactical analysis func
+GatherWeatherIntelligence(city string) (\*WeatherIntel, error) { // Fetch
+weather data from OpenWeatherMap API url := fmt.Sprintf(
+"https://api.openweathermap.org/data/2.5/weather?q=%s&appid={{API_KEY}}&units=metric",
+city, )
 
-    response, err := http.Fetch(url)
-    if err != nil {
-        return nil, err
-    }
-    if !response.Ok() {
-        return nil, fmt.Errorf(
-            "weather data retrieval failed: %d %s",
-            response.Status,
-            response.StatusText,
-        )
-    }
+      response, err := http.Fetch(url)
+      if err != nil {
+          return nil, err
+      }
+      if !response.Ok() {
+          return nil, fmt.Errorf(
+              "weather data retrieval failed: %d %s",
+              response.Status,
+              response.StatusText,
+          )
+      }
 
-    // Parse weather data
-    var weatherData struct {
-        Name string `json:"name"`
-        Main struct {
-            Temp float64 `json:"temp"`
-        } `json:"main"`
-        Weather []struct {
-            Description string `json:"description"`
-        } `json:"weather"`
-    }
+      // Parse weather data
+      var weatherData struct {
+          Name string `json:"name"`
+          Main struct {
+              Temp float64 `json:"temp"`
+          } `json:"main"`
+          Weather []struct {
+              Description string `json:"description"`
+          } `json:"weather"`
+      }
 
-    response.JSON(&weatherData)
+      response.JSON(&weatherData)
 
-    conditions := "unknown"
-    if len(weatherData.Weather) > 0 {
-        conditions = weatherData.Weather[0].Description
-    }
+      conditions := "unknown"
+      if len(weatherData.Weather) > 0 {
+          conditions = weatherData.Weather[0].Description
+      }
 
-    // Generate tactical analysis
-    analysis, err := analyzeTacticalConditions(
-        weatherData.Name,
-        weatherData.Main.Temp,
-        conditions,
-    )
-    if err != nil {
-        fmt.Printf("Analysis failed for %s: %v\n", weatherData.Name, err)
-        analysis = "Analysis unavailable - proceed with standard protocols"
-    }
+      // Generate tactical analysis
+      analysis, err := analyzeTacticalConditions(
+          weatherData.Name,
+          weatherData.Main.Temp,
+          conditions,
+      )
+      if err != nil {
+          fmt.Printf("Analysis failed for %s: %v\n", weatherData.Name, err)
+          analysis = "Analysis unavailable - proceed with standard protocols"
+      }
 
-    return &WeatherIntel{
-        City:        weatherData.Name,
-        Temperature: weatherData.Main.Temp,
-        Conditions:  conditions,
-        Analysis:    analysis,
-    }, nil
+      return &WeatherIntel{
+          City:        weatherData.Name,
+          Temperature: weatherData.Main.Temp,
+          Conditions:  conditions,
+          Analysis:    analysis,
+      }, nil
+
 }
 
-// Analyze weather conditions for tactical implications
-func analyzeTacticalConditions(city string, temp float64, conditions string) (string, error) {
-    model, err := models.GetModel[openai.ChatModel](modelName)
-    if err != nil {
-        return "", err
-    }
+// Analyze weather conditions for tactical implications func
+analyzeTacticalConditions(city string, temp float64, conditions string) (string,
+error) { model, err := models.GetModel[openai.ChatModel](modelName) if err !=
+nil { return "", err }
 
-    prompt := `You are a tactical analyst evaluating weather conditions for field operations.
-    Provide a brief tactical assessment of how these weather conditions might impact
-    outdoor activities, visibility, and operational considerations in 1-2 sentences.`
+      prompt := `You are a tactical analyst evaluating weather conditions for field operations.
+      Provide a brief tactical assessment of how these weather conditions might impact
+      outdoor activities, visibility, and operational considerations in 1-2 sentences.`
 
-    content := fmt.Sprintf(
-        "Location: %s, Temperature: %.1f°C, Conditions: %s",
-        city,
-        temp,
-        conditions,
-    )
+      content := fmt.Sprintf(
+          "Location: %s, Temperature: %.1f°C, Conditions: %s",
+          city,
+          temp,
+          conditions,
+      )
 
-    input, err := model.CreateInput(
-        openai.NewSystemMessage(prompt),
-        openai.NewUserMessage(content),
-    )
-    if err != nil {
-        return "", err
-    }
+      input, err := model.CreateInput(
+          openai.NewSystemMessage(prompt),
+          openai.NewUserMessage(content),
+      )
+      if err != nil {
+          return "", err
+      }
 
-    input.Temperature = 0.7
+      input.Temperature = 0.7
 
-    output, err := model.Invoke(input)
-    if err != nil {
-        return "", err
-    }
+      output, err := model.Invoke(input)
+      if err != nil {
+          return "", err
+      }
 
-    return strings.TrimSpace(output.Choices[0].Message.Content), nil
+      return strings.TrimSpace(output.Choices[0].Message.Content), nil
+
 }
-```
+
+````
+```ts AssemblyScript
+import { http, models } from "@hypermode/modus-sdk-as";
+import { OpenAIChatModel, SystemMessage, UserMessage } from "@hypermode/modus-sdk-as/models/openai/chat";
+
+@json
+class WeatherIntel {
+  city!: string;
+  temperature!: f64;
+  conditions!: string;
+  analysis!: string;
+}
+
+@json
+class WeatherData {
+  name!: string;
+  main!: MainWeatherData;
+  weather!: WeatherDescription[];
+}
+
+@json
+class MainWeatherData {
+  temp!: f64;
+}
+
+@json
+class WeatherDescription {
+  description!: string;
+}
+
+const modelName = "text-generator";
+
+export function gatherWeatherIntelligence(city: string): WeatherIntel {
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid={{API_KEY}}&units=metric`;
+
+  const response = http.fetch(url);
+
+  if (!response.ok)
+    throw new Error("Weather data retrieval failed: " + response.status.toString() + " " + response.statusText);
+
+  const weatherData = response.json<WeatherData>();
+
+  let conditions = "unknown"
+
+  if (weatherData.weather.length) conditions = weatherData.weather[0].description;
+
+  const analysis = analyzeTacticalConditions(
+    weatherData.name,
+    weatherData.main.temp,
+    conditions
+  );
+
+  return {
+    city: weatherData.name,
+    temperature: weatherData.main.temp,
+    conditions,
+    analysis
+  };
+}
+
+function analyzeTacticalConditions(city: string, temperature: f64, conditions: string): string {
+  const model = models.getModel<OpenAIChatModel>(modelName);
+
+  const prompt = `You are a tactical analyst evaluating weather conditions for field operations.
+  Provide a brief tactical assessment of how these weather conditions might impact
+  outdoor activities, visibility, and operational considerations in 1-2 sentences.`;
+
+  const content = `Location: ${city}, Temperatire: ${temperature}, Conditions: ${conditions}`;
+
+  const input = model.createInput([
+    new SystemMessage(prompt),
+    new UserMessage(content)
+  ]);
+  input.temperature = 0.7;
+
+  const output = model.invoke(input);
+
+  return output.choices[0].message.content.trim();
+}
+````
+
+</CodeGroup>
 
 This function automatically becomes available as a GraphQL query:
 
