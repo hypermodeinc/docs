@@ -2,6 +2,7 @@
 [Aa]lterSchema
 Attio
 [Bb]oolean
+[Bb]ootcamp
 [Cc]ollections
 [Cc]omputeDistance
 [Cc]omputeSimilarity
