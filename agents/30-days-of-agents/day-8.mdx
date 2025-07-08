@@ -1,5 +1,5 @@
 ---
-title: "Day 8: Advanced Connections & Multi-Step Workflows"
+title: "Day 8: Advanced Connections"
 sidebarTitle: "Day 8: Advanced Connections"
 description:
   "Master advanced integrations and create sophisticated multi-step workflows.
@@ -24,3 +24,262 @@ business processes.
 
 This is where agents evolve from helpful assistants to business-critical
 automation.
+
+## What you'll accomplish today
+
+- Configure your deployed agent with the right connections
+- Master the agent configuration interface and customization options
+- Understand connection authorization flow and management
+- Explore your agent's capabilities with its new connections
+- Learn to iterate on agent instructions and model selection
+
+<Warning>
+  This builds on Day 7's agent creation. You'll need the custom agent you
+  deployed yesterday to complete today's configuration and workflow development.
+</Warning>
+
+## Step 1: Explore your agent's configuration interface
+
+Your agent from yesterday is now deployed in your sidebar, but let's dive into
+its configuration options. The agent interface gives you powerful customization
+capabilities.
+
+<img
+  className="w-1/2 mx-auto"
+  src="/images/agents/30-days-of-agents/day-8-agent-about.png"
+  alt="Agent About View"
+/>
+
+**Access your agent's configuration:**
+
+1. **Click on your agent** in the sidebar to open its thread view
+2. **Click the agent's name** at the top to access the "About" section
+3. **Review the agent details** including its description, instructions, and
+   current model
+
+**Key configuration options available:**
+
+- **Agent Instructions**: Edit the system prompt that guides your agent's
+  behavior
+- **Model Selection**: Currently set to GPT-4.1 (default), but you can
+  experiment with other models
+- **Agent Description**: Update how your agent presents itself
+- **Connection Management**: Add and configure the tools your agent can use
+
+<Tip>
+  **Customization power**: you have full control over your agent's instructions
+  and model. GPT-4.1 is the default and works great for most use cases, but you
+  can experiment with different models or collaborate with us on Discord to find
+  what works best for your specific needs.
+</Tip>
+
+## Step 2: Add connections through the agent interface
+
+Now let's give your agent the tools it needs to take real actions. The
+connections interface makes this straightforward.
+
+<img
+  className="w-1/2 mx-auto"
+  src="/images/agents/30-days-of-agents/day-8-agent-connections.png"
+  alt="Agent Connections View"
+/>
+
+**Configure connections via agent interface:**
+
+1. **Navigate to the Connections tab** in your agent's about section
+2. **Browse available connections** or search for specific tools your agent
+   might need
+3. **Click "Add Connection"** for tools that align with your agent's purpose
+4. **Complete the OAuth flow** when prompted for authentication
+5. **Verify successful connection** with the green checkmark indicator
+
+**Connection selection strategy:**
+
+Think about what your agent was designed to do (from Day 7) and add connections
+that support those capabilities. For example:
+
+- **Code-related agents**: GitHub, Linear, Vercel
+- **Marketing agents**: HubSpot, Google Analytics, Slack
+- **Research agents**: Google Drive, Notion, LinkedIn
+- **Operations agents**: Google Sheets, Salesforce, Calendar
+
+<Info>
+  **Start focused**: add 2-3 connections initially rather than overwhelming your
+  agent with too many options. You can always add more as you discover new use
+  cases.
+</Info>
+
+## Step 3: Alternative connection management options
+
+Besides the agent interface, you have other ways to manage connections across
+your workspace.
+
+<img
+  className="w-1/2 mx-auto"
+  src="/images/agents/connections-sidebar.png"
+  alt="Agent Connections View"
+/>
+
+**Sidebar connection access:**
+
+- **Click "Add connections"** from the left navigation bar
+- **Search through 2,000+ integrations** to find specific tools
+- **Complete OAuth flows** directly from the sidebar
+
+![Connections Management](/images/agents/connections-manage.png)
+
+**Workspace-level management:**
+
+1. **Navigate to Workspace Settings** from your profile menu
+2. **Click the Connections tab** to see all available integrations
+3. **Add connections** that can be shared across multiple agents
+4. **Manage authentication status** and review permissions
+
+<Info>
+  **Multiple access points**: whether you use the agent interface, sidebar, or
+  workspace settings depends on your preference. All methods give you access to
+  the same powerful integration ecosystem.
+</Info>
+
+## Step 4: Test your agent's new capabilities
+
+Now that your agent has connections, let's explore what it can do. Start with
+simple requests to understand how it uses its new tools.
+
+**Test basic connection feature:**
+
+```text
+What connections do you have access to now? Can you tell me what you can do with each of them?
+```
+
+Your agent can:
+
+- **List available connections** and explain their capabilities
+- **Describe potential actions** it can take with each tool
+- **Suggest workflows** based on your agent's role and available connections
+
+**Try a simple task:**
+
+```text
+Can you help me with [specific task related to your agent's purpose]?
+Use whatever connections you think are most appropriate.
+```
+
+Watch how your agent:
+
+- **Evaluates available tools** for the task at hand
+- **Plans its approach** using the connections you've provided
+- **Executes actions** across the integrated platforms
+- **Reports results** and suggests next steps
+
+<Tip>
+  **Discovery approach**: rather than prescribing specific workflows, let your
+  agent show you what's possible. Ask open-ended questions about what it can
+  help you accomplish with its current connections.
+</Tip>
+
+## Step 5: Customize your agent's instructions and model
+
+The configuration interface gives you direct control over your agent's behavior.
+You can edit the agent's prompt and experiment with different models right from
+the About section.
+
+**Direct customization options:**
+
+1. **Edit Agent Instructions**: Click "Edit" to modify the system prompt that
+   guides your agent's behavior
+2. **Change Model Selection**: Switch from the default GPT-4.1 to experiment
+   with other models
+3. **Update Description**: Adjust how your agent presents itself
+
+**When to customize:**
+
+- **Tone adjustments**: Make the agent more formal, casual, technical, or
+  business-focused
+- **Process preferences**: Specify how the agent should approach tasks
+- **Tool usage patterns**: Guide which connections to prioritize
+- **Communication style**: Adjust how the agent reports progress and results
+
+**Model experimentation:**
+
+GPT-4.1 is the default and works great for most use cases, but you can
+experiment with different models based on your needs. If you're unsure about
+optimization, collaborate with us on Discord to find what works best for your
+specific requirements.
+
+<Info>
+  **Direct control**: unlike other platforms, you have full access to customize
+  your agent's instructions and model selection. This gives you complete control
+  over behavior and performance.
+</Info>
+
+## What you've accomplished
+
+In 20 minutes, you've mastered agent configuration and connection management:
+
+**Interface mastery**: learned to navigate and customize your agent through the
+About section, including instructions and model selection
+
+**Connection configuration**: successfully added relevant connections through
+multiple access methods - agent interface, sidebar, and workspace settings
+
+**Agent capability exploration**: tested your agent's new abilities and
+discovered what's possible with its connected tools
+
+**Direct customization**: learned to edit agent instructions and experiment with
+different models for optimal performance
+
+**Optimization awareness**: understand when and how to get community support for
+advanced optimization
+
+## The configuration advantage
+
+Today's work establishes the foundation for powerful agent automation:
+
+**Before configuration**: your agent could only provide advice and suggestions
+based on its training
+
+**After configuration**: your agent can take real actions, access live data, and
+integrate with your actual workflows and business systems
+
+This transformation from "advisor" to "executor" is what makes Hypermode Agents
+different from traditional AI assistants.
+
+<Card
+  title="Tomorrow - Day 9"
+  icon="arrow-right"
+  href="/agents/30-days-of-agents/day-9"
+>
+  Transform your successful interactions into reusable tasks. Learn to capture
+  institutional knowledge and scale your agent's capabilities across your
+  organization.
+</Card>
+
+## Pro tip for today
+
+Now that your agent is configured, spend some time exploring:
+
+```text
+What are some creative ways I could use the connections you now have access to?
+What would be most valuable for me to automate or streamline in my current work?
+```
+
+Let your agent guide you toward discovering workflows that you might not have
+considered, based on its understanding of the tools now available.
+
+---
+
+**Time to complete**: ~20 minutes
+
+**Skills learned**: agent configuration interface, connection management across
+multiple access points, agent instruction editing, model selection, capability
+exploration and testing
+
+**Next**: day 9 - Create reusable tasks from successful workflows
+
+<Tip>
+  **Remember**: today was about setting up your agent's foundation. The real
+  magic happens when you start using these connections in creative ways. Let
+  your agent surprise you with what becomes possible when it has the right
+  tools.
+</Tip>
