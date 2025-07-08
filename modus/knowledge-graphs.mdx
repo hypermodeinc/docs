@@ -84,67 +84,83 @@ When new Agent activity is detected in the Matrix, you need to process it
 quickly. This is perfect for a stateless function:
 
 ```go
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"strings"
+	"time"
+
+	"github.com/hypermodeinc/modus/sdk/go/pkg/agents"
+	"github.com/hypermodeinc/modus/sdk/go/pkg/dgraph"
+	"github.com/hypermodeinc/modus/sdk/go/pkg/models"
+	"github.com/hypermodeinc/modus/sdk/go/pkg/models/openai"
+)
+
 type AgentSighting struct {
-    SightingID   string `json:"sighting_id"`
-    AgentName    string `json:"agent_name"`
-    Location     string `json:"location"`
-    Behavior     string `json:"behavior"`
-    ThreatLevel  int    `json:"threat_level"`
-    Timestamp    string `json:"timestamp"`
+	SightingID  string  `json:"sighting_id"`
+	AgentName   string  `json:"agent_name"`
+	Location    string  `json:"location"`
+	Behavior    string  `json:"behavior"`
+	ThreatLevel int     `json:"threat_level"`
+	Timestamp   string  `json:"timestamp"`
+	AiAnalysis  *string `json:"ai_analysis,omitempty"`
 }
 
-func ImportAgentSighting(sighting AgentSighting) (*string, error) {
-    // AI-powered analysis of the Agent behavior
-    analysis, err := analyzeAgentWithAI(sighting.Behavior)
-    if err != nil {
-        return nil, err
-    }
+type ThreatAnalysisResponse struct {
+	SightingCount    int      `json:"sighting_count"`
+	ActiveAgents     []string `json:"active_agents"`
+	ThreatAssessment string   `json:"threat_assessment"`
+	Recommendations  []string `json:"recommendations"`
+}
 
-    // Store in knowledge graph - builds organizational knowledge
-    mutation := dgraph.NewMutation().WithSetJson(fmt.Sprintf(`{
-        "dgraph.type": "AgentSighting",
-        "sighting_id": "%s",
-        "agent_name": "%s",
-        "location": "%s",
-        "behavior": "%s",
-        "threat_level": %d,
-        "timestamp": "%s",
-        "ai_analysis": "%s"
-    }`, sighting.SightingID, sighting.AgentName, sighting.Location,
-        sighting.Behavior, sighting.ThreatLevel, sighting.Timestamp, analysis))
+type SightingsData struct {
+	Sightings []AgentSighting `json:"sightings"`
+}
 
-    err = dgraph.ExecuteMutations("dgraph", mutation)
-    if err != nil {
-        return nil, err
-    }
+func ImportAgentSighting(s AgentSighting) (*string, error) {
+	analysis, err := analyzeAgentWithAI(s.Behavior)
+	if err != nil {
+		return nil, err
+	}
+	s.AiAnalysis = &analysis
 
-    result := fmt.Sprintf("Agent sighting processed: %s", sighting.SightingID)
-    return &result, nil
+	data, err := json.Marshal(s)
+	if err != nil {
+		return nil, err
+	}
+
+	mutation := dgraph.NewMutation().WithSetJson(string(data))
+	if _, err := dgraph.ExecuteMutations("dgraph", mutation); err != nil {
+		return nil, err
+	}
+
+	res := fmt.Sprintf("Agent sighting processed: %s", s.SightingID)
+	return &res, nil
 }
 
 func analyzeAgentWithAI(behavior string) (string, error) {
-    model, err := models.GetModel[openai.ChatModel]("text-generator")
-    if err != nil {
-        return "", err
-    }
+	model, err := models.GetModel[openai.ChatModel]("text-generator")
+	if err != nil {
+		return "", err
+	}
 
-    prompt := `Analyze this Agent behavior pattern and assess threat level,
-               behavioral changes, and tactical implications for resistance operations.`
+	prompt := "Analyze this Agent behavior pattern and assess threat level, behavioral changes, and tactical implications for resistance operations. Respond with no more than 3 short sentences."
+	input, err := model.CreateInput(
+		openai.NewSystemMessage(prompt),
+		openai.NewUserMessage(behavior),
+	)
+	if err != nil {
+		return "", err
+	}
+	input.Temperature = 0.3
 
-    input, err := model.CreateInput(
-        openai.NewSystemMessage(prompt),
-        openai.NewUserMessage(behavior),
-    )
-    if err != nil {
-        return "", err
-    }
-    input.Temperature = 0.3
-
-    output, err := model.Invoke(input)
-    if err != nil {
-        return "", err
-    }
-    return strings.TrimSpace(output.Choices[0].Message.Content), nil
+	out, err := model.Invoke(input)
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(out.Choices[0].Message.Content), nil
 }
 ```
 
@@ -183,87 +199,102 @@ Now that we've got the Agent sighting data in our knowledge graph, let's analyze
 the broader threat landscape:
 
 ```go
-type ThreatAnalysisResponse struct {
-    SightingCount    int      `json:"sighting_count"`
-    ActiveAgents     []string `json:"active_agents"`
-    ThreatAssessment string   `json:"threat_assessment"`
-    Recommendations  []string `json:"recommendations"`
+func AnalyzeAgentPatterns(since string) (*ThreatAnalysisResponse, error) {
+	query := dgraph.NewQuery(`
+		query analyzeAgents($since: string) {
+			sightings(func: ge(timestamp, $since)) {
+				sighting_id
+				agent_name
+				location
+				behavior
+				threat_level
+				timestamp
+				ai_analysis
+			}
+		}
+	`).WithVariable("$since", since)
+
+	resp, err := dgraph.ExecuteQuery("dgraph", query)
+	if err != nil {
+		return nil, err
+	}
+
+	var data SightingsData
+	if err := json.Unmarshal([]byte(resp.Json), &data); err != nil {
+		return nil, err
+	}
+
+	assessment, err := generateThreatAssessment(data.Sightings)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ThreatAnalysisResponse{
+		SightingCount:    len(data.Sightings),
+		ActiveAgents:     extractActiveAgents(data.Sightings),
+		ThreatAssessment: assessment,
+		Recommendations:  generateRecommendations(len(data.Sightings)),
+	}, nil
 }
 
-func AnalyzeAgentPatterns(timeRange string) (*ThreatAnalysisResponse, error) {
-    // Query organizational knowledge - traverses relationships
-    query := dgraph.NewQuery(`
-        query analyzeAgents($since: string) {
-            sightings(func: ge(timestamp, $since)) {
-                agent_name
-                behavior
-                threat_level
-                ai_analysis
-            }
-        }
-    `).WithVariable("$since", timeRange)
+func generateThreatAssessment(sightings []AgentSighting) (string, error) {
+	model, err := models.GetModel[openai.ChatModel]("text-generator")
+	if err != nil {
+		return "", err
+	}
 
-    response, err := dgraph.ExecuteQuery("dgraph", query)
-    if err != nil {
-        return nil, err
-    }
+	prompt := "Based on these Agent sightings, provide a strategic threat assessment focusing on behavioral patterns and risks to resistance operations. Respond with no more than 2 short sentences."
+	data, err := json.Marshal(sightings)
+	if err != nil {
+		return "", err
+	}
 
-    // Parse and extract threat data
-    var data SightingsData
-    err = json.Unmarshal([]byte(response.Json), &data)
-    if err != nil {
-        return nil, err
-    }
+	input, err := model.CreateInput(
+		openai.NewSystemMessage(prompt),
+		openai.NewUserMessage("Agent surveillance data: "+string(data)),
+	)
+	if err != nil {
+		return "", err
+	}
+	input.Temperature = 0.4
 
-    // Generate strategic assessment using AI with graph context
-    assessment, err := generateThreatAssessment(data.Sightings)
-    if err != nil {
-        return nil, err
-    }
+	out, err := model.Invoke(input)
+	if err != nil {
+		return "", err
+	}
 
-    return &ThreatAnalysisResponse{
-        SightingCount:    len(data.Sightings),
-        ActiveAgents:     extractActiveAgents(data.Sightings),
-        ThreatAssessment: assessment,
-        Recommendations:  generateRecommendations(len(data.Sightings)),
-    }, nil
+	return strings.TrimSpace(out.Choices[0].Message.Content), nil
 }
 
-func generateThreatAssessment(sightings interface{}) (string, error) {
-    model, err := models.GetModel[openai.ChatModel]("text-generator")
-    if err != nil {
-        return "", err
-    }
-
-    prompt := `Based on these Agent sightings, provide a strategic threat
-               assessment focusing on behavioral patterns and risks to
-               resistance operations.`
-
-    sightingsJson, err := json.Marshal(sightings)
-    if err != nil {
-        return "", err
-    }
-
-    input, err := model.CreateInput(
-        openai.NewSystemMessage(prompt),
-        openai.NewUserMessage(fmt.Sprintf("Agent surveillance data: %s",
-            string(sightingsJson))),
-    )
-    if err != nil {
-        return "", err
-    }
-    input.Temperature = 0.4
-
-    output, err := model.Invoke(input)
-    if err != nil {
-        return "", err
-    }
-    return strings.TrimSpace(output.Choices[0].Message.Content), nil
+func extractActiveAgents(sightings []AgentSighting) []string {
+	seen := map[string]struct{}{}
+	var agents []string
+	for _, s := range sightings {
+		if _, ok := seen[s.AgentName]; !ok {
+			seen[s.AgentName] = struct{}{}
+			agents = append(agents, s.AgentName)
+		}
+	}
+	return agents
 }
 
-// Helper functions for data extraction and recommendations
-func extractActiveAgents(sightings []AgentSightingData) []string { /* ... */ }
-func generateRecommendations(count int) []string { /* ... */ }
+func generateRecommendations(count int) []string {
+	switch {
+	case count > 5:
+		return []string{
+			"Implement additional security measures.",
+			"Enhance threat detection capabilities.",
+			"Implement enhanced access control.",
+		}
+	case count > 2:
+		return []string{
+			"Enhance threat detection capabilities.",
+			"Implement enhanced access control.",
+		}
+	default:
+		return []string{"Implement additional security measures."}
+	}
+}
 ```
 
 Let's query our surveillance data:
@@ -308,40 +339,37 @@ function to trigger them:
 
 ```go
 type SurveillanceAgent struct {
-    agents.AgentBase
-    MonitoredSectors   []string    `json:"monitored_sectors"`
-    SightingsTracked   int         `json:"sightings_tracked"`
-    RecentActivities   []string    `json:"recent_activities"`
-    LastSweepTime      time.Time   `json:"last_sweep_time"`
+	agents.AgentBase
+	MonitoredSectors []string  `json:"monitored_sectors"`
+	SightingsTracked int       `json:"sightings_tracked"`
+	RecentActivities []string  `json:"recent_activities"`
+	LastSweepTime    time.Time `json:"last_sweep_time"`
 }
 
 func (s *SurveillanceAgent) Name() string {
-    return "SurveillanceAgent"
+	return "SurveillanceAgent"
 }
 
 func (s *SurveillanceAgent) OnInitialize() error {
-    s.MonitoredSectors = []string{
-        "Downtown Loop", "Megacity Financial", "Industrial District"}
-    s.SightingsTracked = 0
-    s.RecentActivities = []string{}
-    s.LastSweepTime = time.Now()
-    return nil
+	s.MonitoredSectors = []string{"Downtown Loop", "Megacity Financial", "Industrial District"}
+	s.SightingsTracked = 0
+	s.RecentActivities = []string{}
+	s.LastSweepTime = time.Now()
+	return nil
 }
 
-func (s *SurveillanceAgent) OnReceiveMessage(
-    msgName string, data string) (*string, error) {
-    switch msgName {
-    case "continuous_surveillance":
-        return s.processNewIntelligence()
-    case "get_status":
-        return s.getOperationalStatus()
-    }
-    return nil, fmt.Errorf("unrecognized directive: %s", msgName)
+func (s *SurveillanceAgent) OnReceiveMessage(msgName string, data *string) (*string, error) {
+	switch msgName {
+	case "continuous_surveillance":
+		return s.processNewIntelligence()
+	case "get_status":
+		return s.getOperationalStatus()
+	}
+	return nil, fmt.Errorf("unrecognized directive: %s", msgName)
 }
 
 func (s *SurveillanceAgent) processNewIntelligence() (*string, error) {
-    // Query knowledge graph for latest data since last sweep
-    query := dgraph.NewQuery(`
+	query := dgraph.NewQuery(`
         query getRecentSightings($since: string) {
             sightings(func: ge(timestamp, $since)) {
                 agent_name
@@ -351,64 +379,64 @@ func (s *SurveillanceAgent) processNewIntelligence() (*string, error) {
         }
     `).WithVariable("$since", s.LastSweepTime.Format(time.RFC3339))
 
-    _, err := dgraph.ExecuteQuery("dgraph", query)
-    if err != nil {
-        return nil, err
-    }
+	_, err := dgraph.ExecuteQuery("dgraph", query)
+	if err != nil {
+		return nil, err
+	}
 
-    // Update agent's surveillance state
-    s.LastSweepTime = time.Now()
-    s.SightingsTracked += 1
+	s.LastSweepTime = time.Now()
+	s.SightingsTracked++
+	activity := fmt.Sprintf("Auto surveillance at %s", s.LastSweepTime.Format("15:04:05"))
+	s.RecentActivities = append(s.RecentActivities, activity)
 
-    activity := fmt.Sprintf("Auto surveillance at %s",
-        s.LastSweepTime.Format("15:04:05"))
-    s.RecentActivities = append(s.RecentActivities, activity)
+	if len(s.RecentActivities) > 3 {
+		s.RecentActivities = s.RecentActivities[1:]
+	}
 
-    // Keep only last 3 activities
-    if len(s.RecentActivities) > 3 {
-        s.RecentActivities = s.RecentActivities[1:]
-    }
-
-    result := fmt.Sprintf(`Data processed automatically.
-                           Tracking %d sightings. Matrix integrity: COMPROMISED`,
-        s.SightingsTracked)
-    return &result, nil
+	result := fmt.Sprintf("Data processed automatically.\nTracking %d sightings. Matrix integrity: COMPROMISED", s.SightingsTracked)
+	return &result, nil
 }
 
 func (s *SurveillanceAgent) getOperationalStatus() (*string, error) {
-    status := fmt.Sprintf(`Surveillance Agent Status:
+	status := fmt.Sprintf(`Surveillance Agent Status:
 - Operational: Active
 - Monitoring %d sectors: %s
 - Last sweep: %s
 - Tracking %d ongoing sightings
 - Recent activities: %s`,
-        len(s.MonitoredSectors),
-        strings.Join(s.MonitoredSectors, ", "),
-        s.LastSweepTime.Format("2006-01-02 15:04:05"),
-        s.SightingsTracked,
-        strings.Join(s.RecentActivities, ", "))
-    return &status, nil
+		len(s.MonitoredSectors),
+		strings.Join(s.MonitoredSectors, ", "),
+		s.LastSweepTime.Format("2006-01-02 15:04:05"),
+		s.SightingsTracked,
+		strings.Join(s.RecentActivities, ", "),
+	)
+	return &status, nil
 }
 
-func init() { agents.Register(&SurveillanceAgent{}) }
+func (s *SurveillanceAgent) GetState() *string { return nil }
+func (s *SurveillanceAgent) SetState(state *string) {}
+
+func init() {
+	agents.Register(&SurveillanceAgent{})
+}
 
 func DeploySurveillanceAgent() (string, error) {
-    agentInfo, err := agents.Start("SurveillanceAgent")
-    if err != nil {
-        return "", err
-    }
-    return agentInfo.Id, nil
+	agentInfo, err := agents.Start("SurveillanceAgent")
+	if err != nil {
+		return "", err
+	}
+	return agentInfo.Name + " - " + agentInfo.Id, nil
 }
 
 func GetSurveillanceStatus(agentId string) (string, error) {
-    result, err := agents.SendMessage(agentId, "get_status")
-    if err != nil {
-        return "", err
-    }
-    if result == nil {
-        return "", fmt.Errorf("no response from agent")
-    }
-    return *result, nil
+	result, err := agents.SendMessage(agentId, "get_status")
+	if err != nil {
+		return "", err
+	}
+	if result == nil {
+		return "", fmt.Errorf("no response from agent")
+	}
+	return *result, nil
 }
 ```
 
@@ -416,39 +444,31 @@ Now let's enhance our original import function to automatically trigger
 surveillance:
 
 ```go
-func ImportAgentSighting(sighting AgentSighting) (*string, error) {
-    // AI-powered analysis of the Agent behavior
-    analysis, err := analyzeAgentWithAI(sighting.Behavior)
-    if err != nil {
-        return nil, err
-    }
+func ImportAgentSighting(s AgentSighting, surveillanceAgentId *string) (*string, error) {
+	analysis, err := analyzeAgentWithAI(s.Behavior)
+	if err != nil {
+		return nil, err
+	}
+	s.AiAnalysis = &analysis
 
-    // Store in knowledge graph - builds organizational knowledge
-    mutation := dgraph.NewMutation().WithSetJson(fmt.Sprintf(`{
-        "dgraph.type": "AgentSighting",
-        "sighting_id": "%s",
-        "agent_name": "%s",
-        "location": "%s",
-        "behavior": "%s",
-        "threat_level": %d,
-        "timestamp": "%s",
-        "ai_analysis": "%s"
-    }`, sighting.SightingID, sighting.AgentName, sighting.Location,
-        sighting.Behavior, sighting.ThreatLevel, sighting.Timestamp, analysis))
+	data, err := json.Marshal(s)
+	if err != nil {
+		return nil, err
+	}
 
-    err = dgraph.ExecuteMutations("dgraph", mutation)
-    if err != nil {
-        return nil, err
-    }
+	mutation := dgraph.NewMutation().WithSetJson(string(data))
+	if _, err := dgraph.ExecuteMutations("dgraph", mutation); err != nil {
+		return nil, err
+	}
 
-    // Automatically trigger surveillance via async message
-    err = agents.SendMessageAsync("agent_neo_001", "continuous_surveillance")
-    if err != nil {
-        return nil, err
-    }
+	if surveillanceAgentId != nil {
+		if err := agents.SendMessageAsync(*surveillanceAgentId, "continuous_surveillance"); err != nil {
+			return nil, err
+		}
+	}
 
-    result := fmt.Sprintf("Agent sighting processed: %s", sighting.SightingID)
-    return &result, nil
+	res := fmt.Sprintf("Agent sighting processed: %s", s.SightingID)
+	return &res, nil
 }
 ```
 
@@ -507,7 +527,7 @@ messaging. Check the surveillance status:
 
 ```graphql
 query {
-  getSurveillanceStatus(agentId: "agent_neo_001")
+  surveillanceStatus(agentId: "agent_neo_001")
 }
 ```
 
@@ -516,14 +536,15 @@ query {
 ```json
 {
   "data": {
-    "getSurveillanceStatus": "Surveillance Agent Status:
-                            - Operational: Active
-                            - Monitoring 3 sectors: Downtown Loop,
-                              Megacity Financial, Industrial District
-                            - Last sweep: 2025-01-15 15:45:22
-                            - Tracking 2 ongoing sightings
-                            - Recent activities: Auto surveillance at 14:30:05,
-                              Auto surveillance at 15:45:22"
+    "surveillanceStatus":
+      "Surveillance Agent Status:
+        - Operational: Active
+        - Monitoring 3 sectors: Downtown Loop,
+          Megacity Financial, Industrial District
+        - Last sweep: 2025-01-15 15:45:22
+        - Tracking 2 ongoing sightings
+        - Recent activities: Auto surveillance at 14:30:05,
+          Auto surveillance at 15:45:22"
   }
 }
 ```
@@ -552,12 +573,13 @@ query {
     "analyzeAgentPatterns": {
       "sightingCount": 2,
       "activeAgents": ["Smith", "Brown"],
-      "threatAssessment": "Critical escalation detected. Agent Smith's
-                          enhanced replication capabilities combined with
-                          Agent Brown's encryption countermeasures indicates
-                          coordinated Matrix defense upgrade. Systematic
-                          pattern suggests machines adapting to resistance
-                          operations.",
+      "threatAssessment":
+        "Critical escalation detected. Agent Smith's
+        enhanced replication capabilities combined with
+        Agent Brown's encryption countermeasures indicates
+        coordinated Matrix defense upgrade. Systematic
+        pattern suggests machines adapting to resistance
+        operations.",
       "recommendations": [
         "Emergency extraction protocols",
         "Activate deep cover cells",
