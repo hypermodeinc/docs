@@ -154,6 +154,7 @@ package main
 
 import (
     "fmt"
+    "net/url"
     "strings"
     "github.com/hypermodeinc/modus/sdk/go/pkg/http"
     "github.com/hypermodeinc/modus/sdk/go/pkg/models"
@@ -171,10 +172,11 @@ const modelName = "text-generator"
 
 // Function: Gather weather data and provide tactical analysis
 func GatherWeatherIntelligence(city string) (*WeatherIntel, error) {
+    city = url.QueryEscape(city)
     // Fetch weather data from OpenWeatherMap API
     url := fmt.Sprintf(
-        "https://api.openweathermap.org/data/2.5/weather?q=%s&units=metric",
-        city,
+      "https://api.openweathermap.org/data/2.5/weather?q=%s&units=metric",
+      city,
     )
 
     response, err := http.Fetch(url)
