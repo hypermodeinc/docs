@@ -27,9 +27,8 @@ knowledge.
 ## What you'll accomplish today
 
 - Understand the difference between conversations and tasks
-- Convert successful workflows into reusable tasks
-- Create task libraries that scale across teams
-- Learn task parameterization and customization
+- Use the Create Task button to automatically generate reusable workflows
+- Edit and refine auto-generated task prompts
 - Experience how tasks transform agent utility
 
 <Warning>
@@ -55,15 +54,6 @@ Before creating tasks, understand what makes them powerful:
 - Scalable across users and scenarios
 - Institutional knowledge capture
 
-![Tasks vs Conversations Comparison - Placeholder](/images/agents/30-days-of-agents/day9-tasks-vs-conversations.png)
-
-**Ask your agent to explain this distinction:**
-
-```text
-Looking at our recent conversations, which interactions would make good reusable tasks?
-What's the difference between our exploratory discussions and workflows that could benefit others?
-```
-
 <Tip>
   **The task mindset** think about which workflows would be valuable if someone
   else could execute them without needing to understand all the context and
@@ -72,259 +62,128 @@ What's the difference between our exploratory discussions and workflows that cou
 
 ## Step 2: Identify task-worthy workflows
 
-Review your recent agent interactions to identify candidates for task creation:
+Look for conversations that have these characteristics:
 
-### Evaluation criteria
+**Clear workflow patterns:**
+
+- Multi-step processes that worked well
+- Consistent input/output structures
+- Logical sequences that could be repeated
+- Successful outcomes worth replicating
 
 **High reusability potential:**
 
-```text
-Can you review our recent workflows and identify which ones would be most valuable
-as reusable tasks? Consider:
-- How often might this workflow be needed?
-- Could other people benefit from this process?
-- Is the workflow general enough to work in different contexts?
-- Does it follow a consistent, logical sequence?
-```
-
-**Clear input/output patterns:**
-
-```text
-Which of our workflows have clear inputs (what information is needed to start)
-and predictable outputs (what the user gets at the end)?
-```
-
-**Standardizable processes:**
-
-```text
-Which workflows follow a consistent process that could work across different
-scenarios with minor modifications?
-```
-
-![Workflow Evaluation Process - Placeholder](/images/agents/30-days-of-agents/day9-workflow-evaluation.png)
+- Processes you'll need again with different inputs
+- Workflows that could benefit other team members
+- Patterns that work across different scenarios
 
 ### Common task patterns
 
-**Research and analysis tasks:**
+**Research and analysis workflows:**
 
 - Market research with standardized reporting
 - Competitive analysis with consistent frameworks
 - Customer feedback analysis and insights
 
-**Workflow automation tasks:**
+**Automation workflows:**
 
 - Meeting preparation with agenda and research
 - Project status reporting across tools
-- Content creation and distribution workflows
+- Content creation and distribution processes
 
-**Data processing tasks:**
+## Step 3: using the create task button
 
-- Lead qualification and routing
-- Performance metric compilation
-- Compliance check and reporting
+After completing a successful workflow with your agent, look for the **Create
+Task** button in the bottom left of your interface.
 
-## Step 3: Create your first task
+![Create Task Button](/images/agents/create-task-button.png)
 
-Let's convert one of your successful workflows into a reusable task.
+### How the create task button works
 
-### Choose your workflow
+1. **Click the Create Task button** in the bottom left after a successful
+   workflow
+2. **Hypermode analyzes your conversation** to identify repeatable patterns
+3. **Auto-generates a task prompt** that captures the workflow essence
+4. **You can edit and refine** the generated prompt before saving
 
-Select a workflow from yesterday or earlier that worked particularly well:
+### The automatic analysis process
 
-```text
-I want to turn our [specific workflow] into a reusable task.
-This workflow was successful because [reason], and I think it would be valuable for [who else could use it].
+When you click Create Task, Hypermode:
 
-Can you help me create a task from this workflow?
-```
+- **Identifies the core workflow** from your conversation
+- **Extracts key parameters** that could be customized
+- **Generates a structured prompt** that preserves the successful pattern
+- **Suggests a task name and description** based on the workflow
 
-![Task Creation Process - Placeholder](/images/agents/30-days-of-agents/day9-task-creation.png)
+### Editing your task prompt
 
-### Define task parameters
+The auto-generated prompt appears for you to review and refine:
 
-Work with your agent to structure the task:
+![Create Task Interface](/images/agents/create-task-1.png)
 
-**Task name and description:**
+**You can edit:**
 
-```text
-What should we call this task, and how should we describe it so someone else
-could understand its purpose and value?
-```
-
-**Required inputs:**
-
-```text
-What information does someone need to provide to run this task successfully?
-What are the minimum required inputs vs. optional parameters?
-```
-
-**Expected outputs:**
-
-```text
-What will users receive when this task completes? How should the results be
-formatted for maximum usefulness?
-```
-
-**Customization options:**
-
-```text
-What aspects of this workflow should be customizable based on different use cases
-or user preferences?
-```
+- Task name and description for clarity
+- Prompt instructions to add specificity
+- Parameter definitions for customization
+- Output format requirements
 
 <Info>
-  Well-designed tasks balance standardization (consistent, reliable execution)
-  with flexibility (adaptable to different contexts and needs).
+  The Create Task button uses AI to automatically identify reusable patterns and
+  generate prompts, but you have full control to refine and perfect the task
+  before saving.
 </Info>
 
-## Step 4: Test task execution
+## Step 4: Using your saved tasks
 
-Once your task is created, test it to ensure reliability and usability:
+Once you've refined and saved your task, it becomes available as a reusable
+workflow:
 
-### Test with your own scenarios
+![Task Pills](/images/agents/invoke-task.png)
 
-```text
-Let's test this task with different inputs to make sure it works reliably.
-Can you run it with [scenario 1], then [scenario 2], and show me how the
-outputs differ appropriately?
-```
+### How saved tasks work
 
-### Simulate different user contexts
+- **Task pills** appear proceeding the chat interface
+- **Click any task** to invoke it with new parameters
+- **Provide new inputs** while maintaining the proven workflow structure
+- **Get consistent outputs** that follow the pattern you established
 
-```text
-How would this task work for someone who isn't familiar with [your domain]?
-Can you walk through it as if you're helping a new user understand both the
-process and the results?
-```
+### Testing your task
 
-### Identify edge cases
-
-```text
-What happens if someone provides incomplete information or unexpected inputs?
-How does the task handle errors or unusual scenarios gracefully?
-```
-
-![Task Testing Process - Placeholder](/images/agents/30-days-of-agents/day9-task-testing.png)
-
-## Step 5: Build a task library
-
-Create multiple tasks to build a comprehensive skill library for your agent:
-
-### Task categories
-
-Organize tasks by function and complexity:
-
-**Quick wins (5-10 minute tasks):**
-
-- Research summaries
-- Data formatting and analysis
-- Quick competitive checks
-- Meeting prep basics
-
-**Workflow automation (15-30 minute tasks):**
-
-- Multi-step research and reporting
-- Cross-platform data synchronization
-- Content creation and distribution
-- Project status compilation
-
-**Complex orchestration (30+ minute tasks):**
-
-- End-to-end campaign creation
-- Comprehensive analysis and recommendations
-- Multi-stakeholder workflow coordination
-- Strategic planning and execution
-
-### Task relationships
-
-```text
-Looking at the tasks we've created, how do they relate to each other?
-Could some tasks use outputs from others? Are there opportunities to chain
-tasks together for more complex workflows?
-```
-
-![Task Library Organization - Placeholder](/images/agents/30-days-of-agents/day9-task-library.png)
-
-## Step 6: Optimize task performance
-
-Make your tasks more effective and user-friendly:
-
-### Improve task clarity
-
-```text
-For each task, let's create clear descriptions that explain:
-- What problem this task solves
-- What information users need to provide
-- What they'll receive as output
-- How long the task typically takes
-- When this task is most useful
-```
-
-### Add usage examples
-
-```text
-Can you create example scenarios for each task that show typical use cases
-and expected results? This will help new users understand when and how to use each task.
-```
-
-### Build task chaining
-
-```text
-How can we design tasks that work well together? Can we create workflows where
-the output of one task becomes the input for another?
-```
-
-<Tip>
-  **Task evolution** great tasks improve over time based on usage patterns and
-  user feedback. Design them to be easily refinable and extendable.
-</Tip>
+Click on your newly created task and test it with different inputs to ensure it
+works reliably across various scenarios.
 
 ## What you've accomplished
 
-In 15 minutes, you've transformed from ad-hoc agent interaction to systematic
-workflow management:
+In 15 minutes, you've mastered the task creation workflow:
 
-**Captured institutional knowledge** converted successful workflows into
-reusable assets
+**Automated workflow capture** used the Create Task button to automatically
+identify and capture successful patterns
 
-**Scaled productivity** created tasks that others can execute without learning
-your specific process
+**Prompt refinement skills** learned to edit auto-generated prompts for maximum
+effectiveness
 
-**Built consistency** standardized outputs and quality across repeated
-executions
+**Scalable productivity** created tasks that others can execute with one-click
+invocation
 
-**Enabled delegation** made complex workflows accessible to team members with
-different skill levels
+**Quality control** developed the ability to refine AI-generated task prompts
+for better outcomes
 
-**Created compound value** built a library of capabilities that can be combined
-and extended
+**Institutional knowledge creation** transformed individual expertise into
+repeatable organizational capabilities
 
-## The task advantage
+## The power of automated task creation
 
-Tasks represent a fundamental shift in how organizations capture and scale
-expertise:
+The Create Task button represents a breakthrough in knowledge capture:
 
-**Traditional approach** knowledge stays with individuals, workflows require
-manual execution, expertise doesn't scale
+**Traditional approach**: manually document processes, hope people follow them,
+lose institutional knowledge when people leave
 
-**Task-driven approach** best practices become automated workflows, anyone can
-execute expert-level processes, organizational capability compounds over time
+**Automated approach**: one-click capture of successful workflows, AI-generated
+prompts that preserve expertise, instant availability for team reuse
 
-This is how agent-powered organizations can outperform traditional ones—not
-through individual productivity gains, but through systematic knowledge capture
-and scaling.
-
-## Task sharing and collaboration
-
-Consider how your tasks could benefit others:
-
-```text
-Which of our tasks would be valuable to share with the broader community?
-How could we contribute to a library of proven workflows that help other agent builders?
-```
-
-This community-driven approach accelerates everyone's learning and capability
-development.
+This is how modern organizations can scale expertise without losing the nuance
+of what actually works.
 
 <Card
   title="Tomorrow - Day 10"
@@ -337,27 +196,28 @@ development.
 
 ## Pro tip for today
 
-After creating your tasks, ask your agent:
+After creating several tasks using the Create Task button:
 
-```text
-Based on the tasks we've built, what patterns do you notice in my work style and priorities?
-What types of tasks should we focus on creating next to maximize impact?
-```
+**Look for task improvement opportunities:**
 
-This helps you identify the highest-leverage areas for continued task
-development.
+- Which auto-generated prompts needed the most editing?
+- What patterns make tasks more reliable and useful?
+- How can you structure conversations to generate better auto-tasks?
+
+This helps you become more effective at both conducting task-worthy workflows
+and refining the results.
 
 ---
 
 **Time to complete**: ~15 minutes
 
-**Skills learned**: task design and creation, workflow reusability, knowledge
-capture and scaling, task library management, organizational capability building
+**Skills learned**: automated task creation, prompt refinement, workflow pattern
+recognition, one-click task invocation
 
 **Next**: day 10 - Week 2 reflection and strategic planning
 
 <Tip>
-  **Remember** tasks are how individual insights become organizational
-  capabilities. You're not just building personal productivity tools—you're
-  creating scalable business assets.
+  **Remember** the Create Task button is your bridge from successful
+  conversations to scalable business assets. Every refined workflow becomes a
+  one-click capability for your entire team.
 </Tip>
