@@ -84,7 +84,7 @@ When new Agent activity is detected in the Matrix, you need to process it
 quickly. This is perfect for a stateless function:
 
 <CodeGroup>
-```go got
+```go Go
 package main
 
 import (
@@ -353,6 +353,8 @@ function generateRecommendations(count: i32): string[] {
 }
 ````
 
+</CodeGroup>
+
 Let's query our surveillance data:
 
 ```graphql
@@ -593,6 +595,8 @@ export function importAgentSighting(s: AgentSighting, surveilanceAgentId: string
   return "Agent sighting processed " + s.sighting_id;
 }
 ````
+
+</CodeGroup>
 
 Deploy your surveillance agent:
 
