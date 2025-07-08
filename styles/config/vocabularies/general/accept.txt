@@ -2,6 +2,7 @@
 [Aa]lterSchema
 Attio
 [Bb]oolean
+[Bb]ootcamp
 [Cc]ollections
 [Cc]omputeDistance
 [Cc]omputeSimilarity
@@ -157,3 +158,9 @@ SEO
 Eventbrite
 Typeform
 Bluesky
+Matrix
+Google
+CEO
+Sidekick
+GPT
+Bootcamp
