@@ -296,8 +296,8 @@ class WeatherDescription {
 const modelName = "text-generator";
 
 export function gatherWeatherIntelligence(city: string): WeatherIntel {
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid={{API_KEY}}&units=metric`;
-
+  city = encodeURIComponent(city);
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric`;
   const response = http.fetch(url);
 
   if (!response.ok)
@@ -342,7 +342,7 @@ function analyzeTacticalConditions(city: string, temperature: f64, conditions: s
 
   return output.choices[0].message.content.trim();
 }
-````
+```
 
 </CodeGroup>
 
