@@ -97,6 +97,16 @@
             ]
           },
           {
+            "group": "Apps",
+            "pages": [
+              "apps/overview",
+              "apps/create-app",
+              "apps/connect-app",
+              "apps/develop-app",
+              "apps/deploy-app"
+            ]
+          },
+          {
             "group": "Graphs",
             "pages": [
               "graphs/overview",
