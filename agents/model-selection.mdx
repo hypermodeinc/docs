@@ -5,277 +5,59 @@ description:
   "Select the optimal model for your agent based on your goals and use case."
 ---
 
-Most agents work great with **GPT-4.1**, our default model. Generally it's
-powerful, reliable, and handles the majority of business use cases effectively.
-
-As you scale your agent and understand its value, you can always optimize for
-cost or explore specialized capabilities.
+Choosing the right model is essential to building effective agents. This guide helps you evaluate trade-offs, pick the right model for your use case, and iterate quickly.
 
 ![Select your model](/images/agents/model-selection.png)
 
+## Key considerations
+- **Accuracy and output quality:** Advanced logic, mathematical problem-solving, and multi-step analysis may require high-capability models.
+- **Domain expertise:** Performance varies by domain (e.g., creative writing, code, scientific analysis). Review model benchmarks or test with your own examples.
+- **Context window:** Long documents, extensive conversations, or large codebases require models with longer context windows.
+- **Embeddings:** For semantic search or similarity, consider embedding models. These are not for text generation.
+- **Latency:** Real-time apps may need low-latency responses. Smaller models (or “Mini,” “Nano,” and “Flash” variants) typically respond faster than larger models.
+
+## Models by task / use case at a glance
+| Task / use case | Example models | Key strengths | Considerations |
+| --- | --- | --- | --- |
+| General-purpose conversation | Claude 4 Sonnet, GPT-4.1, Gemini Pro | Balanced, reliable, creative | May not handle edge cases as well |
+| Complex reasoning and research | Claude 4 Opus, O3, Gemini 2.5 Pro | Highest accuracy, multi-step analysis | Higher cost, quality critical |
+| Creative writing and content | Claude 4 Opus, GPT-4.1, Gemini 2.5 Pro | High-quality output, creativity, style control | High cost for premium content |
+| Document analysis and summarization | Claude 4 Opus, Gemini 2.5 Pro, Llama 3.3 | Handles long inputs, comprehension | Higher cost, slower |
+| Real-time apps | Claude 3.5 Haiku, GPT-4o Mini, Gemini 1.5 Flash 8B | Low latency, high throughput | Less nuanced, shorter context |
+| Semantic search and embeddings | OpenAI Embedding 3, Nomic AI, Hugging Face | Vector search, similarity, retrieval | Not for text generation |
+| Custom model training & experimentation | Llama 4 Scout, Llama 3.3, DeepSeek, Mistral | Open source, customizable | Requires setup, variable performance |
+
 <Note>
-  Hypermode provides access to the most popular open source and commercial
-  models through our [Model Router](/model-router). We're constantly evaluating
-  model usage and adding new models to our catalog based on demand.
+Hypermode provides access to the most popular open source and commercial models through [Hypermode Model Router documentation](/model-router). We're constantly evaluating model usage and adding new models to our catalog based on demand.
 </Note>
 
-## Quick start: find your agent type
+## Get started
 
-Start with **GPT-4.1** for most use cases, then consider these alternatives for
-specific needs:
+You can change models at any time in your agent settings. Start with a general-purpose model, then iterate and optimize as you learn more about your agent’s needs.
 
-<CardGroup cols={2}>
-  <Card title="Sales & CRM Operations" icon="chart-line">
-    **Best for:** Lead qualification, call analysis, CRM updates
-    <br />
-    **Recommended:** `GPT-4.1` (our default)
-    <br />
-    **Why:** Excellent structured data extraction, business context understanding
-  </Card>
-
-<Card title="Research & Analysis" icon="magnifying-glass">
-  **Best for:** Market research, competitor analysis, strategic insights
-  <br />
-  **Recommended:** `O3` for complex reasoning, `GPT-4.1` for most research
-  <br />
-  **Why:** Advanced reasoning, multi-source synthesis, deep analysis
-</Card>
-
-<Card title="Content & Marketing" icon="pen-fancy">
-  **Best for:** Social media, blogs, marketing campaigns
-  <br />
-  **Recommended:** `Claude 4 Opus` for creative work, `GPT-4.1` for analysis
-  <br />
-  **Why:** Creative writing, brand voice consistency, platform optimization
-</Card>
-
-<Card title="Data & Operations" icon="table">
-  **Best for:** Inventory tracking, spreadsheet analysis, reporting
-  <br />
-  **Recommended:** `GPT-4o Mini` for high volume, `GPT-4.1` for complexity
-  <br />
-  **Why:** Fast processing, cost-effective, reliable for routine tasks
-</Card>
-
-<Card title="Customer Support" icon="headset">
-  **Best for:** Scheduling, support tickets, real-time chat
-  <br />
-  **Recommended:** `GPT-4o Mini` for real-time interactions
-  <br />
-  **Why:** Low latency, consistent performance, natural conversation
-</Card>
-
-  <Card title="Code & Development" icon="code">
-    **Best for:** GitHub bots, code reviews, API development
-    <br/>
-    **Recommended:** `GPT-4.1` or `Claude 4 Sonnet`
-    <br/>
-    **Why:** Strong code comprehension, security focus, fewer hallucinations
-  </Card>
-</CardGroup>
-
-## When to consider alternatives
-
-After you've proven value with GPT-4.1, consider these alternatives for specific
-needs:
-
-### For creative and editorial work
-
-**Claude 4 Opus** - Superior for content creation, writing, and editorial tasks
-
-- Marketing copy and campaigns
-- Long-form content and storytelling
-- Brand voice consistency
-- Creative problem solving
-
-### For high-volume, cost-sensitive operations
-
-**GPT-4o Mini** - Fast and economical for routine tasks
-
-- Customer support and scheduling
-- Data processing and reporting
-- High-frequency operations (1000+ interactions/day)
-- Simple automation workflows
-
-### For complex reasoning and analysis
-
-**O3** - Advanced reasoning for sophisticated business challenges
-
-- Strategic planning and analysis
-- Complex research and insights
-- Multi-step problem solving
-- High-stakes decision support
-
-## Business-focused model recommendations
-
-### For sales and go-to-market teams
-
-<Card title="GTM Operations Agent" icon="handshake">
-  **Use Case:** Analyze sales calls, update CRM, qualify leads
-
-**Primary Choice:** `GPT-4.1` - Our default model with excellent structured data
-extraction
-
-**Alternative:** `Claude 4 Sonnet` - Superior business context understanding
-
-**Why These Work:**
-
-- Strong performance with sales terminology and CRM integration
-- Reliable field mapping and data accuracy
-- Professional communication tone
-
-**Example:** [Go-to-market Engineer](/agents/agent-gallery/gtm-engineer)
-updating Attio CRM from call transcripts
-
-</Card>
-
-### For marketing and content teams
-
-<Card title="Content Creation Agent" icon="pen-to-square">
-**Use Case:** Social media posts, blog content, marketing campaigns
-
-**Primary Choice:** `Claude 4 Opus` - Superior creative capabilities and nuanced
-writing **Alternative:** `GPT-4.1` - Reliable for analysis and structured
-content
-
-**Why These Work:**
-
-- High-quality, engaging content generation
-- Brand voice consistency across platforms
-- Platform-specific content optimization
-
-**Example:** [Social Media Expert](/agents/agent-gallery/social-media) creating
-targeted content campaigns
-
-</Card>
-
-### For research and strategy teams
-
-<Card title="Market Research Agent" icon="chart-bar">
-**Use Case:** Competitive analysis, industry trends, strategic insights
-
-**Primary Choice:** `O3` - Advanced reasoning with chain-of-thought processing
-
-**Alternative:** `Claude 4 Opus` - Excellent synthesis of multiple sources
-
-**Why These Work:**
-
-- Superior multi-step reasoning for complex analysis
-- Large context windows for extensive document processing
-- Strong capability for strategic insights
-
-**Example:** [Market Research Expert](/agents/agent-gallery/market-researcher)
-analyzing company intelligence
-
-</Card>
-
-### For operations and data teams
-
-<Card title="Data Processing Agent" icon="database">
-**Use Case:** Inventory management, spreadsheet analysis, operational reporting
-  
-**Primary Choice:** `GPT-4o Mini` - Cost-effective with reliable data handling
-
-**Alternative:** `GPT-4.1` - Better for complex data analysis
-
-**Why These Work:**
-
-- Fast processing for large volumes of data
-- Low cost per operation for routine tasks
-- Consistent performance for automated workflows
-
-**Example:** [Inventory Tracker](/agents/agent-gallery/inventory-tracker)
-monitoring stock levels and sales patterns
-
-</Card>
-
-### For customer success teams
-
-<Card title="Support and Scheduling Agent" icon="calendar-clock">
-**Use Case:** Customer support, appointment scheduling, real-time assistance
-
-**Primary Choice:** `GPT-4o Mini` - Fast response times with natural language
-understanding
-
-**Alternative:** `GPT-4.1` - Better for complex customer issues
-
-**Why These Work:**
-
-- Sub-second response times for real-time interactions
-- Reliable performance under varying loads
-- Natural conversation flow and context understanding
-
-**Example:**
-[Workout Scheduling Agent](/agents/agent-gallery/workout-scheduling) managing
-calendar integration
-
-</Card>
-
-## Model capabilities at a glance
-
-| Model             | Best For                  | When to Choose                            |
-| ----------------- | ------------------------- | ----------------------------------------- |
-| **GPT-4.1**       | General business use      | Start here for any use case (our default) |
-| **Claude 4 Opus** | Creative & editorial work | Writing, content, brand voice             |
-| **O3**            | Complex reasoning         | Strategic decisions, deep analysis        |
-| **GPT-4o Mini**   | High-volume operations    | Cost optimization, simple tasks           |
-
-## Getting started
-
-1. **Create your agent** with GPT-4.1 (the default)
-2. **Focus on instructions and connections** to define your agent's role
-3. **Test with real examples** from your workflow
-4. **Refine and iterate** based on results
-5. **Consider alternatives** once you understand value and patterns
+1. [**Create an agent**](/create-agent) with GPT-4.1 (default).
+2. **Define clear instructions and [connections](/connections)** for the agent's role.
+3. **Test with real examples** from your workflow.
+4. **Refine and iterate** based on results.
+5. **Evaluate alternatives** once you understand patterns and outcomes.
 
 <Tip>
-  **Value first, optimization second.** GPT-4.1 handles 90% of business use
-  cases effectively. Prove your agent's value before optimizing for cost or
-  specialized capabilities.
+**Value first, optimize second.** Clarify the task requirements before tuning for
+specialized capabilities or cost.
 </Tip>
 
-## Need help choosing?
+## Comparison of select large language models
 
-**Most users:** Start with GPT-4.1 and focus on your agent's instructions and
-connections.
+| Model | Provider | Best For | Key Strengths | Considerations | Context Window<sup>+</sup> | Speed | Cost<sup>++</sup> |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| **Claude 4 Opus** | Anthropic | Complex reasoning, long docs | Highest accuracy, long context, safe | Higher cost, slower than lighter models | Very long (200K+) | Moderate | $$$$ |
+| **Claude 4 Sonnet** | Anthropic | General-purpose, balanced workloads | Good accuracy, fast, safe | Less capable than Opus for edge cases | Long (100K+) | Fast | $$$ |
+| **GPT-4.1** | OpenAI | Most tasks, nuanced output | Reliable, creative, strong reasoning | Higher cost, moderate speed | Long (128K) | Moderate | $$$ |
+| **GPT-4.1 Mini** | OpenAI | High-volume, cost-sensitive | Fast, affordable, scalable | Less nuanced, shorter context | Medium (32K–64K) | Very Fast | $$ |
+| **GPT o3** | OpenAI | General chat, broad compatibility | Versatile, strong performance | May lack latest features/capabilities | Medium (32K–64K) | Fast | $$ |
+| **Gemini 2.5 Pro** | Google | Up-to-date info | Long context | Limited access, higher cost | Long (128K+) | Moderate | $$$ |
+| **Gemini 2.5 Flash** | Google | Real-time, rapid responses | Extremely fast, cost-effective | Shorter context, less nuanced | Medium (32K–64K) | Very Fast | $$ |
+| **Llama 4 Scout** | Meta | Privacy, customization, open source | Open source, flexible deployment | Variable performance | Medium–Long (varies) | Fast | $ |
 
-- **Creative teams:** Consider Claude 4 Opus for writing and content creation.
-- **High-volume operations:** Try GPT-4o Mini for cost-effective automation.
-- **Strategic work:** Explore O3 for complex analysis and reasoning.
-
-Remember: you can always change your model choice as your needs evolve. The most
-important factors are clear instructions and the right connections for your
-agent's role.
-
-<Tip>
-  Use the [Model Router](/model-router) to easily experiment with models from
-  different providers without changing your integration code. The unified API
-  makes it simple to switch between OpenAI, Anthropic, Google, and Meta models
-  for systematic comparison.
-</Tip>
-
----
-
-## References and additional resources
-
-This guide is based on industry best practices and community insights from
-leading AI development communities. For deeper technical insights and ongoing
-discussions about model selection, see:
-
-- [LLM Developers: How Do You Pick the Right LLM?](https://www.reddit.com/r/LLMDevs/comments/1k6phix/how_do_you_guys_pick_the_right_llm_for_your/)
-- [Generative AI: How to Select an LLM for a Use Case](https://www.reddit.com/r/generativeAI/comments/1ay5drl/how_to_select_a_llm_for_a_use_case/)
-- [Choosing the Right Language Model for Your Use Case](https://medium.com/data-science/choosing-the-right-language-model-for-your-nlp-use-case-1288ef3c4929)
-- [GitHub Copilot AI Model Selection](https://docs.github.com/en/copilot/using-github-copilot/ai-models/choosing-the-right-ai-model-for-your-task)
-- [JetBrains AI: How to Choose the Right LLM](https://blog.jetbrains.com/ai/2025/03/how-to-choose-the-right-llm/#)
-- [How to Choose Right LLM for Your Organisation](https://www.linkedin.com/pulse/how-choose-right-llm-your-organisation-gagan-agrawal-ms0oc/)
-- [OpenAI Model Selection Guide](https://platform.openai.com/docs/guides/model-selection)
-- [How to Select Right LLM Model for Your Use Case](https://masteringllm.medium.com/how-to-select-right-llm-model-for-your-use-case-d4d9670e06f3)
-- [How to Choose an AI Model for Your Business](https://www.leewayhertz.com/how-to-choose-an-ai-model/)
-- [Choosing the Right LLM](https://www.labellerr.com/blog/chosing-the-right-llm/)
-- [Choosing the Best LLM Model: A Strategic Guide](https://medium.com/@social_65128/choosing-the-best-llm-model-a-strategic-guide-for-your-organizations-needs-f64794ead5e9)
-- [DataRobot: How to Choose the Right LLM for Your Use Case](https://www.datarobot.com/blog/how-to-choose-the-right-llm-for-your-use-case/)
-- [TechTarget: How to Choose the Right LLM for Your Needs](https://www.techtarget.com/searchenterpriseai/tip/How-to-choose-the-right-LLM-for-your-needs)
-- [LangDB: Choosing the Right LLM for the Job](https://blog.langdb.ai/choosing-the-right-llm-for-the-job-with-langdb)
-
-For the most current model availability and pricing, always refer to the
-[Hypermode Model Router documentation](/model-router).
+<sup>+</sup>Context window sizes are approximate and may vary by deployment/version.
+<sup>++</sup>Relative cost per 1K tokens ($ = lowest, $$$$ = highest)
