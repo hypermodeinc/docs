@@ -86,6 +86,7 @@
                 "group": "Agents Bootcamp",
                 "pages": [
                   "agents/30-days-of-agents/overview",
+                  "agents/30-days-of-agents/calender",
                   {
                     "group": "Week 1",
                     "pages": [
