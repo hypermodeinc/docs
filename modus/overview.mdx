@@ -41,7 +41,7 @@ maintainable, scalable intelligent systems.
 You can run Modus locally for development or deploy it in seconds to Hypermode
 for production.
 
-## What is Modus good for? {/* vale Google.Contractions = NO */}
+## When to use Modus
 
 Modus is designed for building applications where AI is at its core capability.
 It supports sub-second response times for stateless operations and long-running,
@@ -56,8 +56,22 @@ what it does best.
 Both functions and agents can be deployed in the same app, allowing you to
 choose the right abstraction for each use case.
 
-For more inspiration, check out the
-[Modus recipes](https://github.com/hypermodeinc/modus-recipes).
+### Language-agnostic logic, safely
+
+With WebAssembly's secure isolation environment, define agent behavior in Go or
+AssemblyScript. Compile to WebAssembly and Modus runs it securely. Each agent
+runs as a lightweight actor: self-contained, message-driven, and supervised by
+the runtime.
+
+### Persistent context beyond sessions
+
+For use-cases like multi-day workflows, personal assistants, tutoring, or
+domain-specific agents (for example ticketing systems), long-term context is
+crucial. Modus provides it without requiring a dedicated database layer. Modus'
+built-in short-term memory handles conversational state and context within
+agents. Connect to long-term graph memory for externalized and persisted, but
+serverless-friendly memory. You gain full "recall" - across sessions and
+workflows- without maintaining stateful servers.
 
 ## Where to next?
 

@@ -1,5 +1,6 @@
 [Aa]gentic
 [Aa]lterSchema
+[Aa]pp
 Attio
 [Bb]oolean
 [Bb]ootcamp
@@ -164,3 +165,15 @@ CEO
 Sidekick
 GPT
 Bootcamp
+Crowdsource
+[dD]iscord
+[cC]oncierge
+parameterization
+reusability
+[sS]tandardizable
+refinable
+I'm
+GTM
+chatbots
+enablement
+[lL]uma

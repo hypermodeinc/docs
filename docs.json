@@ -86,14 +86,40 @@
                 "group": "Agents Bootcamp",
                 "pages": [
                   "agents/30-days-of-agents/overview",
-                  "agents/30-days-of-agents/day-1",
-                  "agents/30-days-of-agents/day-2",
-                  "agents/30-days-of-agents/day-3",
-                  "agents/30-days-of-agents/day-4",
-                  "agents/30-days-of-agents/day-5"
+                  "agents/30-days-of-agents/calender",
+                  {
+                    "group": "Week 1",
+                    "pages": [
+                      "agents/30-days-of-agents/day-1",
+                      "agents/30-days-of-agents/day-2",
+                      "agents/30-days-of-agents/day-3",
+                      "agents/30-days-of-agents/day-4",
+                      "agents/30-days-of-agents/day-5"
+                    ]
+                  },
+                  {
+                    "group": "Week 2",
+                    "pages": [
+                      "agents/30-days-of-agents/day-6",
+                      "agents/30-days-of-agents/day-7",
+                      "agents/30-days-of-agents/day-8",
+                      "agents/30-days-of-agents/day-9",
+                      "agents/30-days-of-agents/day-10"
+                    ]
+                  }
                 ]
               },
               "agents/faq"
+            ]
+          },
+          {
+            "group": "Apps",
+            "pages": [
+              "apps/overview",
+              "apps/create-app",
+              "apps/connect-app",
+              "apps/develop-app",
+              "apps/deploy-app"
             ]
           },
           {
