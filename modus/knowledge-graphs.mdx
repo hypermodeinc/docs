@@ -84,6 +84,7 @@ When new Agent activity is detected in the Matrix, you need to process it
 quickly. This is perfect for a stateless function:
 
 <CodeGroup>
+
 ```go Go
 package main
 
@@ -162,28 +163,33 @@ func analyzeAgentWithAI(behavior string) (string, error) {
   return strings.TrimSpace(out.Choices[0].Message.Content), nil
 }
 ```
+
 ```typescript AssemblyScript
-import { Agent, agents, dgraph, models } from "@hypermode/modus-sdk-as";
-import { OpenAIChatModel, SystemMessage, UserMessage } from "@hypermode/modus-sdk-as/models/openai/chat";
-import { JSON } from "json-as";
+import { Agent, agents, dgraph, models } from "@hypermode/modus-sdk-as"
+import {
+  OpenAIChatModel,
+  SystemMessage,
+  UserMessage,
+} from "@hypermode/modus-sdk-as/models/openai/chat"
+import { JSON } from "json-as"
 
 @json
 class AgentSighting {
-  sighting_id!: string;
-  agent_name!: string;
-  location!: string;
-  behavior!: string;
-  timestamp!: string;
+  sighting_id!: string
+  agent_name!: string
+  location!: string
+  behavior!: string
+  timestamp!: string
   @omitnull()
-  ai_analysis: string | null = null;
+  ai_analysis: string | null = null
 }
 
 @json
 class ThreatAnalysisResponse {
-  sightings_count!: i32;
-  active_agents!: string[];
-  threat_assessment!: string;
-  reccommendations!: string[];
+  sightings_count!: i32
+  active_agents!: string[]
+  threat_assessment!: string
+  reccommendations!: string[]
 }
 
 @json
@@ -192,30 +198,32 @@ class SightingsData {
 }
 
 export function importAgentSighting(s: AgentSighting): string {
-  const analysis = analyzeAgentWithAI(s.behavior);
-  s.ai_analysis = analysis;
+  const analysis = analyzeAgentWithAI(s.behavior)
+  s.ai_analysis = analysis
 
-  const mutation = new dgraph.Mutation(JSON.stringify(s));
-  dgraph.executeMutations("dgraph", mutation);
+  const mutation = new dgraph.Mutation(JSON.stringify(s))
+  dgraph.executeMutations("dgraph", mutation)
 
-  return "Agent sighting processed " + s.sighting_id;
+  return "Agent sighting processed " + s.sighting_id
 }
 
 function analyzeAgentWithAI(behavior: string): string {
-  const model = models.getModel<OpenAIChatModel>("text-generator");
+  const model = models.getModel<OpenAIChatModel>("text-generator")
 
-  const prompt = "Analyze this Agent behavior pattern and assess threat level, behavioral changes, and tactical implications for resistance operations. Respond with no more than 3 short sentences.";
+  const prompt =
+    "Analyze this Agent behavior pattern and assess threat level, behavioral changes, and tactical implications for resistance operations. Respond with no more than 3 short sentences."
 
   const input = model.createInput([
     new SystemMessage(prompt),
-    new UserMessage(behavior)
-  ]);
-  input.temperature = 0.3;
+    new UserMessage(behavior),
+  ])
+  input.temperature = 0.3
 
-  const out = model.invoke(input);
-  return out.choices[0].message.content.trim();
+  const out = model.invoke(input)
+  return out.choices[0].message.content.trim()
 }
 ```
+
 </CodeGroup>
 
 Now let's deploy this data import function and test it:
@@ -253,6 +261,7 @@ Now that we've got the Agent sighting data in our knowledge graph, let's analyze
 the broader threat landscape:
 
 <CodeGroup>
+
 ```go Go
 func AnalyzeAgentPatterns(since string) (*ThreatAnalysisResponse, error) {
   query := dgraph.NewQuery(`
@@ -351,53 +360,55 @@ func generateRecommendations(count int) []string {
   }
 }
 ```
+
 ```typescript AssemblyScript
 export function analyzeAgentPatterns(since: string): ThreatAnalysisResponse {
   const query = new dgraph.Query(`
-		query analyzeAgents($since: string) {
-			sightings(func: ge(timestamp, $since)) {
-				sighting_id
-				agent_name
-				location
-				behavior
-				threat_level
-				timestamp
-				ai_analysis
-			}
-		}
-	`).withVariable("since", since);
+    query analyzeAgents($since: string) {
+      sightings(func: ge(timestamp, $since)) {
+        sighting_id
+        agent_name
+        location
+        behavior
+        threat_level
+        timestamp
+        ai_analysis
+      }
+    }
+  `).withVariable("since", since)
 
-  const resp = dgraph.executeQuery("dgraph", query);
+  const resp = dgraph.executeQuery("dgraph", query)
 
-  const data = JSON.parse<SightingsData>(resp.Json);
+  const data = JSON.parse<SightingsData>(resp.Json)
 
-  const assessment = generateThreatAssessment(data.sightings);
+  const assessment = generateThreatAssessment(data.sightings)
 
   return {
     sightings_count: data.sightings.length,
     active_agents: extractActiveAgents(data.sightings),
     threat_assessment: assessment,
-    reccommendations: generateRecommendations(data.sightings.length)
-  };
+    reccommendations: generateRecommendations(data.sightings.length),
+  }
 }
 
 function generateThreatAssessment(sightings: AgentSighting[]): string {
-  const model = models.getModel<OpenAIChatModel>("text-generator");
+  const model = models.getModel<OpenAIChatModel>("text-generator")
 
-  const prompt = "Based on these Agent sightings, provide a strategic threat assessment focusing on behavioral patterns and risks to resistance operations. Respond with no more than 2 short sentences."
+  const prompt =
+    "Based on these Agent sightings, provide a strategic threat assessment focusing on behavioral patterns and risks to resistance operations. Respond with no more than 2 short sentences."
 
   const input = model.createInput([
     new SystemMessage(prompt),
-    new UserMessage(JSON.stringify(sightings))
-  ]);
-  input.temperature = 0.4;
+    new UserMessage(JSON.stringify(sightings)),
+  ])
+  input.temperature = 0.4
 
-  const out = model.invoke(input);
-  return out.choices[0].message.content.trim();
+  const out = model.invoke(input)
+  return out.choices[0].message.content.trim()
 }
 
 function extractActiveAgents(sightings: AgentSighting[]): string[] {
-  return sightings.map<string>(s => s.agent_name);
+  return sightings.map<string>((s) => s.agent_name)
 }
 
 function generateRecommendations(count: i32): string[] {
@@ -406,19 +417,18 @@ function generateRecommendations(count: i32): string[] {
       "Implement additional security measures.",
       "Enhance threat detection capabilities.",
       "Implement enhanced access control.",
-    ];
+    ]
   } else if (count > 2) {
     return [
       "Enhance threat detection capabilities.",
       "Implement enhanced access control.",
     ]
   } else {
-    return [
-      "Implement additional security measures."
-    ]
+    return ["Implement additional security measures."]
   }
 }
 ```
+
 </CodeGroup>
 
 Let's query our surveillance data:
@@ -462,6 +472,7 @@ data arrives. We'll deploy persistent surveillance agents and upgrade our import
 function to trigger them:
 
 <CodeGroup>
+
 ```go Go
 import (
   "time"
@@ -569,29 +580,34 @@ func GetSurveillanceStatus(agentId string) (string, error) {
   return *result, nil
 }
 ```
+
 ```typescript AssemblyScript
 class SurveillanceAgent extends Agent {
-  private monitoredSectors: string[] = [];
-  private sightingsTracked: i32 = 0;
-  private recentActivities: string[] = [];
-  private lastSweepTime: Date = new Date(0);
+  private monitoredSectors: string[] = []
+  private sightingsTracked: i32 = 0
+  private recentActivities: string[] = []
+  private lastSweepTime: Date = new Date(0)
 
   get name(): string {
-    return "SurveillanceAgent";
+    return "SurveillanceAgent"
   }
 
   onInitialize(): void {
-    this.monitoredSectors = ["Downtown Loop", "Megacity Financial", "Industrial District"];
-    this.lastSweepTime = new Date(Date.now());
+    this.monitoredSectors = [
+      "Downtown Loop",
+      "Megacity Financial",
+      "Industrial District",
+    ]
+    this.lastSweepTime = new Date(Date.now())
   }
 
   onReceiveMessage(msgName: string, data: string | null): string {
     if (msgName === "continuous_surveillance") {
-      return this.processNewIntelligence();
+      return this.processNewIntelligence()
     } else if (msgName === "get_status") {
-      return this.getOperationalStatus();
+      return this.getOperationalStatus()
     }
-    throw new Error("Unrecognized directive: " + msgName);
+    throw new Error("Unrecognized directive: " + msgName)
   }
 
   private processNewIntelligence(): string {
@@ -603,30 +619,30 @@ class SurveillanceAgent extends Agent {
           location
         }
       }
-    `).withVariable("since", this.lastSweepTime.toISOString());
+    `).withVariable("since", this.lastSweepTime.toISOString())
 
-    dgraph.executeQuery("dgraph", query);
+    dgraph.executeQuery("dgraph", query)
 
-    this.lastSweepTime = new Date(Date.now());
-    this.sightingsTracked++;
+    this.lastSweepTime = new Date(Date.now())
+    this.sightingsTracked++
 
-    const activity = "Auto surveillance at " + this.lastSweepTime.toTimeString();
-    this.recentActivities.push(activity);
+    const activity = "Auto surveillance at " + this.lastSweepTime.toTimeString()
+    this.recentActivities.push(activity)
 
     if (this.recentActivities.length > 3) {
-      this.recentActivities.shift();
+      this.recentActivities.shift()
     }
 
-    return `Data processed automatically.\nTracking ${this.sightingsTracked} sightings. Matrix integrity: COMPROMISED`;
+    return `Data processed automatically.\nTracking ${this.sightingsTracked} sightings. Matrix integrity: COMPROMISED`
   }
-  
+
   private getOperationalStatus(): string {
     return `Surveillance Agent Status:
 - Operational: Active
 - Monitoring ${this.monitoredSectors.length.toString()} sectors: ${this.monitoredSectors.join(", ")}
 - Last sweep: ${this.lastSweepTime.toISOString().replace("T", " ").slice(0, 19)}
 - Tracking ${this.sightingsTracked.toString()} ongoing sightings
-- Recent activities: ${this.recentActivities.join(", ")}`;
+- Recent activities: ${this.recentActivities.join(", ")}`
   }
 
   getState(): string {
@@ -640,31 +656,33 @@ class SurveillanceAgent extends Agent {
     // this.monitoredSectors = state.monitoredSectors;
     // this.sightingsTracked = state.sightingsTracked;
     // this.recentActivities = state.recentActivities;
-    // this.lastSweepTime = state.lastSweepTime; 
+    // this.lastSweepTime = state.lastSweepTime;
   }
 }
 
-agents.register<SurveillanceAgent>();
+agents.register<SurveillanceAgent>()
 
 export function deploySurveillanceAgent(): string {
-  const agentInfo = agents.start("SurveillanceAgent");
-  return `${agentInfo.name} - ${agentInfo.id}`;
+  const agentInfo = agents.start("SurveillanceAgent")
+  return `${agentInfo.name} - ${agentInfo.id}`
 }
 
 export function getSurveillanceStatus(agentId: string): string {
-  const result = agents.sendMessage(agentId, "get_status");
+  const result = agents.sendMessage(agentId, "get_status")
   if (result == null) {
-    throw new Error("No response from agent");
+    throw new Error("No response from agent")
   }
-  return result;
+  return result
 }
 ```
+
 </CodeGroup>
 
 Now let's enhance our original import function to automatically trigger
 surveillance:
 
 <CodeGroup>
+
 ```go Go
 func ImportAgentSighting(s AgentSighting, surveillanceAgentId *string) (*string, error) {
   analysis, err := analyzeAgentWithAI(s.Behavior)
@@ -693,21 +711,26 @@ func ImportAgentSighting(s AgentSighting, surveillanceAgentId *string) (*string,
   return &res, nil
 }
 ```
-```typescript AssemblyScript
-export function importAgentSighting(s: AgentSighting, surveilanceAgentId: string | null = null): string {
-  const analysis = analyzeAgentWithAI(s.behavior);
-  s.ai_analysis = analysis;
 
-  const mutation = new dgraph.Mutation(JSON.stringify(s));
-  dgraph.executeMutations("dgraph", mutation);
+```typescript AssemblyScript
+export function importAgentSighting(
+  s: AgentSighting,
+  surveilanceAgentId: string | null = null,
+): string {
+  const analysis = analyzeAgentWithAI(s.behavior)
+  s.ai_analysis = analysis
+
+  const mutation = new dgraph.Mutation(JSON.stringify(s))
+  dgraph.executeMutations("dgraph", mutation)
 
   if (surveilanceAgentId) {
-    agents.sendMessageAsync(surveilanceAgentId, "continuous_surveillance");
+    agents.sendMessageAsync(surveilanceAgentId, "continuous_surveillance")
   }
 
-  return "Agent sighting processed " + s.sighting_id;
+  return "Agent sighting processed " + s.sighting_id
 }
 ```
+
 </CodeGroup>
 
 Deploy your surveillance agent:
