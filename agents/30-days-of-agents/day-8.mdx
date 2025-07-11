@@ -1,0 +1,326 @@
+---
+title: "Day 8: Connections & Tools"
+sidebarTitle: "Day 8: Connections & Tools"
+description: "Give your agent the tools it needs to accomplish its goals"
+---
+
+<Card title="Day 8 challenge" icon="link">
+  **Goal**: provide the tools your agent needs to accomplish its goals
+
+**Theme**: community week - enabling agent capabilities
+
+**Time investment**: ~20 minutes
+
+</Card>
+
+Welcome to Day 8! Yesterday you created your first custom agent with Concierge.
+Today we're diving deep into **connections and tools**—the integration ecosystem
+that transforms chatbots into powerful agents. You'll learn to connect services
+and understand what specific tools become available for your agent to use.
+
+This is where agents evolve from helpful assistants to business-critical
+automation.
+
+## What you'll accomplish today
+
+- Configure your deployed agent with the right connections
+- Master the agent configuration interface and customization options
+- Understand connection authorization flow and management
+- Learn the difference between connections and tools
+- Explore your agent's specific tool capabilities with its new connections
+- Learn to iterate on agent instructions and model selection
+
+<Warning>
+  This builds on Day 7's agent creation. You'll need the custom agent you
+  deployed yesterday to complete today's configuration and workflow development.
+</Warning>
+
+## Understanding connections and tools
+
+Before diving into configuration, it's important to understand the distinction:
+
+<Info>
+  **Connection**: the authenticated integration to a service (for example: "Google sheets connection")
+
+**Tools**: the specific actions your agent can perform once connected (for
+example: "create spreadsheet", "update row", "fetch data")
+
+</Info>
+
+{/* <!-- trunk-ignore(markdownlint/MD036) --> */} **Google Sheets**
+
+- **Connection**: OAuth authentication to your Google account
+- **Tools unlocked**: Create, edit, and manage spreadsheets, rows, and data.
+
+{/* <!-- trunk-ignore(markdownlint/MD036) --> */} **GitHub**
+
+- **Connection**: Authentication to your GitHub account
+- **Tools unlocked**: Create and manage repositories, pull requests, issues, and
+  more.
+
+This distinction helps you understand what capabilities your agent gains from
+each connection you enable.
+
+## Step 1: Explore your agent's configuration interface
+
+Your agent from yesterday is now deployed in your sidebar, but let's dive into
+its configuration options. The agent interface gives you powerful customization
+capabilities.
+
+<img
+  className="w-1/2 mx-auto"
+  src="/images/agents/30-days-of-agents/day-8-agent-about.png"
+  alt="Agent About View"
+/>
+
+**Access your agent's configuration:**
+
+1. **Click on your agent** in the sidebar to open its thread view
+2. **Click the agent's name** at the top to access the "About" section
+3. **Review the agent details** including its description, instructions, and
+   current model
+
+**Key configuration options available:**
+
+- **Agent Instructions**: Edit the system prompt that guides your agent's
+  behavior
+- **Model Selection**: Currently set to GPT-4.1 (default), but you can
+  experiment with other models
+- **Agent Description**: Update how your agent presents itself
+- **Connection Management**: Add and configure the services your agent can
+  access
+
+<Tip>
+  **Customization power**: you have full control over your agent's instructions
+  and model. GPT-4.1 is the default and works great for most use cases, but you
+  can experiment with different models or collaborate with us on Discord to find
+  what works best for your specific needs.
+</Tip>
+
+<Tip>
+  **Model awareness**: not all models support tool use. GPT-4.1 is the most
+  capable for this purpose, but you can experiment with others if you want to
+  explore different behaviors.
+</Tip>
+
+## Step 2: Add connections through the agent interface
+
+Now let's give your agent access to the services it needs. The connections
+interface makes this straightforward.
+
+<img
+  className="w-1/2 mx-auto"
+  src="/images/agents/30-days-of-agents/day-8-agent-connections.png"
+  alt="Agent Connections View"
+/>
+
+**Configure connections via agent interface:**
+
+1. **Navigate to the Connections tab** in your agent's about section
+2. **Browse available connections** or search for specific services your agent
+   might need
+3. **Click "Add Connection"** for services that align with your agent's purpose
+4. **Complete the OAuth flow** when prompted for authentication
+5. **Verify successful connection** with the green checkmark indicator
+
+**Connection selection strategy:**
+
+Think about what your agent was designed to do (from Day 7) and add connections
+that support those capabilities. For example:
+
+- **Code-related agents**: GitHub connection (unlocks repository management, PR
+  creation tools)
+- **Marketing agents**: HubSpot connection (unlocks CRM management, campaign
+  tracking tools)
+- **Research agents**: Google Drive connection (unlocks document access,
+  creation tools)
+- **Operations agents**: Google Sheets connection (unlocks spreadsheet
+  management, data analysis tools)
+
+<Tip>
+  **Connection vs. Tools reminder**: when you add a Google Sheets connection,
+  you're not just connecting to Google Sheets—you're unlocking specific tools
+  like "create spreadsheet," "update row," and "analyze data." Each connection
+  provides multiple tools for your agent to use.
+</Tip>
+
+<Info>
+  **Start focused**: add 2-3 connections initially rather than overwhelming your
+  agent with too many options. You can always add more as you discover new use
+  cases.
+</Info>
+
+## Step 3: Alternative connection management options
+
+Besides the agent interface, you have other ways to manage connections across
+your workspace.
+
+<img
+  className="w-1/2 mx-auto"
+  src="/images/agents/connections-sidebar.png"
+  alt="Agent Connections View"
+/>
+
+**Sidebar connection access:**
+
+- **Click "Add connections"** from the left navigation bar
+- **Search through 2,000+ integrations** to find specific services
+- **Complete OAuth flows** directly from the sidebar
+
+![Connections Management](/images/agents/connections-manage.png)
+
+**Workspace-level management:**
+
+1. **Navigate to Workspace Settings** from your profile menu
+2. **Click the Connections tab** to see all available integrations
+3. **Add connections** that can be shared across multiple agents
+4. **Manage authentication status** and review permissions
+
+<Info>
+  **Multiple access points**: whether you use the agent interface, sidebar, or
+  workspace settings depends on your preference. All methods give you access to
+  the same powerful integration ecosystem.
+</Info>
+
+## Step 4: Test your agent's new tool capabilities
+
+Now that your agent has connections, let's explore what specific tools it can
+use. Start with simple requests to understand how it uses its new capabilities.
+
+**Test basic tool awareness:**
+
+```text
+What connections do you have access to now? What specific tools can you use with each connection?
+```
+
+Your agent can:
+
+- **List available connections** and explain the services it can access
+- **Describe specific tools** it can use with each connection
+- **Suggest workflows** based on your agent's role and available tools
+
+**Try a simple task:**
+
+```text
+Can you help me with [specific task related to your agent's purpose]?
+Use whatever tools you think are most appropriate.
+```
+
+Watch how your agent:
+
+- **Evaluates available tools** for the task at hand
+- **Plans its approach** using the specific tools you've provided
+- **Executes actions** across the integrated services
+- **Reports results** and suggests next steps
+
+<Tip>
+  **Discovery approach**: rather than prescribing specific workflows, let your
+  agent show you what's possible. Ask open-ended questions about what it can
+  help you accomplish with its current tools.
+</Tip>
+
+## Step 5: Customize your agent's instructions and model
+
+The configuration interface gives you direct control over your agent's behavior.
+You can edit the agent's prompt and experiment with different models right from
+the About section.
+
+**Direct customization options:**
+
+1. **Edit Agent Instructions**: Click "Edit" to modify the system prompt that
+   guides your agent's behavior
+2. **Change Model Selection**: Switch from the default GPT-4.1 to experiment
+   with other models
+3. **Update Description**: Adjust how your agent presents itself
+
+**When to customize:**
+
+- **Tool usage patterns**: Guide which tools to prioritize for specific tasks
+- **Tone adjustments**: Make the agent more formal, casual, technical, or
+  business-focused
+- **Process preferences**: Specify how the agent should approach tasks
+- **Communication style**: Adjust how the agent reports progress and results
+
+**Model experimentation:**
+
+GPT-4.1 is the default and works great for most use cases, but you can
+experiment with different models based on your needs. If you're unsure about
+optimization, collaborate with us on Discord to find what works best for your
+specific requirements.
+
+<Info>
+  **Direct control**: unlike other platforms, you have full access to customize
+  your agent's instructions and model selection. This gives you complete control
+  over behavior and performance.
+</Info>
+
+## What you've accomplished
+
+In 20 minutes, you've mastered agent configuration and tool enablement:
+
+**Interface mastery**: learned to navigate and customize your agent through the
+About section, including instructions and model selection
+
+**Connection configuration**: successfully added relevant connections through
+multiple access methods - agent interface, sidebar, and workspace settings
+
+**Tool capability exploration**: tested your agent's new abilities and
+discovered what specific tools are available with each connection
+
+**Direct customization**: learned to edit agent instructions and experiment with
+different models for optimal performance
+
+**Optimization awareness**: understand when and how to get community support for
+advanced optimization
+
+## The transformation from advisor to executor
+
+Today's work establishes the foundation for powerful agent automation:
+
+**Before connections**: your agent could only provide advice and suggestions
+based on its training
+
+**After connections**: your agent can take real actions with specific tools,
+access live data, and integrate with your actual workflows and business systems
+
+This transformation from "advisor" to "executor" is what makes Hypermode Agents
+different from traditional AI assistants.
+
+<Card
+  title="Tomorrow - Day 9"
+  icon="arrow-right"
+  href="/agents/30-days-of-agents/day-9"
+>
+  Transform your successful interactions into reusable tasks. Learn to capture
+  institutional knowledge and scale your agent's capabilities across your
+  organization.
+</Card>
+
+## Pro tip for today
+
+Now that your agent has connections and tools, spend some time exploring:
+
+```text
+What are some creative ways I could use the specific tools you now have access to?
+What would be most valuable for me to automate or streamline in my current work?
+```
+
+Let your agent guide you toward discovering workflows that you might not have
+considered, based on its understanding of the tools now available.
+
+---
+
+**Time to complete**: ~20 minutes
+
+**Skills learned**: agent configuration interface, connection management across
+multiple access points, understanding connections vs. tools, agent instruction
+editing, model selection, tool capability exploration and testing
+
+**Next**: day 9 - Create reusable tasks from successful workflows
+
+<Tip>
+  **Remember**: today was about setting up your agent's foundation. The real
+  magic happens when you start using these tools in creative ways. Let your
+  agent surprise you with what becomes possible when it has the right tools to
+  work with.
+</Tip>
