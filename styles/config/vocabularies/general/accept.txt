@@ -1,3 +1,4 @@
+8B
 [Aa]gentic
 [Aa]lterSchema
 [Aa]pp
@@ -33,9 +34,11 @@ Jira
 maxWidth
 (?i)mcp
 [Mm]odus
+Nano
 [Nn]amespace
 [Nn]amespaces
 [Nn]nClassify
+Nomic
 OAuth
 [Oo]nboarding
 [Pp]arams
