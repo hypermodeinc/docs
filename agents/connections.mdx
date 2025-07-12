@@ -2,145 +2,41 @@
 title: "Connections"
 sidebarTitle: "Overview"
 description:
-  "Build AI agents that act, not just chat—from natural conversation to
-  production-ready code"
+  "All the capabilities your agent needs to take action across your stack"
 ---
 
-**Connections** enable Hypermode Agents to securely access and interact with
-external tools, APIs, and services. With over 2,000+ available integrations,
-agents can execute tasks across your entire technology stack.
-
-- **Built-in integrations** like GitHub, Linear, Slack, Vercel, and Notion
-- **Model Context Protocol** support for secure, structured tool integration
-- **2,000+ integrations** through our partnership with leading automation
-  platforms
-- **Your custom APIs** with encrypted credentials and scoped access
-- **Major large language models** including OpenAI, Anthropic, Google, and open
-  source models
+**Connections** enable Hypermode Agents to securely access and interact with external tools, APIs, and services. With over 2,000 available integrations, agents can execute tasks across your entire technology stack.
 
 ## Overview
 
-Hypermode Agents are built for execution, not just conversation. Connections
-provide the bridge between your agents and the tools they need to complete
-tasks, from internal APIs to third-party applications and public resources.
+A Connection is a secure link between your agent and an external service (e.g., GitHub, Slack, Stripe, or your internal APIs). Connections allow agents to perform actions, retrieve data, and automate flows using these services.
 
-## Key features
-
-<CardGroup cols={2}>
-  <Card title="2,000+ Integrations" icon="plug">
-    Access to popular tools, APIs, and services including GitHub, Stripe,
-    Snowflake, and custom internal systems.
-  </Card>
-
-<Card title="Role-Based Access" icon="shield-check">
-  Agents only access tools relevant to their specific role and responsibilities.
-</Card>
-
-<Card title="Secure Authentication" icon="lock">
-  Industry-standard security protocols protect your credentials and data.
-</Card>
-
-  <Card title="Model Context Protocol" icon="code">
-    Tools are structured, typed, and traceable for sophisticated agent
-    reasoning.
-  </Card>
-</CardGroup>
-
-## How connections work
-
-### Domain-specific tool assignment
-
-Rather than providing agents with access to all available tools, Hypermode
-Agents uses a curated approach based on the agent's role and domain. Examples of
-connections relevant for domain specific agents include:
-
-#### Frontend development agent
-
-- GitHub (code repository management)
-- Linear (issue tracking)
-- Vercel (deployment and hosting)
-
-#### Revenue operations agent
-
-- Snowflake (data warehousing)
-- Stripe (payment processing)
-- Internal ticketing API (customer support)
-
-#### Marketing agent
-
-- HubSpot (CRM and automation)
-- Google Analytics (website analytics)
-- Mailchimp (email marketing)
-
-### Role-based access control
-
-<Info>
-  Agents are granted access only to tools that align with their designated role,
-  improving both security and decision-making clarity.
-</Info>
-
-1. **Define agent role** and primary responsibilities
-2. **Select relevant tools** from the curated toolkit
-3. **Configure permissions** for each integration
-4. **Monitor usage** and adjust access as needed
-
-## MCP
-
-Connections leverage the Model Context Protocol (MCP) to provide agents with
-enhanced tool interaction capabilities:
-
-### Benefits of MCP Integration
-
-<CardGroup cols={1}>
-  <Card title="Enhanced Reasoning" icon="brain">
-    Agents understand tool capabilities and parameters as clearly as they
-    understand text, enabling better planning and execution.
-  </Card>
-
-<Card title="Sophisticated Planning" icon="route">
-  Multi-step workflows can be planned and executed with tools working together
-  seamlessly.
-</Card>
-
-<Card title="Improved Debugging" icon="bug">
-  Structured tool calls provide clear audit trails and error diagnosis
-  capabilities.
-</Card>
-
-  <Card title="Tool Reusability" icon="recycle">
-    Consistent tool definitions enable agents to reuse and combine tools
-    effectively.
-  </Card>
-</CardGroup>
-
-## Security and compliance
-
-<Warning>
-  All connections use secure authentication methods including OAuth 2.0, API
-  keys, and service account credentials. Credentials are encrypted and never
-  exposed to the agent's reasoning process.
-</Warning>
-
-### Security features
-
-- **Encrypted credential storage** with enterprise-grade security
-- **Audit logging** for all tool interactions
-- **Permission scoping** to limit access to necessary resources only
-- **Regular security updates** and compliance monitoring
+- **2,000+ integrations** to connect to popular tools across development, analytics, productivity, marketing, finance, and more.
+- **Role-based access control** limits agent access to only the necessary tools and permissions
+- **Audit logging** tracks all agent interactions with external services for compliance and troubleshooting
+- **Powered by Model Context Protocol** for secure, structured, and context-aware tool interactions
+- **Custom API support** with encrypted credentials and scoped access
 
 ## Getting started
 
-### Add a new connection
+### Add a connection
 
-Select a connection from the "add connections"ption from the left navigation bar
-or search from more than 2000 connection options. You'll be prompted to complete
-the OAuth flow if you haven't enabled the connection yet for your workspace.
+Open the information details of your agent. Select a connection from the "add connections" from the left navigation bar
+or search from more than 2,000 connection options. 
 
 <img
   src="/images/agents/connections-sidebar.png"
   alt="Add a new connection"
   style={{ width: "100%", maxWidth: "400px" }}
 />
+
+### Authenticate
+
+You'll be prompted to complete the OAuth flow if you haven't enabled the connection yet for your workspace.
+
+Once authenticated, save the changes made to the agent.
+
+<Note>All connections use secure authentication methods including OAuth 2.0, API keys, and service account credentials. Credentials are encrypted and never exposed to the agent’s reasoning process.</Note>
 
 ### Manage connections
 
@@ -150,23 +46,41 @@ this page.
 
 ![Manage connections](/images/agents/connections-manage.png)
 
+### Edit or remove connections
+
+Update credentials, change permissions, or remove connections at any time form the "Connections" tab in your agent information card or in the Workspace settings page.
+
 <Tip>
   Start with a small set of essential tools for your agent's role, then expand
   as you identify additional needs through usage patterns.
 </Tip>
 
-## Available Integrations
+## FAQs
 
-Popular integration categories include:
+**Why am I seeing a “token not found” or “failed to get connection token” error?**
 
-- **Development Tools**: GitHub, GitLab, Jira, Linear
-- **Data & Analytics**: Snowflake, BigQuery, Tableau, Looker
-- **Customer Success**: Salesforce, HubSpot, Zendesk, Intercom
-- **Finance**: Stripe, QuickBooks, Xero, PayPal
-- **Marketing**: Mailchimp, Constant Contact, Google Ads, Facebook Ads
-- **Productivity**: Slack, Microsoft Teams, Google Workspace, Notion
+This error usually means the connection’s credentials are missing, expired, or were not saved correctly. Please re-authenticate the connection in Workspace Settings > Connections. If the issue persists, ensure you have completed the OAuth flow and granted all required permissions.
 
-<Info>
-  Custom integrations can be built for internal APIs and proprietary systems.
-  Contact us for assistance with custom connection development.
-</Info>
+**Q: My agent can’t access my repositories, calendar, or Notion page even though I connected the service. What should I do?**
+
+Double-check that you completed the OAuth authorization and selected the correct account or workspace. Some services require you to explicitly grant access to specific resources (e.g., repositories, calendars, pages). You can update these permissions in your service’s settings or by reconnecting the integration.
+
+**Q: Is there a way to add or manage connections directly from the agent setup flow?**
+
+Yes. You can add new connections during agent creation. Look for the “Add Connection” tab in your agend card once the agent is created.
+
+**Q: Can one connection power multiple agents?**
+
+Yes. Connections are created at the Workspace level and can be assigned to multiple agents. You can grant access to the same connection for any agents that need it.
+
+**Q: Can I connect to a service not listed in the catalog?**
+
+Custom integrations can be built for internal APIs and proprietary systems. Contact us for assistance with custom connection development.
+
+**Q: How do I restrict agent access to sensitive data?**
+
+Hypermode uses OAuth to connect to external services, allowing you to grant only the minimum required permissions (scopes) for each agent. Use role-based access control and permission scoping when assigning connections to agents to ensure they only access the data and actions necessary for their tasks.
+
+**Q: How do I know which permissions or scopes are being requested during OAuth?**
+
+During the OAuth flow, you’ll see a list of permissions requested by Hypermode. Only the minimum required scopes are requested for the tools you assign to your agent. You can review and adjust these permissions in your service’s settings.

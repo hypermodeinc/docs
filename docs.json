@@ -65,7 +65,7 @@
                 "group": "Connect Your Agent",
                 "pages": [
                   "agents/connections",
-                  "agents/available-connections",
+                  "agents/available-connections"
                 ]
               },
               "agents/tasks",
