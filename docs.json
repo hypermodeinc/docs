@@ -69,6 +69,7 @@
                 ]
               },
               "agents/tasks",
+              "agents/model-selection",
               {
                 "group": "Example Agents",
                 "pages": [
