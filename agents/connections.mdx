@@ -9,7 +9,7 @@ description:
 
 ## Overview
 
-A Connection is a secure link between your agent and an external service (e.g., GitHub, Slack, Stripe, or your internal APIs). Connections allow agents to perform actions, retrieve data, and automate flows using these services.
+A Connection is a secure link between your agent and an external service (for example GitHub, Slack, Stripe, or your internal APIs). Connections allow agents to perform actions, retrieve data, and automate flows using these services.
 
 - **2,000+ integrations** to connect to popular tools across development, analytics, productivity, marketing, finance, and more.
 - **Role-based access control** limits agent access to only the necessary tools and permissions
@@ -21,8 +21,7 @@ A Connection is a secure link between your agent and an external service (e.g., 
 
 ### Add a connection
 
-Open the information details of your agent. Select a connection from the "add connections" from the left navigation bar
-or search from more than 2,000 connection options. 
+Open the information details of your agent. Select a connection from the "add connections" from the left navigation bar or search from more than 2,000 connection options. 
 
 <img
   src="/images/agents/connections-sidebar.png"
@@ -59,28 +58,28 @@ Update credentials, change permissions, or remove connections at any time form t
 
 **Why am I seeing a “token not found” or “failed to get connection token” error?**
 
-This error usually means the connection’s credentials are missing, expired, or were not saved correctly. Please re-authenticate the connection in Workspace Settings > Connections. If the issue persists, ensure you have completed the OAuth flow and granted all required permissions.
+This error usually means the connection’s credentials are missing, expired, or weren't saved correctly. Please re-authenticate the connection in Workspace Settings > Connections. If the issue persists, ensure you have completed the OAuth flow and granted all required permissions.
 
-**Q: My agent can’t access my repositories, calendar, or Notion page even though I connected the service. What should I do?**
+**My agent can’t access my repositories, calendar, or Notion page even though I connected the service. What should I do?**
 
-Double-check that you completed the OAuth authorization and selected the correct account or workspace. Some services require you to explicitly grant access to specific resources (e.g., repositories, calendars, pages). You can update these permissions in your service’s settings or by reconnecting the integration.
+Double-check that you completed the OAuth authorization and selected the correct account or workspace. Some services require you to explicitly grant access to specific resources (for example repositories, calendars, pages). You can update these permissions in your service’s settings or by reconnecting the integration.
 
-**Q: Is there a way to add or manage connections directly from the agent setup flow?**
+**Is there a way to add or manage connections directly from the agent setup flow?**
 
-Yes. You can add new connections during agent creation. Look for the “Add Connection” tab in your agend card once the agent is created.
+Yes. You can add new connections during agent creation. Look for the “Add Connection” tab in your agent card once the agent is created.
 
-**Q: Can one connection power multiple agents?**
+**Can one connection power multiple agents?**
 
 Yes. Connections are created at the Workspace level and can be assigned to multiple agents. You can grant access to the same connection for any agents that need it.
 
-**Q: Can I connect to a service not listed in the catalog?**
+**Can I connect to a service not listed in the catalog?**
 
 Custom integrations can be built for internal APIs and proprietary systems. Contact us for assistance with custom connection development.
 
-**Q: How do I restrict agent access to sensitive data?**
+**How do I restrict agent access to sensitive data?**
 
 Hypermode uses OAuth to connect to external services, allowing you to grant only the minimum required permissions (scopes) for each agent. Use role-based access control and permission scoping when assigning connections to agents to ensure they only access the data and actions necessary for their tasks.
 
-**Q: How do I know which permissions or scopes are being requested during OAuth?**
+**How do I know which permissions or scopes are being requested during OAuth?**
 
 During the OAuth flow, you’ll see a list of permissions requested by Hypermode. Only the minimum required scopes are requested for the tools you assign to your agent. You can review and adjust these permissions in your service’s settings.
