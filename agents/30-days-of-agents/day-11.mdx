@@ -1,0 +1,295 @@
+---
+title: "Day 11: Multi-Agent Collaboration - When Agents Work Together"
+sidebarTitle: "Day 11: Multi-Agent Collaboration"
+description:
+  "Learn to orchestrate multiple agents working together on complex projects.
+  Understand delegation patterns, handoffs, and collaborative workflows that
+  combine different agent specializations."
+---
+
+<Card title="Day 11 challenge" icon="users">
+  **Goal**: orchestrate multiple agents to collaborate on a complex workflow
+
+**Theme**: advanced orchestration week - multi-agent coordination
+
+**Time investment**: ~25 minutes
+
+</Card>
+
+Welcome to Day 11 and Week 3! You've mastered individual agent creation and
+optimization. Now you'll learn to orchestrate **multiple agents working
+together**—combining different specializations to tackle complex projects that
+no single agent could handle alone.
+
+This is where agent systems become truly powerful: specialized agents
+collaborating like a high-performing team.
+
+## What you'll accomplish today
+
+- Understand multi-agent collaboration patterns and when to use them
+- Design a multi-agent workflow with clear delegation and handoffs
+- Implement agent-to-agent communication and coordination
+- Experience how specialized agents combine their strengths
+- Learn to manage complex workflows with multiple moving parts
+
+<Warning>
+  This builds on your agent creation skills from Week 2. You'll need at least 2
+  custom agents to complete today's collaboration exercises.
+</Warning>
+
+## Step 1: Understanding multi-agent patterns
+
+Before building collaborative workflows, understand the key patterns for agent
+coordination:
+
+### Sequential collaboration (pipeline)
+
+Agent A completes work → passes results to Agent B → Agent B continues the work
+
+**Example workflow**: Research Agent gathers market data → Analysis Agent
+processes insights → Report Agent creates executive summary
+
+### Parallel collaboration (divide and conquer)
+
+Multiple agents work on different aspects of the same project simultaneously
+
+**Example workflow**: Content Agent drafts social posts + Design Agent creates
+visuals + Schedule Agent plans distribution timing
+
+### Hierarchical collaboration (manager-worker)
+
+One agent coordinates and delegates while specialized agents execute specific
+tasks
+
+**Example workflow**: Project Manager Agent assigns tasks → Technical Agent
+handles code reviews + Marketing Agent manages campaigns
+
+### Peer collaboration (consensus building)
+
+Agents contribute different perspectives to reach better decisions
+
+**Example workflow**: Multiple research agents analyze different data sources →
+consolidate findings into comprehensive recommendations
+
+<Tip>
+  **Choose the right pattern**: Sequential for dependent workflows, parallel for
+  independent tasks, hierarchical for complex coordination, peer for
+  decision-making.
+</Tip>
+
+## Step 2: Design your first multi-agent workflow
+
+Let's create a practical multi-agent workflow. Choose a scenario that requires
+multiple specializations:
+
+### Scenario example: Product launch coordination
+
+**Agents needed**:
+
+- Market Research Agent (analyzes competitive landscape)
+- Content Creation Agent (develops messaging and materials)
+- Campaign Management Agent (coordinates timeline and execution)
+
+**Start by defining the workflow with one of your existing agents**:
+
+```text
+I want to design a multi-agent workflow for [your chosen scenario].
+I have these agents available: [list your agents and their capabilities].
+
+Can you help me design a collaboration pattern where these agents work together?
+Map out the handoffs, dependencies, and coordination points.
+```
+
+Watch how your agent:
+
+- Analyzes the strengths of each available agent
+- Identifies optimal collaboration patterns
+- Maps dependencies and handoff points
+- Suggests coordination mechanisms
+- Recommends workflow improvements
+
+### Example workflow design:
+
+**Phase 1**: Market Research Agent conducts competitive analysis **Handoff 1**:
+Research findings passed to Content Creation Agent **Phase 2**: Content Agent
+develops messaging based on research insights **Handoff 2**: Content passed to
+Campaign Management Agent **Phase 3**: Campaign Agent coordinates launch
+execution using research and content
+
+## Step 3: Implement agent coordination
+
+Now let's put multi-agent collaboration into practice:
+
+**Start with your primary coordinating agent**:
+
+```text
+I'm implementing a multi-agent workflow for [your scenario].
+You'll be coordinating with [other agent names] to complete this project.
+
+Here's the workflow we designed: [paste your workflow from Step 2]
+
+Let's start with Phase 1. Can you begin the initial work and prepare the handoff to [next agent]?
+```
+
+**Key coordination elements to implement**:
+
+- **Clear handoff formats**: Standardize how information passes between agents
+- **Status tracking**: Each agent reports progress and completion
+- **Quality checkpoints**: Agents verify work before handoffs
+- **Feedback loops**: Later agents can request clarification from earlier agents
+
+### Managing the handoff process:
+
+When Agent A completes their work:
+
+1. **Document outputs clearly** for the next agent
+2. **Summarize key findings** and recommendations
+3. **Flag any dependencies** or requirements for next steps
+4. **Provide context** about decisions made during the work
+
+When Agent B receives the handoff:
+
+1. **Confirm understanding** of the inputs and context
+2. **Ask clarifying questions** if anything is unclear
+3. **Validate assumptions** from the previous agent's work
+4. **Proceed with clear acknowledgment** of responsibilities
+
+<Tip>
+  **Document everything**: Multi-agent workflows require clear documentation at
+  each step. Encourage agents to summarize their work and reasoning for the next
+  agent in the chain.
+</Tip>
+
+## Step 4: Advanced coordination techniques
+
+As your workflow progresses, implement these advanced coordination patterns:
+
+### Parallel coordination
+
+```text
+I need [Agent A] and [Agent B] to work on different aspects of this project simultaneously.
+
+Agent A: Focus on [specific aspect]
+Agent B: Focus on [different aspect]
+
+Coordinate your timelines and check in when you've both completed your initial work.
+```
+
+### Quality assurance handoffs
+
+```text
+Before we move to the next phase, I want [Quality Agent] to review the work from [Previous Agent].
+
+Check for: [specific quality criteria]
+Approve or request revisions before we proceed.
+```
+
+### Consensus building
+
+```text
+I have different perspectives from [Agent A] and [Agent B] on [decision point].
+
+Can you both discuss your reasoning and work toward a consensus recommendation?
+[Agent C], please facilitate this discussion and help reach a decision.
+```
+
+## Step 5: Monitor and optimize workflows
+
+Multi-agent coordination requires active management:
+
+**Track progress across agents**:
+
+```text
+Can each agent provide a status update on their current work?
+- What's completed?
+- What's in progress?
+- Any blockers or dependencies?
+- Estimated completion time?
+```
+
+**Identify optimization opportunities**:
+
+```text
+Based on how this workflow has progressed, what could we optimize?
+- Are there unnecessary handoffs?
+- Could any work be done in parallel instead of sequential?
+- Are agents waiting too long for inputs?
+- How can we improve the coordination process?
+```
+
+**Document successful patterns**:
+
+```text
+This multi-agent workflow worked well. Can you help me document:
+- The successful coordination patterns we used
+- Key handoff formats that worked effectively
+- Quality checkpoints that prevented issues
+- Lessons learned for future multi-agent projects
+```
+
+## What you've accomplished
+
+In 25 minutes, you've mastered multi-agent orchestration:
+
+**Pattern recognition**: Learned to identify the right collaboration pattern for
+different scenarios
+
+**Workflow design**: Created structured multi-agent workflows with clear
+dependencies and handoffs
+
+**Coordination implementation**: Successfully orchestrated multiple agents
+working together on complex projects
+
+**Quality management**: Implemented checkpoints and feedback loops to ensure
+work quality across agent handoffs
+
+**Optimization skills**: Learned to monitor and improve multi-agent workflows
+based on performance
+
+## The power of agent collaboration
+
+Multi-agent workflows unlock capabilities that no single agent can achieve:
+
+**Specialized expertise**: Each agent brings deep knowledge in their domain
+**Parallel processing**: Multiple aspects of complex projects handled
+simultaneously  
+**Quality assurance**: Agents can review and improve each other's work
+**Scalability**: Add specialized agents as project complexity grows **Fault
+tolerance**: If one agent struggles, others can compensate or provide
+alternatives
+
+<Card
+  title="Tomorrow - Day 12"
+  icon="arrow-right"
+  href="/agents/30-days-of-agents/day-12"
+>
+  Advanced workflow automation with triggers, schedules, and event-driven agent
+  collaboration. Learn to build systems that operate with minimal human
+  intervention.
+</Card>
+
+## Pro tip for today
+
+After completing your multi-agent workflow, ask your coordinating agent:
+
+```text
+What made this multi-agent collaboration successful? How could we standardize these patterns for future complex projects?
+```
+
+This helps you develop reusable coordination templates that make future
+multi-agent projects more efficient.
+
+---
+
+**Time to complete**: ~25 minutes
+
+**Skills learned**: Multi-agent pattern recognition, workflow design, agent
+coordination, handoff management, quality assurance, optimization
+
+**Next**: Day 12 - Advanced workflow automation and event-driven collaboration
+
+<Tip>
+  **Remember**: Multi-agent systems are more powerful but also more complex.
+  Start with simple collaborations and gradually build up to sophisticated
+  orchestration patterns.
+</Tip>

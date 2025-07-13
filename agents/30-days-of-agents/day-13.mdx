@@ -1,0 +1,243 @@
+---
+title: "Day 13: Data & Analytics - Connecting to Databases"
+sidebarTitle: "Day 13: Database Connections"
+description:
+  "Learn how to connect your agents to databases through Hypermode, enabling
+  data-driven insights and automated analysis."
+---
+
+<Card title="Day 13 challenge" icon="database">
+  **Goal**: connect your agent to a database and enable data-driven insights
+
+**Theme**: domain specialization week - database intelligence
+
+**Time investment**: ~20 minutes
+
+</Card>
+
+Welcome to Day 13! Today you'll learn how to connect your agents to databases
+through Hypermode's connection system. We'll use Neo4j as an example, but the
+same approach works for any database—SQL, NoSQL, or specialized data stores.
+
+Your agents can query data, analyze patterns, and provide insights without you
+needing to write complex queries yourself.
+
+## What you'll accomplish today
+
+- Understand how database connections work in Hypermode
+- Connect an agent to a database (Neo4j example)
+- See how agents translate questions into queries
+- Get insights from your data through natural language
+- Learn the pattern for building data-driven agents
+
+<Warning>
+  This builds on your Week 2 agent creation skills. For today's example, you can
+  use any available database connection or follow along conceptually.
+</Warning>
+
+## Step 1: How database connections work
+
+Hypermode agents can connect to virtually any database:
+
+### Supported databases include
+
+- **SQL databases**: PostgreSQL, MySQL, SQL Server
+- **NoSQL stores**: MongoDB, DynamoDB
+- **Graph databases**: Neo4j, Amazon Neptune
+- **Data warehouses**: Snowflake, BigQuery
+- **Time-series**: InfluxDB, TimescaleDB
+
+### Connection process
+
+1. **Add connection** from Hypermode's connection library
+2. **Authenticate securely** with credentials stored encrypted
+3. **Assign to your agent** through the connections panel
+4. **Start asking questions** in natural language
+
+<Tip>
+  **No query language needed**: Your agent translates your business questions
+  into the appropriate database queries automatically.
+</Tip>
+
+## Step 2: Create a data analysis agent
+
+Let's build an agent that can analyze customer data:
+
+**Start with Concierge:**
+
+```text
+I want to create a data analysis agent that connects to our customer database to answer business questions and provide insights.
+
+The agent should understand our business context and help me analyze customer patterns, identify opportunities, and track important metrics.
+```
+
+### Simple agent setup
+
+Your agent needs:
+
+- **Database connection** (Neo4j in this example)
+- **Business context** about what the data represents
+- **Clear instructions** to provide insights, not just raw data
+
+## Step 3: Connect and query naturally
+
+Once connected, you can ask business questions directly:
+
+### Example 1: Customer insights
+
+```text
+You: Who are our most valuable customers?
+
+Agent: I'll analyze the customer data to identify your most valuable customers.
+
+Based on the database analysis, here are your top customers:
+
+**Top 5 Most Valuable Customers:**
+1. **TechCorp Solutions** - $487K annual revenue, 47 referrals
+2. **FinanceFlow Inc** - $398K annual revenue, active for 3 years
+3. **GlobalTech Ventures** - $342K annual revenue, expanding rapidly
+4. **DataDynamics LLC** - $289K annual revenue, 23 team members
+5. **CloudFirst Systems** - $234K annual revenue, high engagement
+
+**Key Insight**: Your top 5 customers represent 23% of total revenue and have referred 134 other customers. Focus retention efforts here.
+```
+
+### Example 2: Pattern detection
+
+```text
+You: Are there any concerning trends I should know about?
+
+Agent: I've identified some patterns that need attention:
+
+**⚠️ Concerning Trends:**
+
+1. **Reduced Activity in Enterprise Segment**
+   - 34% of enterprise customers haven't logged in this month
+   - This segment typically drives 45% of revenue
+
+2. **Referral Rate Declining**
+   - New customer referrals down 23% from last quarter
+   - Top referrers showing less activity
+
+**Recommendations:**
+- Reach out to dormant enterprise accounts this week
+- Re-engage your top 10 referrers with incentives
+- Consider a customer health check campaign
+
+Would you like me to identify specific customers for outreach?
+```
+
+### Example 3: Opportunity discovery
+
+```text
+You: What growth opportunities do you see in our data?
+
+Agent: I've found several growth opportunities in your customer data:
+
+**🎯 Growth Opportunities:**
+
+1. **Upsell Potential**
+   - 67 customers hitting usage limits
+   - Estimated revenue opportunity: $34K/month
+
+2. **Untapped Networks**
+   - 23 highly satisfied customers with no referrals yet
+   - Each typically could bring 3-5 new customers
+
+3. **Re-engagement Wins**
+   - 45 previously active accounts went dormant
+   - Historical win-back rate: 35% with targeted outreach
+
+**Quick Win**: Send upgrade offers to the 67 customers hitting limits. Based on past campaigns, expect 40% conversion.
+```
+
+## Step 4: Building data-driven workflows
+
+Your database-connected agent can automate regular analysis:
+
+### Weekly business intelligence
+
+```text
+You: Can you give me our weekly business metrics summary?
+
+Agent: Here's your weekly business intelligence summary:
+
+**Week of March 10-16, 2024**
+
+📈 **Growth Metrics:**
+- New customers: 34 (+12% vs last week)
+- Revenue: $487K (+8% vs last week)
+- Active users: 1,247 (+5%)
+
+📊 **Customer Health:**
+- Engagement score: 78/100 (stable)
+- Support tickets: 23 (-15% - good!)
+- Feature adoption: 67% (+3%)
+
+🎯 **Action Items:**
+- 12 trial accounts ready for conversion outreach
+- 5 customers need check-ins (low activity alerts)
+- 3 upsell opportunities identified
+
+Would you like details on any of these metrics?
+```
+
+## What you've accomplished
+
+In 20 minutes, you've learned how to:
+
+**Connect databases**: Enable agents to access your business data securely
+
+**Natural language queries**: Ask questions without writing complex database
+queries
+
+**Get insights, not just data**: Agents interpret results and provide
+recommendations
+
+**Automate analysis**: Set up regular reporting and monitoring through your
+agent
+
+**Scale expertise**: Give everyone on your team data analyst capabilities
+
+## The power of database-connected agents
+
+With database connections, your agents can:
+
+- **Democratize data access** - Anyone can get insights without SQL knowledge
+- **Proactive monitoring** - Agents watch for important changes and alert you
+- **Cross-system analysis** - Connect multiple databases for complete pictures
+- **Automated reporting** - Regular insights without manual work
+
+<Card
+  title="Tomorrow - Day 14"
+  icon="arrow-right"
+  href="/agents/30-days-of-agents/day-14"
+>
+  Customer Relationship Management with Attio. Build agents that transform CRM
+  from data entry to intelligent revenue operations.
+</Card>
+
+## Pro tip for today
+
+Start simple with your database agent:
+
+```text
+What are the three most important questions about our business that data could answer?
+Let's make sure you can help me monitor these regularly.
+```
+
+This helps your agent focus on what matters most to your business.
+
+---
+
+**Time to complete**: ~20 minutes
+
+**Skills learned**: Database connections, natural language querying, insight
+generation, automated analysis
+
+**Next**: Day 14 - Customer Relationship Management with Attio CRM
+
+<Tip>
+  **Remember**: You don't need to be a database expert. Your agent handles the
+  technical complexity while you focus on getting business insights.
+</Tip>
