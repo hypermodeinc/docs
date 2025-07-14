@@ -39,34 +39,72 @@ Every agent starts with the essential framework:
 package main
 
 import (
-    "fmt"
-    "strings"
-    "time"
-    "github.com/hypermodeinc/modus/sdk/go/pkg/agents"
-    "github.com/hypermodeinc/modus/sdk/go/pkg/models"
-    "github.com/hypermodeinc/modus/sdk/go/pkg/models/openai"
+  "encoding/json"
+  "errors"
+  "fmt"
+  "math"
+  "strings"
+  "time"
+
+  "github.com/hypermodeinc/modus/sdk/go/pkg/agents"
+  "github.com/hypermodeinc/modus/sdk/go/pkg/models"
+  "github.com/hypermodeinc/modus/sdk/go/pkg/models/openai"
 )
 
 type IntelligenceAgent struct {
-    agents.AgentBase
-
-    // The rest of the fields make up the agent's state and can be customized per agent
-    intelligenceReports []string     // Matrix surveillance data
-    threatLevel         float64      // Current threat assessment
-    lastContact         time.Time
-    currentMission      *MissionPhase // Track long-running operations
-    missionLog          []string     // Operational progress log
+  agents.AgentBase
+  intelligenceReports []string
+  threatLevel         float64
+  lastContact         time.Time
+  currentMission      *MissionPhase
+  missionLog          []string
 }
 
 type MissionPhase struct {
-    Name        string
-    StartTime   time.Time
-    Duration    time.Duration
-    Complete    bool
+  Name      string
+  StartTime time.Time
+  Duration  time.Duration
+  Complete  bool
 }
 
-func (a *IntelligenceAgent) Name() string {
-    return "IntelligenceAgent"
+type MissionStatus struct {
+  Phase                  string  `json:"phase"`
+  Progress               float64 `json:"progress"`
+  CurrentTask            string  `json:"current_task"`
+  EstimatedTimeRemaining int     `json:"estimated_time_remaining"`
+  IsComplete             bool    `json:"is_complete"`
+}
+
+type ThreatDetected struct {
+  ThreatLevel string  `json:"threatLevel"`
+  Confidence  float64 `json:"confidence"`
+  Analysis    string  `json:"analysis"`
+}
+
+type MissionStarted struct {
+  MissionName  string `json:"missionName"`
+  Priority     string `json:"priority"`
+  ActivityData int    `json:"activityData"`
+}
+
+type SurveillanceProgress struct {
+  Phase            string  `json:"phase"`
+  Progress         float64 `json:"progress"`
+  ReportsProcessed int     `json:"reportsProcessed"`
+  TotalReports     int     `json:"totalReports"`
+}
+
+type AIAnalysisStarted struct {
+  ModelName   string `json:"modelName"`
+  ContextSize int    `json:"contextSize"`
+  ReportCount int    `json:"reportCount"`
+}
+
+type MissionCompleted struct {
+  MissionName     string  `json:"missionName"`
+  Confidence      float64 `json:"confidence"`
+  ReportsAnalyzed int     `json:"reportsAnalyzed"`
+  Status          string  `json:"status"`
 }
 ```
 
@@ -81,20 +119,16 @@ Agents are created and managed through regular Modus functions that become part
 of your GraphQL API. These functions handle agent lifecycle operations:
 
 ```go
-// Register your agent type during initialization
 func init() {
-    agents.Register(&IntelligenceAgent{})
+  agents.Register(&IntelligenceAgent{})
 }
 
-// Create a new agent instance - this becomes a GraphQL mutation
 func DeployAgent() (string, error) {
-    agentInfo, err := agents.Start("IntelligenceAgent")
-    if err != nil {
-        return "", err
-    }
-
-    // Return the agent ID - clients must store this to communicate with the agent
-    return agentInfo.Id, nil
+  info, err := agents.Start("IntelligenceAgent")
+  if err != nil {
+    return "", err
+  }
+  return info.Id, nil
 }
 ```
 
@@ -111,7 +145,7 @@ Response:
 ```json
 {
   "data": {
-    "deployAgent": "agent_neo_001"
+    "deployAgent": "d1qn141d6u7qu64mesjg"
   }
 }
 ```
@@ -135,30 +169,27 @@ Once created, you communicate with agents using their unique ID. Create
 functions that send messages to specific agent instances:
 
 ```go
-func ImportActivity(agentId string, activityData string) (string, error) {
-    result, err := agents.SendMessage(
-        agentId,
-        "matrix_surveillance",
-        agents.WithData(activityData),
-    )
-    if err != nil {
-        return "", err
-    }
-    if result == nil {
-        return "", fmt.Errorf("no response from agent")
-    }
-    return *result, nil
+
+func ImportActivity(agentId, activityData string) (string, error) {
+  res, err := agents.SendMessage(agentId, "matrix_surveillance", agents.WithData(activityData))
+  if err != nil {
+    return "", err
+  }
+  if res == nil {
+    return "", errors.New("no response from agent")
+  }
+  return *res, nil
 }
 
 func GetThreatStatus(agentId string) (string, error) {
-    result, err := agents.SendMessage(agentId, "threat_assessment")
-    if err != nil {
-        return "", err
-    }
-    if result == nil {
-        return "", fmt.Errorf("no response from agent")
-    }
-    return *result, nil
+  res, err := agents.SendMessage(agentId, "threat_assessment")
+  if err != nil {
+    return "", err
+  }
+  if res == nil {
+    return "", errors.New("no response from agent")
+  }
+  return *res, nil
 }
 ```
 
@@ -168,7 +199,7 @@ ID:
 ```graphql
 mutation {
   importActivity(
-    agentId: "agent_neo_001"
+    agentId: "d1qn141d6u7qu64mesjg"
     activityData: "Anomalous Agent Smith replication detected in Sector 7"
   )
 }
@@ -189,7 +220,7 @@ Response:
 
 ```graphql
 query {
-  getThreatStatus(agentId: "agent_neo_001")
+  threatStatus(agentId: "d1qn141d6u7qu64mesjg")
 }
 ```
 
@@ -198,7 +229,7 @@ Response:
 ```json
 {
   "data": {
-    "getThreatStatus": "Current threat assessment:
+    "threatStatus": "Current threat assessment:
       3 intelligence reports analyzed.
       Threat level: 0.89.
       Agent operational in the Matrix."
@@ -215,24 +246,19 @@ maintaining persistent memory of every interaction.
 Agents process requests through their message handling system:
 
 ```go
-func (a *IntelligenceAgent) OnReceiveMessage(
-    msgName string,
-    data string,
-) (*string, error) {
-    switch msgName {
-    case "matrix_surveillance":
-        return a.analyzeMatrixActivity(data)
-    case "background_reconnaissance":
-        return a.performBackgroundRecon(data)
-    case "threat_assessment":
-        return a.getThreatAssessment()
-    case "get_status":
-        return a.getOperationalStatus()
-    case "intelligence_history":
-        return a.getIntelligenceHistory()
-    default:
-        return nil, fmt.Errorf("unrecognized directive: %s", msgName)
-    }
+func (a *IntelligenceAgent) OnReceiveMessage(msgName string, data *string) (*string, error) {
+  switch msgName {
+  case "matrix_surveillance":
+    return a.analyzeMatrixActivity(data)
+  case "background_reconnaissance":
+    return a.performBackgroundRecon(data)
+  case "threat_assessment":
+    return a.getThreatAssessment()
+  case "get_status":
+    return a.getOperationalStatus()
+  default:
+    return nil, fmt.Errorf("unrecognized directive: %s", msgName)
+  }
 }
 ```
 
@@ -245,64 +271,36 @@ Here's how agents handle operations while maintaining persistent state and using
 AI models for analysis:
 
 ```go
-func (a *IntelligenceAgent) analyzeMatrixActivity(data string) (*string, error) {
-    // Store new intelligence in persistent memory
-    a.intelligenceReports = append(a.intelligenceReports, *data)
-    a.lastContact = time.Now()
+func (a *IntelligenceAgent) analyzeActivity(data *string) (*string, error) {
+  a.IntelReports = append(a.IntelReports, *data)
+  a.LastContact = time.Now()
 
-    // Build context from all accumulated intelligence
-    accumulatedReports := strings.Join(a.intelligenceReports, "\n")
+  model, err := models.GetModel[openai.ChatModel]("text-generator")
+  if err != nil {
+    return nil, err
+  }
 
-    // AI analysis using complete operational history
-    model, err := models.GetModel[openai.ChatModel]("analyst-model")
-    if err != nil {
-        return nil, err
-    }
+  input, err := model.CreateInput(
+    openai.NewSystemMessage("You are a resistance operative in the Matrix. Analyze patterns from accumulated surveillance reports and provide threat assessment. Respond in no more than 3 concise sentences."),
+    openai.NewUserMessage(fmt.Sprintf("All Matrix Intelligence:\n%s\n\nProvide threat assessment:", strings.Join(a.IntelReports, "\n"))),
+  )
+  if err != nil {
+    return nil, err
+  }
 
-    systemPrompt := `You are a resistance operative in the Matrix.
-        Analyze patterns from accumulated surveillance reports
-        and provide threat assessment for anomalous Agent behavior.`
+  output, err := model.Invoke(input)
+  if err != nil {
+    return nil, err
+  }
+  analysis := output.Choices[0].Message.Content
 
-    userPrompt := fmt.Sprintf(`All Matrix Intelligence:
-        %s
+  a.ThreatLevel = math.Min(1.0, float64(len(a.IntelReports))/10.0)
+  if s := strings.ToLower(analysis); strings.Contains(s, "critical") || strings.Contains(s, "agent smith") {
+    a.ThreatLevel = math.Min(a.ThreatLevel+0.2, 1.0)
+  }
 
-        Provide threat assessment:`,
-        accumulatedReports)
-
-    input, err := model.CreateInput(
-        openai.NewSystemMessage(systemPrompt),
-        openai.NewUserMessage(userPrompt),
-    )
-    if err != nil {
-        return nil, err
-    }
-
-    output, err := model.Invoke(input)
-    if err != nil {
-        return nil, err
-    }
-    analysis := output.Choices[0].Message.Content
-
-    // Update threat level based on data volume and AI analysis
-    a.threatLevel = float64(len(a.intelligenceReports)) / 10.0
-    if a.threatLevel > 1.0 {
-        a.threatLevel = 1.0
-    }
-
-    // Boost threat level for critical AI analysis
-    if strings.Contains(strings.ToLower(analysis), "critical") ||
-       strings.Contains(strings.ToLower(analysis), "agent smith") {
-        a.threatLevel = math.Min(a.threatLevel + 0.2, 1.0)
-    }
-
-    result := fmt.Sprintf(`Matrix surveillance complete:
-        %s
-
-        (Threat level: %.2f based on %d intelligence reports)`,
-        analysis,
-        a.threatLevel,
-        len(a.intelligenceReports))
-    return &result, nil
+  result := fmt.Sprintf("Matrix surveillance complete:\n%s\n\n(Threat level: %.2f based on %d intelligence reports)", analysis, a.ThreatLevel, len(a.IntelReports))
+  return &result, nil
 }
 ```
 
@@ -335,28 +333,34 @@ system:
 
 ```go
 func (a *IntelligenceAgent) GetState() *string {
-    reportsData := strings.Join(a.intelligenceReports, "|")
-    state := fmt.Sprintf("%.2f|%s|%d",
-        a.threatLevel,
-        reportsData,
-        a.lastContact.Unix())
-    return &state
+  state := AgentState{
+    ThreatLevel:         a.threatLevel,
+    IntelligenceReports: a.intelligenceReports,
+    LastContactUnix:     a.lastContact.Unix(),
+    CurrentMission:      a.currentMission,
+    MissionLog:          a.missionLog,
+  }
+  bytes, err := json.Marshal(state)
+  if err != nil {
+    return nil
+  }
+  result := string(bytes)
+  return &result
 }
 
-func (a *IntelligenceAgent) SetState(data string) {
-    if data == nil {
-        return
-    }
-
-    parts := strings.Split(*data, "|")
-    if len(parts) >= 3 {
-        a.threatLevel, _ = strconv.ParseFloat(parts[0], 64)
-        if parts[1] != "" {
-            a.intelligenceReports = strings.Split(parts[1], "|")
-        }
-        timestamp, _ := strconv.ParseInt(parts[2], 10, 64)
-        a.lastContact = time.Unix(timestamp, 0)
-    }
+func (a *IntelligenceAgent) SetState(data *string) {
+  if data == nil {
+    return
+  }
+  state := AgentState{}
+  if err := json.Unmarshal([]byte(*data), &state); err != nil {
+    return
+  }
+  a.threatLevel = state.ThreatLevel
+  a.intelligenceReports = state.IntelligenceReports
+  a.lastContact = time.Unix(state.LastContactUnix, 0)
+  a.currentMission = state.CurrentMission
+  a.missionLog = state.MissionLog
 }
 ```
 
@@ -366,36 +370,26 @@ Agents have built-in lifecycle management protocols:
 
 ```go
 func (a *IntelligenceAgent) OnInitialize() error {
-    // Called when agent is first created
-    a.lastContact = time.Now()
-    a.threatLevel = 0.0
-
-    fmt.Printf(`Resistance Agent %s awakened
-        and ready for Matrix surveillance`, a.Id())
-    return nil
+  a.lastContact = time.Now();
+  a.threatLevel = 0;
+  fmt.Printf("Agent %s ready\n", a.Id());
+  return nil
 }
 
 func (a *IntelligenceAgent) OnResume() error {
-    // Called when agent reconnects with complete state intact
-    fmt.Printf(`Agent back online in the Matrix.
-        %d intelligence reports processed.
-        Threat level: %.2f`,
-        len(a.intelligenceReports),
-        a.threatLevel)
-    return nil
+  fmt.Printf("Agent resumed. Reports: %d, Threat Level: %.2f\n", len(a.intelligenceReports), a.threatLevel);
+  return nil
 }
 
 func (a *IntelligenceAgent) OnSuspend() error {
-    // Called before agent goes offline
-    return nil
+  return nil
 }
 
 func (a *IntelligenceAgent) OnTerminate() error {
-    // Called before final shutdown
-    fmt.Printf(`Agent %s extracted from Matrix.
-        Intelligence archive preserved.`, a.Id())
-    return nil
+  fmt.Printf("Agent %s terminated. Archive saved.\n", a.Id());
+  return nil
 }
+
 ```
 
 ## Asynchronous operations
@@ -404,19 +398,12 @@ For fire-and-forget operations where you don't need to wait for a response,
 agents support asynchronous messaging:
 
 ```go
-func InitiateBackgroundRecon(agentId string, data string) error {
-    // Send message asynchronously - agent processes in background
-    err := agents.SendMessageAsync(
-        agentId,
-        "background_reconnaissance",
-        agents.WithData(data),
-    )
-    if err != nil {
-        return err
-    }
-
-    // Operation initiated - agent continues processing independently
-    return nil
+func InitiateBackgroundRecon(agentId, data string) error {
+  return agents.SendMessageAsync(
+    agentId,
+    "background_reconnaissance",
+    agents.WithData(data)
+  )
 }
 ```
 
@@ -440,7 +427,7 @@ Monitor your agent's real-time activities using the unified event subscription:
 
 ```graphql
 subscription {
-  agentEvent(agentId: "agent_neo_001") {
+  agentEvent(agentId: "d1qn141d6u7qu64mesjg") {
     name
     data
     timestamp
@@ -512,110 +499,72 @@ type ThreatDetected struct {
     Confidence  float64 `json:"confidence"`
     Analysis    string `json:"analysis"`
 }
-
-func (e ThreatDetected) EventName() string {
-    return "threat_detected"
-}
+func (ThreatDetected) EventName() string { return "threat_detected" }
 
 // Other event types can be defined similarly...
 
-func (a *IntelligenceAgent) analyzeMatrixActivity(
-    data string,
-) (*string, error) {
-    // Emit mission start event
-    err := a.PublishEvent(MissionStarted{
-        MissionName: "Matrix Surveillance Analysis",
-        Priority: "HIGH",
-        ActivityData: len(*data),
+func (a *IntelligenceAgent) analyzeMatrixActivity(data *string) (*string, error) {
+  a.PublishEvent(MissionStarted{
+    MissionName:  "Matrix Surveillance Analysis",
+    Priority:     "HIGH",
+    ActivityData: len(*data),
+  })
+
+  a.intelligenceReports = append(a.intelligenceReports, *data)
+  a.lastContact = time.Now()
+
+  a.PublishEvent(SurveillanceProgress{
+    Phase:            "Processing Matrix surveillance data",
+    Progress:         0.3,
+    ReportsProcessed: len(a.intelligenceReports),
+    TotalReports:     len(a.intelligenceReports),
+  })
+
+  model, err := models.GetModel[openai.ChatModel]("text-generator")
+  if err != nil {
+    return nil, err
+  }
+
+  a.PublishEvent(AIAnalysisStarted{
+    ModelName:   "text-generator",
+    ContextSize: len(strings.Join(a.intelligenceReports, "\n")),
+    ReportCount: len(a.intelligenceReports),
+  })
+
+  input, err := model.CreateInput(
+    openai.NewSystemMessage("You are a resistance operative in the Matrix. Analyze patterns from accumulated surveillance reports and provide threat assessment."),
+    openai.NewUserMessage(fmt.Sprintf("All Matrix Intelligence:\n%s\n\nProvide threat assessment:", strings.Join(a.intelligenceReports, "\n"))),
+  )
+  if err != nil {
+    return nil, err
+  }
+
+  output, err := model.Invoke(input)
+  if err != nil {
+    return nil, err
+  }
+
+  analysis := output.Choices[0].Message.Content
+  a.threatLevel = math.Min(1.0, float64(len(a.intelligenceReports))/10.0)
+
+  if strings.Contains(strings.ToLower(analysis), "critical") || strings.Contains(strings.ToLower(analysis), "agent smith") {
+    a.threatLevel = math.Min(a.threatLevel+0.2, 1.0)
+    a.PublishEvent(ThreatDetected{
+      ThreatLevel: "HIGH",
+      Confidence:  a.threatLevel,
+      Analysis:    analysis,
     })
-    if err != nil {
-        return nil, err
-    }
+  }
 
-    // Store new intelligence in persistent memory
-    a.intelligenceReports = append(a.intelligenceReports, *data)
-    a.lastContact = time.Now()
+  a.PublishEvent(MissionCompleted{
+    MissionName:     "Matrix Surveillance Analysis",
+    Confidence:      a.threatLevel,
+    ReportsAnalyzed: len(a.intelligenceReports),
+    Status:          "SUCCESS",
+  })
 
-    // Emit progress update
-    a.PublishEvent(SurveillanceProgress{
-        ReportsProcessed: len(a.intelligenceReports),
-        Phase: "Processing Matrix surveillance data",
-        Progress: 0.3,
-    })
-
-    // Build context from all accumulated intelligence
-    accumulatedReports := strings.Join(a.intelligenceReports, "\n")
-
-    // AI analysis using complete operational history
-    model, err := models.GetModel[openai.ChatModel]("analyst-model")
-    if err != nil {
-        return nil, err
-    }
-
-    systemPrompt := `You are a resistance operative in the Matrix.
-        Analyze patterns from accumulated surveillance reports
-        and provide threat assessment for anomalous Agent behavior.`
-
-    userPrompt := fmt.Sprintf(`All Matrix Intelligence:
-        %s
-
-        Provide threat assessment:`,
-        accumulatedReports)
-
-    input, err := model.CreateInput(
-        openai.NewSystemMessage(systemPrompt),
-        openai.NewUserMessage(userPrompt),
-    )
-    if err != nil {
-        return nil, err
-    }
-
-    // Emit AI processing event
-    a.PublishEvent(AIAnalysisStarted{
-        ModelName: "analyst-model",
-        ContextSize: len(accumulatedReports),
-        ReportCount: len(a.intelligenceReports),
-    })
-
-    output, err := model.Invoke(input)
-    if err != nil {
-        return nil, err
-    }
-    analysis := output.Choices[0].Message.Content
-
-    // Update threat level based on data volume and AI analysis
-    a.threatLevel = float64(len(a.intelligenceReports)) / 10.0
-    if a.threatLevel > 1.0 {
-        a.threatLevel = 1.0
-    }
-
-    // Check for Agent threats and emit alerts
-    if strings.Contains(strings.ToLower(analysis), "critical") ||
-       strings.Contains(strings.ToLower(analysis), "agent smith") {
-        a.threatLevel = math.Min(a.threatLevel + 0.2, 1.0)
-        a.PublishEvent(ThreatDetected{
-            ThreatLevel: "HIGH",
-            Confidence: a.threatLevel,
-            Analysis: analysis,
-        })
-    }
-
-    // Emit mission completion
-    a.PublishEvent(MissionCompleted{
-        MissionName: "Matrix Surveillance Analysis",
-        Confidence: a.threatLevel,
-        ReportsAnalyzed: len(a.intelligenceReports),
-        Status: "SUCCESS",
-    })
-
-    result := fmt.Sprintf(`Matrix surveillance complete:
-        %s
-
-        (Threat level: %.2f based on %d intelligence reports)`,
-        analysis,
-        a.threatLevel,
-        len(a.intelligenceReports))
-    return &result, nil
+  result := fmt.Sprintf("Matrix surveillance complete:\n%s\n\n(Threat level: %.2f based on %d reports)", analysis, a.threatLevel, len(a.intelligenceReports))
+  return &result, nil
 }
 ```
 
@@ -655,7 +604,7 @@ Example with curl:
 curl -N -H "accept: text/event-stream" \
      -H "content-type: application/json" \
      -X POST http://localhost:8080/graphql \
-     -d '{"query":"subscription { agentEvent(agentId: \"agent_neo_001\") { name data timestamp } }"}'
+     -d '{"query":"subscription { agentEvent(agentId: \"d1qn141d6u7qu64mesjg\") { name data timestamp } }"}'
 ```
 
 ## Monitoring ongoing operations
@@ -664,20 +613,15 @@ You can also poll agent status directly through dedicated functions:
 
 ```go
 func CheckMissionProgress(agentId string) (*MissionStatus, error) {
-    result, err := agents.SendMessage(agentId, "get_status")
-    if err != nil {
-        return nil, err
-    }
-    if result == nil {
-        return nil, fmt.Errorf("no response from agent")
-    }
-
-    var status MissionStatus
-    err = json.Unmarshal([]byte(*result), &status)
-    if err != nil {
-        return nil, err
-    }
-    return &status, nil
+  res, err := agents.SendMessage(agentId, "get_status")
+  if err != nil || res == nil {
+    return nil, err
+  }
+  var status MissionStatus
+  if err := json.Unmarshal([]byte(*res), &status); err != nil {
+    return nil, err
+  }
+  return &status, nil
 }
 
 type MissionStatus struct {
@@ -694,34 +638,32 @@ earlier:
 
 ```go
 func (a *IntelligenceAgent) getOperationalStatus() (*string, error) {
-    var status MissionStatus
+  status := MissionStatus{
+    Phase:       "Standby",
+    Progress:    1.0,
+    CurrentTask: "Awaiting mission directives in the Matrix",
+    IsComplete:  true,
+  }
 
-    if a.currentMission == nil {
-        status = MissionStatus{
-            Phase:       "Standby",
-            Progress:    1.0,
-            CurrentTask: "Awaiting mission directives in the Matrix",
-            IsComplete:  true,
-        }
-    } else {
-        // Calculate progress based on mission log entries
-        progress := float64(len(a.missionLog)) / 4.0 // 4 phases expected
-        if progress > 1.0 { progress = 1.0 }
-
-        status = MissionStatus{
-            Phase:       a.currentMission.Name,
-            Progress:    progress,
-            CurrentTask: a.missionLog[len(a.missionLog)-1], // Latest entry
-            IsComplete:  a.currentMission.Complete,
-        }
+  if a.currentMission != nil && len(a.missionLog) > 0 {
+    progress := float64(len(a.missionLog)) / 4.0
+    if progress > 1 {
+      progress = 1
     }
-
-    statusJson, err := json.Marshal(status)
-    if err != nil {
-        return nil, err
+    status = MissionStatus{
+      Phase:       a.currentMission.Name,
+      Progress:    progress,
+      CurrentTask: a.missionLog[len(a.missionLog)-1],
+      IsComplete:  a.currentMission.Complete,
     }
-    result := string(statusJson)
-    return &result, nil
+  }
+
+  jsonData, err := json.Marshal(status)
+  if err != nil {
+    return nil, err
+  }
+  result := string(jsonData)
+  return &result, nil
 }
 ```
 
