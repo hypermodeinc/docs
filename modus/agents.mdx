@@ -35,6 +35,11 @@ Agents are perfect for:
 
 Every agent starts with the essential framework:
 
+<Tabs>
+
+  <Tab title="Go">
+  `agents.go`
+
 ```go
 package main
 
@@ -59,7 +64,11 @@ type IntelligenceAgent struct {
   currentMission      *MissionPhase
   missionLog          []string
 }
+```
 
+`types.go`
+
+```go Go Expandable
 type MissionPhase struct {
   Name      string
   StartTime time.Time
@@ -108,6 +117,126 @@ type MissionCompleted struct {
 }
 ```
 
+  </Tab>
+  <Tab title="AssemblyScript">
+
+`index.ts`
+
+```typescript
+import { Agent } from "@hypermode/modus-sdk-as"
+import { JSON } from "json-as"
+import { MissionPhase } from "./types"
+
+@json
+class IntelligenceAgent extends Agent {
+  private intelReports: string[] = []
+  private threatLevel: f64 = 0
+  private lastContact: u64 = 0
+  private currentMission: MissionPhase | null = null
+  private missionLog: string[] = []
+
+  get name(): string {
+    return "IntelligenceAgent"
+  }
+}
+```
+
+`types.ts`
+
+```typescript Expandable
+import { AgentEvent } from "@hypermode/modus-sdk-as"
+
+@json
+export class MissionPhase {
+  name: string = ""
+  startTime: u64 = 0
+  duration: u64 = 0
+  complete: bool = false
+}
+
+@json
+export class MissionStatus {
+  phase: string = ""
+  progress: f64 = 0
+  currentTask: string = ""
+  estimatedTimeRemaining: i32 = 0
+  isComplete: bool = false
+}
+
+@json
+export class ThreatDetected extends AgentEvent {
+  eventName: string = "threat_detected"
+  threatLevel: string = ""
+  confidence: f64 = 0
+  analysis: string = ""
+  constructor(threatLevel: string, confidence: f64, analysis: string) {
+    super("threat_detected")
+    this.threatLevel = threatLevel
+    this.confidence = confidence
+    this.analysis = analysis
+  }
+}
+
+@json
+export class MissionStarted extends AgentEvent {
+  eventName: string = "mission_started"
+  missionName: string = ""
+  priority: string = ""
+  activityData: i32 = 0
+  constructor(missionName: string, priority: string, activityData: i32) {
+    super("mission_started")
+    this.missionName = missionName
+    this.priority = priority
+    this.activityData = activityData
+  }
+}
+
+@json
+export class SurveillanceProgress extends AgentEvent {
+  eventName: string = "surveillance_progress"
+  phase: string = ""
+  progress: f64 = 0
+  reportsProcessed: i32 = 0
+  totalReports: i32 = 0
+  constructor(
+    phase: string,
+    progress: f64,
+    reportsProcessed: i32,
+    totalReports: i32,
+  ) {
+    super("surveillance_progress")
+    this.phase = phase
+    this.progress = progress
+    this.reportsProcessed = reportsProcessed
+    this.totalReports = totalReports
+  }
+}
+
+@json
+export class MissionCompleted extends AgentEvent {
+  eventName: string = "mission_completed"
+  missionName: string = ""
+  confidence: f64 = 0
+  reportsAnalyzed: i32 = 0
+  status: string = ""
+  constructor(
+    missionName: string,
+    confidence: f64,
+    reportsAnalyzed: i32,
+    status: string,
+  ) {
+    super("mission_completed")
+    this.missionName = missionName
+    this.confidence = confidence
+    this.reportsAnalyzed = reportsAnalyzed
+    this.status = status
+  }
+}
+```
+
+  </Tab>
+</Tabs>
+
 The agent embeds `agents.AgentBase`, which provides all the infrastructure for
 state management, secure communications, and persistence. Your app
 data—intelligence reports, threat assessments, contact logs—lives as fields in
@@ -118,7 +247,9 @@ the struct, automatically preserved across all interactions.
 Agents are created and managed through regular Modus functions that become part
 of your GraphQL API. These functions handle agent lifecycle operations:
 
-```go
+<CodeGroup>
+
+```go Go
 func init() {
   agents.Register(&IntelligenceAgent{})
 }
@@ -131,6 +262,16 @@ func DeployAgent() (string, error) {
   return info.Id, nil
 }
 ```
+
+```typescript AssemblyScript
+agents.register<IntelligenceAgent>()
+
+export function deployAgent(): string {
+  return agents.start("IntelligenceAgent").id
+}
+```
+
+</CodeGroup>
 
 When you call this function through GraphQL, it returns a unique agent ID:
 
@@ -168,8 +309,9 @@ continues operating exactly where it left off.
 Once created, you communicate with agents using their unique ID. Create
 functions that send messages to specific agent instances:
 
-```go
+<CodeGroup>
 
+```go Go
 func ImportActivity(agentId, activityData string) (string, error) {
   res, err := agents.SendMessage(agentId, "matrix_surveillance", agents.WithData(activityData))
   if err != nil {
@@ -192,6 +334,21 @@ func GetThreatStatus(agentId string) (string, error) {
   return *res, nil
 }
 ```
+
+```typescript AssemblyScript
+export function importActivity(
+  agentId: string,
+  activityData: string,
+): string | null {
+  return agents.sendMessage(agentId, "matrix_surveillance", activityData)
+}
+
+export function getThreatStatus(agentId: string): string | null {
+  return agents.sendMessage(agentId, "threat_assessment")
+}
+```
+
+</CodeGroup>
 
 These functions become GraphQL operations that you can call with your agent's
 ID:
@@ -245,7 +402,9 @@ maintaining persistent memory of every interaction.
 
 Agents process requests through their message handling system:
 
-```go
+<CodeGroup>
+
+```go Go
 func (a *IntelligenceAgent) OnReceiveMessage(msgName string, data *string) (*string, error) {
   switch msgName {
   case "matrix_surveillance":
@@ -262,6 +421,31 @@ func (a *IntelligenceAgent) OnReceiveMessage(msgName string, data *string) (*str
 }
 ```
 
+```typescript AssemblyScript focus={3-20}
+class IntelligenceAgent extends Agent {
+  // ...
+  onReceiveMessage(msgName: string, data: string | null): string | null {
+    switch (msgName) {
+      case "matrix_surveillance":
+        if (!data) return "No data provided"
+        return this.analyzeMatrixActivity(data)
+      case "background_reconnaissance":
+        if (!data) return "No data provided"
+        this.performBackgroundRecon(data)
+        return null
+      case "threat_assessment":
+        return this.getThreatAssessment()
+      case "get_status":
+        return this.getOperationalStatus()
+      default:
+        return `Unrecognized directive: ${msgName}`
+    }
+  }
+}
+```
+
+</CodeGroup>
+
 Each message type triggers specific operations, with all data automatically
 maintained in the agent's persistent memory.
 
@@ -270,8 +454,10 @@ maintained in the agent's persistent memory.
 Here's how agents handle operations while maintaining persistent state and using
 AI models for analysis:
 
-```go
-func (a *IntelligenceAgent) analyzeActivity(data *string) (*string, error) {
+<CodeGroup>
+
+```go Go
+func (a *IntelligenceAgent) analyzeMatrixActivity(data *string) (*string, error) {
   a.IntelReports = append(a.IntelReports, *data)
   a.LastContact = time.Now()
 
@@ -281,7 +467,11 @@ func (a *IntelligenceAgent) analyzeActivity(data *string) (*string, error) {
   }
 
   input, err := model.CreateInput(
-    openai.NewSystemMessage("You are a resistance operative in the Matrix. Analyze patterns from accumulated surveillance reports and provide threat assessment. Respond in no more than 3 concise sentences."),
+    openai.NewSystemMessage(
+      "You are a resistance operative in the Matrix.
+      Analyze patterns from accumulated surveillance reports and provide threat assessment.
+      Respond in no more than 3 concise sentences."
+      ),
     openai.NewUserMessage(fmt.Sprintf("All Matrix Intelligence:\n%s\n\nProvide threat assessment:", strings.Join(a.IntelReports, "\n"))),
   )
   if err != nil {
@@ -303,6 +493,67 @@ func (a *IntelligenceAgent) analyzeActivity(data *string) (*string, error) {
   return &result, nil
 }
 ```
+
+```typescript AssemblyScript focus={3-54}
+class IntelligenceAgent extends Agent {
+  // ...
+  private analyzeMatrixActivity(data: string): string | null {
+    this.publishEvent(
+      new MissionStarted("Matrix Surveillance Analysis", "HIGH", data.length),
+    )
+
+    this.intelReports.push(data)
+    this.lastContact = Date.now()
+
+    this.publishEvent(
+      new SurveillanceProgress(
+        "Processing Matrix surveillance data",
+        0.3,
+        this.intelReports.length,
+        this.intelReports.length,
+      ),
+    )
+
+    const model = models.getModel<OpenAIChatModel>("text-generator")
+    const prompt = `
+      You are a resistance operative in the Matrix.
+      Analyze patterns from accumulated surveillance reports and provide threat assessment.
+      Respond in no more than 2 concise sentences.`
+    const content =
+      "All Matrix Intelligence:\n" +
+      this.intelReports.join("\n") +
+      "\n\nProvide threat assessment:"
+    const input = model.createInput([
+      new SystemMessage<string>(prompt),
+      new UserMessage<string>(content),
+    ])
+    const analysis = model.invoke(input).choices[0].message.content
+
+    this.threatLevel = Math.min(1, this.intelReports.length / 10)
+
+    if (
+      analysis.toLowerCase().includes("critical") ||
+      analysis.toLowerCase().includes("agent smith")
+    ) {
+      this.threatLevel = Math.min(this.threatLevel + 0.2, 1)
+      this.publishEvent(new ThreatDetected("HIGH", this.threatLevel, analysis))
+    }
+
+    this.publishEvent(
+      new MissionCompleted(
+        "Matrix Surveillance Analysis",
+        this.threatLevel,
+        this.intelReports.length,
+        "SUCCESS",
+      ),
+    )
+
+    return `Matrix surveillance complete:\n${analysis}\n\n(Threat level: ${this.threatLevel} based on ${this.intelReports.length} reports)`
+  }
+}
+```
+
+</CodeGroup>
 
 This demonstrates how agents maintain state across complex operations while
 using AI models with the full context of accumulated intelligence.
@@ -331,7 +582,9 @@ sophisticated pattern recognition impossible with stateless functions.
 Agents automatically preserve their state through Modus's built-in persistence
 system:
 
-```go
+<CodeGroup>
+
+```go Go
 func (a *IntelligenceAgent) GetState() *string {
   state := AgentState{
     ThreatLevel:         a.threatLevel,
@@ -364,11 +617,34 @@ func (a *IntelligenceAgent) SetState(data *string) {
 }
 ```
 
+```typescript AssemblyScript focus={3-15}
+class IntelligenceAgent extends Agent {
+  // ...
+  getState(): string {
+    return JSON.stringify(this)
+  }
+
+  setState(data: string | null): void {
+    if (!data) return
+    const agent = JSON.parse<IntelligenceAgent>(data)
+    this.intelReports = agent.intelReports
+    this.threatLevel = agent.threatLevel
+    this.lastContact = agent.lastContact
+    this.currentMission = agent.currentMission
+    this.missionLog = agent.missionLog
+  }
+}
+```
+
+</CodeGroup>
+
 ## Agent lifecycle
 
 Agents have built-in lifecycle management protocols:
 
-```go
+<CodeGroup>
+
+```go Go
 func (a *IntelligenceAgent) OnInitialize() error {
   a.lastContact = time.Now();
   a.threatLevel = 0;
@@ -389,15 +665,41 @@ func (a *IntelligenceAgent) OnTerminate() error {
   fmt.Printf("Agent %s terminated. Archive saved.\n", a.Id());
   return nil
 }
-
 ```
+
+```typescript AssemblyScript focus={3-19}
+class IntelligenceAgent extends Agent {
+  // ...
+  onInitialize(): void {
+    this.lastContact = Date.now()
+    this.threatLevel = 0
+    console.log(`Agent ${this.id} ready`)
+  }
+
+  onResume(): void {
+    console.log(
+      `Agent resumed. Reports: ${this.intelReports.length}, Threat Level: ${this.threatLevel}`,
+    )
+  }
+
+  onSuspend(): void {}
+
+  onTerminate(): void {
+    console.log(`Agent ${this.id} terminated. Archive saved`)
+  }
+}
+```
+
+</CodeGroup>
 
 ## Asynchronous operations
 
 For fire-and-forget operations where you don't need to wait for a response,
 agents support asynchronous messaging:
 
-```go
+<CodeGroup>
+
+```go Go
 func InitiateBackgroundRecon(agentId, data string) error {
   return agents.SendMessageAsync(
     agentId,
@@ -406,6 +708,14 @@ func InitiateBackgroundRecon(agentId, data string) error {
   )
 }
 ```
+
+```typescript AssemblyScript
+export function initiateBackgroundRecon(agentId: string, data: string): void {
+  agents.sendMessageAsync(agentId, "background_reconnaissance", data)
+}
+```
+
+</CodeGroup>
 
 This enables agents to handle long-running operations like:
 
@@ -492,7 +802,9 @@ Your agent streams various types of operational events:
 Agents can broadcast real-time operational intelligence by publishing events
 during their operations. Use the `PublishEvent` method to emit custom events:
 
-```go
+<CodeGroup>
+
+```go Go
 // Custom event types implement the AgentEvent interface
 type ThreatDetected struct {
     ThreatLevel string `json:"threatLevel"`
@@ -568,6 +880,66 @@ func (a *IntelligenceAgent) analyzeMatrixActivity(data *string) (*string, error)
 }
 ```
 
+```typescript AssemblyScript focus={3-54}
+class IntelligenceAgent extends Agent {
+  // ...
+  private analyzeMatrixActivity(data: string): string | null {
+    this.publishEvent(
+      new MissionStarted("Matrix Surveillance Analysis", "HIGH", data.length),
+    )
+
+    this.intelReports.push(data)
+    this.lastContact = Date.now()
+
+    this.publishEvent(
+      new SurveillanceProgress(
+        "Processing Matrix surveillance data",
+        0.3,
+        this.intelReports.length,
+        this.intelReports.length,
+      ),
+    )
+
+    const model = models.getModel<OpenAIChatModel>("text-generator")
+    const prompt = `You are a resistance operative in the Matrix.
+      Analyze patterns from accumulated surveillance reports and provide threat assessment.
+      Respond in no more than 2 concise sentences.`
+    const content =
+      "All Matrix Intelligence:\n" +
+      this.intelReports.join("\n") +
+      "\n\nProvide threat assessment:"
+    const input = model.createInput([
+      new SystemMessage<string>(prompt),
+      new UserMessage<string>(content),
+    ])
+    const analysis = model.invoke(input).choices[0].message.content
+
+    this.threatLevel = Math.min(1, this.intelReports.length / 10)
+
+    if (
+      analysis.toLowerCase().includes("critical") ||
+      analysis.toLowerCase().includes("agent smith")
+    ) {
+      this.threatLevel = Math.min(this.threatLevel + 0.2, 1)
+      this.publishEvent(new ThreatDetected("HIGH", this.threatLevel, analysis))
+    }
+
+    this.publishEvent(
+      new MissionCompleted(
+        "Matrix Surveillance Analysis",
+        this.threatLevel,
+        this.intelReports.length,
+        "SUCCESS",
+      ),
+    )
+
+    return `Matrix surveillance complete:\n${analysis}\n\n(Threat level: ${this.threatLevel} based on ${this.intelReports.length} reports)`
+  }
+}
+```
+
+</CodeGroup>
+
 ### Event-driven operational patterns
 
 This streaming capability enables sophisticated real-time operational patterns:
@@ -611,7 +983,9 @@ curl -N -H "accept: text/event-stream" \
 
 You can also poll agent status directly through dedicated functions:
 
-```go
+<CodeGroup>
+
+```go Go
 func CheckMissionProgress(agentId string) (*MissionStatus, error) {
   res, err := agents.SendMessage(agentId, "get_status")
   if err != nil || res == nil {
@@ -633,10 +1007,22 @@ type MissionStatus struct {
 }
 ```
 
+```typescript AssemblyScript
+export function checkMissionProgress(agentId: string): MissionStatus | null {
+  const res = agents.sendMessage(agentId, "get_status")
+  if (!res) return null
+  return JSON.parse<MissionStatus>(res)
+}
+```
+
+</CodeGroup>
+
 The agent tracks its operational status using the mission state we defined
 earlier:
 
-```go
+<CodeGroup>
+
+```go Go
 func (a *IntelligenceAgent) getOperationalStatus() (*string, error) {
   status := MissionStatus{
     Phase:       "Standby",
@@ -666,6 +1052,42 @@ func (a *IntelligenceAgent) getOperationalStatus() (*string, error) {
   return &result, nil
 }
 ```
+
+```typescript AssemblyScript focus={3-30}
+class IntelligenceAgent extends Agent {
+  // ...
+  private getOperationalStatus(): string {
+    const status = new MissionStatus()
+
+    if (this.currentMission && this.missionLog.length > 0) {
+      let progress = <f64>this.missionLog.length / 4.0
+      if (progress > 1.0) progress = 1.0
+
+      const now = Date.now()
+      const endTime =
+        this.currentMission!.startTime + this.currentMission!.duration
+      const remaining = endTime > u64(now) ? endTime - now : 0
+      const estimatedSeconds = <i32>(remaining / 1000)
+
+      status.phase = this.currentMission!.name
+      status.progress = progress
+      status.currentTask = this.missionLog[this.missionLog.length - 1]
+      status.isComplete = this.currentMission!.complete
+      status.estimatedTimeRemaining = estimatedSeconds
+    } else {
+      status.phase = "Standby"
+      status.progress = 1.0
+      status.currentTask = "Awaiting mission directives in the Matrix"
+      status.isComplete = true
+      status.estimatedTimeRemaining = 0
+    }
+
+    return JSON.stringify(status)
+  }
+}
+```
+
+</CodeGroup>
 
 Your client can either poll this status endpoint via GraphQL or subscribe to
 real-time events for instant updates:
