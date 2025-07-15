@@ -1,295 +1,210 @@
 ---
-title: "Day 11: Multi-Agent Collaboration - When Agents Work Together"
-sidebarTitle: "Day 11: Multi-Agent Collaboration"
+title: "Day 11: Finance & Revenue Operations - Stripe Integration"
+sidebarTitle: "Day 11: Stripe Integration"
 description:
-  "Learn to orchestrate multiple agents working together on complex projects.
-  Understand delegation patterns, handoffs, and collaborative workflows that
-  combine different agent specializations."
+  "Build a revenue operations agent that monitors payments, analyzes
+  subscription metrics, and provides financial insights through Stripe
+  integration."
 ---
 
-<Card title="Day 11 challenge" icon="users">
-  **Goal**: orchestrate multiple agents to collaborate on a complex workflow
+<Card title="Day 11 challenge" icon="dollar-sign">
+  **Goal**: create a revenue operations agent with Stripe integration
 
-**Theme**: advanced orchestration week - multi-agent coordination
+**Theme**: domain specialization week - financial intelligence
 
-**Time investment**: ~25 minutes
+**Time investment**: ~20 minutes
 
 </Card>
 
-Welcome to Day 11 and Week 3! You've mastered individual agent creation and
-optimization. Now you'll learn to orchestrate **multiple agents working
-together**—combining different specializations to tackle complex projects that
-no single agent could handle alone.
+Welcome to Day 11 and Week 3! You've mastered agent creation and workflows. Now
+you'll specialize in **domain-specific agents**—starting with finance and
+revenue operations through Stripe integration.
 
-This is where agent systems become truly powerful: specialized agents
-collaborating like a high-performing team.
+This week is about building agents that don't just use tools, but understand the
+business context and best practices of specific domains.
 
 ## What you'll accomplish today
 
-- Understand multi-agent collaboration patterns and when to use them
-- Design a multi-agent workflow with clear delegation and handoffs
-- Implement agent-to-agent communication and coordination
-- Experience how specialized agents combine their strengths
-- Learn to manage complex workflows with multiple moving parts
+- Build a revenue operations agent that understands financial workflows
+- Connect Stripe for payment and subscription intelligence
+- Create automated revenue reporting and customer insights
+- Learn domain-specific patterns for financial agents
 
 <Warning>
-  This builds on your agent creation skills from Week 2. You'll need at least 2
-  custom agents to complete today's collaboration exercises.
+  This builds on your Week 2 agent creation skills. You'll need a Stripe account
+  with appropriate permissions to complete today's integration.
 </Warning>
 
-## Step 1: Understanding multi-agent patterns
+## Step 1: Understanding revenue agent patterns
 
-Before building collaborative workflows, understand the key patterns for agent
-coordination:
+Financial agents need specialized knowledge beyond basic tool usage:
 
-### Sequential collaboration (pipeline)
+### Domain expertise requirements
 
-Agent A completes work → passes results to Agent B → Agent B continues the work
+Revenue agents must understand:
 
-**Example workflow**: Research Agent gathers market data → Analysis Agent
-processes insights → Report Agent creates executive summary
-
-### Parallel collaboration (divide and conquer)
-
-Multiple agents work on different aspects of the same project simultaneously
-
-**Example workflow**: Content Agent drafts social posts + Design Agent creates
-visuals + Schedule Agent plans distribution timing
-
-### Hierarchical collaboration (manager-worker)
-
-One agent coordinates and delegates while specialized agents execute specific
-tasks
-
-**Example workflow**: Project Manager Agent assigns tasks → Technical Agent
-handles code reviews + Marketing Agent manages campaigns
-
-### Peer collaboration (consensus building)
-
-Agents contribute different perspectives to reach better decisions
-
-**Example workflow**: Multiple research agents analyze different data sources →
-consolidate findings into comprehensive recommendations
+- **Financial metrics**: MRR, churn, LTV, CAC, and their relationships
+- **Customer lifecycle**: Trial → paid → expansion → renewal patterns
+- **Risk indicators**: Failed payments, cancellations, downgrades
+- **Compliance needs**: Data privacy, financial reporting requirements
 
 <Tip>
-  **Choose the right pattern**: Sequential for dependent workflows, parallel for
-  independent tasks, hierarchical for complex coordination, peer for
-  decision-making.
+  **Domain thinking**: Your agent should reason like a revenue operations
+  manager, not just fetch Stripe data.
 </Tip>
 
-## Step 2: Design your first multi-agent workflow
+## Step 2: Create your revenue operations agent
 
-Let's create a practical multi-agent workflow. Choose a scenario that requires
-multiple specializations:
-
-### Scenario example: Product launch coordination
-
-**Agents needed**:
-
-- Market Research Agent (analyzes competitive landscape)
-- Content Creation Agent (develops messaging and materials)
-- Campaign Management Agent (coordinates timeline and execution)
-
-**Start by defining the workflow with one of your existing agents**:
+Work with Concierge to build a specialized financial agent:
 
 ```text
-I want to design a multi-agent workflow for [your chosen scenario].
-I have these agents available: [list your agents and their capabilities].
+I want to create a revenue operations agent that monitors our Stripe payments and subscriptions.
 
-Can you help me design a collaboration pattern where these agents work together?
-Map out the handoffs, dependencies, and coordination points.
+The agent should:
+- Track key revenue metrics (MRR, churn, new vs expansion revenue)
+- Identify at-risk customers based on payment patterns
+- Generate weekly revenue reports with insights
+- Alert on significant revenue events (large cancellations, payment failures)
+- Provide customer health scores based on payment history
+
+It should think like a revenue operations manager who understands SaaS metrics.
 ```
 
-Watch how your agent:
+## Step 3: Connect and configure Stripe
 
-- Analyzes the strengths of each available agent
-- Identifies optimal collaboration patterns
-- Maps dependencies and handoff points
-- Suggests coordination mechanisms
-- Recommends workflow improvements
+Add Stripe to your agent's connections:
 
-### Example workflow design:
+1. **Navigate to Connections** in your agent settings
+2. **Search for Stripe** and click "Add Connection"
+3. **Authenticate** with your Stripe account
+4. **Select appropriate permissions** (read access to payments, customers,
+   subscriptions)
 
-**Phase 1**: Market Research Agent conducts competitive analysis **Handoff 1**:
-Research findings passed to Content Creation Agent **Phase 2**: Content Agent
-develops messaging based on research insights **Handoff 2**: Content passed to
-Campaign Management Agent **Phase 3**: Campaign Agent coordinates launch
-execution using research and content
+### Key Stripe capabilities for revenue agents
 
-## Step 3: Implement agent coordination
+Your agent can now:
 
-Now let's put multi-agent collaboration into practice:
+- **Analyze payment data**: Success rates, failure reasons, retry patterns
+- **Monitor subscriptions**: New, upgraded, downgraded, cancelled
+- **Track customer behavior**: Payment methods, billing cycles, usage patterns
+- **Generate insights**: Revenue trends, cohort analysis, forecasting
 
-**Start with your primary coordinating agent**:
+## Step 4: Implement revenue intelligence workflows
+
+Test your agent with real revenue scenarios:
 
 ```text
-I'm implementing a multi-agent workflow for [your scenario].
-You'll be coordinating with [other agent names] to complete this project.
-
-Here's the workflow we designed: [paste your workflow from Step 2]
-
-Let's start with Phase 1. Can you begin the initial work and prepare the handoff to [next agent]?
+Can you analyze our revenue performance this month and identify any concerning trends?
 ```
 
-**Key coordination elements to implement**:
+Your agent should:
 
-- **Clear handoff formats**: Standardize how information passes between agents
-- **Status tracking**: Each agent reports progress and completion
-- **Quality checkpoints**: Agents verify work before handoffs
-- **Feedback loops**: Later agents can request clarification from earlier agents
+- Pull current month's transaction data from Stripe
+- Calculate key metrics (MRR, churn rate, growth rate)
+- Identify anomalies or concerning patterns
+- Provide actionable recommendations
 
-### Managing the handoff process:
-
-When Agent A completes their work:
-
-1. **Document outputs clearly** for the next agent
-2. **Summarize key findings** and recommendations
-3. **Flag any dependencies** or requirements for next steps
-4. **Provide context** about decisions made during the work
-
-When Agent B receives the handoff:
-
-1. **Confirm understanding** of the inputs and context
-2. **Ask clarifying questions** if anything is unclear
-3. **Validate assumptions** from the previous agent's work
-4. **Proceed with clear acknowledgment** of responsibilities
-
-<Tip>
-  **Document everything**: Multi-agent workflows require clear documentation at
-  each step. Encourage agents to summarize their work and reasoning for the next
-  agent in the chain.
-</Tip>
-
-## Step 4: Advanced coordination techniques
-
-As your workflow progresses, implement these advanced coordination patterns:
-
-### Parallel coordination
+### Example revenue analysis
 
 ```text
-I need [Agent A] and [Agent B] to work on different aspects of this project simultaneously.
-
-Agent A: Focus on [specific aspect]
-Agent B: Focus on [different aspect]
-
-Coordinate your timelines and check in when you've both completed your initial work.
+What's our current MRR and how has it changed this quarter?
+Which customers are at risk of churning?
 ```
 
-### Quality assurance handoffs
+The agent analyzes:
+
+- **MRR trends**: Current MRR, growth rate, net new vs expansion
+- **Churn indicators**: Failed payments, downgrades, usage decline
+- **Customer health**: Payment reliability, engagement, upgrade potential
+- **Action items**: Customers needing attention, upsell opportunities
+
+## Step 5: Create automated revenue workflows
+
+Build repeatable revenue tasks:
+
+**Weekly revenue report**:
 
 ```text
-Before we move to the next phase, I want [Quality Agent] to review the work from [Previous Agent].
+Every Monday, analyze last week's revenue performance including:
+- New vs lost MRR
+- Payment failure rate and recovery
+- Top customers by revenue
+- Churn risk assessment
+- Week-over-week comparison
 
-Check for: [specific quality criteria]
-Approve or request revisions before we proceed.
+Format as an executive summary with key metrics and action items.
 ```
 
-### Consensus building
+**Customer health monitoring**:
 
 ```text
-I have different perspectives from [Agent A] and [Agent B] on [decision point].
+Daily, check for:
+- Failed payments needing attention
+- Customers with multiple failed attempts
+- Sudden usage drops indicating churn risk
+- Opportunities for upgrades based on usage
 
-Can you both discuss your reasoning and work toward a consensus recommendation?
-[Agent C], please facilitate this discussion and help reach a decision.
+Alert me only for critical issues needing immediate action.
 ```
 
-## Step 5: Monitor and optimize workflows
-
-Multi-agent coordination requires active management:
-
-**Track progress across agents**:
-
-```text
-Can each agent provide a status update on their current work?
-- What's completed?
-- What's in progress?
-- Any blockers or dependencies?
-- Estimated completion time?
-```
-
-**Identify optimization opportunities**:
-
-```text
-Based on how this workflow has progressed, what could we optimize?
-- Are there unnecessary handoffs?
-- Could any work be done in parallel instead of sequential?
-- Are agents waiting too long for inputs?
-- How can we improve the coordination process?
-```
-
-**Document successful patterns**:
-
-```text
-This multi-agent workflow worked well. Can you help me document:
-- The successful coordination patterns we used
-- Key handoff formats that worked effectively
-- Quality checkpoints that prevented issues
-- Lessons learned for future multi-agent projects
-```
+<Info>
+  **TODO**: Advanced Stripe webhook integration and automated dunning workflows
+  will be covered in future advanced sessions.
+</Info>
 
 ## What you've accomplished
 
-In 25 minutes, you've mastered multi-agent orchestration:
+In 20 minutes, you've built a domain-specific revenue operations agent:
 
-**Pattern recognition**: Learned to identify the right collaboration pattern for
-different scenarios
+**Financial intelligence**: Agent that understands revenue metrics and SaaS
+business models
 
-**Workflow design**: Created structured multi-agent workflows with clear
-dependencies and handoffs
+**Stripe integration**: Connected payment and subscription data for real-time
+insights
 
-**Coordination implementation**: Successfully orchestrated multiple agents
-working together on complex projects
+**Automated workflows**: Revenue reporting and customer health monitoring
 
-**Quality management**: Implemented checkpoints and feedback loops to ensure
-work quality across agent handoffs
+**Domain expertise**: Agent that thinks like a revenue operations manager, not
+just a data fetcher
 
-**Optimization skills**: Learned to monitor and improve multi-agent workflows
-based on performance
+## The power of domain-specific agents
 
-## The power of agent collaboration
+Unlike generic agents, domain-specific agents:
 
-Multi-agent workflows unlock capabilities that no single agent can achieve:
-
-**Specialized expertise**: Each agent brings deep knowledge in their domain
-**Parallel processing**: Multiple aspects of complex projects handled
-simultaneously  
-**Quality assurance**: Agents can review and improve each other's work
-**Scalability**: Add specialized agents as project complexity grows **Fault
-tolerance**: If one agent struggles, others can compensate or provide
-alternatives
+- **Understand context**: Know what metrics matter and why
+- **Identify patterns**: Recognize revenue risks before they become problems
+- **Provide insights**: Actionable recommendations, not just data dumps
+- **Automate expertise**: Scale revenue operations knowledge across your team
 
 <Card
   title="Tomorrow - Day 12"
   icon="arrow-right"
   href="/agents/30-days-of-agents/day-12"
 >
-  Advanced workflow automation with triggers, schedules, and event-driven agent
-  collaboration. Learn to build systems that operate with minimal human
-  intervention.
+  Development & infrastructure with GitHub and Vercel. Build agents that manage
+  code, deployments, and development workflows.
 </Card>
 
 ## Pro tip for today
 
-After completing your multi-agent workflow, ask your coordinating agent:
+Ask your revenue agent:
 
 ```text
-What made this multi-agent collaboration successful? How could we standardize these patterns for future complex projects?
+Based on our payment patterns, what early warning signs should I watch for to prevent churn?
 ```
 
-This helps you develop reusable coordination templates that make future
-multi-agent projects more efficient.
+This helps your agent develop predictive capabilities specific to your business.
 
 ---
 
-**Time to complete**: ~25 minutes
+**Time to complete**: ~20 minutes
 
-**Skills learned**: Multi-agent pattern recognition, workflow design, agent
-coordination, handoff management, quality assurance, optimization
+**Skills learned**: Domain-specific agent design, Stripe integration, revenue
+intelligence, automated financial workflows
 
-**Next**: Day 12 - Advanced workflow automation and event-driven collaboration
+**Next**: Day 12 - Development & infrastructure agents with GitHub and Vercel
 
 <Tip>
-  **Remember**: Multi-agent systems are more powerful but also more complex.
-  Start with simple collaborations and gradually build up to sophisticated
-  orchestration patterns.
+  **Remember**: The best financial agents don't just report numbers—they
+  understand what those numbers mean for your business and what actions to take.
 </Tip>

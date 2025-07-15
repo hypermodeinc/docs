@@ -1,243 +1,199 @@
 ---
-title: "Day 13: Data & Analytics - Connecting to Databases"
-sidebarTitle: "Day 13: Database Connections"
+title: "Day 13: Project Management & Documentation - Linear & Notion"
+sidebarTitle: "Day 13: Linear & Notion"
 description:
-  "Learn how to connect your agents to databases through Hypermode, enabling
-  data-driven insights and automated analysis."
+  "Build a project management agent that coordinates tasks, tracks progress, and
+  maintains documentation across Linear and Notion."
 ---
 
-<Card title="Day 13 challenge" icon="database">
-  **Goal**: connect your agent to a database and enable data-driven insights
+<Card title="Day 13 challenge" icon="tasks">
+  **Goal**: create a project coordination agent with Linear and Notion
 
-**Theme**: domain specialization week - database intelligence
+**Theme**: domain specialization week - project intelligence
 
 **Time investment**: ~20 minutes
 
 </Card>
 
-Welcome to Day 13! Today you'll learn how to connect your agents to databases
-through Hypermode's connection system. We'll use Neo4j as an example, but the
-same approach works for any database—SQL, NoSQL, or specialized data stores.
-
-Your agents can query data, analyze patterns, and provide insights without you
-needing to write complex queries yourself.
+Welcome to Day 13! Today you'll build a **project management agent** that
+bridges task tracking in Linear with documentation in Notion. This agent
+understands how modern teams work across multiple tools.
 
 ## What you'll accomplish today
 
-- Understand how database connections work in Hypermode
-- Connect an agent to a database (Neo4j example)
-- See how agents translate questions into queries
-- Get insights from your data through natural language
-- Learn the pattern for building data-driven agents
+- Build a project management agent that coordinates across tools
+- Connect Linear for issue tracking and sprint management
+- Integrate Notion for documentation and knowledge management
+- Create workflows that keep projects and docs in sync
 
 <Warning>
-  This builds on your Week 2 agent creation skills. For today's example, you can
-  use any available database connection or follow along conceptually.
+  You'll need access to Linear and Notion workspaces with appropriate
+  permissions to complete today's exercises.
 </Warning>
 
-## Step 1: How database connections work
+## Step 1: Understanding project management patterns
 
-Hypermode agents can connect to virtually any database:
+Project agents need to understand:
 
-### Supported databases include
+### Cross-tool coordination
 
-- **SQL databases**: PostgreSQL, MySQL, SQL Server
-- **NoSQL stores**: MongoDB, DynamoDB
-- **Graph databases**: Neo4j, Amazon Neptune
-- **Data warehouses**: Snowflake, BigQuery
-- **Time-series**: InfluxDB, TimescaleDB
-
-### Connection process
-
-1. **Add connection** from Hypermode's connection library
-2. **Authenticate securely** with credentials stored encrypted
-3. **Assign to your agent** through the connections panel
-4. **Start asking questions** in natural language
+- **Task lifecycle**: From idea in Notion → issue in Linear → documentation
+  update
+- **Status synchronization**: Keep project status consistent across platforms
+- **Knowledge capture**: Document decisions and outcomes, not just track tasks
+- **Team collaboration**: Different tools for different team members
 
 <Tip>
-  **No query language needed**: Your agent translates your business questions
-  into the appropriate database queries automatically.
+  **Multi-tool thinking**: Your agent should understand that Linear tracks work
+  while Notion captures knowledge—and keep both synchronized.
 </Tip>
 
-## Step 2: Create a data analysis agent
+## Step 2: Create your project management agent
 
-Let's build an agent that can analyze customer data:
-
-**Start with Concierge:**
+Work with Concierge to build a cross-platform coordinator:
 
 ```text
-I want to create a data analysis agent that connects to our customer database to answer business questions and provide insights.
+I want to create a project management agent that coordinates between Linear and Notion.
 
-The agent should understand our business context and help me analyze customer patterns, identify opportunities, and track important metrics.
+The agent should:
+- Track sprint progress in Linear and update project docs in Notion
+- Create Linear issues from Notion meeting notes and planning docs
+- Generate weekly project summaries combining task data and documentation
+- Ensure technical decisions in Linear are documented in Notion
+- Keep project roadmaps synchronized across both platforms
+
+It should act like a technical project manager who ensures nothing falls through the cracks.
 ```
 
-### Simple agent setup
+## Step 3: Connect Linear and Notion
 
-Your agent needs:
+Add both connections to your agent:
 
-- **Database connection** (Neo4j in this example)
-- **Business context** about what the data represents
-- **Clear instructions** to provide insights, not just raw data
+**Linear connection**:
 
-## Step 3: Connect and query naturally
+- Issue management and creation
+- Sprint tracking and velocity
+- Project status and milestones
+- Team workload visibility
 
-Once connected, you can ask business questions directly:
+**Notion connection**:
 
-### Example 1: Customer insights
+- Documentation reading and updates
+- Meeting notes processing
+- Knowledge base management
+- Project wiki maintenance
+
+## Step 4: Implement coordination workflows
+
+### Workflow 1: Sprint documentation
 
 ```text
-You: Who are our most valuable customers?
-
-Agent: I'll analyze the customer data to identify your most valuable customers.
-
-Based on the database analysis, here are your top customers:
-
-**Top 5 Most Valuable Customers:**
-1. **TechCorp Solutions** - $487K annual revenue, 47 referrals
-2. **FinanceFlow Inc** - $398K annual revenue, active for 3 years
-3. **GlobalTech Ventures** - $342K annual revenue, expanding rapidly
-4. **DataDynamics LLC** - $289K annual revenue, 23 team members
-5. **CloudFirst Systems** - $234K annual revenue, high engagement
-
-**Key Insight**: Your top 5 customers represent 23% of total revenue and have referred 134 other customers. Focus retention efforts here.
+At the end of each sprint, can you:
+1. Summarize completed Linear issues
+2. Extract key decisions and technical changes
+3. Update our Notion sprint retrospective doc
+4. Identify undocumented features that need wiki updates
 ```
 
-### Example 2: Pattern detection
+Your agent coordinates:
+
+- Pulls completed issues from Linear
+- Identifies important decisions and changes
+- Updates Notion with structured summaries
+- Flags documentation gaps
+
+### Workflow 2: Meeting to task conversion
 
 ```text
-You: Are there any concerning trends I should know about?
-
-Agent: I've identified some patterns that need attention:
-
-**⚠️ Concerning Trends:**
-
-1. **Reduced Activity in Enterprise Segment**
-   - 34% of enterprise customers haven't logged in this month
-   - This segment typically drives 45% of revenue
-
-2. **Referral Rate Declining**
-   - New customer referrals down 23% from last quarter
-   - Top referrers showing less activity
-
-**Recommendations:**
-- Reach out to dormant enterprise accounts this week
-- Re-engage your top 10 referrers with incentives
-- Consider a customer health check campaign
-
-Would you like me to identify specific customers for outreach?
+I just finished a planning meeting. The notes are in Notion under "Product Planning."
+Can you create Linear issues for all the action items we discussed?
 ```
 
-### Example 3: Opportunity discovery
+The agent:
+
+- Reads meeting notes from Notion
+- Identifies concrete action items
+- Creates properly labeled Linear issues
+- Links back to source documentation
+
+## Step 5: Build reusable coordination tasks
+
+**Daily standup prep**:
 
 ```text
-You: What growth opportunities do you see in our data?
+Each morning, prepare a standup summary that includes:
+- Yesterday's completed Linear issues
+- Today's priorities from Linear
+- Any blockers mentioned in Linear comments
+- Related Notion docs for context
 
-Agent: I've found several growth opportunities in your customer data:
-
-**🎯 Growth Opportunities:**
-
-1. **Upsell Potential**
-   - 67 customers hitting usage limits
-   - Estimated revenue opportunity: $34K/month
-
-2. **Untapped Networks**
-   - 23 highly satisfied customers with no referrals yet
-   - Each typically could bring 3-5 new customers
-
-3. **Re-engagement Wins**
-   - 45 previously active accounts went dormant
-   - Historical win-back rate: 35% with targeted outreach
-
-**Quick Win**: Send upgrade offers to the 67 customers hitting limits. Based on past campaigns, expect 40% conversion.
+Post this in our Notion daily standups page.
 ```
 
-## Step 4: Building data-driven workflows
-
-Your database-connected agent can automate regular analysis:
-
-### Weekly business intelligence
+**Documentation health check**:
 
 ```text
-You: Can you give me our weekly business metrics summary?
+Weekly, analyze:
+- Linear issues marked "Done" without linked documentation
+- Notion pages that reference outdated Linear issues
+- Technical decisions in Linear not captured in Notion
+- Project timelines that have diverged between tools
 
-Agent: Here's your weekly business intelligence summary:
-
-**Week of March 10-16, 2024**
-
-📈 **Growth Metrics:**
-- New customers: 34 (+12% vs last week)
-- Revenue: $487K (+8% vs last week)
-- Active users: 1,247 (+5%)
-
-📊 **Customer Health:**
-- Engagement score: 78/100 (stable)
-- Support tickets: 23 (-15% - good!)
-- Feature adoption: 67% (+3%)
-
-🎯 **Action Items:**
-- 12 trial accounts ready for conversion outreach
-- 5 customers need check-ins (low activity alerts)
-- 3 upsell opportunities identified
-
-Would you like details on any of these metrics?
+Create a "Documentation Debt" report in Notion.
 ```
 
 ## What you've accomplished
 
-In 20 minutes, you've learned how to:
+In 20 minutes, you've built a cross-platform project management agent:
 
-**Connect databases**: Enable agents to access your business data securely
+**Multi-tool coordination**: Agent that understands Linear for execution and
+Notion for knowledge
 
-**Natural language queries**: Ask questions without writing complex database
-queries
+**Automated synchronization**: Keeps tasks and documentation aligned
 
-**Get insights, not just data**: Agents interpret results and provide
-recommendations
+**Workflow intelligence**: Converts between different information formats
 
-**Automate analysis**: Set up regular reporting and monitoring through your
-agent
+**Gap identification**: Finds where documentation doesn't match execution
 
-**Scale expertise**: Give everyone on your team data analyst capabilities
+## The power of multi-tool agents
 
-## The power of database-connected agents
+Project management agents that span tools can:
 
-With database connections, your agents can:
-
-- **Democratize data access** - Anyone can get insights without SQL knowledge
-- **Proactive monitoring** - Agents watch for important changes and alert you
-- **Cross-system analysis** - Connect multiple databases for complete pictures
-- **Automated reporting** - Regular insights without manual work
+- **Prevent information silos** by connecting execution with documentation
+- **Reduce context switching** by bringing information together
+- **Capture institutional knowledge** automatically from task execution
+- **Improve team alignment** through consistent cross-tool updates
 
 <Card
   title="Tomorrow - Day 14"
   icon="arrow-right"
   href="/agents/30-days-of-agents/day-14"
 >
-  Customer Relationship Management with Attio. Build agents that transform CRM
-  from data entry to intelligent revenue operations.
+  Data & analytics with Neo4j and MongoDB. Build agents that understand complex
+  data relationships.
 </Card>
 
 ## Pro tip for today
 
-Start simple with your database agent:
+Ask your project agent:
 
 ```text
-What are the three most important questions about our business that data could answer?
-Let's make sure you can help me monitor these regularly.
+What patterns do you notice between our Linear velocity and our Notion documentation quality?
+How can we improve both?
 ```
 
-This helps your agent focus on what matters most to your business.
+This helps your agent develop insights about your team's work patterns.
 
 ---
 
 **Time to complete**: ~20 minutes
 
-**Skills learned**: Database connections, natural language querying, insight
-generation, automated analysis
+**Skills learned**: Multi-tool coordination, Linear integration, Notion
+automation, project intelligence
 
-**Next**: Day 14 - Customer Relationship Management with Attio CRM
+**Next**: Day 14 - Data & analytics agents with Neo4j and MongoDB
 
 <Tip>
-  **Remember**: You don't need to be a database expert. Your agent handles the
-  technical complexity while you focus on getting business insights.
+  **Remember**: The best project agents don't just move data between tools—they
+  understand how your team works and help improve processes.
 </Tip>
