@@ -184,3 +184,6 @@ GTM
 chatbots
 enablement
 [lL]uma
+CRM
+CRMs
+touchpoints
