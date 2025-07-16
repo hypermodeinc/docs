@@ -275,69 +275,7 @@ All metrics look healthy. Promoting to 100% traffic...
 I'll continue monitoring and alert you if any issues arise.
 ```
 
-## Step 5: Implement production monitoring and rollback
-
-Your agent should be capable of handling production issues:
-
-**Configure monitoring and rollback:**
-
-```text
-Monitor production health by:
-
-1. Tracking Key Metrics:
-   - Error rates (baseline vs current)
-   - Response times (P50, P95, P99)
-   - Core Web Vitals scores
-   - Active user sessions
-
-2. Automated Rollback Triggers:
-   - Error rate increases >5% from baseline
-   - Response time degradation >20%
-   - Multiple user reports of issues
-   - Critical service dependencies failing
-
-3. Rollback Process:
-   - Immediately revert to previous deployment
-   - Notify team via Slack
-   - Create incident report
-   - Begin root cause analysis
-```
-
-### Example monitoring and rollback
-
-```text
-You: How's the authentication deployment performing in production?
-
-Agent: I'm monitoring the authentication deployment. Here's the current status:
-
-**Production Health Check (2 hours post-deployment):**
-
-📊 **Performance Metrics:**
-- Error rate: 0.03% (↑ 0.01% from baseline) - Within normal range
-- Login success rate: 98.7% (previously 97.2%) - Improved! ✅
-- Avg response time: 124ms (baseline: 118ms) - Acceptable
-- Active sessions: 3,247 (normal for this time)
-
-⚠️ **Detected Issue:**
-I've noticed an increase in "token refresh failed" errors in the last 15 minutes:
-- Affected users: 47 (1.4% of active users)
-- Error pattern: Timeout errors from auth service
-- Started: 14:23 UTC
-
-**Investigating:**
-- Checking Vercel function logs... Found timeout issues with the refresh endpoint
-- Database connection pool may be exhausted
-- This could escalate if not addressed
-
-**Recommended Action:**
-This doesn't meet automatic rollback criteria yet, but I recommend:
-1. Increase database connection pool size (quick fix)
-2. Or rollback if errors increase beyond 2%
-
-Would you like me to apply the quick fix or initiate a rollback?
-```
-
-## Step 6: Create development best practices automation
+## Step 5: Create development best practices automation
 
 Extend your agent to enforce and automate development best practices:
 
