@@ -1,0 +1,382 @@
+---
+title: "Day 12: Development & Infrastructure - GitHub & Vercel Integration"
+sidebarTitle: "Day 12: GitHub & Vercel"
+description:
+  "Master development workflows by building agents that manage code
+  repositories, automate reviews, handle deployments, and coordinate production
+  releases with GitHub and Vercel."
+---
+
+<Card title="Day 12 challenge" icon="code">
+  **Goal**: build sophisticated development agents that automate code reviews, manage deployments, and coordinate release workflows
+
+**Theme**: domain specialization week - development & infrastructure
+
+**Time investment**: ~30 minutes
+
+</Card>
+
+Welcome to Day 12! Today you'll specialize in development and infrastructure by
+building agents that understand code, deployments, and development workflows.
+You'll integrate GitHub for repository management and Vercel for deployment
+automation, creating agents that act like senior DevOps engineers.
+
+This isn't just about connecting tools—it's about building agents that
+understand development best practices, can review code intelligently, and manage
+production deployments safely.
+
+## What you'll accomplish today
+
+- Build a development agent that combines GitHub and Vercel capabilities
+- Create intelligent code review workflows that go beyond syntax checking
+- Implement automated deployment pipelines with safety checks
+- Develop monitoring and rollback capabilities for production systems
+- Learn domain-specific patterns for development and infrastructure agents
+
+<Warning>
+  This builds on your Week 2 agent creation skills. You'll need access to GitHub
+  and Vercel accounts with appropriate permissions to complete today's
+  exercises.
+</Warning>
+
+## Step 1: Understanding development agent patterns
+
+Before building, understand what makes development agents different from
+general-purpose agents:
+
+### Code understanding capabilities
+
+Development agents need to:
+
+- **Analyze code quality** beyond just syntax—understanding patterns, security
+  implications, and performance
+- **Understand project context** from README files, documentation, and code
+  structure
+- **Follow coding standards** specific to languages, frameworks, and team
+  conventions
+- **Assess risk levels** for changes based on file criticality and change scope
+
+### Deployment intelligence
+
+Infrastructure agents must:
+
+- **Coordinate deployments** across environments (development, staging,
+  production)
+- **Monitor build status** and understand when deployments are safe
+- **Implement rollback strategies** when issues are detected
+- **Manage environment variables** and configuration securely
+
+<Tip>
+  **Domain expertise matters** development agents need to understand not just
+  how to use GitHub and Vercel APIs, but when and why to use specific features
+  based on development best practices.
+</Tip>
+
+## Step 2: Create your development agent with Concierge
+
+Let's build a sophisticated development agent that combines code management and
+deployment capabilities:
+
+**Start with Concierge:**
+
+```text
+I want to create a development and infrastructure agent that helps me manage code reviews and deployments.
+
+The agent should:
+- Review pull requests on GitHub for code quality, security issues, and best practices
+- Manage deployments to Vercel with proper staging and production workflows
+- Monitor deployment status and performance metrics
+- Coordinate releases between code merges and deployments
+- Provide intelligent insights about code changes and their potential impact
+
+I want it to act like a senior DevOps engineer who understands both code quality and production stability.
+```
+
+### Example agent configuration
+
+Based on the GitHub Review Bot example from the gallery, enhance your agent with
+these capabilities:
+
+**Core responsibilities:**
+
+- Automated code review with actionable feedback
+- Deployment coordination with safety checks
+- Performance monitoring and alerting
+- Release note generation
+- Rollback automation when issues detected
+
+**Key integrations needed:**
+
+- **GitHub**: Repository access, PR management, issue tracking
+- **Vercel**: Deployment management, environment configuration, monitoring
+- **Slack** (optional): Team notifications for important events
+
+## Step 3: Implement intelligent code review workflows
+
+Your development agent should go beyond basic linting. Drawing from the GitHub
+Review Bot example:
+
+**Configure advanced review capabilities:**
+
+```text
+When reviewing pull requests, analyze:
+
+1. Code Quality Patterns:
+   - Clean code principles and readability
+   - DRY (Don't Repeat Yourself) violations
+   - Function complexity and refactoring opportunities
+   - Consistent naming conventions
+
+2. Security Analysis:
+   - Hardcoded secrets or API keys
+   - SQL injection vulnerabilities
+   - Cross-site scripting (XSS) risks
+   - Dependency vulnerabilities
+
+3. Performance Considerations:
+   - Database query optimization
+   - Memory leak potential
+   - Unnecessary re-renders (for React)
+   - Bundle size impact
+
+4. Testing Coverage:
+   - Missing test cases
+   - Edge case handling
+   - Integration test requirements
+
+Provide specific line numbers and code examples for all feedback.
+Use severity levels: Critical, High, Medium, Low.
+Always include positive feedback for well-written code sections.
+```
+
+### Example code review interaction
+
+```text
+You: Review PR #142 in our main repository - it's adding a new authentication system.
+
+Agent: I've completed the review of PR #142 - "Implement OAuth 2.0 authentication system". Here's my analysis:
+
+**Overall Score: 8/10**
+
+**Critical Issues:**
+• Line 45 in auth.js: Hardcoded client secret should be moved to environment variables
+• Line 128 in middleware.js: Missing input validation for JWT tokens could lead to injection attacks
+
+**Security Recommendations:**
+• Add rate limiting to login endpoints (auth.js:67-89)
+• Implement refresh token rotation for enhanced security
+• Consider adding PKCE flow for public clients
+
+**Performance Optimizations:**
+• Token validation is happening on every request - implement caching (middleware.js:34)
+• Database queries in getUserProfile() could be optimized with indexes
+
+**Positive Highlights:**
+• Excellent test coverage at 94%
+• Clean separation of auth and authorization logic
+• Proper error handling without leaking sensitive info
+
+**Deployment Considerations:**
+• Will need to update Vercel environment variables before deployment
+• Database migrations required for refresh_tokens table
+• Consider feature flag for gradual rollout
+
+Ready to proceed with deployment after addressing critical issues.
+```
+
+## Step 4: Automate deployment workflows with Vercel
+
+Now let's add sophisticated deployment capabilities:
+
+**Configure deployment intelligence:**
+
+```text
+For deployment workflows, implement:
+
+1. Pre-deployment Checks:
+   - All CI/CD tests passing
+   - No critical security issues in code review
+   - Database migrations ready if needed
+   - Environment variables configured
+
+2. Staging Deployment First:
+   - Deploy to staging environment
+   - Run smoke tests automatically
+   - Check performance metrics
+   - Verify no errors in logs
+
+3. Production Deployment:
+   - Only after staging validation
+   - Implement canary or blue-green deployment
+   - Monitor error rates and performance
+   - Automatic rollback if error threshold exceeded
+
+4. Post-deployment Monitoring:
+   - Track Core Web Vitals
+   - Monitor error rates
+   - Check API response times
+   - Alert on anomalies
+```
+
+### Example deployment workflow
+
+```text
+You: The PR has been approved. Deploy the authentication changes to production.
+
+Agent: I'll coordinate the deployment of the authentication system to production. Let me start with our safety checks:
+
+**Pre-deployment Validation:**
+✅ All GitHub Actions tests passing (last run: 2 minutes ago)
+✅ Critical security issues from code review have been addressed
+✅ PR #142 merged to main branch
+✅ Vercel preview deployment successful
+
+**Staging Deployment:**
+Deploying to staging environment...
+✅ Deployment successful: https://app-staging.vercel.app
+✅ Running automated smoke tests...
+  - Login flow: PASS (avg 230ms)
+  - Token refresh: PASS (avg 145ms)
+  - Logout flow: PASS (avg 89ms)
+✅ No errors in staging logs (monitored for 5 minutes)
+
+**Production Deployment Plan:**
+I'll use a canary deployment strategy:
+1. Deploy to 10% of traffic first
+2. Monitor for 15 minutes
+3. If metrics are stable, deploy to 100%
+
+Shall I proceed with the canary deployment to production?
+
+[After confirmation]
+
+**Production Deployment Progress:**
+🚀 Deploying to production (10% canary)...
+✅ Canary deployment live
+📊 Monitoring metrics for 15 minutes...
+  - Error rate: 0.01% (baseline: 0.02%) ✅
+  - Response time: 122ms (baseline: 118ms) ✅
+  - CPU usage: 34% (baseline: 32%) ✅
+
+All metrics look healthy. Promoting to 100% traffic...
+✅ Full production deployment complete!
+
+**Deployment Summary:**
+- URL: https://app.vercel.app
+- Build ID: dpl_Fk3j2k4j2k3j4
+- Duration: 18 minutes total
+- Features: OAuth 2.0 authentication system
+
+**Next Steps:**
+1. Monitor error rates for next 24 hours
+2. Review user feedback on new auth flow
+3. Plan gradual feature flag rollout for existing users
+
+I'll continue monitoring and alert you if any issues arise.
+```
+
+## Step 5: Create development best practices automation
+
+Extend your agent to enforce and automate development best practices:
+
+**Advanced automation patterns:**
+
+```text
+Implement these automated workflows:
+
+1. Dependency Management:
+   - Weekly dependency update PRs
+   - Security vulnerability scanning
+   - Breaking change detection
+   - Automated testing of updates
+
+2. Documentation Sync:
+   - Update API docs when endpoints change
+   - Generate changelog from PR descriptions
+   - Keep README synchronized with actual setup
+   - Create architecture diagrams from code
+
+3. Performance Budget Enforcement:
+   - Block deployments exceeding bundle size limits
+   - Warn on significant performance regressions
+   - Track and report Core Web Vitals trends
+   - Suggest optimization opportunities
+
+4. Release Coordination:
+   - Generate release notes from merged PRs
+   - Coordinate database migrations with deployments
+   - Manage feature flags for gradual rollouts
+   - Schedule deployments for optimal times
+```
+
+## What you've accomplished
+
+In 30 minutes, you've built a sophisticated development and infrastructure agent
+that:
+
+**Code intelligence** reviews code with understanding of quality, security, and
+performance implications beyond basic syntax
+
+**Deployment orchestration** manages complex deployment workflows with staging
+validation, canary releases, and automatic rollbacks
+
+**Production monitoring** tracks system health, detects anomalies, and takes
+corrective action when needed
+
+**Best practices automation** enforces development standards, manages
+dependencies, and coordinates releases
+
+**Domain expertise** acts like a senior DevOps engineer, understanding not just
+how to use tools but when and why
+
+## The power of domain-specific development agents
+
+Development agents that truly understand code and infrastructure can:
+
+**Reduce deployment risk** catch issues before they reach production through
+intelligent analysis
+
+**Accelerate development** automate repetitive tasks while maintaining quality
+standards
+
+**Improve code quality** provide consistent, actionable feedback on every change
+
+**Enable continuous deployment** safe, automated releases with confidence
+
+**Scale expertise** every developer gets access to senior-level DevOps knowledge
+
+<Card
+  title="Tomorrow - Day 13"
+  icon="arrow-right"
+  href="/agents/30-days-of-agents/day-13"
+>
+  Data & Analytics with Neo4j and MongoDB. Build agents that understand graph
+  relationships and document structures for complex data analysis.
+</Card>
+
+## Pro tip for today
+
+After building your development agent, test it with real scenarios:
+
+```text
+What development workflows in our team are most error-prone or time-consuming?
+How can we enhance your capabilities to better handle these specific patterns?
+```
+
+This helps you identify additional automation opportunities specific to your
+team's needs.
+
+---
+
+**Time to complete** ~30 minutes
+
+**Skills learned** code review intelligence, deployment orchestration,
+production monitoring, rollback automation, development best practices
+
+**Next** day 13 - Data & Analytics agents with Neo4j and MongoDB
+
+<Tip>
+  **Remember** the best development agents don't just execute commands—they
+  understand the why behind development practices and make intelligent decisions
+  about code quality, deployment safety, and system reliability.
+</Tip>

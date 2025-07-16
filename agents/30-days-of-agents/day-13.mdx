@@ -1,0 +1,210 @@
+---
+title: "Day 13: Project Management & Documentation - Linear & Notion"
+sidebarTitle: "Day 13: Linear & Notion"
+description:
+  "Build a project management agent that coordinates tasks, tracks progress, and
+  maintains documentation across Linear and Notion."
+---
+
+<Card title="Day 13 challenge" icon="tasks">
+  **Goal**: create a project coordination agent with Linear and Notion
+
+**Theme**: domain specialization week - project intelligence
+
+**Time investment**: ~20 minutes
+
+</Card>
+
+Welcome to Day 13! Today you'll build a **project management agent** that
+bridges task tracking in Linear with documentation in Notion. This agent
+understands how modern teams work across multiple tools.
+
+## What you'll accomplish today
+
+- Build a project management agent that coordinates across tools
+- Connect Linear for issue tracking and sprint management
+- Integrate Notion for documentation and knowledge management
+- Create workflows that keep projects and docs in sync
+
+<Warning>
+  You'll need access to Linear and Notion workspaces with appropriate
+  permissions to complete today's exercises.
+</Warning>
+
+## Step 1: Understanding project management patterns
+
+Project agents need to understand:
+
+### Cross-tool coordination
+
+- **Task lifecycle**: From idea in Notion → issue in Linear → documentation
+  update
+- **Status synchronization**: Keep project status consistent across platforms
+- **Knowledge capture**: Document decisions and outcomes, not just track tasks
+- **Team collaboration**: Different tools for different team members
+
+<Tip>
+  **Multi-tool thinking**: your agent should understand that Linear tracks work
+  while Notion captures knowledge—and keep both synchronized.
+</Tip>
+
+## Step 2: Create your project management agent
+
+Work with Concierge to build a cross-platform coordinator:
+
+```text
+I want to create a project management agent that coordinates between Linear and Notion.
+
+The agent should:
+- Track sprint progress in Linear and update project docs in Notion
+- Create Linear issues from Notion meeting notes and planning docs
+- Generate weekly project summaries combining task data and documentation
+- Ensure technical decisions in Linear are documented in Notion
+- Keep project roadmaps synchronized across both platforms
+
+It should act like a technical project manager who ensures nothing falls through the cracks.
+```
+
+## Step 3 connect Linear and Notion
+
+Add both connections to your agent:
+
+**Linear connection**:
+
+- Issue management and creation
+- Sprint tracking and velocity
+- Project status and milestones
+- Team workload visibility
+
+**Notion connection**:
+
+- Documentation reading and updates
+- Meeting notes processing
+- Knowledge base management
+- Project wiki maintenance
+
+## Step 4: Implement coordination workflows
+
+### Workflow 1: Sprint documentation
+
+```text
+At the end of each sprint, can you:
+1. Summarize completed Linear issues
+2. Extract key decisions and technical changes
+3. Update our Notion sprint retrospective doc
+4. Identify undocumented features that need wiki updates
+```
+
+Your agent coordinates:
+
+- Pulls completed issues from Linear
+- Identifies important decisions and changes
+- Updates Notion with structured summaries
+- Flags documentation gaps
+
+### Workflow 2: Meeting to task conversion
+
+```text
+I just finished a planning meeting. The notes are in Notion under "Product Planning."
+Can you create Linear issues for all the action items we discussed?
+```
+
+The agent:
+
+- Reads meeting notes from Notion
+- Identifies concrete action items
+- Creates properly labeled Linear issues
+- Links back to source documentation
+
+## Step 5: Build reusable coordination tasks
+
+<Note>
+  **Coming soon** daily scheduled tasks and automated workflows. For now, you'll
+  need to interact with your agent through the UI to trigger these workflows.
+</Note>
+
+**Daily standup prep**:
+
+```text
+Can you prepare a standup summary that includes:
+- Yesterday's completed Linear issues
+- Today's priorities from Linear
+- Any blockers mentioned in Linear comments
+- Related Notion docs for context
+
+Post this in our Notion daily standups page.
+```
+
+**Documentation health check**:
+
+```text
+Can you analyze:
+- Linear issues marked "Done" without linked documentation
+- Notion pages that reference outdated Linear issues
+- Technical decisions in Linear not captured in Notion
+- Project timelines that have diverged between tools
+
+Create a "Documentation Debt" report in Notion.
+```
+
+<Tip>
+  **Pro tip** set a reminder to run these workflows daily or weekly until
+  automated scheduling becomes available.
+</Tip>
+
+## What you've accomplished
+
+In 20 minutes, you've built a cross-platform project management agent:
+
+**Multi-tool coordination** agent that understands Linear for execution and
+Notion for knowledge
+
+**Manual synchronization** keeps tasks and documentation aligned when you run
+the workflows
+
+**Workflow intelligence** converts between different information formats
+
+**Gap identification** finds where documentation doesn't match execution
+
+## The power of multi-tool agents
+
+Project management agents that span tools can:
+
+- **Prevent information silos** by connecting execution with documentation
+- **Reduce context switching** by bringing information together
+- **Capture institutional knowledge** automatically from task execution
+- **Improve team alignment** through consistent cross-tool updates
+
+<Card
+  title="Tomorrow - Day 14"
+  icon="arrow-right"
+  href="/agents/30-days-of-agents/day-14"
+>
+  Data & analytics with Neo4j and MongoDB. Build agents that understand complex
+  data relationships.
+</Card>
+
+## Pro tip for today
+
+Ask your project agent:
+
+```text
+What patterns do you notice between our Linear velocity and our Notion documentation quality?
+How can we improve both?
+```
+
+This helps your agent develop insights about your team's work patterns.
+
+---
+
+**Time to complete**: ~20 minutes
+
+**Skills learned** multi-tool coordination, Linear integration, Notion
+automation, project intelligence
+
+**Next** Day 14 - Data & analytics agents with Neo4j and MongoDB
+
+<Tip>
+  **Remember** the best project agents don't just move data between tools—they
+  understand how your team works and help improve processes.
+</Tip>
