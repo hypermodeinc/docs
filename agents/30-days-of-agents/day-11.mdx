@@ -1,0 +1,216 @@
+---
+title: "Day 11: Finance & Revenue Operations - Stripe Integration"
+sidebarTitle: "Day 11: Stripe Integration"
+description:
+  "Build a revenue operations agent that monitors payments, analyzes
+  subscription metrics, and provides financial insights through Stripe
+  integration."
+---
+
+<Card title="Day 11 challenge" icon="dollar-sign">
+  **Goal**: create a revenue operations agent with Stripe integration
+
+**Theme**: domain specialization week - financial intelligence
+
+**Time investment**: ~20 minutes
+
+</Card>
+
+Welcome to Day 11 and Week 3! You've mastered agent creation and workflows. Now
+you'll specialize in **domain-specific agents**—starting with finance and
+revenue operations through Stripe integration.
+
+This week is about building agents that don't just use tools, but understand the
+business context and best practices of specific domains.
+
+## What you'll accomplish today
+
+- Build a revenue operations agent that understands financial workflows
+- Connect Stripe for payment and subscription intelligence
+- Create automated revenue reporting and customer insights
+- Learn domain-specific patterns for financial agents
+
+<Warning>
+  This builds on your Week 2 agent creation skills. You'll need a Stripe account
+  with appropriate permissions to complete today's integration.
+</Warning>
+
+## Step 1: Understanding revenue agent patterns
+
+Financial agents need specialized knowledge beyond basic tool usage:
+
+### Domain expertise requirements
+
+Revenue agents must understand:
+
+- **Financial metrics**: MRR, churn, LTV, CAC, and their relationships
+- **Customer lifecycle**: Trial → paid → expansion → renewal patterns
+- **Risk indicators**: Failed payments, cancellations, downgrades
+- **Compliance needs**: Data privacy, financial reporting requirements
+
+<Tip>
+  **Domain thinking** your agent should reason like a revenue operations
+  manager, not just fetch Stripe data.
+</Tip>
+
+## Step 2: Create your revenue operations agent
+
+Work with Concierge to build a specialized financial agent:
+
+```text
+I want to create a revenue operations agent that monitors our Stripe payments and subscriptions.
+
+The agent should:
+- Track key revenue metrics (MRR, churn, new vs expansion revenue)
+- Identify at-risk customers based on payment patterns
+- Generate weekly revenue reports with insights
+- Alert on significant revenue events (large cancellations, payment failures)
+- Provide customer health scores based on payment history
+
+It should think like a revenue operations manager who understands SaaS metrics.
+```
+
+## Step 3: Connect and configure Stripe
+
+Add Stripe to your agent's connections:
+
+1. **Navigate to Connections** in your agent settings
+2. **Search for Stripe** and click "Add Connection"
+3. **Authenticate** with your Stripe account
+4. **Select appropriate permissions** (read access to payments, customers,
+   subscriptions)
+
+### Key Stripe capabilities for revenue agents
+
+Your agent can now:
+
+- **Analyze payment data**: Success rates, failure reasons, retry patterns
+- **Monitor subscriptions**: New, upgraded, downgraded, cancelled
+- **Track customer behavior**: Payment methods, billing cycles, usage patterns
+- **Generate insights**: Revenue trends, cohort analysis, forecasting
+
+## Step 4: Implement revenue intelligence workflows
+
+Test your agent with real revenue scenarios:
+
+```text
+Can you analyze our revenue performance this month and identify any concerning trends?
+```
+
+Your agent should:
+
+- Pull current month's transaction data from Stripe
+- Calculate key metrics (MRR, churn rate, growth rate)
+- Identify anomalies or concerning patterns
+- Provide actionable recommendations
+
+### Example revenue analysis
+
+```text
+What's our current MRR and how has it changed this quarter?
+Which customers are at risk of churning?
+```
+
+The agent analyzes:
+
+- **MRR trends**: Current MRR, growth rate, net new vs expansion
+- **Churn indicators**: Failed payments, downgrades, usage decline
+- **Customer health**: Payment reliability, engagement, upgrade potential
+- **Action items**: Customers needing attention, upsell opportunities
+
+## Step 5: Create automated revenue workflows
+
+Build repeatable revenue tasks:
+
+<Note>
+  **Coming soon** daily and weekly scheduled tasks. For now, you'll need to
+  interact with your agent through the UI to run these workflows.
+</Note>
+
+**Weekly revenue report**:
+
+```text
+Can you analyze last week's revenue performance including:
+- New vs lost MRR
+- Payment failure rate and recovery
+- Top customers by revenue
+- Churn risk assessment
+- Week-over-week comparison
+
+Format as an executive summary with key metrics and action items.
+```
+
+**Customer health monitoring**:
+
+```text
+Can you check for:
+- Failed payments needing attention
+- Customers with multiple failed attempts
+- Sudden usage drops indicating churn risk
+- Opportunities for upgrades based on usage
+
+Alert me only for critical issues needing immediate action.
+```
+
+<Tip>
+  **Pro tip** set calendar reminders to run your revenue report weekly and
+  health checks daily until automated scheduling is available.
+</Tip>
+
+## What you've accomplished
+
+In 20 minutes, you've built a domain-specific revenue operations agent:
+
+**Financial intelligence** agent that understands revenue metrics and SaaS
+business models
+
+**Stripe integration** connected payment and subscription data for real-time
+insights
+
+**Manual workflows** revenue reporting and customer health monitoring that you
+can run on-demand
+
+**Domain expertise** agent that thinks like a revenue operations manager, not
+just a data fetcher
+
+## The power of domain-specific agents
+
+Unlike generic agents, domain-specific agents:
+
+- **Understand context**: Know what metrics matter and why
+- **Identify patterns**: Recognize revenue risks before they become problems
+- **Provide insights**: Actionable recommendations, not just data dumps
+- **Automate expertise**: Scale revenue operations knowledge across your team
+
+<Card
+  title="Tomorrow - Day 12"
+  icon="arrow-right"
+  href="/agents/30-days-of-agents/day-12"
+>
+  Development & infrastructure with GitHub and Vercel. Build agents that manage
+  code, deployments, and development workflows.
+</Card>
+
+## Pro tip for today
+
+Ask your revenue agent:
+
+```text
+Based on our payment patterns, what early warning signs should I watch for to prevent churn?
+```
+
+This helps your agent develop predictive capabilities specific to your business.
+
+---
+
+**Time to complete** ~20 minutes
+
+**Skills learned** domain-specific agent design, Stripe integration, revenue
+intelligence, automated financial workflows
+
+**Next** Day 12 - Development & infrastructure agents with GitHub and Vercel
+
+<Tip>
+  **Remember** the best financial agents don't just report numbers—they
+  understand what those numbers mean for your business and what actions to take.
+</Tip>
