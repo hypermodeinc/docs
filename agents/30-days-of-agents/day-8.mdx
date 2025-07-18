@@ -68,7 +68,7 @@ its configuration options. The agent interface gives you powerful customization
 capabilities.
 
 <img
-  className="w-1/2 mx-auto"
+  className="w-2/3 mx-auto"
   src="/images/agents/30-days-of-agents/day-8-agent-about.png"
   alt="Agent About View"
 />
@@ -103,25 +103,36 @@ capabilities.
   explore different behaviors.
 </Tip>
 
-## Step 2: Add connections through the agent interface
+## Step 2: Configure agent-specific connections
 
-Now let's give your agent access to the services it needs. The connections
-interface makes this straightforward.
+Now let's give your agent access to the services it needs. There are two types
+of connections: **agent connections** (specific to your agent) and **workspace
+connections** (shared across all agents). Let's start with agent-specific
+connections.
 
 <img
-  className="w-1/2 mx-auto"
+  className="w-2/3 mx-auto"
   src="/images/agents/30-days-of-agents/day-8-agent-connections.png"
   alt="Agent Connections View"
 />
 
-**Configure connections via agent interface:**
+**Configure agent connections:**
 
-1. **Navigate to the Connections tab** in your agent's about section
-2. **Browse available connections** or search for specific services your agent
-   might need
-3. **Click "Add Connection"** for services that align with your agent's purpose
-4. **Complete the OAuth flow** when prompted for authentication
-5. **Verify successful connection** with the green checkmark indicator
+1. **Navigate to your agent** by clicking it in the sidebar
+2. **Click the agent's name** at the top to open the About section
+3. **Click the Connections tab** to see available connections for this agent
+4. **Browse available connections** or search for specific services your agent
+   needs
+5. **Click "Add Connection"** for services that align with your agent's purpose
+6. **Complete the OAuth flow** when prompted for authentication
+7. **Verify successful connection** with the green checkmark indicator
+
+<Info>
+  **Agent connections are specific**: connections you add here are only
+  available to this particular agent. If you want connections available to all
+  agents in your workspace, you'll need to configure workspace connections
+  (covered in Step 3).
+</Info>
 
 **Connection selection strategy:**
 
@@ -150,37 +161,35 @@ that support those capabilities. For example:
   cases.
 </Info>
 
-## Step 3: Alternative connection management options
+## Step 3: Configure workspace-level connections
 
-Besides the agent interface, you have other ways to manage connections across
-your workspace.
-
-<img
-  className="w-1/2 mx-auto"
-  src="/images/agents/connections-sidebar.png"
-  alt="Agent Connections View"
-/>
-
-**Sidebar connection access:**
-
-- **Click "Add connections"** from the left navigation bar
-- **Search through 2,000+ integrations** to find specific services
-- **Complete OAuth flows** directly from the sidebar
+In addition to agent-specific connections, you can configure workspace
+connections that are shared across all agents in your workspace.
 
 ![Connections Management](/images/agents/connections-manage.png)
 
-**Workspace-level management:**
+**Configure workspace connections:**
 
-1. **Navigate to Workspace Settings** from your profile menu
-2. **Click the Connections tab** to see all available integrations
-3. **Add connections** that can be shared across multiple agents
-4. **Manage authentication status** and review permissions
+1. **Navigate to Workspace Settings** from your profile menu (click your avatar
+   in the top right)
+2. **Click the Connections tab** to see all available workspace-wide
+   integrations
+3. **Add connections** that multiple agents might need to share
+4. **Complete authentication** for each service you connect
+5. **Manage authentication status** and review permissions
 
 <Info>
-  **Multiple access points**: whether you use the agent interface, sidebar, or
-  workspace settings depends on your preference. All methods give you access to
-  the same powerful integration ecosystem.
+  **When to use workspace vs. agent connections**: - **Workspace connections**:
+  for services that multiple agents need to access (like company Google Drive or
+  Slack) - **Agent connections**: for services specific to one agent's role
+  (like a specific GitHub repository for a code agent)
 </Info>
+
+<Tip>
+  **Connection hierarchy**: agents can use both their specific connections and
+  any workspace connections. This gives you flexibility in how you organize
+  access across your team.
+</Tip>
 
 ## Step 4: Test your agent's new tool capabilities
 
@@ -261,8 +270,9 @@ In 20 minutes, you've mastered agent configuration and tool enablement:
 **Interface mastery**: learned to navigate and customize your agent through the
 About section, including instructions and model selection
 
-**Connection configuration**: successfully added relevant connections through
-multiple access methods - agent interface, sidebar, and workspace settings
+**Connection configuration**: successfully added agent-specific connections
+through the agent's Connections tab and learned to configure workspace-wide
+connections through Workspace Settings
 
 **Tool capability exploration**: tested your agent's new abilities and
 discovered what specific tools are available with each connection
@@ -312,9 +322,10 @@ considered, based on its understanding of the tools now available.
 
 **Time to complete**: ~20 minutes
 
-**Skills learned**: agent configuration interface, connection management across
-multiple access points, understanding connections vs. tools, agent instruction
-editing, model selection, tool capability exploration and testing
+**Skills learned**: agent configuration interface, connection management for
+both agent-specific and workspace connections, understanding connections vs.
+tools, agent instruction editing, model selection, tool capability exploration
+and testing
 
 **Next**: day 9 - Create reusable tasks from successful workflows
 
