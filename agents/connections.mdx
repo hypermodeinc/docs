@@ -5,23 +5,33 @@ description:
   "All the capabilities your agent needs to take action across your stack"
 ---
 
-**Connections** enable Hypermode Agents to securely access and interact with external tools, APIs, and services. With over 2,000 available integrations, agents can execute tasks across your entire technology stack.
+**Connections** enable Hypermode Agents to securely access and interact with
+external tools, APIs, and services. With over 2,000 available integrations,
+agents can execute tasks across your entire technology stack.
 
 ## Overview
 
-A Connection is a secure link between your agent and an external service (for example GitHub, Slack, Stripe, or your internal APIs). Connections allow agents to perform actions, retrieve data, and automate flows using these services.
+A Connection is a secure link between your agent and an external service (for
+example GitHub, Slack, Stripe, or your internal APIs). Connections allow agents
+to perform actions, retrieve data, and automate flows using these services.
 
-- **2,000+ integrations** to connect to popular tools across development, analytics, productivity, marketing, finance, and more.
-- **Role-based access control** limits agent access to only the necessary tools and permissions
-- **Audit logging** tracks all agent interactions with external services for compliance and troubleshooting
-- **Powered by Model Context Protocol** for secure, structured, and context-aware tool interactions
+- **2,000+ integrations** to connect to popular tools across development,
+  analytics, productivity, marketing, finance, and more.
+- **Role-based access control** limits agent access to only the necessary tools
+  and permissions
+- **Audit logging** tracks all agent interactions with external services for
+  compliance and troubleshooting
+- **Powered by Model Context Protocol** for secure, structured, and
+  context-aware tool interactions
 - **Custom API support** with encrypted credentials and scoped access
 
 ## Getting started
 
 ### Add a connection
 
-Open the information details of your agent. Select a connection from the "add connections" from the left navigation bar or search from more than 2,000 connection options. 
+Open the information details of your agent. Select a connection from the "add
+connections" from the left navigation bar or search from more than 2,000
+connection options.
 
 <img
   src="/images/agents/connections-sidebar.png"
@@ -31,11 +41,16 @@ Open the information details of your agent. Select a connection from the "add co
 
 ### Authenticate
 
-You'll be prompted to complete the OAuth flow if you haven't enabled the connection yet for your workspace.
+You'll be prompted to complete the OAuth flow if you haven't enabled the
+connection yet for your workspace.
 
 Once authenticated, save the changes made to the agent.
 
-<Note>All connections use secure authentication methods including OAuth 2.0, API keys, and service account credentials. Credentials are encrypted and never exposed to the agent’s reasoning process.</Note>
+<Note>
+  All connections use secure authentication methods including OAuth 2.0, API
+  keys, and service account credentials. Credentials are encrypted and never
+  exposed to the agent's reasoning process.
+</Note>
 
 ### Manage connections
 
@@ -47,7 +62,9 @@ this page.
 
 ### Edit or remove connections
 
-Update credentials, change permissions, or remove connections at any time form the "Connections" tab in your agent information card or in the Workspace settings page.
+Update credentials, change permissions, or remove connections at any time form
+the "Connections" tab in your agent information card or in the Workspace
+settings page.
 
 <Tip>
   Start with a small set of essential tools for your agent's role, then expand
@@ -56,30 +73,47 @@ Update credentials, change permissions, or remove connections at any time form t
 
 ## FAQs
 
-**Why am I seeing a “token not found” or “failed to get connection token” error?**
+**Why is there a "token not found" or "failed to get connection token" error?**
 
-This error usually means the connection’s credentials are missing, expired, or weren't saved correctly. Please re-authenticate the connection in Workspace Settings > Connections. If the issue persists, ensure you have completed the OAuth flow and granted all required permissions.
+This error usually means the connection’s credentials are missing, expired, or
+weren't saved correctly. Please re-authenticate the connection in Workspace
+Settings > Connections. If the issue persists, ensure you have completed the
+OAuth flow and granted all required permissions.
 
-**My agent can’t access my repositories, calendar, or Notion page even though I connected the service. What should I do?**
+**The agent can't access repositories, calendar, or Notion pages even though the
+service is connected?**
 
-Double-check that you completed the OAuth authorization and selected the correct account or workspace. Some services require you to explicitly grant access to specific resources (for example repositories, calendars, pages). You can update these permissions in your service’s settings or by reconnecting the integration.
+Double-check that you completed the OAuth authorization and selected the correct
+account or workspace. Some services require you to explicitly grant access to
+specific resources (for example repositories, calendars, pages). You can update
+these permissions in your service’s settings or by reconnecting the integration.
 
-**Is there a way to add or manage connections directly from the agent setup flow?**
+**Is there a way to add or manage connections directly from the agent setup
+flow?**
 
-Yes. You can add new connections during agent creation. Look for the “Add Connection” tab in your agent card once the agent is created.
+Yes. You can add new connections during agent creation. Look for the “Add
+Connection” tab in your agent card once the agent is created.
 
 **Can one connection power multiple agents?**
 
-Yes. Connections are created at the Workspace level and can be assigned to multiple agents. You can grant access to the same connection for any agents that need it.
+Yes. Connections are created at the Workspace level and can be assigned to
+multiple agents. You can grant access to the same connection for any agents that
+need it.
 
-**Can I connect to a service not listed in the catalog?**
+**Can we connect to a service not listed in the catalog?**
 
-Custom integrations can be built for internal APIs and proprietary systems. Contact us for assistance with custom connection development.
+Custom integrations can be built for internal APIs and proprietary systems.
+Contact us for assistance with custom connection development.
 
-**How do I restrict agent access to sensitive data?**
+**How do we restrict agent access to sensitive data?**
 
-Hypermode uses OAuth to connect to external services, allowing you to grant only the minimum required permissions (scopes) for each agent. Use role-based access control and permission scoping when assigning connections to agents to ensure they only access the data and actions necessary for their tasks.
+Hypermode uses OAuth to connect to external services, allowing you to grant only
+the minimum required permissions (scopes) for each agent. Use role-based access
+control and permission scoping when assigning connections to agents to ensure
+they only access the data and actions necessary for their tasks.
 
-**How do I know which permissions or scopes are being requested during OAuth?**
+**How do we know which permissions or scopes are being requested during OAuth?**
 
-During the OAuth flow, you’ll see a list of permissions requested by Hypermode. Only the minimum required scopes are requested for the tools you assign to your agent. You can review and adjust these permissions in your service’s settings.
+During the OAuth flow, you’ll see a list of permissions requested by Hypermode.
+Only the minimum required scopes are requested for the tools you assign to your
+agent. You can review and adjust these permissions in your service’s settings.
