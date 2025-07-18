@@ -1,15 +1,21 @@
 8B
 [Aa]gentic
+Ahrefs
+Airtable
 [Aa]lterSchema
 [Aa]pp
+Asana
 Attio
+Basecamp
 [Bb]oolean
 [Bb]ootcamp
+Browserbase
 [Cc]ollections
 [Cc]omputeDistance
 [Cc]omputeSimilarity
 [Cc]onsole
 CRM
+[Cc]ryptocurrency
 [Dd]eserialize
 [Dd]istilbert
 [Dd]ropAll
@@ -18,6 +24,7 @@ CRM
 [Ee]xecuteMutations
 [Ee]xecuteQuery
 [Ff]etch
+FAQs
 [Gg]etLabels
 [Gg]etModel
 [Gg]etNamespaces
@@ -28,6 +35,7 @@ CRM
 [Hh]yp
 [Hh]ypercategories
 [Hh]ypermode
+Hyperbrowser
 [Ii]nferencing
 Jira
 [Ll]og
@@ -41,8 +49,10 @@ Nano
 Nomic
 OAuth
 [Oo]nboarding
+[Oo]perationalize
 [Pp]arams
 [Qq]ueryScalar
+[Rr]eimagine
 [Ss]erializable
 [Ss]erverless
 [Tt]imeEnd
@@ -87,6 +97,7 @@ SDK|sdk
 [Ss]idekick
 Spotify
 Strava
+Supabase 
 TLS
 tokenizer
 URL|url
@@ -96,6 +107,7 @@ UUID
 Warnf
 WASM
 waitlist
+Weaviate
 Xero
 Zendesk
 
