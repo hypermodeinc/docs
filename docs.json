@@ -113,6 +113,17 @@
                       "agents/30-days-of-agents/day-9",
                       "agents/30-days-of-agents/day-10"
                     ]
+                  },
+                  {
+                    "group": "Week 3",
+                    "pages": [
+                      "agents/30-days-of-agents/domain-specific-agents",
+                      "agents/30-days-of-agents/day-11",
+                      "agents/30-days-of-agents/day-12",
+                      "agents/30-days-of-agents/day-13",
+                      "agents/30-days-of-agents/day-14",
+                      "agents/30-days-of-agents/day-15"
+                    ]
                   }
                 ]
               },
