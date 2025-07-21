@@ -31,37 +31,39 @@ started with Hypermode Agents by learning how to interact with agents and add
 ![Sidekick](/images/tutorials/first-hypermode-agent/sidekick.png)
 
 Connections give our agents access to external tools and services, such as
-Google Calendar, email, GitHub, our CRM, and more.
+Google Calendar, email, GitHub, our CRM, and more. Sidekick has access to the
+Google Calendar connection by default.
+
+Let's start by asking Sidekick what they can help us with.
+
+![Sidekick user message](/images/tutorials/first-hypermode-agent/sidekick-message.png)
+
+It looks like Sidekick can be a lot more helpful if we connect our Google
+Calendar.
 
 ## Sidekick connections
 
 Let's configure the Google Calendar connection so Sidekick can access our
-calendar and help us prepare for meetings.
+calendar and help us prepare for meetings. Select the **"Configure agent
+connections"** button and follow the authorization flow to connect your Google
+Calendar.
 
 <Tip>
   Sidekick is configured to connect to Google Calendar. Over 2000 other
   connections are available by upgrading to the Hypermode Pro tier.
 </Tip>
-<img
-  src="/images/tutorials/first-hypermode-agent/sidekick-connections.png"
-  alt="Sidekick connections"
-  style={{ width: "100%", maxWidth: "300px" }}
-/>
-
-## Suggestion task
-
-Sidekick is configured with [tasks](/agents/tasks) to help us interact with our
-agent. Tasks are a repeatable set of instructions that you can save and use
-later with your agent. Think of a task as a learned skill for your agent.
-
-![Suggest task](/images/tutorials/first-hypermode-agent/suggest-task.png)
 
 ## Chat and tools
 
-In addition to selecting tasks, we can also interact with our agent through
-natural language chat. The agent uses tools to complete our requests. By asking
-the agent "who are we meeting with?" it uses the Google Calendar connection to
-access our calendar and find the meeting we're preparing for.
+We can interact with our agent through natural language chat. The agent uses
+"tools" to complete our requests. These tools enable an agent to understand and
+interact on its environment using the connections we add. Under the hood these
+tools and connections are powered by Model Context Protocol (MCP) servers.
+
+When we send a message to our agent it is able to use the tools and connections
+we've added to it to complete our requests. By asking the agent "who are we
+meeting with?" it uses the Google Calendar connection to access our calendar and
+find the meeting we're preparing for.
 
 ![Who are we meeting with?](/images/tutorials/first-hypermode-agent/who-meetings.png)
 

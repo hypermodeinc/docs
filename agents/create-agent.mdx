@@ -7,16 +7,17 @@ description:
 ---
 
 Creating an Agent is simple and can be done
-[using the built-in Hypermode Concierge agent](/agents/create-agent#build-a-new-agent-with-concierge)
+[using the built-in Hypermode Agent Helper concierge agent](/agents/create-agent#build-a-new-agent-with-concierge)
 or by
 [specifying the agent's role and instructions yourself](/agents/create-agent#create-an-agent-manually).
 
 ## Build a new agent with Concierge
 
-![Hypermode Concierge agent](/images/agents/concierge.png)
+**Hypermode Agent Helper Concierge** is Hypermode's AI-powered agent that
+transforms natural language descriptions into fully functional agents. No coding
+experience required.
 
-**Concierge** is Hypermode's AI-powered agent that transforms natural language
-descriptions into fully functional agents. No coding experience required.
+![Hypermode Concierge agent](/images/agents/concierge.png)
 
 ### Overview
 
@@ -26,12 +27,12 @@ minutes to complete.
 
 <Steps>
 
-<Step title="Start a new thread with Concierge">
+<Step title="Start a new thread with Hypermode Agent Helper Concierge">
 
-Select the "Start a new thread" option from the left navigation bar under the
-Hypermode Concierge agent.
+To get started with the Agent Helper Concierge, select the "Create new" option
+to create a new thread and select the "Hypermode Agent Helper" helper.
 
-![Start a new thread with Concierge](/images/agents/concierge-1.png)
+![Start a new thread with Concierge](/images/agents/concierge-new-thread.png)
 
 </Step>
 
@@ -72,10 +73,21 @@ marketing agent might need access to GitHub to be able to submit website changes
 as pull requests and access to Notion to read internal messaging and product
 documents.
 
-![Enable connections and start working with your agent](/images/agents/concierge-4.png)
+Select the Agents view from the left navigation bar. Here you'll see the list of
+all agents in your workspace. Select "Add connections" next to the agent you
+just created.
 
-Once you've added connections, start chatting with your agent by asking what
-they can help you with or what connections they have access to.
+![Enable connections and start working with your agent](/images/agents/manual-create-connections.png)
+
+To add a connection select it from the list of available connections or search
+for it in the search bar.
+
+![Enable connections and start working with your agent](/images/agents/manual-create-connections-github.png)
+
+After selecting a connection, you'll be prompted to complete the OAuth flow to
+authorize the agent to access the connection on your behalf.
+
+Once you've added connections, we're ready to start working with your agent.
 
 </Step>
 
@@ -89,9 +101,10 @@ Agents can also be created manually by following the steps below.
 
 <Step title="Create new agent">
 
-Select the "Create new agent" option from the left navigation bar.
+Select the "Create new" button then select the "Create new agent" option from
+the drop down menu.
 
-![Create new agent](/images/agents/manual-create-1.png)
+![Create new agent](/images/agents/manual-create-2.png)
 
 </Step>
 
@@ -100,12 +113,7 @@ Select the "Create new agent" option from the left navigation bar.
 Choose a name, title, and description for your agent. An agent avatar is
 generated randomly but you can also upload your own avatar.
 
-<img
-  height="200"
-  src="/images/agents/manual-create-2.png"
-  alt="Describe your agent"
-  style={{ width: "100%", maxWidth: "400px" }}
-/>
+![Describe your agent](/images/agents/manual-create-form.png)
 
 </Step>
 
@@ -114,12 +122,7 @@ generated randomly but you can also upload your own avatar.
 The agent instructions are the system prompt that's used to guide the agent's
 behavior. This is where you define the agent's role and objectives.
 
-<img
-  height="200"
-  src="/images/agents/manual-create-3.png"
-  alt="Add your agent instructions"
-  style={{ width: "100%", maxWidth: "400px" }}
-/>
+![Add your agent instructions](/images/agents/manual-create-3.png)
 
 </Step>
 
@@ -128,21 +131,28 @@ behavior. This is where you define the agent's role and objectives.
 Select the model that you want to use for your agent. The model is used to run
 the agent's instructions, including choosing how to leverage tools.
 
-<img
-  height="200"
-  src="/images/agents/manual-create-4.png"
-  alt="Select your agent's model"
-  style={{ width: "100%", maxWidth: "400px" }}
-/>
+![Select your agent's model](/images/agents/manual-create-4.png)
 
 </Step>
 
 <Step title="Enable connections and start working with your agent">
+Connections enable the agent to understand and act on its environment. Add the connections that your agent will need to perform its tasks.
 
-Enable connections to allow your agent to access tools and data. This is where
-you define the tools that your agent has access to.
+Select the Agents view from the left navigation bar. Here you'll see the list of
+all agents in your workspace. Select "Add connections" next to the agent you
+just created.
 
-![Enable connections and start working with your agent](/images/agents/manual-create-5.png)
+![Enable connections and start working with your agent](/images/agents/manual-create-connections.png)
+
+To add a connection select it from the list of available connections or search
+for it in the search bar.
+
+![Enable connections and start working with your agent](/images/agents/manual-create-connections-github.png)
+
+After selecting a connection, you'll be prompted to complete the OAuth flow to
+authorize the agent to access the connection on your behalf.
+
+Once you've added connections, we're ready to start working with your agent.
 
 </Step>
 
