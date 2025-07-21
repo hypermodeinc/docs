@@ -65,7 +65,6 @@
                 "group": "Connect Your Agent",
                 "pages": ["agents/connections", "agents/available-connections"]
               },
-              "agents/tasks",
               "agents/model-selection",
               {
                 "group": "Example Agents",
