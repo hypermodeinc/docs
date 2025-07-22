@@ -1,0 +1,593 @@
+---
+title: "Day 19: Retrieval with MongoDB - Document-Based RAG Systems"
+sidebarTitle: "Day 19: MongoDB RAG"
+description:
+  "Implement sophisticated document-based retrieval systems using MongoDB Atlas
+  for unstructured data like product reviews, feedback, and content analysis
+  with vector search capabilities."
+---
+
+<Card title="Day 19 challenge" icon="file-text">
+  **Goal**: build document-based RAG with MongoDB for unstructured data retrieval
+
+**Theme**: context engineering week - NoSQL and document retrieval
+
+**Time investment**: ~25 minutes
+
+</Card>
+
+Welcome to Day 19! Yesterday you built structured RAG systems with PostgreSQL.
+Today you'll work with **unstructured document retrieval** using MongoDB Atlas.
+You'll learn to search through product reviews, feedback, and content where the
+structure varies and context is embedded in natural language.
+
+Document-based RAG excels when dealing with varied, unstructured content that
+doesn't fit neatly into database tables.
+
+## What you'll accomplish today
+
+- Set up MongoDB Atlas with vector search capabilities for document retrieval
+- Load Amazon product reviews as example unstructured data
+- Connect your agent to MongoDB for intelligent document search
+- Implement semantic search across varying document structures
+- Build retrieval patterns for sentiment analysis and contextual understanding
+
+<Warning>
+  This requires setting up MongoDB Atlas (free tier available). You'll be
+  working with unstructured documents that require different indexing and search
+  strategies than structured data.
+</Warning>
+
+## Step 1: Understanding document-based retrieval
+
+Document databases handle unstructured data differently than relational
+databases:
+
+### Document vs. relational data
+
+**Relational data (Day 18)**:
+
+- Fixed schema with defined columns
+- Structured relationships between tables
+- Efficient for transactional operations
+- Great for precise, attribute-based queries
+
+**Document data (Today)**:
+
+- Flexible schema with nested objects and arrays
+- Self-contained documents with varying structures
+- Efficient for content storage and retrieval
+- Great for text analysis and semantic search
+
+### When to use document-based RAG
+
+**Ideal for**:
+
+- Product reviews and customer feedback
+- Content analysis (blogs, articles, documentation)
+- Social media posts and comments
+- Support tickets and conversation logs
+- Research papers and knowledge articles
+
+**Not ideal for**:
+
+- Highly structured transactional data
+- Complex multi-table relationships
+- Frequent schema changes requiring migrations
+
+<Tip>
+  **Document thinking**: Think of document retrieval as searching through a
+  library of books rather than looking up entries in a catalog. Context and
+  content matter more than exact structure.
+</Tip>
+
+## Step 2: Set up MongoDB Atlas with vector search
+
+MongoDB Atlas provides managed MongoDB with built-in vector search:
+
+### Create your MongoDB Atlas cluster
+
+1. **Visit [mongodb.com/atlas](https://mongodb.com/atlas)** and create a free
+   account
+2. **Create a new cluster** (M0 free tier is sufficient for learning)
+3. **Set up database access** with username/password authentication
+4. **Configure network access** to allow connections from your IP
+5. **Get your connection string** for later use
+
+### Set up vector search index
+
+MongoDB Atlas uses Atlas Search for vector capabilities:
+
+```javascript
+// Create vector search index in MongoDB Atlas UI
+{
+  "fields": [
+    {
+      "numDimensions": 1536,
+      "path": "embedding",
+      "similarity": "cosine",
+      "type": "vector"
+    },
+    {
+      "path": "product_title",
+      "type": "string"
+    },
+    {
+      "path": "review_text",
+      "type": "string"
+    },
+    {
+      "path": "rating",
+      "type": "number"
+    }
+  ]
+}
+```
+
+### Create the reviews collection
+
+```javascript
+// Connect to your MongoDB instance and create the reviews collection
+use product_reviews
+
+// Create collection with validation schema
+db.createCollection("reviews", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["product_id", "product_title", "review_text", "rating"],
+      properties: {
+        product_id: { bsonType: "string" },
+        product_title: { bsonType: "string" },
+        review_text: { bsonType: "string" },
+        rating: { bsonType: "number", minimum: 1, maximum: 5 },
+        reviewer_name: { bsonType: "string" },
+        review_date: { bsonType: "date" },
+        verified_purchase: { bsonType: "bool" },
+        helpful_votes: { bsonType: "number" },
+        embedding: { bsonType: "array" }
+      }
+    }
+  }
+})
+```
+
+## Step 3: Load Amazon product reviews data
+
+Create a realistic dataset of product reviews with varying structures:
+
+### Sample review documents
+
+```javascript
+// Insert sample Amazon-style product reviews
+db.reviews.insertMany([
+  {
+    product_id: "iphone15pro",
+    product_title: "Apple iPhone 15 Pro",
+    review_text:
+      "Absolutely love this phone! The camera quality is incredible, especially in low light. The titanium build feels premium and the battery easily lasts all day. The Action Button is a nice touch. Only downside is the price, but you get what you pay for with Apple.",
+    rating: 5,
+    reviewer_name: "TechEnthusiast2024",
+    review_date: new Date("2024-10-15"),
+    verified_purchase: true,
+    helpful_votes: 23,
+    features_mentioned: ["camera", "battery", "titanium", "Action Button"],
+    sentiment: "positive",
+  },
+  {
+    product_id: "iphone15pro",
+    product_title: "Apple iPhone 15 Pro",
+    review_text:
+      "Camera is good but not revolutionary. Battery life is decent but nothing special. The phone feels nice but is way overpriced for what you get. Android flagships offer better value. Not impressed with iOS limitations either.",
+    rating: 3,
+    reviewer_name: "AndroidUser42",
+    review_date: new Date("2024-11-02"),
+    verified_purchase: true,
+    helpful_votes: 8,
+    features_mentioned: ["camera", "battery", "price", "iOS"],
+    sentiment: "neutral",
+  },
+  {
+    product_id: "galaxy_s24_ultra",
+    product_title: "Samsung Galaxy S24 Ultra",
+    review_text:
+      "The S Pen integration is fantastic for note-taking and creative work. Display is gorgeous and the camera zoom capabilities are unmatched. AI features are actually useful, especially for photo editing. Great phone for productivity.",
+    rating: 5,
+    reviewer_name: "ProductivityPro",
+    review_date: new Date("2024-09-28"),
+    verified_purchase: true,
+    helpful_votes: 15,
+    features_mentioned: ["S Pen", "display", "camera zoom", "AI features"],
+    sentiment: "positive",
+  },
+  {
+    product_id: "sony_wh1000xm5",
+    product_title: "Sony WH-1000XM5 Headphones",
+    review_text:
+      "These headphones are a game changer for my daily commute. Noise cancellation is outstanding - completely blocks out subway noise. Sound quality is crisp and balanced. Comfort is excellent for long wearing sessions. Battery life is as advertised. Highly recommend!",
+    rating: 5,
+    reviewer_name: "CommuterLife",
+    review_date: new Date("2024-10-20"),
+    verified_purchase: true,
+    helpful_votes: 31,
+    features_mentioned: [
+      "noise cancellation",
+      "sound quality",
+      "comfort",
+      "battery life",
+    ],
+    sentiment: "positive",
+  },
+  {
+    product_id: "dyson_v15",
+    product_title: "Dyson V15 Detect Vacuum",
+    review_text:
+      "The laser dust detection is amazing - you can see exactly where dust is hiding. Suction power is incredible on all surfaces. However, it's quite heavy for extended use and the battery drains faster than expected on max power. Worth it but has limitations.",
+    rating: 4,
+    reviewer_name: "CleaningExpert",
+    review_date: new Date("2024-11-05"),
+    verified_purchase: true,
+    helpful_votes: 12,
+    features_mentioned: [
+      "laser detection",
+      "suction power",
+      "weight",
+      "battery",
+    ],
+    sentiment: "mostly_positive",
+  },
+  {
+    product_id: "nike_air_max_270",
+    product_title: "Nike Air Max 270",
+    review_text:
+      "Comfortable for casual wear but not great for serious running. The cushioning feels good for walking around the city. Style is nice and goes with most outfits. Sizing runs a bit large - order half a size down. Good for the price point.",
+    rating: 4,
+    reviewer_name: "CasualRunner",
+    review_date: new Date("2024-10-08"),
+    verified_purchase: true,
+    helpful_votes: 7,
+    features_mentioned: ["comfort", "cushioning", "style", "sizing"],
+    sentiment: "positive",
+  },
+  {
+    product_id: "instant_pot_duo",
+    product_title: "Instant Pot Duo 7-in-1",
+    review_text:
+      "This has revolutionized my meal prep! Makes perfect rice, tender meats, and great yogurt. Learning curve was steep initially but now I use it almost daily. Saves so much time compared to traditional cooking methods. Essential kitchen appliance.",
+    rating: 5,
+    reviewer_name: "MealPrepMaster",
+    review_date: new Date("2024-09-15"),
+    verified_purchase: true,
+    helpful_votes: 45,
+    features_mentioned: ["meal prep", "rice", "yogurt", "time saving"],
+    sentiment: "positive",
+  },
+  {
+    product_id: "macbook_pro_m3",
+    product_title: "MacBook Pro 16-inch M3",
+    review_text:
+      "Performance is absolutely incredible for video editing and development work. The M3 chip handles everything I throw at it without breaking a sweat. Display is stunning. Battery life is impressive for such a powerful machine. Premium build quality as expected from Apple.",
+    rating: 5,
+    reviewer_name: "VideoEditor_Pro",
+    review_date: new Date("2024-11-10"),
+    verified_purchase: true,
+    helpful_votes: 28,
+    features_mentioned: [
+      "performance",
+      "M3 chip",
+      "video editing",
+      "display",
+      "battery",
+    ],
+    sentiment: "positive",
+  },
+])
+```
+
+### Generate embeddings for reviews
+
+Similar to Day 18, you'll need to generate embeddings:
+
+```python
+# Python script to generate embeddings for MongoDB reviews
+import pymongo
+import openai
+import json
+
+# Configure OpenAI
+openai.api_key = "your-openai-api-key"
+
+# Connect to MongoDB Atlas
+client = pymongo.MongoClient("your-mongodb-connection-string")
+db = client.product_reviews
+collection = db.reviews
+
+def generate_embedding(text):
+    response = openai.Embedding.create(
+        model="text-embedding-ada-002",
+        input=text
+    )
+    return response['data'][0]['embedding']
+
+# Update reviews with embeddings
+reviews = collection.find({"embedding": {"$exists": False}})
+
+for review in reviews:
+    # Combine review text with product context for better embeddings
+    text = f"{review['product_title']}. {review['review_text']}"
+    embedding = generate_embedding(text)
+
+    collection.update_one(
+        {"_id": review["_id"]},
+        {"$set": {"embedding": embedding}}
+    )
+
+print("Embeddings generated for all reviews")
+```
+
+## Step 4: Connect your agent to MongoDB
+
+Integrate MongoDB with your Hypermode agent for document retrieval:
+
+### Add MongoDB connection
+
+1. **Navigate to your agent's connections** in the About section
+2. **Add MongoDB connection** with your Atlas cluster credentials
+3. **Test the connection** by querying the reviews collection
+
+### Create a review analysis agent
+
+If needed, create a specialized agent with Concierge:
+
+```text
+I want to create a product review analysis agent that helps users understand customer sentiment and experiences.
+
+The agent should:
+- Search through product reviews using semantic similarity
+- Analyze customer sentiment and common themes
+- Identify specific product strengths and weaknesses mentioned by reviewers
+- Compare customer experiences across similar products
+- Provide insights about product satisfaction patterns
+- Help users understand real customer experiences beyond marketing claims
+
+The agent should act like a market research analyst who specializes in customer feedback analysis.
+```
+
+### Configure document retrieval patterns
+
+Add these instructions to your agent:
+
+```text
+Review Analysis Guidelines:
+1. Use semantic search to find relevant reviews based on user interests
+2. Look for patterns in customer feedback, not just individual opinions
+3. Identify specific product features mentioned by multiple reviewers
+4. Consider both positive and negative feedback for balanced insights
+5. Explain sentiment trends and common themes across reviews
+6. Provide specific quotes from reviews to support analysis
+7. Note verified purchases vs. unverified reviews when relevant
+```
+
+## Step 5: Implement document search and analysis
+
+Test your document-based RAG system:
+
+### Semantic review search
+
+```text
+What do customers say about camera quality in smartphone reviews? I'm particularly interested in low-light performance.
+```
+
+Your agent should:
+
+1. **Search reviews** using semantic similarity for camera-related content
+2. **Extract specific mentions** of camera features and performance
+3. **Analyze sentiment** around camera quality
+4. **Provide quotes** from actual reviews
+5. **Summarize trends** across multiple customer experiences
+
+### Sentiment analysis queries
+
+```text
+Analyze customer satisfaction patterns for headphones. What are the most common complaints and praise points?
+```
+
+This tests the agent's ability to:
+
+- **Aggregate sentiment** across multiple reviews
+- **Identify common themes** in feedback
+- **Distinguish between** different types of issues or praise
+- **Provide actionable insights** from unstructured feedback
+
+### Comparative analysis
+
+```text
+Compare customer experiences between iPhone and Samsung phones based on actual user reviews. What are the key differences in satisfaction?
+```
+
+This requires:
+
+- **Cross-product analysis** using semantic search
+- **Pattern recognition** across different product categories
+- **Balanced reporting** of pros and cons
+- **Context-aware insights** about user preferences
+
+<Tip>
+  **Document retrieval insight**: The power of document-based RAG is in
+  understanding context and nuance that structured data misses. Focus on
+  semantic meaning over exact keyword matches.
+</Tip>
+
+## Step 6: Advanced document retrieval patterns
+
+Enhance your MongoDB RAG with sophisticated search capabilities:
+
+### Multi-field semantic search
+
+```javascript
+// Advanced aggregation pipeline for semantic search with filters
+;[
+  {
+    $vectorSearch: {
+      index: "reviews_vector_index",
+      path: "embedding",
+      queryVector: "<query_embedding>",
+      numCandidates: 100,
+      limit: 10,
+    },
+  },
+  {
+    $match: {
+      rating: { $gte: 4 }, // Filter for positive reviews
+      verified_purchase: true,
+    },
+  },
+  {
+    $project: {
+      product_title: 1,
+      review_text: 1,
+      rating: 1,
+      reviewer_name: 1,
+      features_mentioned: 1,
+      sentiment: 1,
+      score: { $meta: "vectorSearchScore" },
+    },
+  },
+]
+```
+
+### Sentiment-aware retrieval
+
+```javascript
+// Search with sentiment filtering
+;[
+  {
+    $vectorSearch: {
+      index: "reviews_vector_index",
+      path: "embedding",
+      queryVector: "<query_embedding>",
+      numCandidates: 150,
+      limit: 20,
+    },
+  },
+  {
+    $match: {
+      sentiment: { $in: ["positive", "mostly_positive"] },
+    },
+  },
+  {
+    $group: {
+      _id: "$product_id",
+      product_title: { $first: "$product_title" },
+      avg_rating: { $avg: "$rating" },
+      review_count: { $sum: 1 },
+      sample_reviews: {
+        $push: {
+          text: "$review_text",
+          rating: "$rating",
+          features: "$features_mentioned",
+        },
+      },
+    },
+  },
+]
+```
+
+### Feature-based analysis
+
+```javascript
+// Aggregate reviews by mentioned features
+;[
+  { $match: { features_mentioned: { $exists: true } } },
+  { $unwind: "$features_mentioned" },
+  {
+    $group: {
+      _id: "$features_mentioned",
+      avg_rating: { $avg: "$rating" },
+      mention_count: { $sum: 1 },
+      products: { $addToSet: "$product_title" },
+      sample_reviews: {
+        $push: {
+          text: "$review_text",
+          rating: "$rating",
+          product: "$product_title",
+        },
+      },
+    },
+  },
+  { $sort: { mention_count: -1 } },
+]
+```
+
+## What you've accomplished
+
+In 25 minutes, you've mastered document-based RAG systems:
+
+**MongoDB foundation**: set up Atlas with vector search for document retrieval
+
+**Unstructured data handling**: loaded and indexed product reviews with flexible
+schemas
+
+**Semantic document search**: implemented vector similarity search across
+varying content structures
+
+**Sentiment analysis**: built patterns for understanding customer feedback and
+satisfaction trends
+
+**Advanced aggregation**: explored complex queries for multi-dimensional
+document analysis
+
+## The power of document-based retrieval
+
+Document RAG unlocks insights from unstructured content:
+
+**Before document RAG**: Limited to structured product information and marketing
+claims
+
+**After document RAG**: Access to real customer experiences, sentiment trends,
+and nuanced feedback
+
+Combined with yesterday's structured RAG, you now have comprehensive information
+retrieval capabilities.
+
+<Card
+  title="Tomorrow - Day 20"
+  icon="arrow-right"
+  href="/agents/30-days-of-agents/day-20"
+>
+  Explore GraphRAG with Neo4j for complex relationship reasoning and knowledge
+  discovery through connected data.
+</Card>
+
+## Pro tip for today
+
+Test document retrieval with nuanced queries:
+
+```text
+Test my document RAG system with these complex queries:
+1. "What specific issues do customers mention about battery life across different devices?"
+2. "How do customer experiences vary between verified and unverified purchasers?"
+3. "What patterns emerge when customers compare competing products?"
+4. "Which product features generate the most emotional responses in reviews?"
+
+How well does the system understand context and extract insights from unstructured text?
+```
+
+This reveals the sophistication of your document-based retrieval system.
+
+---
+
+**Time to complete**: ~25 minutes
+
+**Skills learned**: MongoDB Atlas setup, document-based retrieval, semantic
+search across unstructured data, sentiment analysis, advanced aggregation
+patterns
+
+**Next**: day 20 - GraphRAG with Neo4j for relationship-based knowledge
+discovery
+
+<Tip>
+  **Remember**: document-based RAG excels at capturing human context, emotion,
+  and nuanced experiences that structured data often misses. Use it for
+  understanding "why" not just "what."
+</Tip>

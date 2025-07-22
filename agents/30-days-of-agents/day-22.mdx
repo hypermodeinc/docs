@@ -1,0 +1,794 @@
+---
+title: "Day 22: Dgraph - Querying Knowledge Graphs with DQL"
+sidebarTitle: "Day 22: Dgraph Querying"
+description:
+  "Master DQL (Dgraph Query Language) for complex graph queries, explore the
+  news knowledge graph with Ratel, and integrate Dgraph with agents using
+  Python, JavaScript, and Go clients."
+---
+
+<Card title="Day 22 challenge" icon="search">
+  **Goal**: master DQL querying and multi-language client integration with Dgraph
+
+**Theme**: context engineering week - advanced graph query mastery
+
+**Time investment**: ~30 minutes
+
+</Card>
+
+Welcome to Day 22! Yesterday you built sophisticated knowledge graphs with
+Dgraph. Today you'll master **DQL (Dgraph Query Language)** for complex graph
+queries and learn to integrate Dgraph with your agents using multiple
+programming languages.
+
+DQL enables sophisticated graph traversal and analysis that powers intelligent
+agent reasoning.
+
+## What you'll accomplish today
+
+- Master DQL syntax for complex graph queries
+- Use Ratel (Dgraph's UI) to explore the news knowledge graph
+- Learn multi-hop graph traversal and aggregation techniques
+- Integrate Dgraph with agents using Python, JavaScript, and Go clients
+- Build sophisticated graph-powered agent workflows
+
+<Warning>
+  This requires access to a Dgraph instance (free Cloud instance available) and
+  familiarity with basic programming concepts. You'll work with multiple client
+  libraries.
+</Warning>
+
+## Step 1: DQL fundamentals
+
+DQL (Dgraph Query Language) is designed specifically for graph traversal and
+analysis:
+
+### Basic DQL syntax
+
+```dql
+{
+  # Query structure: block_name(func: function) { predicates }
+  news_articles(func: type(Article)) {
+    title
+    published_date
+    author {
+      name
+      title
+    }
+    source {
+      name
+      credibility_score
+    }
+  }
+}
+```
+
+### Key DQL concepts
+
+- **Functions**: Entry points for queries (`type()`, `eq()`, `allofterms()`,
+  etc.)
+- **Predicates**: Properties to retrieve or traverse
+- **Variables**: Store intermediate results (`var(func: ...)`)
+- **Filters**: Refine results at any level(`@filter()`)
+- **Aggregations**: Calculate values across sets (`count`, `sum`, `avg`)
+
+### DQL vs. other query languages
+
+**DQL advantages**:
+
+- Native graph traversal with unlimited depth
+- Variables for complex multi-stage queries
+- Built-in aggregation and filtering at any level
+- Optimized for distributed graph operations
+
+<Tip>
+  **DQL thinking** Unlike SQL joins, DQL follows relationships naturally. Think
+  about traversing paths through connected data rather than combining tables.
+</Tip>
+
+## Step 2: Exploring with Ratel
+
+Ratel is Dgraph's built-in UI for query development and visualization:
+
+### Basic news graph exploration
+
+Start with simple queries to understand your data:
+
+```dql
+# Find all articles about AI companies
+{
+  ai_articles(func: allofterms(title, "OpenAI Anthropic Microsoft")) {
+    title
+    published_date
+    sentiment
+    mentions {
+      name
+      type
+    }
+  }
+}
+```
+
+```dql
+# Explore person networks
+{
+  ai_leaders(func: type(Person)) @filter(anyofterms(name, "Sam Altman Dario Amodei")) {
+    name
+    title
+    organization {
+      name
+      type
+    }
+    mentioned_in {
+      title
+      published_date
+      source {
+        name
+      }
+    }
+  }
+}
+```
+
+### Understanding query results
+
+Ratel shows:
+
+- **Query results**: JSON structure of returned data
+- **Visualization**: Graph view of connected nodes
+- **Query time**: Performance metrics
+- **Schema browser**: Available types and predicates
+
+### Advanced filtering
+
+```dql
+# Articles published in the last month with high sentiment
+{
+  recent_positive_articles(func: type(Article)) @filter(gt(published_date, "2024-01-01") AND gt(sentiment, 0.7)) {
+    title
+    published_date
+    sentiment
+    topics {
+      name
+      category
+    }
+    mentions @filter(eq(type, "Organization")) {
+      name
+    }
+  }
+}
+```
+
+## Step 3: Complex DQL patterns
+
+Master sophisticated querying techniques:
+
+### Multi-hop traversal
+
+```dql
+# Find all articles that mention companies competing with OpenAI
+{
+  var(func: eq(name, "OpenAI")) {
+    competitors as ~mentions @filter(type(Organization))
+  }
+
+  competitive_articles(func: uid(competitors)) {
+    name
+    type
+    mentioned_in {
+      title
+      published_date
+      also_mentions: mentions @filter(NOT uid(competitors)) {
+        name
+        type
+      }
+    }
+  }
+}
+```
+
+### Aggregation and analysis
+
+```dql
+# Analyze news source credibility and article sentiment
+{
+  source_analysis(func: type(NewsSource)) {
+    name
+    credibility_score
+    article_count: count(articles)
+    avg_sentiment: avg(articles.sentiment)
+    recent_articles: articles @filter(gt(published_date, "2024-01-01")) {
+      title
+      sentiment
+    }
+  }
+}
+```
+
+### Temporal analysis
+
+```dql
+# Track mention frequency over time
+{
+  var(func: eq(name, "OpenAI")) {
+    monthly_mentions as mentioned_in @groupby(published_date) {
+      month: max(published_date)
+      mention_count: count(uid)
+    }
+  }
+
+  mention_trends(func: uid(monthly_mentions)) {
+    month
+    mention_count
+  }
+}
+```
+
+### Network analysis
+
+```dql
+# Find most connected entities in the knowledge graph
+{
+  entity_centrality(func: type(Entity)) {
+    name
+    type
+    connection_count: count(~mentions)
+    recent_mentions: ~mentions @filter(gt(published_date, "2024-01-01")) {
+      title
+      published_date
+    }
+  }
+}
+```
+
+<Tip>
+  **DQL power move** Use variables to build complex, multi-stage queries that
+  would be difficult or impossible in other query languages. Variables let you
+  store intermediate results and use them in multiple places.
+</Tip>
+
+## Step 4: Python client integration
+
+Integrate Dgraph with your agents using the Python client:
+
+### Setup and basic connection
+
+```python
+import pydgraph
+import grpc
+import json
+from datetime import datetime
+
+# Create Dgraph client
+def create_client():
+    stub = pydgraph.DgraphClientStub('localhost:9080')
+    client = pydgraph.DgraphClient(stub)
+    return client
+
+# Example agent integration class
+class NewsGraphAgent:
+    def __init__(self):
+        self.client = create_client()
+
+    def search_articles_by_topic(self, topic_name, limit=10):
+        query = f"""
+        {{
+          articles(func: allofterms(topics.name, "{topic_name}"))
+          @filter(type(Article))
+          (first: {limit}) {{
+            uid
+            title
+            published_date
+            sentiment
+            author {{
+              name
+              title
+            }}
+            source {{
+              name
+              credibility_score
+            }}
+            mentions {{
+              name
+              type
+            }}
+          }}
+        }}
+        """
+
+        txn = self.client.txn()
+        try:
+            response = txn.query(query)
+            return json.loads(response.json)
+        finally:
+            txn.discard()
+
+    def analyze_entity_relationships(self, entity_name):
+        query = f"""
+        {{
+          var(func: eq(name, "{entity_name}")) {{
+            related_entities as mentioned_in {{
+              other_mentions: mentions @filter(NOT eq(name, "{entity_name}")) {{
+                name
+                type
+              }}
+            }}
+          }}
+
+          relationships(func: uid(related_entities)) {{
+            name
+            type
+            co_mention_count: count(mentioned_in @filter(uid(related_entities)))
+            recent_articles: mentioned_in @filter(gt(published_date, "2024-01-01")) (first: 5) {{
+              title
+              published_date
+              sentiment
+            }}
+          }}
+        }}
+        """
+
+        txn = self.client.txn()
+        try:
+            response = txn.query(query)
+            return json.loads(response.json)
+        finally:
+            txn.discard()
+
+    def track_sentiment_trends(self, entity_name, days_back=30):
+        query = f"""
+        {{
+          var(func: eq(name, "{entity_name}")) {{
+            sentiment_data as mentioned_in @filter(gt(published_date, "2024-01-01")) {{
+              published_date
+              sentiment
+            }}
+          }}
+
+          sentiment_trends(func: uid(sentiment_data)) {{
+            published_date
+            sentiment
+            title
+            source {{
+              name
+              credibility_score
+            }}
+          }}
+        }}
+        """
+
+        txn = self.client.txn()
+        try:
+            response = txn.query(query)
+            data = json.loads(response.json)
+            # Process and analyze trends
+            return self._analyze_sentiment_patterns(data)
+        finally:
+            txn.discard()
+
+    def _analyze_sentiment_patterns(self, data):
+        # Implement sentiment trend analysis
+        articles = data.get('sentiment_trends', [])
+        if not articles:
+            return {"trend": "insufficient_data", "summary": "Not enough data for analysis"}
+
+        sentiments = [article['sentiment'] for article in articles if 'sentiment' in article]
+        avg_sentiment = sum(sentiments) / len(sentiments) if sentiments else 0
+
+        return {
+            "average_sentiment": avg_sentiment,
+            "article_count": len(articles),
+            "trend": "positive" if avg_sentiment > 0.6 else "negative" if avg_sentiment < 0.4 else "neutral",
+            "recent_articles": articles[:5]
+        }
+```
+
+### Advanced Python patterns
+
+```python
+class GraphAnalysisAgent:
+    def __init__(self, dgraph_client):
+        self.client = dgraph_client
+
+    async def complex_relationship_analysis(self, entities, relationship_depth=3):
+        """Analyze complex multi-hop relationships between entities"""
+        query = f"""
+        {{
+          var(func: anyofterms(name, "{' '.join(entities)}")) {{
+            uid
+            name
+            # Multi-hop traversal
+            hop1 as mentioned_in {{
+              other_entities_1: mentions @filter(NOT anyofterms(name, "{' '.join(entities)}"))
+            }}
+            hop2 as mentioned_in @filter(uid(hop1)) {{
+              other_entities_2: mentions @filter(NOT anyofterms(name, "{' '.join(entities)}"))
+            }}
+          }}
+
+          relationship_network(func: uid(hop1, hop2)) {{
+            name
+            type
+            connection_strength: count(mentioned_in)
+            bridge_entities: mentions @filter(anyofterms(name, "{' '.join(entities)}")) {{
+              name
+            }}
+          }}
+        }}
+        """
+
+        return await self._execute_query(query)
+
+    def generate_knowledge_summary(self, topic_area):
+        """Generate comprehensive knowledge summary for a domain"""
+        query = f"""
+        {{
+          topic_articles(func: allofterms(topics.name, "{topic_area}")) @filter(type(Article)) {{
+            title
+            sentiment
+            key_entities: mentions @filter(gt(count(mentioned_in), 5)) {{
+              name
+              type
+              importance: count(mentioned_in)
+            }}
+          }}
+
+          topic_trends(func: allofterms(topics.name, "{topic_area}")) @filter(type(Article))
+          @groupby(published_date) {{
+            date: max(published_date)
+            article_count: count(uid)
+            avg_sentiment: avg(sentiment)
+          }}
+        }}
+        """
+
+        txn = self.client.txn()
+        try:
+            response = txn.query(query)
+            data = json.loads(response.json)
+            return self._synthesize_knowledge_summary(data, topic_area)
+        finally:
+            txn.discard()
+```
+
+## Step 5: JavaScript and Go client examples
+
+### JavaScript client integration
+
+```javascript
+const dgraph = require("dgraph-js")
+const grpc = require("grpc")
+
+class NewsGraphJS {
+  constructor() {
+    const clientStub = new dgraph.DgraphClientStub(
+      "localhost:9080",
+      grpc.credentials.createInsecure(),
+    )
+    this.client = new dgraph.DgraphClient(clientStub)
+  }
+
+  async searchCompanyNews(companyName, daysBack = 30) {
+    const query = `
+        {
+          company_news(func: eq(name, "${companyName}")) {
+            name
+            type
+            recent_mentions: mentioned_in @filter(gt(published_date, "2024-01-01")) (first: 20) {
+              title
+              published_date
+              sentiment
+              source {
+                name
+                credibility_score
+              }
+              related_entities: mentions @filter(NOT eq(name, "${companyName}")) {
+                name
+                type
+              }
+            }
+          }
+        }
+        `
+
+    const txn = this.client.newTxn()
+    try {
+      const response = await txn.query(query)
+      return response.getJson()
+    } finally {
+      await txn.discard()
+    }
+  }
+
+  async analyzeCompetitiveLandscape(companies) {
+    const query = `
+        {
+          var(func: anyofterms(name, "${companies.join(" ")}")) {
+            competitor_articles as mentioned_in {
+              other_competitors: mentions @filter(anyofterms(name, "${companies.join(" ")}"))
+            }
+          }
+          
+          competitive_analysis(func: uid(competitor_articles)) {
+            title
+            published_date
+            sentiment
+            companies_mentioned: mentions @filter(anyofterms(name, "${companies.join(" ")}")) {
+              name
+              mention_sentiment: sentiment
+            }
+          }
+        }
+        `
+
+    const txn = this.client.newTxn()
+    try {
+      const response = await txn.query(query)
+      return this.processCompetitiveData(response.getJson())
+    } finally {
+      await txn.discard()
+    }
+  }
+
+  processCompetitiveData(data) {
+    // Process and analyze competitive mentions
+    const articles = data.competitive_analysis || []
+    const companyMentions = {}
+
+    articles.forEach((article) => {
+      article.companies_mentioned?.forEach((company) => {
+        if (!companyMentions[company.name]) {
+          companyMentions[company.name] = {
+            total_mentions: 0,
+            avg_sentiment: 0,
+            articles: [],
+          }
+        }
+        companyMentions[company.name].total_mentions++
+        companyMentions[company.name].articles.push(article)
+      })
+    })
+
+    return {
+      analysis_date: new Date().toISOString(),
+      companies_analyzed: Object.keys(companyMentions),
+      competitive_insights: companyMentions,
+      total_articles_analyzed: articles.length,
+    }
+  }
+}
+```
+
+### Go client integration
+
+```go
+package main
+
+import (
+    "context"
+    "encoding/json"
+    "fmt"
+    "log"
+
+    "github.com/dgraph-io/dgo/v2"
+    "github.com/dgraph-io/dgo/v2/protos/api"
+    "google.golang.org/grpc"
+)
+
+type NewsGraphGo struct {
+    client *dgo.Dgraph
+}
+
+func NewNewsGraphClient() *NewsGraphGo {
+    conn, err := grpc.Dial("localhost:9080", grpc.WithInsecure())
+    if err != nil {
+        log.Fatal("Failed to connect to Dgraph")
+    }
+
+    client := dgo.NewDgraphClient(api.NewDgraphClient(conn))
+    return &NewsGraphGo{client: client}
+}
+
+func (ng *NewsGraphGo) AnalyzeEntityNetworks(entityName string) (map[string]interface{}, error) {
+    query := fmt.Sprintf(`
+    {
+      var(func: eq(name, "%s")) {
+        network_entities as mentioned_in {
+          connected_entities: mentions @filter(NOT eq(name, "%s")) {
+            name
+            type
+          }
+        }
+      }
+
+      entity_network(func: uid(network_entities)) {
+        name
+        type
+        centrality: count(mentioned_in)
+        connections: mentions @filter(uid(network_entities)) {
+          name
+          relationship_strength: count(mentioned_in)
+        }
+      }
+    }
+    `, entityName, entityName)
+
+    txn := ng.client.NewTxn()
+    defer txn.Discard(context.Background())
+
+    response, err := txn.Query(context.Background(), query)
+    if err != nil {
+        return nil, err
+    }
+
+    var result map[string]interface{}
+    err = json.Unmarshal(response.Json, &result)
+    return result, err
+}
+
+func (ng *NewsGraphGo) GenerateInsightReport(topics []string) (*InsightReport, error) {
+    query := fmt.Sprintf(`
+    {
+      topic_analysis(func: anyofterms(topics.name, "%s")) @filter(type(Article)) {
+        title
+        published_date
+        sentiment
+        topics {
+          name
+          category
+        }
+        key_entities: mentions @filter(gt(count(mentioned_in), 3)) {
+          name
+          type
+          prominence: count(mentioned_in)
+        }
+      }
+    }
+    `, joinStrings(topics, " "))
+
+    txn := ng.client.NewTxn()
+    defer txn.Discard(context.Background())
+
+    response, err := txn.Query(context.Background(), query)
+    if err != nil {
+        return nil, err
+    }
+
+    return ng.processInsightData(response.Json)
+}
+
+type InsightReport struct {
+    Topics           []string                   `json:"topics"`
+    TotalArticles    int                       `json:"total_articles"`
+    AverageSentiment float64                   `json:"average_sentiment"`
+    KeyEntities      []EntityInsight           `json:"key_entities"`
+    Trends           []TrendData               `json:"trends"`
+}
+
+type EntityInsight struct {
+    Name       string  `json:"name"`
+    Type       string  `json:"type"`
+    Prominence int     `json:"prominence"`
+    Sentiment  float64 `json:"average_sentiment"`
+}
+
+func (ng *NewsGraphGo) processInsightData(jsonData []byte) (*InsightReport, error) {
+    var data map[string]interface{}
+    err := json.Unmarshal(jsonData, &data)
+    if err != nil {
+        return nil, err
+    }
+
+    // Process and analyze the data to create insights
+    // Implementation would analyze patterns, calculate metrics, etc.
+
+    return &InsightReport{
+        Topics:           []string{"processed topics"},
+        TotalArticles:    len(data["topic_analysis"].([]interface{})),
+        AverageSentiment: 0.0, // Calculate from data
+        KeyEntities:      []EntityInsight{},
+        Trends:           []TrendData{},
+    }, nil
+}
+```
+
+## Step 6: Agent integration patterns
+
+Connect your graph querying capabilities to Hypermode agents:
+
+### Agent prompt for graph-powered reasoning
+
+```text
+I want to create a graph-powered news analysis agent that uses Dgraph for sophisticated relationship reasoning.
+
+The agent should:
+- Query knowledge graphs to discover entity relationships and networks
+- Analyze temporal patterns in news coverage and sentiment
+- Identify indirect connections and influence patterns
+- Provide competitive intelligence through relationship analysis
+- Track narrative evolution over time through graph traversal
+- Explain complex multi-hop relationships in business context
+
+Use DQL queries to power insights and always explain the graph reasoning behind conclusions.
+```
+
+### Integration workflow
+
+1. **Entity extraction** from user queries
+2. **Graph traversal** using DQL to find relationships
+3. **Pattern analysis** across temporal and network dimensions
+4. **Insight synthesis** combining graph data with reasoning
+5. **Explanation generation** showing how graph structure supports conclusions
+
+## What you've accomplished
+
+In 30 minutes, you've mastered advanced graph querying:
+
+**DQL mastery**: learned sophisticated query patterns for graph traversal and
+analysis
+
+**Ratel exploration**: used visual tools to understand graph structure and
+optimize queries
+
+**Multi-language integration**: implemented Dgraph clients in Python,
+JavaScript, and Go
+
+**Agent integration**: connected graph reasoning capabilities to intelligent
+agents
+
+**Advanced patterns**: built complex analysis workflows using graph-native
+operations
+
+## The power of graph querying
+
+DQL enables reasoning that traditional databases cannot:
+
+**Traditional queries**: "What articles mention OpenAI?"
+
+**Graph-powered queries**: "What entities are connected to OpenAI through 2-3
+degrees of separation, how has this network evolved over time, and what does the
+pattern suggest about competitive positioning?"
+
+This completes your mastery of context engineering fundamentals.
+
+<Card
+  title="Week 4 Complete"
+  icon="trophy"
+  href="/agents/30-days-of-agents/overview"
+>
+  You've mastered context engineering - from prompts to sophisticated graph
+  reasoning. Ready for production deployment in Week 5!
+</Card>
+
+## Pro tip for today
+
+Build a comprehensive graph analysis workflow:
+
+```text
+Create a complete analysis workflow that:
+1. Takes a business question (e.g., "How is the AI industry competitive landscape evolving?")
+2. Extracts relevant entities and relationships from the question
+3. Designs appropriate DQL queries to explore the graph
+4. Analyzes patterns across multiple dimensions (temporal, network, sentiment)
+5. Synthesizes insights that answer the original business question
+6. Explains the graph reasoning behind each conclusion
+
+Show me both the technical implementation and the business insights it reveals.
+```
+
+This demonstrates the full power of graph-powered agent reasoning.
+
+---
+
+**Time to complete**: ~30 minutes
+
+**Skills learned**: DQL mastery, Ratel exploration, multi-language client
+integration, graph-powered agent reasoning, advanced analysis workflows
+
+**Week 4 complete**: context engineering mastery achieved!
+
+<Tip>
+  **Remember**: Graph querying is about following the connections that reveal
+  hidden insights. The most valuable discoveries often come from relationships
+  that weren't obvious until you traversed the graph.
+</Tip>

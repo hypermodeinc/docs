@@ -1,0 +1,633 @@
+---
+title: "Day 21: Dgraph - Graph Data Modeling for Knowledge Graphs"
+sidebarTitle: "Day 21: Dgraph Data Modeling"
+description:
+  "Master advanced graph data modeling with Dgraph. Learn key concepts, load
+  sample RDF data from news articles, and explore different types of knowledge
+  graphs including lexical, domain, visual, and geospatial."
+---
+
+<Card title="Day 21 challenge" icon="project-diagram">
+  **Goal**: master advanced graph data modeling concepts with Dgraph
+
+**Theme**: context engineering week - sophisticated knowledge graph architecture
+
+**Time investment**: ~25 minutes
+
+</Card>
+
+Welcome to Day 21! Yesterday you explored GraphRAG with Neo4j. Today you'll
+advance to **Dgraph** - a distributed graph database designed for modern
+applications. You'll learn sophisticated data modeling concepts and build
+knowledge graphs from real-world news data.
+
+Dgraph represents the cutting edge of graph database technology with native
+GraphQL support and advanced querying capabilities.
+
+## What you'll accomplish today
+
+- Understand key Dgraph concepts and architecture
+- Load sample RDF data from a news article knowledge graph
+- Explore different types of knowledge graphs (lexical, domain, visual,
+  geospatial)
+- Model complex relationships and schema design
+- Connect to the hyper-news example project for real-world data
+
+<Warning>
+  This introduces advanced graph database concepts. You'll work with RDF data
+  formats and sophisticated schema design patterns that differ from traditional
+  databases.
+</Warning>
+
+## Step 1: Key Dgraph concepts
+
+Dgraph differs from other graph databases in several important ways:
+
+### Dgraph architecture
+
+**Distributed by design**: Automatically shards data across multiple nodes
+**ACID transactions**: Full transactional consistency across the distributed
+system  
+**GraphQL native**: Direct GraphQL support without translation layers **Type
+system**: Strong typing with schema validation **Real-time subscriptions**: Live
+updates for dynamic applications
+
+### Core concepts
+
+**Predicates**: Properties or relationships between nodes (similar to edges)
+**UIDs**: Unique identifiers for nodes (automatically managed) **Facets**:
+Properties on predicates (metadata about relationships) **Types**: Schema
+definitions that group predicates **Indexes**: Optimizations for specific query
+patterns
+
+### Schema definition example
+
+```graphql
+type Person {
+  name: string @index(exact, term) .
+  age: int .
+  friend: [Person] .
+  works_at: Company .
+}
+
+type Company {
+  name: string @index(exact) .
+  founded: datetime .
+  employees: [Person] .
+  industry: string @index(exact) .
+}
+```
+
+<Tip>
+  **Dgraph thinking**: Unlike property graphs, Dgraph treats everything as a
+  predicate (relationship) with optional facets (metadata). This creates more
+  flexible and expressive data models.
+</Tip>
+
+## Step 2: Understanding the hyper-news project
+
+We'll use the hyper-news project as our example - a news article knowledge graph
+that demonstrates real-world complexity:
+
+### Project structure
+
+The hyper-news knowledge graph contains:
+
+- **Articles**: News articles with content, metadata, and relationships
+- **Entities**: People, organizations, locations mentioned in articles
+- **Topics**: Subject categories and themes
+- **Sources**: News outlets and publishers
+- **Temporal data**: Publication dates and time-based relationships
+
+### Data model overview
+
+```graphql
+type Article {
+  title: string @index(fulltext) .
+  content: string @index(fulltext) .
+  published_date: datetime @index(day) .
+  author: [Person] .
+  source: NewsSource .
+  mentions: [Entity] .
+  topics: [Topic] .
+  sentiment: float .
+  url: string @index(exact) .
+}
+
+type Person {
+  name: string @index(exact, term) .
+  title: string .
+  organization: [Organization] .
+  mentioned_in: [Article] .
+  bio: string .
+}
+
+type Organization {
+  name: string @index(exact, term) .
+  type: string @index(exact) .
+  description: string .
+  mentioned_in: [Article] .
+  employees: [Person] .
+  location: [Location] .
+}
+
+type Location {
+  name: string @index(exact, term) .
+  country: string @index(exact) .
+  coordinates: geo .
+  mentioned_in: [Article] .
+}
+
+type Topic {
+  name: string @index(exact) .
+  category: string @index(exact) .
+  articles: [Article] .
+  related_topics: [Topic] .
+}
+
+type NewsSource {
+  name: string @index(exact) .
+  url: string @index(exact) .
+  bias_rating: string .
+  credibility_score: float .
+  articles: [Article] .
+}
+```
+
+## Step 3: Load sample RDF data
+
+RDF (Resource Description Framework) is a standard format for representing graph
+data:
+
+### Sample news knowledge graph data
+
+```rdf
+# Sample RDF data for hyper-news knowledge graph
+@prefix : <http://hyper-news.example.org/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# News Sources
+:techcrunch a :NewsSource ;
+    :name "TechCrunch" ;
+    :url "https://techcrunch.com" ;
+    :bias_rating "Slightly Left" ;
+    :credibility_score "7.5"^^xsd:float .
+
+:reuters a :NewsSource ;
+    :name "Reuters" ;
+    :url "https://reuters.com" ;
+    :bias_rating "Center" ;
+    :credibility_score "9.2"^^xsd:float .
+
+# People
+:sam_altman a :Person ;
+    :name "Sam Altman" ;
+    :title "CEO" ;
+    :organization :openai ;
+    :bio "CEO of OpenAI, former president of Y Combinator" .
+
+:dario_amodei a :Person ;
+    :name "Dario Amodei" ;
+    :title "CEO" ;
+    :organization :anthropic ;
+    :bio "CEO and co-founder of Anthropic" .
+
+# Organizations
+:openai a :Organization ;
+    :name "OpenAI" ;
+    :type "AI Research Company" ;
+    :description "AI research and deployment company" ;
+    :location :san_francisco .
+
+:anthropic a :Organization ;
+    :name "Anthropic" ;
+    :type "AI Safety Company" ;
+    :description "AI safety and research company" ;
+    :location :san_francisco .
+
+:microsoft a :Organization ;
+    :name "Microsoft" ;
+    :type "Technology Company" ;
+    :description "Multinational technology corporation" ;
+    :location :redmond .
+
+# Locations
+:san_francisco a :Location ;
+    :name "San Francisco" ;
+    :country "United States" ;
+    :coordinates "POINT(-122.4194 37.7749)"^^geo .
+
+:redmond a :Location ;
+    :name "Redmond" ;
+    :country "United States" ;
+    :coordinates "POINT(-122.1215 47.6740)"^^geo .
+
+# Topics
+:artificial_intelligence a :Topic ;
+    :name "Artificial Intelligence" ;
+    :category "Technology" .
+
+:business_partnerships a :Topic ;
+    :name "Business Partnerships" ;
+    :category "Business" .
+
+:ai_safety a :Topic ;
+    :name "AI Safety" ;
+    :category "Technology" .
+
+# Articles
+:article_001 a :Article ;
+    :title "Microsoft Deepens OpenAI Partnership with Additional Investment" ;
+    :content "Microsoft announced an expanded partnership with OpenAI..." ;
+    :published_date "2024-01-15T10:00:00Z"^^xsd:dateTime ;
+    :author :tech_reporter_1 ;
+    :source :techcrunch ;
+    :mentions :microsoft, :openai, :sam_altman ;
+    :topics :artificial_intelligence, :business_partnerships ;
+    :sentiment "0.7"^^xsd:float ;
+    :url "https://techcrunch.com/microsoft-openai-partnership" .
+
+:article_002 a :Article ;
+    :title "Anthropic Raises $300M in Series B Funding Round" ;
+    :content "Anthropic, the AI safety company founded by former OpenAI researchers..." ;
+    :published_date "2024-01-10T14:30:00Z"^^xsd:dateTime ;
+    :author :business_reporter_2 ;
+    :source :reuters ;
+    :mentions :anthropic, :dario_amodei ;
+    :topics :artificial_intelligence, :ai_safety ;
+    :sentiment "0.8"^^xsd:float ;
+    :url "https://reuters.com/anthropic-funding-round" .
+
+# Relationships with facets (metadata on edges)
+:article_001 :mentions :microsoft (
+    :mention_type "primary_subject" ;
+    :mention_count "5"^^xsd:int ;
+    :sentiment_about_entity "0.8"^^xsd:float
+) .
+
+:article_001 :mentions :openai (
+    :mention_type "primary_subject" ;
+    :mention_count "8"^^xsd:int ;
+    :sentiment_about_entity "0.7"^^xsd:float
+) .
+
+:sam_altman :mentioned_in :article_001 (
+    :context "quoted extensively about partnership" ;
+    :quote_count "3"^^xsd:int
+) .
+```
+
+### Loading RDF data into Dgraph
+
+To load this data, you would use Dgraph's live loader or mutation API:
+
+```bash
+# Using dgraph live loader
+dgraph live -f news_data.rdf -s schema.txt
+
+# Or using GraphQL mutation
+curl -X POST localhost:8080/mutate?commitNow=true -d @news_data.rdf
+```
+
+## Step 4: Types of knowledge graphs
+
+Different knowledge graph types serve different purposes:
+
+### Lexical knowledge graphs
+
+Focus on language, terminology, and semantic relationships:
+
+```graphql
+type Concept {
+  term: string @index(exact, term) .
+  definition: string @index(fulltext) .
+  synonyms: [string] .
+  related_terms: [Concept] .
+  usage_examples: [string] .
+  domain: string @index(exact) .
+}
+
+type Relationship {
+  type: string @index(exact) .  # "synonym", "antonym", "broader", "narrower"
+  source_concept: Concept .
+  target_concept: Concept .
+  confidence: float .
+}
+```
+
+**Use cases**: Natural language processing, content classification, semantic
+search
+
+### Domain-specific knowledge graphs
+
+Capture expertise and relationships within specific fields:
+
+```graphql
+type Drug {
+  name: string @index(exact) .
+  chemical_formula: string .
+  mechanism_of_action: string .
+  indications: [Condition] .
+  contraindications: [Condition] .
+  interactions: [Drug] .
+  side_effects: [SideEffect] .
+}
+
+type Condition {
+  name: string @index(exact) .
+  symptoms: [Symptom] .
+  treatments: [Treatment] .
+  related_conditions: [Condition] .
+  prevalence: float .
+}
+
+type Treatment {
+  name: string @index(exact) .
+  type: string .  # "medication", "procedure", "therapy"
+  effectiveness: float .
+  contraindications: [Condition] .
+}
+```
+
+**Use cases**: Medical diagnosis, research assistance, expert systems
+
+### Visual knowledge graphs
+
+Represent visual elements and their relationships:
+
+```graphql
+type Image {
+  url: string @index(exact) .
+  description: string @index(fulltext) .
+  contains_objects: [VisualObject] .
+  scene_type: string @index(exact) .
+  visual_features: [VisualFeature] .
+  similar_images: [Image] .
+}
+
+type VisualObject {
+  label: string @index(exact) .
+  bounding_box: string .  # JSON coordinates
+  confidence: float .
+  attributes: [string] .
+  relationships: [SpatialRelationship] .
+}
+
+type SpatialRelationship {
+  type: string @index(exact) .  # "above", "below", "left_of", "contains"
+  subject: VisualObject .
+  object: VisualObject .
+  confidence: float .
+}
+```
+
+**Use cases**: Image search, computer vision, content moderation
+
+### Geospatial knowledge graphs
+
+Model geographic relationships and spatial data:
+
+```graphql
+type Place {
+  name: string @index(exact) .
+  coordinates: geo @index(geo) .
+  place_type: string @index(exact) .
+  population: int .
+  area: float .
+  contains: [Place] .
+  borders: [Place] .
+  climate_zone: string @index(exact) .
+}
+
+type Event {
+  name: string @index(exact) .
+  occurred_at: Place .
+  date: datetime @index(day) .
+  event_type: string @index(exact) .
+  participants: [Person] .
+  impact_radius: float .
+}
+
+type Transportation {
+  route_type: string @index(exact) .
+  from_location: Place .
+  to_location: Place .
+  distance: float .
+  travel_time: int .
+  mode: string @index(exact) .
+}
+```
+
+**Use cases**: Urban planning, logistics, environmental analysis
+
+## Step 5: Advanced modeling patterns
+
+Sophisticated knowledge graphs use advanced patterns:
+
+### Temporal modeling
+
+```graphql
+type TemporalFact {
+  subject: uid .
+  predicate: string .
+  object: uid .
+  valid_from: datetime @index(day) .
+  valid_to: datetime @index(day) .
+  confidence: float .
+  source: string .
+}
+
+# Example: CEO relationships that change over time
+type Employment {
+  person: Person .
+  company: Organization .
+  role: string .
+  start_date: datetime @index(day) .
+  end_date: datetime @index(day) .
+  current: bool @index(bool) .
+}
+```
+
+### Multi-modal knowledge integration
+
+```graphql
+type KnowledgeNode {
+  identifier: string @index(exact) .
+  type: string @index(exact) .  # "text", "image", "audio", "video"
+  content: string .
+  embeddings: [float] .
+  modality_specific_data: string .  # JSON for type-specific properties
+  cross_modal_links: [KnowledgeNode] .
+  semantic_similarity: [SemanticLink] .
+}
+
+type SemanticLink {
+  source: KnowledgeNode .
+  target: KnowledgeNode .
+  relationship_type: string @index(exact) .
+  similarity_score: float .
+  modality_bridge: string .  # "text-to-image", "audio-to-text", etc.
+}
+```
+
+### Provenance and trust modeling
+
+```graphql
+type Statement {
+  claim: string @index(fulltext) .
+  subject: Entity .
+  predicate: string .
+  object: Entity .
+  confidence: float .
+  sources: [Source] .
+  evidence: [Evidence] .
+  contradicts: [Statement] .
+  supports: [Statement] .
+}
+
+type Source {
+  name: string @index(exact) .
+  credibility_score: float .
+  bias_rating: string .
+  expertise_domains: [string] .
+  statements: [Statement] .
+}
+
+type Evidence {
+  type: string @index(exact) .  # "primary", "secondary", "expert_opinion"
+  content: string .
+  strength: float .
+  supports_statement: [Statement] .
+}
+```
+
+## Step 6: Connecting to Hypermode agents
+
+Integrate your Dgraph knowledge graph with agents:
+
+### Schema for agent integration
+
+```graphql
+type AgentQuery {
+  query_text: string @index(fulltext) .
+  query_type: string @index(exact) .
+  timestamp: datetime @index(day) .
+  entities_mentioned: [Entity] .
+  intent: string .
+  response_generated: string .
+}
+
+type Entity {
+  name: string @index(exact, term) .
+  type: string @index(exact) .
+  aliases: [string] .
+  description: string @index(fulltext) .
+  related_entities: [Entity] .
+  mentioned_in_queries: [AgentQuery] .
+  knowledge_graph_id: string @index(exact) .
+}
+```
+
+### Agent integration patterns
+
+```text
+Dgraph Integration Guidelines for Agents:
+
+1. Entity Recognition: When users mention entities, resolve them to knowledge graph nodes
+2. Relationship Traversal: Use graph structure to find connected information
+3. Temporal Queries: Consider time-based relationships for current vs. historical data
+4. Multi-hop Reasoning: Traverse multiple relationship levels for complex answers
+5. Provenance Tracking: Always include source and confidence information
+6. Dynamic Updates: Keep knowledge graph current with new information from conversations
+```
+
+Create an agent prompt that leverages graph capabilities:
+
+```text
+I want to create a knowledge graph agent that can reason about complex relationships in news and business data.
+
+The agent should:
+- Query Dgraph knowledge graphs to find entity relationships
+- Understand temporal changes in business relationships
+- Analyze patterns across multiple news sources and time periods
+- Provide provenance and confidence scores for information
+- Discover indirect connections between entities through graph traversal
+- Explain the significance of relationship patterns and network effects
+
+The agent should think like an investigative journalist who uses data analysis to uncover hidden connections and patterns.
+```
+
+## What you've accomplished
+
+In 25 minutes, you've mastered advanced graph data modeling:
+
+**Dgraph architecture**: understood distributed graph databases and modern
+capabilities
+
+**Real-world data modeling**: worked with complex news article knowledge graphs
+
+**Multi-type graphs**: explored lexical, domain, visual, and geospatial graph
+patterns
+
+**Advanced patterns**: learned temporal modeling, multi-modal integration, and
+provenance tracking
+
+**Agent integration**: connected sophisticated graph capabilities to your agents
+
+## The power of advanced graph modeling
+
+Dgraph enables sophisticated knowledge representation:
+
+**Traditional databases**: Store facts in isolation with limited relationship
+modeling
+
+**Advanced graph databases**: Model complex, multi-dimensional relationships
+with temporal and provenance tracking
+
+**Agent integration**: Enable reasoning about networks of knowledge with
+confidence and source tracking
+
+This sophisticated foundation prepares you for production-grade knowledge
+systems.
+
+<Card
+  title="Tomorrow - Day 22"
+  icon="arrow-right"
+  href="/agents/30-days-of-agents/day-22"
+>
+  Master DQL (Dgraph Query Language) for complex graph queries and integrate
+  Dgraph with your agents using multiple client libraries.
+</Card>
+
+## Pro tip for today
+
+Experiment with different graph modeling approaches:
+
+```text
+Help me understand when to use different knowledge graph types:
+
+1. For a customer support system: What type of knowledge graph would be most effective?
+2. For a research assistant: How would you model academic papers and citations?
+3. For a business intelligence system: What relationships matter most for competitive analysis?
+4. For a content recommendation system: How do you balance multiple types of similarity?
+
+Show me schema examples and explain the reasoning behind each design choice.
+```
+
+This develops intuition for choosing the right graph modeling approach for
+different use cases.
+
+---
+
+**Time to complete**: ~25 minutes
+
+**Skills learned**: Dgraph architecture, RDF data modeling, multi-type knowledge
+graphs, temporal and provenance patterns, agent integration strategies
+
+**Next**: day 22 - DQL querying and multi-language client integration
+
+<Tip>
+  **Remember**: Advanced graph modeling is about representing not just what you
+  know, but how you know it, when you knew it, and how confident you are about
+  it. This metadata becomes crucial for agent reasoning.
+</Tip>

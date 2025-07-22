@@ -1,0 +1,336 @@
+---
+title: "Day 17: Agent User Messages - The Art of Agent Communication"
+sidebarTitle: "Day 17: Agent User Messages"
+description:
+  "Learn best practices for crafting user messages that elicit optimal agent
+  responses, enable complex task completion, and establish effective human-agent
+  collaboration patterns."
+---
+
+<Card title="Day 17 challenge" icon="message-circle">
+  **Goal**: master user message engineering for optimal agent collaboration
+
+**Theme**: context engineering week - communication optimization
+
+**Time investment**: ~20 minutes
+
+</Card>
+
+Welcome to Day 17! Yesterday you mastered system prompts that guide agent
+behavior. Today you'll learn the other half of the conversation: **user message
+engineering**. You'll discover how to craft requests that elicit optimal agent
+responses and enable complex task completion.
+
+Great user messages are the difference between agents that frustrate you and
+agents that feel like the perfect colleague.
+
+## What you'll accomplish today
+
+- Understand the anatomy of effective user messages
+- Learn communication patterns that maximize agent capability
+- Master techniques for complex task delegation
+- Develop strategies for iterative problem-solving with agents
+- Build repeatable communication frameworks for consistent results
+
+<Warning>
+  This builds on Day 16's prompt engineering foundation. You'll be practicing
+  with the agents you've optimized to see how message quality affects outcomes.
+</Warning>
+
+## Step 1: The anatomy of effective user messages
+
+Just as system prompts have structure, effective user messages follow
+predictable patterns:
+
+### Core message components
+
+**Context**: What background does the agent need? **Goal**: What are you trying
+to accomplish? **Constraints**: What limitations or requirements exist?
+**Format**: How should the output be structured? **Success criteria**: How will
+you know if it worked?
+
+### Message clarity hierarchy
+
+**Level 1 - Basic requests**: Simple, single-step tasks
+
+```text
+"Create a calendar event for tomorrow at 2 PM"
+```
+
+**Level 2 - Contextual requests**: Tasks with background information
+
+```text
+"Create a calendar event for tomorrow at 2 PM with the client we discussed yesterday - include the project proposal as agenda item"
+```
+
+**Level 3 - Strategic requests**: Complex, multi-step workflows
+
+```text
+"Prepare for tomorrow's client meeting at 2 PM: research their recent announcements, update the project proposal based on our last conversation, and create a follow-up task list based on likely outcomes"
+```
+
+<Tip>
+  **Communication principle**: Agents perform better when they understand not
+  just what to do, but why they're doing it and how it fits into larger goals.
+</Tip>
+
+## Step 2: Communication patterns that maximize agent capability
+
+Different types of requests require different communication approaches:
+
+### The CLEAR framework
+
+**C**ontext: Provide relevant background **L**imits: Define scope and
+constraints  
+**E**xpectations: Specify desired outcomes **A**ctions: Suggest approach if
+helpful **R**eview: Plan for feedback and iteration
+
+### Request type patterns
+
+**Information gathering requests:**
+
+```text
+Good: "Research our top 3 competitors' pricing strategies, focusing on their enterprise tiers. I need this for our pricing review meeting next week - include key differentiators and market positioning."
+
+Poor: "Look up competitor pricing"
+```
+
+**Action-taking requests:**
+
+```text
+Good: "Create a Slack message for the #engineering channel announcing our API v2.0 release. Include the key improvements (performance, new endpoints, breaking changes) and link to the migration guide. Schedule it for 9 AM tomorrow."
+
+Poor: "Post about the API release"
+```
+
+**Analysis requests:**
+
+```text
+Good: "Analyze last quarter's sales pipeline data from HubSpot. I want to understand our conversion rates by source, identify which stages have the biggest drop-offs, and recommend 3 specific improvements for next quarter."
+
+Poor: "Look at sales data"
+```
+
+### Progressive elaboration technique
+
+Start simple, then add complexity:
+
+```text
+1. Initial request: "Help me prepare for tomorrow's board meeting"
+
+2. Add context: "Help me prepare for tomorrow's board meeting where we're discussing Q4 performance and 2025 strategy"
+
+3. Add specifics: "Help me prepare for tomorrow's board meeting on Q4 performance and 2025 strategy. I need: current metrics summary, comparison to goals, key wins/challenges, and our top 3 strategic priorities for next year"
+
+4. Add constraints: "Help me prepare for tomorrow's board meeting on Q4 performance and 2025 strategy. I need: current metrics summary, comparison to goals, key wins/challenges, and our top 3 strategic priorities for next year. Keep everything concise - the deck should be 10 slides max, and focus on actionable insights rather than raw data."
+```
+
+## Step 3: Complex task delegation strategies
+
+Breaking down complex work into manageable agent tasks:
+
+### The decomposition approach
+
+**Instead of**: "Plan our product launch"
+
+**Try this sequence**:
+
+```text
+1. "Research successful product launches in our space over the last year - what tactics, timelines, and channels did they use?"
+
+2. "Based on that research and our product features, create a high-level launch timeline with key milestones"
+
+3. "For each milestone, identify what assets we'll need, who's responsible, and what success looks like"
+
+4. "Create a detailed project plan for the first 4 weeks with specific tasks and deadlines"
+```
+
+### Dependency management
+
+Help agents understand task relationships:
+
+```text
+"I need to create a customer onboarding email sequence. First, analyze our current customer feedback to identify the top 3 onboarding pain points. Then, draft email templates that address each pain point. Finally, suggest an automation workflow in HubSpot to deliver these emails based on user behavior."
+```
+
+### Quality checkpoints
+
+Build verification into complex tasks:
+
+```text
+"Create a competitive analysis report. After you gather the initial research, summarize your findings and ask if I want you to dive deeper into any specific areas before proceeding to the full report."
+```
+
+<Tip>
+  **Complex task strategy**: Think of agents as highly capable interns. Give
+  them meaningful work, clear context, and check in at key decision points.
+</Tip>
+
+## Step 4: Iterative problem-solving techniques
+
+Agents excel at iterative refinement when guided properly:
+
+### The spiral approach
+
+**Start broad, then narrow**:
+
+```text
+1. "What are the main approaches to improving our customer retention?"
+
+2. "Focus on the top 3 approaches - give me specific tactics for each"
+
+3. "For the email engagement approach, create a detailed implementation plan"
+
+4. "Draft the first email in that sequence targeting customers who haven't used our key features"
+```
+
+### Feedback integration
+
+Help agents learn from your responses:
+
+```text
+"That analysis is helpful, but I need more focus on the financial impact. Can you redo the recommendations section with specific revenue/cost projections for each suggestion?"
+```
+
+### Course correction
+
+Guide agents back on track when they drift:
+
+```text
+"I appreciate the comprehensive research, but let's refocus on the original question about pricing strategy. Can you distill those findings into 3 actionable pricing adjustments we could implement this quarter?"
+```
+
+## Step 5: Building repeatable communication frameworks
+
+Develop templates for common interaction patterns:
+
+### Framework templates
+
+**Research requests**:
+
+```text
+Research [topic] for [purpose/context]. Focus on [specific aspects]. I need this by [deadline] for [intended use]. Format as [output type] and include [specific elements].
+```
+
+**Analysis requests**:
+
+```text
+Analyze [data source] to answer [specific question]. Consider [key factors] and provide [output format]. Include recommendations prioritized by [criteria].
+```
+
+**Creation requests**:
+
+```text
+Create [deliverable] for [audience/purpose]. Use [style/tone] and include [required elements]. Format should be [specifications] and optimized for [intended use].
+```
+
+### Situation-specific patterns
+
+**Weekly reviews**:
+
+```text
+"Run my weekly [department] review: check progress on active projects, identify any blockers, summarize key metrics vs. goals, and flag anything needing my attention this week."
+```
+
+**Meeting preparation**:
+
+```text
+"Prepare me for [meeting type] with [attendees] about [topic]. Include: recent context about [relevant area], talking points for [specific agenda items], and potential questions I might face."
+```
+
+**Project updates**:
+
+```text
+"Create a project status update for [project] covering progress since [last update], current status vs. timeline, upcoming milestones, and any risks or blockers."
+```
+
+## Step 6: Advanced communication techniques
+
+### Context threading
+
+Reference previous conversations effectively:
+
+```text
+"Building on the competitive analysis we discussed yesterday, now create a positioning strategy that addresses the gaps we identified in our enterprise messaging."
+```
+
+### Perspective taking
+
+Help agents understand different viewpoints:
+
+```text
+"Draft this announcement from the perspective of our customer success team - they'll need to field questions about the changes, so include likely concerns and talking points for addressing them."
+```
+
+### Constraint optimization
+
+Work within realistic limitations:
+
+```text
+"Given that we only have 2 weeks and a $5K budget, what's the highest-impact marketing campaign we could run for this product launch? Focus on tactics that leverage our existing assets and team expertise."
+```
+
+## What you've accomplished
+
+In 20 minutes, you've mastered user message engineering:
+
+**Communication frameworks**: learned structured approaches to agent requests
+
+**Task decomposition**: developed strategies for breaking complex work into
+manageable pieces
+
+**Iterative refinement**: mastered techniques for progressive problem-solving
+with agents
+
+**Quality optimization**: built methods for getting better outputs through
+better inputs
+
+**Repeatable patterns**: created templates for common interaction types
+
+## The power of engineered communication
+
+Well-crafted user messages unlock agent potential:
+
+**Before optimization**: Vague requests leading to generic responses and
+multiple rounds of clarification
+
+**After optimization**: Precise requests that elicit targeted, actionable
+responses on the first try
+
+Combined with yesterday's prompt engineering, you now control both sides of the
+human-agent conversation.
+
+<Card
+  title="Tomorrow - Day 18"
+  icon="arrow-right"
+  href="/agents/30-days-of-agents/day-18"
+>
+  Begin building RAG (Retrieval Augmented Generation) systems with PostgreSQL
+  and Supabase for dynamic information access.
+</Card>
+
+## Pro tip for today
+
+Practice the spiral approach with one of your agents:
+
+```text
+"Let's practice iterative problem-solving. Start by giving me a high-level overview of [complex topic relevant to your work]. Then we'll drill down into specifics based on what I find most interesting or useful."
+```
+
+This builds your intuition for guiding agents through complex reasoning
+processes.
+
+---
+
+**Time to complete**: ~20 minutes
+
+**Skills learned**: message structure optimization, task decomposition
+strategies, iterative problem-solving, communication frameworks, advanced
+delegation techniques
+
+**Next**: day 18 - Retrieval systems with PostgreSQL and Supabase
+
+<Tip>
+  **Remember**: agents are mirrors of the communication they receive. Invest in
+  crafting better requests, and you'll get exponentially better results.
+</Tip>
