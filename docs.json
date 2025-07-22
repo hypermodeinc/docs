@@ -51,8 +51,14 @@
             "group": "Hypermode",
             "pages": [
               "introduction",
-              "first-hypermode-agent",
-              "semantic-search"
+              {
+                "group": "Tutorials",
+                "pages": [
+                  "first-hypermode-agent",
+                  "semantic-search",
+                  "/agents/knowledge-graph-extraction"
+                ]
+              }
             ]
           },
           {
