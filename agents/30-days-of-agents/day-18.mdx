@@ -1,10 +1,10 @@
 ---
-title: "Day 18: Retrieval with PostgreSQL - Building RAG Systems"
-sidebarTitle: "Day 18: PostgreSQL RAG"
+title: "Day 18: Retrieval with PostgreSQL - Building Retrieval Systems"
+sidebarTitle: "Day 18: PostgreSQL Retrieval"
 description:
-  "Build sophisticated RAG (Retrieval Augmented Generation) systems using
-  PostgreSQL and Supabase, implementing semantic search over structured product
-  catalogs for intelligent information retrieval."
+  "Build sophisticated retrieval systems using PostgreSQL and Supabase,
+  implementing semantic search over structured product catalogs for intelligent
+  information retrieval."
 ---
 
 <Card title="Day 18 challenge" icon="database">
@@ -35,25 +35,26 @@ rather than relying solely on training data.
 <Warning>
   This requires setting up external services (Supabase). You'll need to create
   accounts and configure database connections. The concepts apply to any
-  PostgreSQL-based RAG system.
+  PostgreSQL-based retrieval system.
 </Warning>
 
-## Step 1: Understanding RAG systems
+## Step 1: Understanding retrieval systems
 
-Before building, understand what makes RAG powerful:
+Before building, understand what makes retrieval powerful:
 
-### RAG architecture components
+### Retrieval architecture components
 
-**Knowledge Base**: Structured or unstructured data that agents can search
-**Embedding Model**: Converts text to vector representations for similarity
-search **Vector Database**: Stores and searches embeddings efficiently
-**Retrieval System**: Finds relevant information based on user queries
-**Generation**: Language model uses retrieved context to provide informed
-responses
+- **Knowledge Base**: Structured or unstructured data that agents can search
+- **Embedding Model**: Converts text to vector representations for similarity
+  search
+- **Vector Database**: Stores and searches embeddings efficiently
+- **Retrieval System**: Finds relevant information based on user queries
+- **Generation**: Language model uses retrieved context to provide informed
+  responses
 
-### When to use RAG vs. fine-tuning
+### When to use retrieval vs. fine-tuning
 
-**RAG is ideal for**:
+**Retrieval is ideal for**:
 
 - Dynamic information that changes frequently
 - Large knowledge bases that exceed context windows
@@ -67,8 +68,8 @@ responses
 - When information is stable and doesn't change often
 
 <Tip>
-  **RAG thinking**: Think of RAG as giving your agent access to a dynamic,
-  searchable library rather than memorizing everything up front.
+  **Retrieval thinking** Think of retrieval as giving your agent access to a
+  dynamic, searchable library rather than memorizing everything up front.
 </Tip>
 
 ## Step 2: Set up Supabase with vector search
@@ -77,10 +78,9 @@ Supabase provides PostgreSQL with built-in vector search capabilities:
 
 ### Create your Supabase project
 
-1. **Visit [supabase.com](https://supabase.com)** and create a free account
+1. **Visit [Supabase.com](https://supabase.com)** and create a free account
 2. **Create a new project** and note your project URL and API keys
-3. **Enable the pgvector extension** for vector similarity search
-4. **Set up authentication** and database permissions
+3. **Set up authentication** and database permissions
 
 ### Enable vector search capabilities
 
@@ -219,9 +219,8 @@ print("All products updated with embeddings")
 ```
 
 <Info>
-  **Alternative approach**: Use Supabase's built-in embedding generation
-  features or integrate with Hypermode's embedding capabilities for automated
-  processing.
+  **Alternative approach** Use Supabase's built-in embedding generation features
+  or integrate with Hypermode's embedding capabilities for automated processing.
 </Info>
 
 ## Step 4: Connect your agent to Supabase
@@ -301,8 +300,9 @@ This tests the agent's ability to retrieve multiple products and synthesize
 comparative information.
 
 <Tip>
-  **Retrieval quality**: Good RAG systems return not just similar products, but
-  contextually relevant ones that actually answer the user's underlying need.
+  **Retrieval quality** Good retrieval systems return not just similar products,
+  but contextually relevant ones that actually answer the user's underlying
+  need.
 </Tip>
 
 ## Step 6: Advanced retrieval patterns
@@ -490,14 +490,14 @@ retrieval
 **Performance optimization**: learned indexing and monitoring strategies for
 production use
 
-## The power of RAG systems
+## The power of retrieval systems
 
-RAG transforms static agents into dynamic information systems:
+Retrieval transforms static agents into dynamic information systems:
 
-**Before RAG**: Agents limited to training data and general knowledge
+**Before retrieval** Agents limited to training data and general knowledge
 
-**After RAG**: Agents with access to current, specific, searchable knowledge
-bases
+**After retrieval** Agents with access to current, specific, searchable
+knowledge bases
 
 This foundation enables agents to provide accurate, up-to-date information from
 your own data sources.
@@ -531,13 +531,13 @@ This reveals the strengths and limitations of your retrieval system.
 
 **Time to complete**: ~30 minutes
 
-**Skills learned**: RAG system architecture, PostgreSQL vector search, embedding
+**Skills learned** RAG system architecture, PostgreSQL vector search, embedding
 generation, semantic retrieval, hybrid search patterns, performance optimization
 
 **Next**: day 19 - Document retrieval with MongoDB for unstructured data
 
 <Tip>
-  **Remember**: RAG quality depends on both the relevance of retrieved
+  **Remember** Retrieval quality depends on both the relevance of retrieved
   information and how well your agent uses that information to generate
   responses. Both sides matter equally.
 </Tip>

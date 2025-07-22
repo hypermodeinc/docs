@@ -14,9 +14,11 @@ Browserbase
 [Cc]omputeDistance
 [Cc]omputeSimilarity
 [Cc]onsole
+(?i)CLEAR
 CRM
 [Cc]ryptocurrency
 [Dd]eserialize
+Dgraph
 [Dd]istilbert
 [Dd]ropAll
 [Dd]ropAttr
@@ -100,6 +102,7 @@ Strava
 Supabase 
 TLS
 tokenizer
+[Tt]ransformative
 URL|url
 UTC
 urql
@@ -200,7 +203,7 @@ CRM
 CRMs
 touchpoints
 Neo4j
-Geospatial
+[Gg]eospatial
 Linear
 MRR
 LTV

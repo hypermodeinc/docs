@@ -251,7 +251,14 @@ Master sophisticated querying techniques:
 
 Integrate Dgraph with your agents using the Python client:
 
+## Step 4: Multi-language client integration
+
+Integrate Dgraph with your agents using multiple programming languages:
+
 ### Setup and basic connection
+
+<Tabs>
+<Tab title="Python">
 
 ```python
 import pydgraph
@@ -260,15 +267,13 @@ import json
 from datetime import datetime
 
 # Create Dgraph client
-def create_client():
-    stub = pydgraph.DgraphClientStub('localhost:9080')
-    client = pydgraph.DgraphClient(stub)
-    return client
+
+def create_client(): stub = pydgraph.DgraphClientStub('localhost:9080') client =
+pydgraph.DgraphClient(stub) return client
 
 # Example agent integration class
-class NewsGraphAgent:
-    def __init__(self):
-        self.client = create_client()
+
+class NewsGraphAgent: def **init**(self): self.client = create_client()
 
     def search_articles_by_topic(self, topic_name, limit=10):
         query = f"""
@@ -381,9 +386,292 @@ class NewsGraphAgent:
             "trend": "positive" if avg_sentiment > 0.6 else "negative" if avg_sentiment < 0.4 else "neutral",
             "recent_articles": articles[:5]
         }
+
 ```
 
-### Advanced Python patterns
+</Tab>
+
+<Tab title="JavaScript">
+
+```javascript
+const dgraph = require("dgraph-js")
+const grpc = require("grpc")
+
+class NewsGraphJS { constructor() { const clientStub = new
+dgraph.DgraphClientStub( "localhost:9080", grpc.credentials.createInsecure(), )
+this.client = new dgraph.DgraphClient(clientStub) }
+
+async searchArticlesByTopic(topicName, limit = 10) { const query =
+`         {           articles(func: allofterms(topics.name, "${topicName}"))           @filter(type(Article))           (first: ${limit}) {             uid             title             published_date             sentiment             author {               name               title             }             source {               name               credibility_score             }             mentions {               name               type             }           }         }         `
+
+    const txn = this.client.newTxn()
+    try {
+      const response = await txn.query(query)
+      return response.getJson()
+    } finally {
+      await txn.discard()
+    }
+
+}
+
+async analyzeEntityRelationships(entityName) { const query = ` { var(func:
+eq(name,
+"${entityName}")) {
+            related_entities as mentioned_in {
+              other_mentions: mentions @filter(NOT eq(name, "${entityName}"))
+{ name type } } }
+
+          relationships(func: uid(related_entities)) {
+            name
+            type
+            co_mention_count: count(mentioned_in @filter(uid(related_entities)))
+            recent_articles: mentioned_in @filter(gt(published_date, "2024-01-01")) (first: 5) {
+              title
+              published_date
+              sentiment
+            }
+          }
+        }
+        `
+
+    const txn = this.client.newTxn()
+    try {
+      const response = await txn.query(query)
+      return response.getJson()
+    } finally {
+      await txn.discard()
+    }
+
+}
+
+async trackSentimentTrends(entityName, daysBack = 30) { const query = ` {
+var(func: eq(name, "${entityName}")) { sentiment_data as mentioned_in
+@filter(gt(published_date, "2024-01-01")) { published_date sentiment } }
+
+          sentiment_trends(func: uid(sentiment_data)) {
+            published_date
+            sentiment
+            title
+            source {
+              name
+              credibility_score
+            }
+          }
+        }
+        `
+
+    const txn = this.client.newTxn()
+    try {
+      const response = await txn.query(query)
+      const data = response.getJson()
+      return this._analyzeSentimentPatterns(data)
+    } finally {
+      await txn.discard()
+    }
+
+}
+
+\_analyzeSentimentPatterns(data) { const articles = data.sentiment_trends || []
+if (!articles.length) { return { trend: "insufficient_data", summary: "Not
+enough data for analysis" } }
+
+    const sentiments = articles
+      .filter(article => article.sentiment !== undefined)
+      .map(article => article.sentiment)
+
+    const avgSentiment = sentiments.length > 0
+      ? sentiments.reduce((sum, s) => sum + s, 0) / sentiments.length
+      : 0
+
+    return {
+      average_sentiment: avgSentiment,
+      article_count: articles.length,
+      trend: avgSentiment > 0.6 ? "positive" : avgSentiment < 0.4 ? "negative" : "neutral",
+      recent_articles: articles.slice(0, 5)
+    }
+
+} }
+
+```
+
+</Tab>
+
+<Tab title="Go">
+
+```go
+package main
+
+import (
+    "context"
+    "encoding/json"
+    "fmt"
+    "log"
+    "strings"
+
+    "github.com/dgraph-io/dgo/v2"
+    "github.com/dgraph-io/dgo/v2/protos/api"
+    "google.golang.org/grpc"
+
+)
+
+type NewsGraphGo struct { client \*dgo.Dgraph }
+
+func NewNewsGraphClient() \*NewsGraphGo { conn, err :=
+grpc.Dial("localhost:9080", grpc.WithInsecure()) if err != nil {
+log.Fatal("Failed to connect to Dgraph") }
+
+    client := dgo.NewDgraphClient(api.NewDgraphClient(conn))
+    return &NewsGraphGo{client: client}
+
+}
+
+func (ng \*NewsGraphGo) SearchArticlesByTopic(topicName string, limit int)
+(map[string]interface{}, error) { query :=
+fmt.Sprintf(`     {       articles(func: allofterms(topics.name, "%s"))       @filter(type(Article))       (first: %d) {         uid         title         published_date         sentiment         author {           name           title         }         source {           name           credibility_score         }         mentions {           name           type         }       }     }     `,
+topicName, limit)
+
+    txn := ng.client.NewTxn()
+    defer txn.Discard(context.Background())
+
+    response, err := txn.Query(context.Background(), query)
+    if err != nil {
+        return nil, err
+    }
+
+    var result map[string]interface{}
+    err = json.Unmarshal(response.Json, &result)
+    return result, err
+
+}
+
+func (ng \*NewsGraphGo) AnalyzeEntityRelationships(entityName string)
+(map[string]interface{}, error) { query := fmt.Sprintf(` { var(func: eq(name,
+"%s")) { related_entities as mentioned_in { other_mentions: mentions @filter(NOT
+eq(name, "%s")) { name type } } }
+
+      relationships(func: uid(related_entities)) {
+        name
+        type
+        co_mention_count: count(mentioned_in @filter(uid(related_entities)))
+        recent_articles: mentioned_in @filter(gt(published_date, "2024-01-01")) (first: 5) {
+          title
+          published_date
+          sentiment
+        }
+      }
+    }
+    `, entityName, entityName)
+
+    txn := ng.client.NewTxn()
+    defer txn.Discard(context.Background())
+
+    response, err := txn.Query(context.Background(), query)
+    if err != nil {
+        return nil, err
+    }
+
+    var result map[string]interface{}
+    err = json.Unmarshal(response.Json, &result)
+    return result, err
+
+}
+
+func (ng *NewsGraphGo) TrackSentimentTrends(entityName string, daysBack int)
+(*SentimentAnalysis, error) { query := fmt.Sprintf(` { var(func: eq(name, "%s"))
+{ sentiment_data as mentioned_in @filter(gt(published_date, "2024-01-01")) {
+published_date sentiment } }
+
+      sentiment_trends(func: uid(sentiment_data)) {
+        published_date
+        sentiment
+        title
+        source {
+          name
+          credibility_score
+        }
+      }
+    }
+    `, entityName)
+
+    txn := ng.client.NewTxn()
+    defer txn.Discard(context.Background())
+
+    response, err := txn.Query(context.Background(), query)
+    if err != nil {
+        return nil, err
+    }
+
+    return ng.analyzeSentimentPatterns(response.Json)
+
+}
+
+type SentimentAnalysis struct { AverageSentiment float64
+`json:"average_sentiment"` ArticleCount int `json:"article_count"` Trend string
+`json:"trend"` RecentArticles []map[string]interface{} `json:"recent_articles"`
+}
+
+func (ng *NewsGraphGo) analyzeSentimentPatterns(jsonData []byte)
+(*SentimentAnalysis, error) { var data map[string]interface{} err :=
+json.Unmarshal(jsonData, &data) if err != nil { return nil, err }
+
+    articles, ok := data["sentiment_trends"].([]interface{})
+    if !ok || len(articles) == 0 {
+        return &SentimentAnalysis{
+            Trend: "insufficient_data",
+            ArticleCount: 0,
+        }, nil
+    }
+
+    var sentiments []float64
+    var recentArticles []map[string]interface{}
+
+    for i, article := range articles {
+        if articleMap, ok := article.(map[string]interface{}); ok {
+            if sentiment, exists := articleMap["sentiment"]; exists {
+                if sentimentVal, ok := sentiment.(float64); ok {
+                    sentiments = append(sentiments, sentimentVal)
+                }
+            }
+            if i < 5 {
+                recentArticles = append(recentArticles, articleMap)
+            }
+        }
+    }
+
+    avgSentiment := 0.0
+    if len(sentiments) > 0 {
+        sum := 0.0
+        for _, s := range sentiments {
+            sum += s
+        }
+        avgSentiment = sum / float64(len(sentiments))
+    }
+
+    trend := "neutral"
+    if avgSentiment > 0.6 {
+        trend = "positive"
+    } else if avgSentiment < 0.4 {
+        trend = "negative"
+    }
+
+    return &SentimentAnalysis{
+        AverageSentiment: avgSentiment,
+        ArticleCount:     len(articles),
+        Trend:           trend,
+        RecentArticles:  recentArticles,
+    }, nil
+
+}
+
+```
+
+</Tab>
+</Tabs>
+
+### Advanced patterns and analysis
+
+<Tabs>
+<Tab title="Python">
 
 ```python
 class GraphAnalysisAgent:
@@ -449,43 +737,35 @@ class GraphAnalysisAgent:
             return self._synthesize_knowledge_summary(data, topic_area)
         finally:
             txn.discard()
+
 ```
 
-## Step 5: JavaScript and Go client examples
+</Tab>
 
-### JavaScript client integration
+<Tab title="JavaScript">
 
 ```javascript
-const dgraph = require("dgraph-js")
-const grpc = require("grpc")
-
-class NewsGraphJS {
-  constructor() {
-    const clientStub = new dgraph.DgraphClientStub(
-      "localhost:9080",
-      grpc.credentials.createInsecure(),
-    )
-    this.client = new dgraph.DgraphClient(clientStub)
+class GraphAnalysisJS {
+  constructor(dgraphClient) {
+    this.client = dgraphClient
   }
 
-  async searchCompanyNews(companyName, daysBack = 30) {
-    const query = `
-        {
-          company_news(func: eq(name, "${companyName}")) {
+async complexRelationshipAnalysis(entities, relationshipDepth = 3) { const query
+= ` { var(func: anyofterms(name,
+"${entities.join(" ")}")) {
+            uid
+            name
+            hop1 as mentioned_in {
+              other_entities_1: mentions @filter(NOT anyofterms(name, "${entities.join("
+")}")) } hop2 as mentioned_in @filter(uid(hop1)) { other_entities_2: mentions
+@filter(NOT anyofterms(name, "${entities.join(" ")}")) } }
+
+          relationship_network(func: uid(hop1, hop2)) {
             name
             type
-            recent_mentions: mentioned_in @filter(gt(published_date, "2024-01-01")) (first: 20) {
-              title
-              published_date
-              sentiment
-              source {
-                name
-                credibility_score
-              }
-              related_entities: mentions @filter(NOT eq(name, "${companyName}")) {
-                name
-                type
-              }
+            connection_strength: count(mentioned_in)
+            bridge_entities: mentions @filter(anyofterms(name, "${entities.join(" ")}")) {
+              name
             }
           }
         }
@@ -498,17 +778,55 @@ class NewsGraphJS {
     } finally {
       await txn.discard()
     }
-  }
 
-  async analyzeCompetitiveLandscape(companies) {
-    const query = `
-        {
-          var(func: anyofterms(name, "${companies.join(" ")}")) {
-            competitor_articles as mentioned_in {
-              other_competitors: mentions @filter(anyofterms(name, "${companies.join(" ")}"))
-            }
+}
+
+async generateKnowledgeSummary(topicArea) { const query = ` {
+topic_articles(func: allofterms(topics.name, "${topicArea}"))
+@filter(type(Article)) { title sentiment key_entities: mentions
+@filter(gt(count(mentioned_in), 5)) { name type importance: count(mentioned_in)
+} }
+
+          topic_trends(func: allofterms(topics.name, "${topicArea}")) @filter(type(Article))
+          @groupby(published_date) {
+            date: max(published_date)
+            article_count: count(uid)
+            avg_sentiment: avg(sentiment)
           }
-          
+        }
+        `
+
+    const txn = this.client.newTxn()
+    try {
+      const response = await txn.query(query)
+      const data = response.getJson()
+      return this._synthesizeKnowledgeSummary(data, topicArea)
+    } finally {
+      await txn.discard()
+    }
+
+}
+
+async searchCompanyNews(companyName, daysBack = 30) { const query =
+`         {           company_news(func: eq(name, "${companyName}")) {             name             type             recent_mentions: mentioned_in @filter(gt(published_date, "2024-01-01")) (first: 20) {               title               published_date               sentiment               source {                 name                 credibility_score               }               related_entities: mentions @filter(NOT eq(name, "${companyName}")) {                 name                 type               }             }           }         }         `
+
+    const txn = this.client.newTxn()
+    try {
+      const response = await txn.query(query)
+      return response.getJson()
+    } finally {
+      await txn.discard()
+    }
+
+}
+
+async analyzeCompetitiveLandscape(companies) { const query = ` { var(func:
+anyofterms(name,
+"${companies.join(" ")}")) {
+            competitor_articles as mentioned_in {
+              other_competitors: mentions @filter(anyofterms(name, "${companies.join("
+")}")) } }
+
           competitive_analysis(func: uid(competitor_articles)) {
             title
             published_date
@@ -528,12 +846,11 @@ class NewsGraphJS {
     } finally {
       await txn.discard()
     }
-  }
 
-  processCompetitiveData(data) {
-    // Process and analyze competitive mentions
-    const articles = data.competitive_analysis || []
-    const companyMentions = {}
+}
+
+processCompetitiveData(data) { const articles = data.competitive_analysis || []
+const companyMentions = {}
 
     articles.forEach((article) => {
       article.companies_mentioned?.forEach((company) => {
@@ -555,63 +872,33 @@ class NewsGraphJS {
       competitive_insights: companyMentions,
       total_articles_analyzed: articles.length,
     }
-  }
-}
+
+} }
+
 ```
 
-### Go client integration
+</Tab>
+
+<Tab title="Go">
 
 ```go
-package main
+func (ng \*NewsGraphGo) ComplexRelationshipAnalysis(entities []string,
+relationshipDepth int) (map[string]interface{}, error) { query := fmt.Sprintf(`
+{ var(func: anyofterms(name, "%s")) { uid name hop1 as mentioned_in {
+other_entities_1: mentions @filter(NOT anyofterms(name, "%s")) } hop2 as
+mentioned_in @filter(uid(hop1)) { other_entities_2: mentions @filter(NOT
+anyofterms(name, "%s")) } }
 
-import (
-    "context"
-    "encoding/json"
-    "fmt"
-    "log"
-
-    "github.com/dgraph-io/dgo/v2"
-    "github.com/dgraph-io/dgo/v2/protos/api"
-    "google.golang.org/grpc"
-)
-
-type NewsGraphGo struct {
-    client *dgo.Dgraph
-}
-
-func NewNewsGraphClient() *NewsGraphGo {
-    conn, err := grpc.Dial("localhost:9080", grpc.WithInsecure())
-    if err != nil {
-        log.Fatal("Failed to connect to Dgraph")
-    }
-
-    client := dgo.NewDgraphClient(api.NewDgraphClient(conn))
-    return &NewsGraphGo{client: client}
-}
-
-func (ng *NewsGraphGo) AnalyzeEntityNetworks(entityName string) (map[string]interface{}, error) {
-    query := fmt.Sprintf(`
-    {
-      var(func: eq(name, "%s")) {
-        network_entities as mentioned_in {
-          connected_entities: mentions @filter(NOT eq(name, "%s")) {
-            name
-            type
-          }
-        }
-      }
-
-      entity_network(func: uid(network_entities)) {
+      relationship_network(func: uid(hop1, hop2)) {
         name
         type
-        centrality: count(mentioned_in)
-        connections: mentions @filter(uid(network_entities)) {
+        connection_strength: count(mentioned_in)
+        bridge_entities: mentions @filter(anyofterms(name, "%s")) {
           name
-          relationship_strength: count(mentioned_in)
         }
       }
     }
-    `, entityName, entityName)
+    `, strings.Join(entities, " "), strings.Join(entities, " "), strings.Join(entities, " "), strings.Join(entities, " "))
 
     txn := ng.client.NewTxn()
     defer txn.Discard(context.Background())
@@ -624,27 +911,13 @@ func (ng *NewsGraphGo) AnalyzeEntityNetworks(entityName string) (map[string]inte
     var result map[string]interface{}
     err = json.Unmarshal(response.Json, &result)
     return result, err
+
 }
 
-func (ng *NewsGraphGo) GenerateInsightReport(topics []string) (*InsightReport, error) {
-    query := fmt.Sprintf(`
-    {
-      topic_analysis(func: anyofterms(topics.name, "%s")) @filter(type(Article)) {
-        title
-        published_date
-        sentiment
-        topics {
-          name
-          category
-        }
-        key_entities: mentions @filter(gt(count(mentioned_in), 3)) {
-          name
-          type
-          prominence: count(mentioned_in)
-        }
-      }
-    }
-    `, joinStrings(topics, " "))
+func (ng *NewsGraphGo) GenerateInsightReport(topics []string) (*InsightReport,
+error) { query :=
+fmt.Sprintf(`     {       topic_analysis(func: anyofterms(topics.name, "%s")) @filter(type(Article)) {         title         published_date         sentiment         topics {           name           category         }         key_entities: mentions @filter(gt(count(mentioned_in), 3)) {           name           type           prominence: count(mentioned_in)         }       }     }     `,
+strings.Join(topics, " "))
 
     txn := ng.client.NewTxn()
     defer txn.Discard(context.Background())
@@ -655,42 +928,106 @@ func (ng *NewsGraphGo) GenerateInsightReport(topics []string) (*InsightReport, e
     }
 
     return ng.processInsightData(response.Json)
+
 }
 
-type InsightReport struct {
-    Topics           []string                   `json:"topics"`
-    TotalArticles    int                       `json:"total_articles"`
-    AverageSentiment float64                   `json:"average_sentiment"`
-    KeyEntities      []EntityInsight           `json:"key_entities"`
-    Trends           []TrendData               `json:"trends"`
+type InsightReport struct { Topics []string `json:"topics"` TotalArticles int
+`json:"total_articles"` AverageSentiment float64 `json:"average_sentiment"`
+KeyEntities []EntityInsight `json:"key_entities"` Trends []TrendData
+`json:"trends"` }
+
+type EntityInsight struct { Name string `json:"name"` Type string `json:"type"`
+Prominence int `json:"prominence"` Sentiment float64 `json:"average_sentiment"`
 }
 
-type EntityInsight struct {
-    Name       string  `json:"name"`
-    Type       string  `json:"type"`
-    Prominence int     `json:"prominence"`
-    Sentiment  float64 `json:"average_sentiment"`
-}
+type TrendData struct { Date string `json:"date"` ArticleCount int
+`json:"article_count"` AvgSentiment float64 `json:"avg_sentiment"` }
 
-func (ng *NewsGraphGo) processInsightData(jsonData []byte) (*InsightReport, error) {
-    var data map[string]interface{}
-    err := json.Unmarshal(jsonData, &data)
-    if err != nil {
-        return nil, err
+func (ng *NewsGraphGo) processInsightData(jsonData []byte) (*InsightReport,
+error) { var data map[string]interface{} err := json.Unmarshal(jsonData, &data)
+if err != nil { return nil, err }
+
+    articles, ok := data["topic_analysis"].([]interface{})
+    if !ok {
+        articles = []interface{}{}
     }
 
     // Process and analyze the data to create insights
-    // Implementation would analyze patterns, calculate metrics, etc.
-
     return &InsightReport{
         Topics:           []string{"processed topics"},
-        TotalArticles:    len(data["topic_analysis"].([]interface{})),
-        AverageSentiment: 0.0, // Calculate from data
-        KeyEntities:      []EntityInsight{},
+        TotalArticles:    len(articles),
+        AverageSentiment: ng.calculateAverageSentiment(articles),
+        KeyEntities:      ng.extractKeyEntities(articles),
         Trends:           []TrendData{},
     }, nil
+
 }
+
+func (ng \*NewsGraphGo) calculateAverageSentiment(articles []interface{})
+float64 { if len(articles) == 0 { return 0.0 }
+
+    var total float64
+    var count int
+
+    for _, article := range articles {
+        if articleMap, ok := article.(map[string]interface{}); ok {
+            if sentiment, exists := articleMap["sentiment"]; exists {
+                if sentimentVal, ok := sentiment.(float64); ok {
+                    total += sentimentVal
+                    count++
+                }
+            }
+        }
+    }
+
+    if count == 0 {
+        return 0.0
+    }
+    return total / float64(count)
+
+}
+
+func (ng *NewsGraphGo) extractKeyEntities(articles []interface{})
+[]EntityInsight { entityMap := make(map[string]*EntityInsight)
+
+    for _, article := range articles {
+        if articleMap, ok := article.(map[string]interface{}); ok {
+            if entities, exists := articleMap["key_entities"]; exists {
+                if entitiesList, ok := entities.([]interface{}); ok {
+                    for _, entity := range entitiesList {
+                        if entityMap, ok := entity.(map[string]interface{}); ok {
+                            name, _ := entityMap["name"].(string)
+                            entityType, _ := entityMap["type"].(string)
+                            prominence, _ := entityMap["prominence"].(float64)
+
+                            if _, exists := entityMap[name]; !exists {
+                                entityMap[name] = &EntityInsight{
+                                    Name:       name,
+                                    Type:       entityType,
+                                    Prominence: int(prominence),
+                                    Sentiment:  0.0,
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    var result []EntityInsight
+    for _, entity := range entityMap {
+        result = append(result, *entity)
+    }
+
+    return result
+
+}
+
 ```
+
+</Tab>
+</Tabs>
 
 ## Step 6: Agent integration patterns
 
@@ -741,7 +1078,7 @@ operations
 
 ## The power of graph querying
 
-DQL enables reasoning that traditional databases cannot:
+DQL enables reasoning that traditional databases can't:
 
 **Traditional queries**: "What articles mention OpenAI?"
 
@@ -782,13 +1119,14 @@ This demonstrates the full power of graph-powered agent reasoning.
 
 **Time to complete**: ~30 minutes
 
-**Skills learned**: DQL mastery, Ratel exploration, multi-language client
+**Skills learned** DQL mastery, Ratel exploration, multi-language client
 integration, graph-powered agent reasoning, advanced analysis workflows
 
 **Week 4 complete**: context engineering mastery achieved!
 
 <Tip>
-  **Remember**: Graph querying is about following the connections that reveal
+  **Remember** Graph querying is about following the connections that reveal
   hidden insights. The most valuable discoveries often come from relationships
   that weren't obvious until you traversed the graph.
 </Tip>
+````
