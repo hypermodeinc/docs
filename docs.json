@@ -65,8 +65,13 @@
                 "group": "Connect Your Agent",
                 "pages": [
                   "agents/connections",
-                  "agents/available-connections",
-                  "agents/connections/supabase"
+                  {
+                    "group": "Available Connections",
+                    "pages": [
+                      "agents/available-connections",
+                      "agents/connections/supabase"
+                    ]
+                  }
                 ]
               },
               "agents/model-selection",
