@@ -1,0 +1,177 @@
+---
+title: Using Supabase with Hypermode
+sidebarTitle: Supabase
+description:
+  Connect your Hypermode agent to Supabase for real-time database operations
+---
+
+<div className="flex items-center gap-3 mb-6">
+  <img
+    src="/images/agents/connections/icons/supabase.svg"
+    alt="Supabase"
+    width={48}
+    height={48}
+  />
+  <div>
+    <h2 className="text-2xl font-bold m-0">Supabase</h2>
+    <p className="text-gray-600 m-0">
+      Supabase is the PostgresSQL development platform.
+    </p>
+  </div>
+</div>
+
+## Overview
+
+In this document you will learn how to connect your Hypermode agent to Supabase,
+enabling real-time database operations and interactions.
+
+Bwfore getting started you need to make an account with supabase, you can do
+that here: [Supabase](https://supabase.com/)
+
+![Signup](/images//connections/supabase/signup-supabase.png)
+
+Then you need to make a database and go to the settings to make a new API key.
+
+![Create Key](/images/connections/supabase/create-key.png)
+
+This key will become the service key when you connect using Hypermode Agents and
+the subdomain will be the projeect id in the URL:
+
+Examples: https://supabase.com/dashboard/project/my-project-id/settings/api-keys
+
+Subdomain ID: my-project-id Service Key: --key-from-supabase--
+
+Now you have got all you need setup with supabase we can now make our agent in
+hypermode.
+
+Creating your supabase agent.
+
+Firslty ensure you have signed up and created a workspace on
+[Hypermode](https://hypermode.com/).
+
+Now frmo the threads interfaces, lets manually create a new agent to streamline
+the process.
+
+You can create agets with either conciege or manually, we will do this manually,
+from the UI find the create agent dropdown: ]\
+
+![Find Create Agent](/images/connections/supabase/navigate-create-agent.png)
+
+Then select the "Create new Agent" option, this will open a modal to create your
+agent:
+
+![Create Agent](/images/connections/supabase/create-agent-modal.png)
+
+To streanline this process we will use the following settings:
+
+Agent Name: SupaAgent Agent Title: Connects to Supabase Description: SupaAgent
+issues queries Instructions: You have a connection to Supabase and various other
+developer tools to streamline data access and awareness. Model: GPT 4.1
+
+Once created you will see the agent in the sidebar living and breathing ready to
+interact with, take yourself to the agents setting page via the agents icon and
+see the profile:
+
+![Agent Profile](/images/connections/supabase/agent-profile.png)
+
+Now navgiate to the connections tab, this is where we will add our supabase
+connection.
+
+![Dropdown supabase](/images/connections/supabase/add-supabase-connection.png)
+
+This is where we need to add our supabase connection, click the dropdown and
+select "Supabase" from the list, then you will be presented with a Modal, from
+here we should take the Domain ID and Service Key we created earlier and paste
+them into the relevant fields:
+
+![Supabase Connection](/images/connections/supabase/supabase-connection-modal.png)
+
+Great now you Agent is connected to Supabase, you can now use it to issue
+queries and interact with your database.
+
+You can learn more about this supabase connector here:
+https://mcp.pipedream.com/app/supabase
+
+<Note>
+  The supabase connector does not let you modify the schema, for this reason
+  lets manually create the schema for interaction.
+</Note>
+
+Lets migrate our database with some movie data, to do this we will need to
+navigate back to the supabase workspace and find the query editor, this is where
+we can run SQL queries to create our schema and insert data, here is the schema
+we will work with:
+
+```sql
+-- 1. Movies Table
+CREATE TABLE IF NOT EXISTS public."Movies" (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    year INTEGER
+);
+
+-- 2. Actors Table
+CREATE TABLE IF NOT EXISTS public."Actors" (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- 3. MovieActors Join Table
+CREATE TABLE IF NOT EXISTS public."MovieActors" (
+    movie_id INTEGER NOT NULL REFERENCES public."Movies"(id) ON DELETE CASCADE,
+    actor_id INTEGER NOT NULL REFERENCES public."Actors"(id) ON DELETE CASCADE,
+    PRIMARY KEY (movie_id, actor_id)
+);
+```
+
+![Migrate Supabase](/images/connections/supabase/migrate.png)
+
+![Schema](/images/connections/supabase/supabase-schema.png)
+
+<Note>
+  The supabase connector does not let you modify the schema, for this reason
+  lets manually create the schema for interaction - you can ask your Agent to
+  help you build the schema.
+</Note>
+
+Finnaly one last step before our agent can understand our db we need to modify
+the system prompt of the agent to include the schema, you can do this by copying
+the schema and navigtaing the the agents page pasting in the schema into the
+system prompt, this will allow the agent to understand the schema and issue
+queries against it.
+
+![Agent update prompt](/images/connections/supabase/agent-update-prompt.png)
+
+Now we are ready to work with our agent and ou supabase database.
+
+Testing the connection, its always best to test the connection first, lets ask
+it to fetch a list of Movies, note we will have empty mooives but you are
+looking for success tool call in the chat history.
+
+Try asking in a new thread:
+
+```text
+Can you list the movies ?
+```
+
+You will see the Supabase select row tool call in the chat history, this is a
+good sign that the connection is working and the agent can issue queries against
+the database.
+
+![Empty movies](/images/connections/supabase/empty-movies.png)
+
+Now we have all we need to start inserting movies and actors in our database.
+
+Adding a movie:
+
+Try asking in a new thread:
+
+```text
+Can you Add the Matrix 1999 and Neo the actor into my Supabase database?
+```
+
+![Add Movie](/images/connections/supabase/add-matrix.png)
+
+Thats it your connected, try adding more data, scheming a new schema and reading
+the data in your instace, finally supabase can be paird well with other
+connections such as Gthub and Slack and Stripe.
