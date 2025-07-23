@@ -15,92 +15,117 @@ description:
   <div>
     <h2 className="text-2xl font-bold m-0">Supabase</h2>
     <p className="text-gray-600 m-0">
-      Supabase is the PostgresSQL development platform.
+      Open source PostgreSQL development platform
     </p>
   </div>
 </div>
 
 ## Overview
 
-In this document you will learn how to connect your Hypermode agent to Supabase,
-enabling real-time database operations and interactions.
+Supabase is an open source alternative to Firebase that provides a complete
+backend solution with PostgreSQL at its core. This guide will walk you through
+connecting your Hypermode agent to Supabase, enabling powerful database
+operations and real-time interactions.
 
-Bwfore getting started you need to make an account with supabase, you can do
-that here: [Supabase](https://supabase.com/)
+## Prerequisites
 
-![Signup](/images//connections/supabase/signup-supabase.png)
+Before connecting Supabase to Hypermode, you'll need:
 
-Then you need to make a database and go to the settings to make a new API key.
+1. A [Supabase account](https://supabase.com/)
+2. A Supabase project with API credentials
+3. A [Hypermode workspace](https://hypermode.com/)
 
-![Create Key](/images/connections/supabase/create-key.png)
+## Setting up Supabase
 
-This key will become the service key when you connect using Hypermode Agents and
-the subdomain will be the projeect id in the URL:
+### Step 1: Create your Supabase account
 
-Examples: https://supabase.com/dashboard/project/my-project-id/settings/api-keys
+If you haven't already, sign up for a free Supabase account.
 
-Subdomain ID: my-project-id Service Key: --key-from-supabase--
+![Supabase signup](/images/connections/supabase/signup-supabase.png)
 
-Now you have got all you need setup with supabase we can now make our agent in
-hypermode.
+### Step 2: Generate API credentials
 
-Creating your supabase agent.
+Navigate to your project settings and create a new API key:
 
-Firslty ensure you have signed up and created a workspace on
-[Hypermode](https://hypermode.com/).
+1. Go to **Settings** → **API** in your Supabase dashboard
+2. Create a new service role key (this bypasses Row Level Security)
+3. Copy your project URL to extract the subdomain ID
 
-Now frmo the threads interfaces, lets manually create a new agent to streamline
-the process.
-
-You can create agets with either conciege or manually, we will do this manually,
-from the UI find the create agent dropdown: ]\
-
-![Find Create Agent](/images/connections/supabase/navigate-create-agent.png)
-
-Then select the "Create new Agent" option, this will open a modal to create your
-agent:
-
-![Create Agent](/images/connections/supabase/create-agent-modal.png)
-
-To streanline this process we will use the following settings:
-
-Agent Name: SupaAgent Agent Title: Connects to Supabase Description: SupaAgent
-issues queries Instructions: You have a connection to Supabase and various other
-developer tools to streamline data access and awareness. Model: GPT 4.1
-
-Once created you will see the agent in the sidebar living and breathing ready to
-interact with, take yourself to the agents setting page via the agents icon and
-see the profile:
-
-![Agent Profile](/images/connections/supabase/agent-profile.png)
-
-Now navgiate to the connections tab, this is where we will add our supabase
-connection.
-
-![Dropdown supabase](/images/connections/supabase/add-supabase-connection.png)
-
-This is where we need to add our supabase connection, click the dropdown and
-select "Supabase" from the list, then you will be presented with a Modal, from
-here we should take the Domain ID and Service Key we created earlier and paste
-them into the relevant fields:
-
-![Supabase Connection](/images/connections/supabase/supabase-connection-modal.png)
-
-Great now you Agent is connected to Supabase, you can now use it to issue
-queries and interact with your database.
-
-You can learn more about this supabase connector here:
-https://mcp.pipedream.com/app/supabase
+![Create API key](/images/connections/supabase/create-key.png)
 
 <Note>
-  The supabase connector does not let you modify the schema, for this reason
-  lets manually create the schema for interaction.
+  The subdomain ID is the part before `.supabase.co` in the project URL. For
+  example, if the URL is `https://supa-project-id.supabase.co`, then the
+  subdomain ID is `supa-project-id`.
 </Note>
 
-Lets migrate our database with some movie data, to do this we will need to
-navigate back to the supabase workspace and find the query editor, this is where
-we can run SQL queries to create our schema and insert data, here is the schema
-we will work with:
+## Creating your Supabase agent
+
+### Step 1: Create a new agent
+
+From the Hypermode interface, create a new agent manually:
+
+1. Click the agent dropdown menu
+2. Select "Create new Agent"
+
+![Navigate to create agent](/images/connections/supabase/navigate-create-agent.png)
+
+### Step 2: Configure agent settings
+
+Use these recommended settings for your Supabase agent:
+
+- **Agent Name**: SupaAgent
+- **Agent Title**: Connects to Supabase
+- **Description**: SupaAgent issues queries
+- **Instructions**: You have a connection to Supabase and various other
+  developer tools to streamline data access and awareness
+- **Model**: GPT-4.1
+
+![Create agent modal](/images/connections/supabase/create-agent-modal.png)
+
+### Step 3: View your agent profile
+
+Once created, navigate to your agent's settings page to see the profile:
+
+![Agent profile](/images/connections/supabase/agent-profile.png)
+
+## Connecting to Supabase
+
+### Step 1: Add the Supabase connection
+
+Navigate to the **Connections** tab and add Supabase:
+
+1. Click "Add connection"
+2. Select "Supabase" from the dropdown
+
+![Add Supabase connection](/images/connections/supabase/add-supabase-connection.png)
+
+### Step 2: Configure credentials
+
+Enter your Supabase credentials:
+
+- **Subdomain ID**: Your project reference `supa-project-id`
+- **Service Key**: Your service role key from Supabase
+
+![Supabase connection modal](/images/connections/supabase/supabase-connection-modal.png)
+
+<Warning>
+  Keep your service key secure! This key bypasses Row Level Security and should
+  never be exposed in client-side code.
+</Warning>
+
+## Setting up your database
+
+<Note>
+  The Supabase connector allows you to query and manipulate data but doesn't
+  modify schemas. You'll need to create your database schema directly in
+  Supabase.
+</Note>
+
+### Step 1: Create your schema
+
+Navigate to the SQL editor in your Supabase dashboard and run this example
+schema:
 
 ```sql
 -- 1. Movies Table
@@ -124,54 +149,72 @@ CREATE TABLE IF NOT EXISTS public."MovieActors" (
 );
 ```
 
-![Migrate Supabase](/images/connections/supabase/migrate.png)
+![Migrate database](/images/connections/supabase/migrate.png)
 
-![Schema](/images/connections/supabase/supabase-schema.png)
+### Step 2: View your schema
 
-<Note>
-  The supabase connector does not let you modify the schema, for this reason
-  lets manually create the schema for interaction - you can ask your Agent to
-  help you build the schema.
-</Note>
+Confirm your tables are created successfully:
 
-Finnaly one last step before our agent can understand our db we need to modify
-the system prompt of the agent to include the schema, you can do this by copying
-the schema and navigtaing the the agents page pasting in the schema into the
-system prompt, this will allow the agent to understand the schema and issue
-queries against it.
+![Database schema](/images/connections/supabase/supabase-schema.png)
 
-![Agent update prompt](/images/connections/supabase/agent-update-prompt.png)
+### Step 3: Update agent instructions
 
-Now we are ready to work with our agent and ou supabase database.
+For your agent to understand your database structure, update its instructions
+with your schema information:
 
-Testing the connection, its always best to test the connection first, lets ask
-it to fetch a list of Movies, note we will have empty mooives but you are
-looking for success tool call in the chat history.
+![Update agent prompt](/images/connections/supabase/agent-update-prompt.png)
 
-Try asking in a new thread:
+## Testing the connection
+
+### Test 1: Query empty tables
+
+Start a new thread and test with a simple query:
 
 ```text
-Can you list the movies ?
+Can you list the movies?
 ```
 
-You will see the Supabase select row tool call in the chat history, this is a
-good sign that the connection is working and the agent can issue queries against
-the database.
+You should see a Supabase tool call in the chat history, confirming the
+connection works:
 
-![Empty movies](/images/connections/supabase/empty-movies.png)
+![Empty movies query](/images/connections/supabase/empty-movies.png)
 
-Now we have all we need to start inserting movies and actors in our database.
+### Test 2: Insert data
 
-Adding a movie:
-
-Try asking in a new thread:
+Now try adding data to your database:
 
 ```text
-Can you Add the Matrix 1999 and Neo the actor into my Supabase database?
+Can you add The Matrix 1999 and Neo the actor into my Supabase database?
 ```
 
-![Add Movie](/images/connections/supabase/add-matrix.png)
+![Add Matrix movie](/images/connections/supabase/add-matrix.png)
 
-Thats it your connected, try adding more data, scheming a new schema and reading
-the data in your instace, finally supabase can be paird well with other
-connections such as Gthub and Slack and Stripe.
+## What you can do
+
+With your Supabase connection established, your agent can:
+
+- **Query data** with complex filters and joins
+- **Insert, update, and delete** records
+- **Execute transactions** for data consistency
+- **Work with relationships** between tables
+- **Integrate with other tools** like GitHub, Slack, and Stripe
+
+## Best practices
+
+1. **Schema documentation**: Keep your agent's instructions updated with your
+   current schema
+2. **Security**: Use Row Level Security policies for additional protection
+3. **Performance**: Create indexes for frequently queried columns
+4. **Error handling**: Your agent will handle common database errors gracefully
+
+## Learn more
+
+- [Supabase Documentation](https://supabase.com/docs)
+- [MCP Supabase Connector](https://mcp.pipedream.com/app/supabase)
+- [PostgreSQL Best Practices](https://www.postgresql.org/docs/current/index.html)
+
+<Tip>
+  Combine Supabase with other Hypermode connections to build powerful workflows.
+  For example, use GitHub to track code changes that affect your database, or
+  Slack to notify your team of important data updates.
+</Tip>
