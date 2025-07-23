@@ -209,3 +209,4 @@ upsell
 will
 signup
 [sS]upabase
+schemaless
