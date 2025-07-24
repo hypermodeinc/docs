@@ -1,0 +1,237 @@
+---
+title: Using Attio with Hypermode
+sidebarTitle: Attio
+description: Connect your Hypermode agent to Attio for CRM operations
+---
+
+<div className="flex items-center gap-3 mb-6">
+  <img
+    src="/images/agents/connections/icons/attio.png"
+    alt="Attio"
+    width={48}
+    height={48}
+  />
+  <div>
+    <h2 className="text-2xl font-bold m-0">Attio</h2>
+    <p className="text-gray-600 m-0">
+      Highly customizable, modern CRM platform
+    </p>
+  </div>
+</div>
+
+## Overview
+
+Attio is a modern, highly customizable CRM platform that helps businesses manage
+customer relationships, track deals, and organize data in a flexible way. This
+guide will walk you through connecting your Hypermode agent to Attio for
+automated CRM operations.
+
+## Prerequisites
+
+Before connecting Attio to Hypermode, you'll need:
+
+1. An [Attio workspace](https://attio.com/)
+2. Admin permissions to generate API credentials
+3. A [Hypermode workspace](https://hypermode.com/)
+
+## Getting started with Attio
+
+### Step 1: Sign up for Attio
+
+If you don't have an Attio account yet, you'll need to create one first. Visit
+the Attio homepage to get started:
+
+![Attio Homepage](/images/connections/attio/homepage.png)
+
+Click "Sign up" to create your new Attio workspace. You'll need admin access to
+generate the API credentials required for the Hypermode integration.
+
+### Step 2: Note your workspace domain
+
+Your Attio workspace URL will be in the format
+`https://[workspace-name].attio.com`. Make note of your workspace name as you'll
+authenticate through Attio when adding the connection to Hypermode.
+
+## Creating your Attio agent
+
+### Step 1: Create a new agent
+
+From the Hypermode interface, create a new agent:
+
+1. Click the agent dropdown menu
+2. Select "Create new Agent"
+
+![Navigate to create agent](/images/connections/attio/navigate-create-agent.png)
+
+### Step 2: Configure agent settings
+
+Use these recommended settings for your Attio CRM agent:
+
+- **Agent Name**: CRMAgent
+- **Agent Title**: Attio CRM Manager
+- **Description**: Manages customer relationships and deal tracking in Attio CRM
+- **Instructions**: You have a connection to Attio CRM. You can create and
+  update companies and deals, search for existing records, manage deal
+  pipelines, and track customer interactions. Always confirm data before making
+  changes and provide clear summaries of actions taken.
+- **Model**: GPT-4.1 - Default - Optionally, use Claude for best results
+
+![Create agent modal](/images/connections/attio/create-agent-modal.png)
+
+### Step 3: View your agent profile
+
+Once created, navigate to your agent's settings page:
+
+![Agent profile](/images/connections/attio/agent-profile.png)
+
+## Connecting to Attio
+
+### Step 1: Add the Attio connection
+
+Navigate to the **Connections** tab and add Attio:
+
+1. Click "Add connection"
+2. Search for "Attio" in the available connections
+
+![Add Attio connection](/images/connections/attio/add-attio-connection.png)
+
+### Step 2: Configure connection with OAuth
+
+When you select Attio, you'll be prompted to authenticate via OAuth. This will
+redirect you to Attio's authorization page:
+
+![Attio App Request](/images/connections/attio/attio-app-request.png)
+
+Follow the OAuth flow to grant Hypermode access to your Attio workspace. This
+secure process ensures your credentials are never directly stored in Hypermode.
+
+<Note>
+  The OAuth flow ensures secure authentication without exposing your API
+  credentials. You'll be redirected back to Hypermode once authorization is
+  complete.
+</Note>
+
+## Understanding Attio's data model
+
+Attio uses a flexible data model that includes:
+
+- **Companies**: Organizations and account details
+- **Deals**: Sales opportunities and their progress through pipelines
+- **Custom Objects**: Any custom data types you've created
+- **Lists**: Collections of records with shared characteristics
+- **Attributes**: Custom fields that can be added to any object type
+
+This flexibility makes Attio perfect for:
+
+- Complex sales pipeline management
+- Detailed customer relationship tracking
+- Custom workflow automation
+- Advanced reporting and analytics
+
+## Testing the connection
+
+### Test 1: Search for existing companies
+
+Start a new thread with your agent and test the connection:
+
+```text
+Can you show me the first 10 companies in our Attio CRM?
+```
+
+![Search companies result](/images/connections/attio/first-companies.png)
+
+### Test 2: Create a new company
+
+Try adding a new company to your CRM:
+
+```text
+Introspect the workspace and create a new company in Attio with the following details:
+
+Name: Tech Solutions Inc
+Website (domain): techsolutions.com
+Industry/Category: Software
+Employee Range: 50-100
+Description: A leading provider of innovative tech solutions.
+Primary Location: San Francisco, CA
+```
+
+![Create company](/images/connections/attio/create-company.png)
+
+### Test 3: Create and manage a deal
+
+Create a sales opportunity and track its progress:
+
+```text
+Create a new deal in Attio:
+- Deal name: "Q1 Enterprise Software License"
+- Company: Tech Solutions Inc
+- Value: $50,000
+- Stage: Discovery
+```
+
+![Create deal](/images/connections/attio/create-deal.png)
+
+### Test 4: Update deal status
+
+Move the deal through your pipeline:
+
+```text
+Add a note about the "Enterprise Software License - TechCorp" deal that the demo completed yesterday.
+```
+
+![Add note](/images/connections/attio/add-note.png)
+
+## What you can do
+
+With your Attio connection established, your agent can:
+
+- **Manage companies**: Create, update, and search for organizations and account
+  details
+- **Track deals**: Create opportunities, update pipeline stages, and manage deal
+  values
+- **Organize data**: Use lists and custom attributes to categorize records
+- **Search and filter**: Find records based on various criteria
+- **Generate reports**: Analyze pipeline health and company data
+- **Integrate workflows**: Combine CRM operations with other tools like email,
+  calendar, and project management
+
+<Note>
+  The Attio connection provides access to a comprehensive set of tools for CRM
+  management focused on companies and deals. The available tools may vary as we
+  optimize the connection for the most commonly used operations.
+</Note>
+
+## Troubleshooting
+
+### Common issues
+
+#### OAuth authentication failed
+
+- Ensure you have admin permissions in your Attio workspace
+- Try clearing your browser cache and cookies
+- Make sure you're logged into the correct Attio workspace during OAuth flow
+
+#### "Workspace not found" error
+
+- Confirm you completed the OAuth flow successfully
+- Check that your workspace domain is spelled correctly
+- Verify you have access to the workspace
+
+#### Record creation failures
+
+- Ensure required fields are provided for the object type
+- Check that attribute names match exactly (case-sensitive)
+- Verify that enum values are valid for dropdown fields
+
+## Learn more
+
+- [Attio Documentation](https://developers.attio.com/)
+- [Attio API Reference](https://developers.attio.com/reference)
+- [MCP Attio Server](https://mcp.pipedream.com/app/attio)
+- [CRM Best Practices](https://attio.com/blog)
+
+<Tip>
+  Combine Attio with other Hypermode connections to build powerful sales
+  workflows. For example, use Gmail to automatically log email interactions, or
+  Google Calendar to schedule follow-up meetings directly from deal records.
+</Tip>
