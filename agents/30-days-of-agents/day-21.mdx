@@ -21,9 +21,6 @@ advance to **Dgraph** - a distributed graph database designed for modern
 applications. You'll learn sophisticated data modeling concepts and build
 knowledge graphs from real-world news data.
 
-Dgraph represents the cutting edge of graph database technology with native
-GraphQL support and advanced querying capabilities.
-
 ## What you'll accomplish today
 
 - Understand key Dgraph concepts and architecture
@@ -39,28 +36,33 @@ GraphQL support and advanced querying capabilities.
   databases.
 </Warning>
 
-## Step 1: Key Dgraph concepts
+We'll use the [hyper-news project](https://github.com/johnymontana/hyper-news)
+as our example - a news article knowledge graph that demonstrates real-world
+complexity using data from the New York Times API.
+
+### Understanding key Dgraph concepts
 
 Dgraph differs from other graph databases in several important ways:
 
-### Dgraph architecture
+#### Dgraph architecture
 
-**Distributed by design**: Automatically shards data across multiple nodes
-**ACID transactions**: Full transactional consistency across the distributed
-system  
-**GraphQL native**: Direct GraphQL support without translation layers **Type
-system**: Strong typing with schema validation **Real-time subscriptions**: Live
-updates for dynamic applications
+Dgraph makes
 
-### Core concepts
+- **Distributed by design**: Automatically shards data across multiple nodes
+- **ACID transactions**: Full transactional consistency across the distributed
+  system
+- **GraphQL native**: Direct GraphQL support without translation layers
+- **Type system**: Strong typing with schema validation
 
-**Predicates**: Properties or relationships between nodes (similar to edges)
-**UIDs**: Unique identifiers for nodes (automatically managed) **Facets**:
-Properties on predicates (metadata about relationships) **Types**: Schema
-definitions that group predicates **Indexes**: Optimizations for specific query
-patterns
+#### Core concepts
 
-### Schema definition example
+- **Predicates**: Properties or relationships between nodes (similar to edges)
+- **UIDs**: Unique identifiers for nodes (automatically managed)
+- **Facets**: Properties on predicates (metadata about relationships)
+- **Types**: Schema definitions that group predicates
+- **Indexes**: Optimizations for specific query patterns
+
+#### Schema definition example
 
 ```graphql
 type Person {
@@ -78,16 +80,11 @@ type Company {
 }
 ```
 
-<Tip>
-  **Dgraph thinking**: Unlike property graphs, Dgraph treats everything as a
-  predicate (relationship) with optional facets (metadata). This creates more
-  flexible and expressive data models.
-</Tip>
+## Step 1: Create your Hypermode Graph instance
 
-## Step 2: Understanding the hyper-news project
-
-We'll use the hyper-news project as our example - a news article knowledge graph
-that demonstrates real-world complexity:
+We'll use the [hyper-news project](https://github.com/johnymontana/hyper-news)
+as our example - a news article knowledge graph that demonstrates real-world
+complexity using data from the New York Times API.
 
 ### Project structure
 
