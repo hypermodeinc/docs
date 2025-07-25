@@ -1,14 +1,13 @@
 ---
 title: "Day 19: Retrieval with MongoDB - Document-Based RAG Systems"
-sidebarTitle: "Day 19: MongoDB RAG"
+sidebarTitle: "Day 19: MongoDB Retrieval"
 description:
   "Implement sophisticated document-based retrieval systems using MongoDB Atlas
-  for unstructured data like product reviews, feedback, and content analysis
-  with vector search capabilities."
+  for unstructured data like product reviews, feedback, and content analysis."
 ---
 
 <Card title="Day 19 challenge" icon="file-text">
-  **Goal**: build document-based RAG with MongoDB for unstructured data retrieval
+  **Goal**: build document-based retrieval with MongoDB for unstructured data retrieval
 
 **Theme**: context engineering week - NoSQL and document retrieval
 
@@ -21,15 +20,14 @@ Today you'll work with **unstructured document retrieval** using MongoDB Atlas.
 You'll learn to search through product reviews, feedback, and content where the
 structure varies and context is embedded in natural language.
 
-Document-based RAG excels when dealing with varied, unstructured content that
-doesn't fit neatly into database tables.
+Document-based retrieval excels when dealing with varied, unstructured content
+that doesn't fit neatly into database tables.
 
 ## What you'll accomplish today
 
 - Set up MongoDB Atlas with vector search capabilities for document retrieval
 - Load Amazon product reviews as example unstructured data
 - Connect your agent to MongoDB for intelligent document search
-- Implement semantic search across varying document structures
 - Build retrieval patterns for sentiment analysis and contextual understanding
 
 <Warning>
@@ -43,7 +41,7 @@ doesn't fit neatly into database tables.
 Document databases handle unstructured data differently than relational
 databases:
 
-### Document vs. relational data
+### Document and relational data
 
 **Relational data (Day 18)**:
 
@@ -59,7 +57,7 @@ databases:
 - Efficient for content storage and retrieval
 - Great for text analysis and semantic search
 
-### When to use document-based RAG
+### When to use document-based retrieval
 
 **Ideal for**:
 
@@ -76,7 +74,7 @@ databases:
 - Frequent schema changes requiring migrations
 
 <Tip>
-  **Document thinking**: Think of document retrieval as searching through a
+  **Document thinking** Think of document retrieval as searching through a
   library of books rather than looking up entries in a catalog. Context and
   content matter more than exact structure.
 </Tip>
@@ -93,36 +91,6 @@ MongoDB Atlas provides managed MongoDB with built-in vector search:
 3. **Set up database access** with username/password authentication
 4. **Configure network access** to allow connections from your IP
 5. **Get your connection string** for later use
-
-### Set up vector search index
-
-MongoDB Atlas uses Atlas Search for vector capabilities:
-
-```javascript
-// Create vector search index in MongoDB Atlas UI
-{
-  "fields": [
-    {
-      "numDimensions": 1536,
-      "path": "embedding",
-      "similarity": "cosine",
-      "type": "vector"
-    },
-    {
-      "path": "product_title",
-      "type": "string"
-    },
-    {
-      "path": "review_text",
-      "type": "string"
-    },
-    {
-      "path": "rating",
-      "type": "number"
-    }
-  ]
-}
-```
 
 ### Create the reviews collection
 
@@ -152,7 +120,7 @@ db.createCollection("reviews", {
 })
 ```
 
-## Step 3: Load Amazon product reviews data
+## Load Amazon product reviews data
 
 Create a realistic dataset of product reviews with varying structures:
 
@@ -284,48 +252,7 @@ db.reviews.insertMany([
 ])
 ```
 
-### Generate embeddings for reviews
-
-Similar to Day 18, you'll need to generate embeddings:
-
-```python
-# Python script to generate embeddings for MongoDB reviews
-import pymongo
-import openai
-import json
-
-# Configure OpenAI
-openai.api_key = "your-openai-api-key"
-
-# Connect to MongoDB Atlas
-client = pymongo.MongoClient("your-mongodb-connection-string")
-db = client.product_reviews
-collection = db.reviews
-
-def generate_embedding(text):
-    response = openai.Embedding.create(
-        model="text-embedding-ada-002",
-        input=text
-    )
-    return response['data'][0]['embedding']
-
-# Update reviews with embeddings
-reviews = collection.find({"embedding": {"$exists": False}})
-
-for review in reviews:
-    # Combine review text with product context for better embeddings
-    text = f"{review['product_title']}. {review['review_text']}"
-    embedding = generate_embedding(text)
-
-    collection.update_one(
-        {"_id": review["_id"]},
-        {"$set": {"embedding": embedding}}
-    )
-
-print("Embeddings generated for all reviews")
-```
-
-## Step 4: Connect your agent to MongoDB
+## Connect MongoDB to your agent
 
 Integrate MongoDB with your Hypermode agent for document retrieval:
 
@@ -368,9 +295,9 @@ Review Analysis Guidelines:
 7. Note verified purchases vs. unverified reviews when relevant
 ```
 
-## Step 5: Implement document search and analysis
+### Implement document search and analysis
 
-Test your document-based RAG system:
+Test your document-based retrieval system:
 
 ### Semantic review search
 
@@ -380,7 +307,7 @@ What do customers say about camera quality in smartphone reviews? I'm particular
 
 Your agent should:
 
-1. **Search reviews** using semantic similarity for camera-related content
+1. **Search reviews** for camera-related content
 2. **Extract specific mentions** of camera features and performance
 3. **Analyze sentiment** around camera quality
 4. **Provide quotes** from actual reviews
@@ -418,107 +345,6 @@ This requires:
   semantic meaning over exact keyword matches.
 </Tip>
 
-## Step 6: Advanced document retrieval patterns
-
-Enhance your MongoDB RAG with sophisticated search capabilities:
-
-### Multi-field semantic search
-
-```javascript
-// Advanced aggregation pipeline for semantic search with filters
-;[
-  {
-    $vectorSearch: {
-      index: "reviews_vector_index",
-      path: "embedding",
-      queryVector: "<query_embedding>",
-      numCandidates: 100,
-      limit: 10,
-    },
-  },
-  {
-    $match: {
-      rating: { $gte: 4 }, // Filter for positive reviews
-      verified_purchase: true,
-    },
-  },
-  {
-    $project: {
-      product_title: 1,
-      review_text: 1,
-      rating: 1,
-      reviewer_name: 1,
-      features_mentioned: 1,
-      sentiment: 1,
-      score: { $meta: "vectorSearchScore" },
-    },
-  },
-]
-```
-
-### Sentiment-aware retrieval
-
-```javascript
-// Search with sentiment filtering
-;[
-  {
-    $vectorSearch: {
-      index: "reviews_vector_index",
-      path: "embedding",
-      queryVector: "<query_embedding>",
-      numCandidates: 150,
-      limit: 20,
-    },
-  },
-  {
-    $match: {
-      sentiment: { $in: ["positive", "mostly_positive"] },
-    },
-  },
-  {
-    $group: {
-      _id: "$product_id",
-      product_title: { $first: "$product_title" },
-      avg_rating: { $avg: "$rating" },
-      review_count: { $sum: 1 },
-      sample_reviews: {
-        $push: {
-          text: "$review_text",
-          rating: "$rating",
-          features: "$features_mentioned",
-        },
-      },
-    },
-  },
-]
-```
-
-### Feature-based analysis
-
-```javascript
-// Aggregate reviews by mentioned features
-;[
-  { $match: { features_mentioned: { $exists: true } } },
-  { $unwind: "$features_mentioned" },
-  {
-    $group: {
-      _id: "$features_mentioned",
-      avg_rating: { $avg: "$rating" },
-      mention_count: { $sum: 1 },
-      products: { $addToSet: "$product_title" },
-      sample_reviews: {
-        $push: {
-          text: "$review_text",
-          rating: "$rating",
-          product: "$product_title",
-        },
-      },
-    },
-  },
-  { $sort: { mention_count: -1 } },
-]
-```
-
 ## What you've accomplished
 
 In 25 minutes, you've mastered document-based RAG systems:
@@ -528,8 +354,7 @@ In 25 minutes, you've mastered document-based RAG systems:
 **Unstructured data handling**: loaded and indexed product reviews with flexible
 schemas
 
-**Semantic document search**: implemented vector similarity search across
-varying content structures
+**Document search**: implemented search across varying content structures
 
 **Sentiment analysis**: built patterns for understanding customer feedback and
 satisfaction trends
