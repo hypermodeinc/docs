@@ -69,8 +69,17 @@
                     "group": "Available Connections",
                     "pages": [
                       "agents/available-connections",
-                      "agents/connections/supabase",
-                      "agents/connections/neo4j"
+                      {
+                        "group": "CRMs",
+                        "pages": ["agents/connections/attio"]
+                      },
+                      {
+                        "group": "Data Sources",
+                        "pages": [
+                          "agents/connections/supabase",
+                          "agents/connections/neo4j"
+                        ]
+                      }
                     ]
                   }
                 ]
