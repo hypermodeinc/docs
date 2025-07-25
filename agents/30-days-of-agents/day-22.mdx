@@ -397,6 +397,7 @@ This counts how many articles are associated with each topic.
 ```graphql
 {
   articles(func: type(Article)) {
+    // trunk-ignore(vale/error)
     topic_stats: Article.topic {
       # Requires @index(exact) on Topic.name
       topic_min: min(Topic.name)
@@ -406,6 +407,8 @@ This counts how many articles are associated with each topic.
   }
 }
 ```
+
+{/* <!-- trunk-ignore-end(vale/error) --> */}
 
 #### Value-based aggregations
 
