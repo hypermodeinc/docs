@@ -311,26 +311,6 @@ null or empty:
 This returns only articles that have all three fields: title, abstract, and at
 least one topic.
 
-#### The `@normalize` directive
-
-The `@normalize` directive flattens nested data into a simpler structure:
-
-```graphql
-{
-  articles(func: type(Article)) @normalize {
-    title: Article.title
-    topics: Article.topic {
-      name: Topic.name
-    }
-    authors: Article.author {
-      name: Author.name
-    }
-  }
-}
-```
-
-This returns results with flattened, aliased field names for easier processing.
-
 #### The `@facets` directive
 
 While not currently configured in your schema, facets let you add metadata to
