@@ -26,7 +26,7 @@ rather than relying solely on training data.
 
 ## What you'll accomplish today
 
-- Set up a Supabase PostgreSQL database with vector search capabilities
+- Set up a Supabase PostgreSQL database
 - Load and index an Amazon product catalog as example data
 - Connect your agent to Supabase for intelligent retrieval
 - Implement semantic search queries that enhance agent responses
@@ -72,7 +72,7 @@ Before building, understand what makes retrieval powerful:
   dynamic, searchable library rather than memorizing everything up front.
 </Tip>
 
-## Step 2: Set up Supabase with vector search
+## Step 2: Set up Supabase
 
 Supabase provides PostgreSQL with built-in vector search capabilities:
 
@@ -82,76 +82,16 @@ Supabase provides PostgreSQL with built-in vector search capabilities:
 2. **Create a new project** and note your project URL and API keys
 3. **Set up authentication** and database permissions
 
-### Enable vector search capabilities
-
-In your Supabase SQL editor, run:
-
-```sql
--- Enable the pgvector extension
-CREATE EXTENSION IF NOT EXISTS vector;
-
--- Create the products table with vector column
-CREATE TABLE products (
-  id SERIAL PRIMARY KEY,
-  title TEXT NOT NULL,
-  description TEXT,
-  category TEXT,
-  price DECIMAL(10,2),
-  rating DECIMAL(3,2),
-  metadata JSONB,
-  embedding vector(1536), -- OpenAI embedding dimension
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Create index for similarity search
-CREATE INDEX ON products USING ivfflat (embedding vector_cosine_ops);
-```
-
-### Create similarity search function
-
-```sql
--- Function to find similar products
-CREATE OR REPLACE FUNCTION search_products(
-  query_embedding vector(1536),
-  match_threshold float DEFAULT 0.7,
-  match_count int DEFAULT 10
-)
-RETURNS TABLE (
-  id int,
-  title text,
-  description text,
-  category text,
-  price decimal,
-  rating decimal,
-  similarity float
-)
-LANGUAGE plpgsql
-AS $$
-BEGIN
-  RETURN QUERY
-  SELECT
-    products.id,
-    products.title,
-    products.description,
-    products.category,
-    products.price,
-    products.rating,
-    1 - (products.embedding <=> query_embedding) as similarity
-  FROM products
-  WHERE 1 - (products.embedding <=> query_embedding) > match_threshold
-  ORDER BY products.embedding <=> query_embedding
-  LIMIT match_count;
-END;
-$$;
-```
-
 ## Step 3: Load Amazon product catalog data
 
 Let's create a realistic product dataset for testing:
 
 ### Sample product data
 
-Create sample product data that represents a typical e-commerce catalog:
+Create sample product data that represents a typical e-commerce catalog.
+Navigate to the SQL editor in Supabase and run the following SQL:
+
+{/* <!-- markdownlint-disable MD013 --> */}
 
 ```sql
 -- Insert sample Amazon-style product data
@@ -173,65 +113,20 @@ INSERT INTO products (title, description, category, price, rating, metadata) VAL
 ('Espresso Machine Deluxe', 'Semi-automatic espresso machine with milk frother and programmable settings', 'Kitchen', 599.99, 4.5, '{"brand": "Breville", "features": ["Semi-automatic", "Milk frother", "Programmable"]}');
 ```
 
-### Generate embeddings for products
-
-You'll need to generate embeddings for each product. Here's how to structure the
-embedding generation:
-
-```python
-# Example Python script to generate embeddings
-import openai
-import psycopg2
-import json
-from supabase import create_client, Client
-
-# Configure OpenAI
-openai.api_key = "your-openai-api-key"
-
-# Configure Supabase
-url = "your-supabase-url"
-key = "your-supabase-anon-key"
-supabase: Client = create_client(url, key)
-
-def generate_embedding(text):
-    response = openai.embeddings.create(
-        model="text-embedding-ada-002",
-        input=text
-    )
-    return response.data[0].embedding
-
-# Update products with embeddings
-products = supabase.table('products').select('*').is_('embedding', 'null').execute()
-
-for product in products.data:
-    # Combine title and description for embedding
-    text = f"{product['title']}. {product['description']}"
-    embedding = generate_embedding(text)
-
-    # Update product with embedding
-    supabase.table('products').update({
-        'embedding': embedding
-    }).eq('id', product['id']).execute()
-
-    print(f"Updated product: {product['title']}")
-
-print("All products updated with embeddings")
-```
-
-<Info>
-  **Alternative approach** Use Supabase's built-in embedding generation features
-  or integrate with Hypermode's embedding capabilities for automated processing.
-</Info>
+{/* <!-- markdownlint-enable MD013 --> */}
 
 ## Step 4: Connect your agent to Supabase
 
-Now integrate your RAG system with your Hypermode agent:
+Now integrate your retrieval system with your Hypermode agent:
 
 ### Add Supabase connection
 
 1. **Navigate to your agent's connections** in the About section
 2. **Add Supabase connection** and configure with your project credentials
 3. **Test the connection** by querying the products table
+
+Refer to the [Hypermode Supabase connection docs](/agents/connections/supabase)
+for more information.
 
 ### Create a retrieval-enabled agent
 
@@ -241,7 +136,7 @@ If you don't have a suitable agent, create one with Concierge:
 I want to create a product recommendation agent that helps users find products based on their needs.
 
 The agent should:
-- Use semantic search to find relevant products from our catalog
+- Search to find relevant products from our catalog
 - Understand user preferences and requirements
 - Provide detailed product comparisons and recommendations
 - Explain why specific products match user needs
@@ -256,7 +151,7 @@ Add these patterns to your agent's instructions:
 
 ```text
 Product Search Guidelines:
-1. When users ask about products, use semantic search on the products database
+1. When users ask about products, use search on the products database
 2. Search using natural language descriptions of user needs
 3. Include relevant product details: title, description, price, rating, and key features
 4. Explain why recommended products match the user's requirements
@@ -264,9 +159,9 @@ Product Search Guidelines:
 6. Always provide specific product information rather than generic advice
 ```
 
-## Step 5: Implement semantic search queries
+## Step 5: Implement retrieval queries
 
-Test your RAG system with real queries:
+Test your retrieval system with real queries:
 
 ### Basic product search
 
@@ -276,10 +171,9 @@ I'm looking for a smartphone with good camera quality and long battery life unde
 
 Your agent should:
 
-1. **Generate an embedding** for the search query
-2. **Query the products table** using vector similarity
-3. **Return relevant products** with explanations
-4. **Format results** with specific details and reasoning
+1. **Query the products table**
+2. **Return relevant products** with explanations
+3. **Format results** with specific details and reasoning
 
 ### Complex requirement matching
 
@@ -304,102 +198,6 @@ comparative information.
   but contextually relevant ones that actually answer the user's underlying
   need.
 </Tip>
-
-## Step 6: Advanced retrieval patterns
-
-Enhance your RAG system with sophisticated search capabilities:
-
-### Hybrid search (combining vector and keyword search)
-
-```sql
--- Function for hybrid search combining similarity and text search
-CREATE OR REPLACE FUNCTION hybrid_search_products(
-  query_text text,
-  query_embedding vector(1536),
-  match_threshold float DEFAULT 0.7,
-  match_count int DEFAULT 10
-)
-RETURNS TABLE (
-  id int,
-  title text,
-  description text,
-  category text,
-  price decimal,
-  rating decimal,
-  similarity_score float,
-  text_score float,
-  combined_score float
-)
-LANGUAGE plpgsql
-AS $$
-BEGIN
-  RETURN QUERY
-  SELECT
-    p.id,
-    p.title,
-    p.description,
-    p.category,
-    p.price,
-    p.rating,
-    (1 - (p.embedding <=> query_embedding)) as similarity_score,
-    ts_rank(to_tsvector('english', p.title || ' ' || p.description), plainto_tsquery('english', query_text)) as text_score,
-    (1 - (p.embedding <=> query_embedding)) * 0.7 + ts_rank(to_tsvector('english', p.title || ' ' || p.description), plainto_tsquery('english', query_text)) * 0.3 as combined_score
-  FROM products p
-  WHERE
-    (1 - (p.embedding <=> query_embedding)) > match_threshold
-    OR to_tsvector('english', p.title || ' ' || p.description) @@ plainto_tsquery('english', query_text)
-  ORDER BY combined_score DESC
-  LIMIT match_count;
-END;
-$$;
-```
-
-### Filtered retrieval
-
-Add filters for better targeted search:
-
-```sql
--- Function with category and price filtering
-CREATE OR REPLACE FUNCTION filtered_search_products(
-  query_embedding vector(1536),
-  category_filter text DEFAULT NULL,
-  min_price decimal DEFAULT NULL,
-  max_price decimal DEFAULT NULL,
-  min_rating decimal DEFAULT NULL,
-  match_count int DEFAULT 10
-)
-RETURNS TABLE (
-  id int,
-  title text,
-  description text,
-  category text,
-  price decimal,
-  rating decimal,
-  similarity float
-)
-LANGUAGE plpgsql
-AS $$
-BEGIN
-  RETURN QUERY
-  SELECT
-    p.id,
-    p.title,
-    p.description,
-    p.category,
-    p.price,
-    p.rating,
-    1 - (p.embedding <=> query_embedding) as similarity
-  FROM products p
-  WHERE
-    (category_filter IS NULL OR p.category = category_filter)
-    AND (min_price IS NULL OR p.price >= min_price)
-    AND (max_price IS NULL OR p.price <= max_price)
-    AND (min_rating IS NULL OR p.rating >= min_rating)
-  ORDER BY p.embedding <=> query_embedding
-  LIMIT match_count;
-END;
-$$;
-```
 
 ### Contextual retrieval
 
@@ -432,7 +230,7 @@ Test sophisticated retrieval patterns:
 
 ## Step 7: Performance optimization and monitoring
 
-Ensure your RAG system performs well at scale:
+Ensure your retrieval system performs well at scale:
 
 ### Indexing optimization
 
@@ -516,7 +314,7 @@ your own data sources.
 Test retrieval quality with diverse queries:
 
 ```text
-Test my RAG system with these different query types:
+Test my retrieval system with these different query types:
 1. Specific product searches: "wireless noise-canceling headphones"
 2. Use case searches: "products for home office productivity"
 3. Comparative searches: "best value smartphones under $500"
