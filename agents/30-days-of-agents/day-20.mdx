@@ -42,7 +42,7 @@ entities themselves.
 
 GraphRAG represents a fundamentally different approach to information retrieval:
 
-### Traditional RAG vs. GraphRAG
+### Traditional RAG and GraphRAG
 
 **Traditional RAG**:
 
@@ -77,15 +77,15 @@ GraphRAG represents a fundamentally different approach to information retrieval:
   roadmap?"
 
 <Tip>
-  **Graph thinking**: Instead of asking "What documents contain X?", GraphRAG
+  **Graph thinking** Instead of asking "What documents contain X?", GraphRAG
   asks "What's connected to X, and what does that network tell us?"
 </Tip>
 
-## Step 2: Set up Neo4j Sandbox
+## Step 2: Set up Neo4j sandbox
 
 Neo4j Sandbox provides a free, hosted Neo4j instance for learning:
 
-### Create your Neo4j Sandbox
+### Create your Neo4j sandbox
 
 1. **Visit [sandbox.neo4j.com](https://sandbox.neo4j.com)** and create a free
    account
@@ -95,10 +95,11 @@ Neo4j Sandbox provides a free, hosted Neo4j instance for learning:
 
 ### Understanding Neo4j concepts
 
-**Nodes**: Entities in your graph (People, Companies, Products, Concepts)
-**Relationships**: Connections between nodes (WORKS_FOR, COMPETES_WITH,
-INFLUENCES) **Properties**: Attributes of nodes and relationships (name, date,
-strength) **Labels**: Categories for nodes (Person, Company, Technology)
+- **Nodes** Entities in your graph (People, Companies, Products, Concepts)
+- **Relationships** Connections between nodes (WORKS_FOR, COMPETES_WITH,
+  INFLUENCES)
+- **Properties** Attributes of nodes and relationships (name, date, strength)
+- **Labels** Categories for nodes (Person, Company, Technology)
 
 ### Basic Cypher syntax
 
@@ -240,6 +241,9 @@ Integrate graph database capabilities with your Hypermode agent:
 2. **Add Neo4j connection** with your Sandbox credentials
 3. **Test the connection** by running a simple Cypher query
 
+Refer to the [Neo4j connection documentation](agents/connections/neo4j) for more
+information on how to add the Neo4j connection to your Hypermode agent.
+
 ### Create a GraphRAG agent
 
 Create an agent specialized in graph-based reasoning:
@@ -318,7 +322,7 @@ This tests:
 - **Competitive advantage assessment** through connectivity
 
 <Tip>
-  **GraphRAG insight**: The most valuable insights often come from discovering
+  **GraphRAG insight** The most valuable insights often come from discovering
   unexpected connections or understanding how influence flows through networks
   of relationships.
 </Tip>
@@ -409,7 +413,7 @@ discovery
 
 ## The power of GraphRAG
 
-GraphRAG enables reasoning that traditional RAG cannot:
+GraphRAG enables reasoning that traditional RAG can't:
 
 **Traditional RAG**: "What companies work on AI safety?" → Returns individual
 documents about AI safety companies
@@ -451,13 +455,13 @@ effects.
 
 **Time to complete**: ~30 minutes
 
-**Skills learned**: Neo4j setup, knowledge graph construction, GraphRAG
+**Skills learned** Neo4j setup, knowledge graph construction, GraphRAG
 implementation, Cypher querying, network analysis, graph visualization
 
 **Next**: day 21 - Advanced graph data modeling with Dgraph
 
 <Tip>
-  **Remember**: GraphRAG's power lies in understanding that knowledge isn't just
+  **Remember** GraphRAG's power lies in understanding that knowledge isn't just
   about individual facts, but about how those facts connect to create larger
   patterns of meaning and influence.
 </Tip>

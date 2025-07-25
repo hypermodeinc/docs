@@ -10,6 +10,7 @@ Attio
 Basecamp
 [Bb]oolean
 [Bb]ootcamp
+[Bb]rowser
 Browserbase
 [Cc]ollections
 [Cc]omputeDistance
@@ -18,6 +19,7 @@ Browserbase
 (?i)CLEAR
 CRM
 [Cc]ryptocurrency
+[Cc]ypher
 datetime
 [Dd]eserialize
 Dgraph
@@ -35,6 +37,7 @@ FAQs
 [Gg]etText
 [Gg]etTexts
 [Gg]etVector
+GraphRAG
 [Hh]ardcoding
 [Hh]yp
 [Hh]ypercategories
@@ -89,10 +92,12 @@ ISO
 LLM
 Logf
 MySQL|mysql
+[Nn]eo4j
 NPM|npm
 NQuads|nquads
 PostgreSQL|postgresql
 PUT
+(?i)RAG
 recompiles
 repo
 RDF
