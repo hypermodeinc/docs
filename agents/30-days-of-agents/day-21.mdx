@@ -62,23 +62,9 @@ Dgraph makes
 - **Types**: Schema definitions that group predicates
 - **Indexes**: Optimizations for specific query patterns
 
-#### Schema definition example
+#### Graph data modeling
 
-```graphql
-type Person {
-  name: string @index(exact, term) .
-  age: int .
-  friend: [Person] .
-  works_at: Company .
-}
-
-type Company {
-  name: string @index(exact) .
-  founded: datetime .
-  employees: [Person] .
-  industry: string @index(exact) .
-}
-```
+![hyper-news graph data model](/images/agents/30-days-of-agents/day-21-graph-model.png)
 
 ## Step 1: Create your Hypermode Graph instance
 
@@ -96,26 +82,46 @@ The hyper-news knowledge graph contains:
 - **Sources**: News outlets and publishers
 - **Temporal data**: Publication dates and time-based relationships
 
-## Create Your Hypermode Graph
+## Create your Hypermode graph
 
-1. Navigate to [Hypermode](https://hypermode.com) and sign up for a free account
-2. Create a new graph
+<Steps >
 
-![create new graph](img/hypermode-1.png)
+<Step title="Sign in to Hypermode">
 
-3. Copy the `dgraph://` connection string, you'll use this to connect to your
-   Hypermode Graph instance
+Navigate to [Hypermode](https://hypermode.com/login) and sign in.
 
-![dgraph connection string](img/hypermode-2.png)
+</Step>
 
-4. Navigate to ratel.hypermode.com and connect to your Hypermode Graph instance
-   using the `dgraph://` connection string
+<Step title="Create a new graph">
 
-![connect to graph](img/hypermode-3.png)
+Select the "Develop" tab and click "Create Graph". Give your graph a name and
+select "Create Graph".
 
-5. Update the graph schema
+![create new graph](/images/agents/30-days-of-agents/day-21-hypermode-1.png)
 
-![update graph schema](img/ratel-update-schema.png)
+</Step>
+
+<Step title="Copy the Dgraph connection string">
+
+Copy the `dgraph://` connection string, you'll use this to connect to your
+Hypermode Graph instance.
+
+![dgraph connection string](/images/agents/30-days-of-agents/day-21-hypermode-2.png)
+
+</Step>
+
+<Step title="Open the Ratel interface">
+
+Navigate to [ratel.hypermode.com](https://ratel.hypermode.com) and connect to
+your Hypermode Graph instance using the `dgraph://` connection string
+
+![connect to graph](/images/agents/30-days-of-agents/day-21-hypermode-3.png)
+
+</Step>
+
+<Step title="Update the graph schema">
+
+![update graph schema](/images/agents/30-days-of-agents/day-21-ratel-update-schema.png)
 
 Select "Schema" from Ratel's left navigation, then select "Bulk Edit" and copy
 and paste the following graph schema to replace the default schema, then select
@@ -159,7 +165,9 @@ type <dgraph.graphql.persisted_query> {
 
 </Accordion>
 
-6. Import the sample data into your graph
+</Step>
+
+<Step title="Import the sample data into your graph">
 
 Load RDF data into your graph, navigate to the
 [Ratel](https://ratel.hypermode.com) interface and connect to your graph using
@@ -409,9 +417,13 @@ _:Article_100000010065487 <Article.embedding> "[0.03844505548477173, 0.076365791
 
 </Accordion>
 
-![import sample data](img/hypermode-4.png)
+![import sample data](/images/agents/30-days-of-agents/day-21-hypermode-4.png)
 
-## Step 5: Verify your graph
+</Step>
+
+</Steps>
+
+## Verify your graph
 
 Run the following query in Ratel to verify your graph data is loaded:
 
@@ -436,7 +448,7 @@ Run the following query in Ratel to verify your graph data is loaded:
 }
 ```
 
-![querying the graph using Ratel](img/ratel-query.png)
+![querying the graph using Ratel](/images/agents/30-days-of-agents/day-21-ratel-query.png)
 
 ## What you've accomplished
 
@@ -490,13 +502,14 @@ different use cases.
 
 **Time to complete**: ~25 minutes
 
-**Skills learned**: Dgraph architecture, RDF data modeling, multi-type knowledge
-graphs, temporal and provenance patterns, agent integration strategies
+- **Skills learned** Dgraph architecture, RDF data modeling, multi-type
+  knowledge graphs, temporal and provenance patterns, agent integration
+  strategies
 
 **Next**: day 22 - DQL querying and multi-language client integration
 
 <Tip>
-  **Remember**: Advanced graph modeling is about representing not just what you
+  **Remember** Advanced graph modeling is about representing not just what you
   know, but how you know it, when you knew it, and how confident you are about
   it. This metadata becomes crucial for agent reasoning.
 </Tip>
