@@ -220,3 +220,6 @@ LTV
 CAC
 upsell
 will
+signup
+[sS]upabase
+schemaless
