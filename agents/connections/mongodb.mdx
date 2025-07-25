@@ -66,9 +66,10 @@ You'll also need to create a user and password for your database.
 Navigate to your cluster and get the connection string:
 
 1. Click "Connect" on your cluster
-2. Choose "Connect your application"
+2. Choose "Connect"
 3. Copy the connection string and replace `<password>` with your database user
-   password
+   password. You'll use this connection string to connect your Hypermode agent
+   to MongoDB.
 
 ![MongoDB connection string](/images/connections/mongodb/connection-string.png)
 
@@ -125,8 +126,14 @@ Navigate to the **Connections** tab and add MongoDB:
 
 Enter your MongoDB credentials:
 
-- **Connection String**: Your MongoDB connection string
+- **Username**: The username of your MongoDB user
+- **Password**: The password of your MongoDB user
 - **Database Name**: The default database to connect to
+- **Hostname**: The hostname of your MongoDB cluster. This is the part of your
+  MongoDB connection string that comes after `mongodb+srv://` and is a domain
+  name. For example given the connection string
+  `mongodb+srv://will:<db_password>@hypermodeturorials.o7ygcmn.mongodb.net/?retryWrites=true&w=majority&appName=HypermodeTurorials`,
+  the hostname is `hypermodeturorials.o7ygcmn.mongodb.net`
 
 ![MongoDB connection modal](/images/connections/mongodb/mongodb-connection-modal.png)
 
