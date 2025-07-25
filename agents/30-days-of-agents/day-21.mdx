@@ -155,11 +155,11 @@ and paste the following graph schema to replace the default schema, then select
 <dgraph.graphql.schema>: string .
 <dgraph.graphql.xid>: string @index(exact) @upsert .
 type <dgraph.graphql> {
-	dgraph.graphql.schema
-	dgraph.graphql.xid
+  dgraph.graphql.schema
+  dgraph.graphql.xid
 }
 type <dgraph.graphql.persisted_query> {
-	dgraph.graphql.p_query
+  dgraph.graphql.p_query
 }
 ```
 
@@ -175,6 +175,8 @@ the Dgraph connection string. Then run the following mutation in Ratel (be sure
 to select the Mutate tab):
 
 <Accordion title="Copy this DQL mutation to load sample data">
+
+{/* <!-- markdownlint-disable MD013 --> */}
 
 ```dql
 {
@@ -415,6 +417,8 @@ _:Article_100000010065487 <Article.embedding> "[0.03844505548477173, 0.076365791
 }
 ```
 
+{/* <!-- markdownlint-enable MD013 --> */}
+
 </Accordion>
 
 ![import sample data](/images/agents/30-days-of-agents/day-21-hypermode-4.png)
@@ -430,7 +434,7 @@ Run the following query in Ratel to verify your graph data is loaded:
 ```dql
 {
   articles(func:type(Article),first:100) {
-	Article.title
+    Article.title
     Article.uri
     Article.url
     Article.published
