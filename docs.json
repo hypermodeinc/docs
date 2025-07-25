@@ -130,6 +130,19 @@
                       "agents/30-days-of-agents/day-14",
                       "agents/30-days-of-agents/day-15"
                     ]
+                  },
+                  {
+                    "group": "Week 4",
+                    "pages": [
+                      "agents/30-days-of-agents/context-engineering",
+                      "agents/30-days-of-agents/day-16",
+                      "agents/30-days-of-agents/day-17",
+                      "agents/30-days-of-agents/day-18",
+                      "agents/30-days-of-agents/day-19",
+                      "agents/30-days-of-agents/day-20",
+                      "agents/30-days-of-agents/day-21",
+                      "agents/30-days-of-agents/day-22"
+                    ]
                   }
                 ]
               },
