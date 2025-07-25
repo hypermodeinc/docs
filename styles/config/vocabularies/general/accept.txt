@@ -43,6 +43,7 @@ GraphRAG
 [Hh]ypercategories
 [Hh]ypermode
 HNSW
+[Hh]ostname
 Hyperbrowser
 [Ii]nferencing
 Jira

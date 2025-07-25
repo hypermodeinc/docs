@@ -70,7 +70,8 @@
                     "pages": [
                       "agents/available-connections",
                       "agents/connections/supabase",
-                      "agents/connections/neo4j"
+                      "agents/connections/neo4j",
+                      "agents/connections/mongodb"
                     ]
                   }
                 ]
