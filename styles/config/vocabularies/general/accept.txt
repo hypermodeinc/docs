@@ -2,6 +2,7 @@
 [Aa]gentic
 Ahrefs
 Airtable
+[Aa]rticle
 [Aa]lterSchema
 [Aa]pp
 Asana
@@ -17,6 +18,7 @@ Browserbase
 (?i)CLEAR
 CRM
 [Cc]ryptocurrency
+datetime
 [Dd]eserialize
 Dgraph
 [Dd]istilbert
@@ -37,6 +39,7 @@ FAQs
 [Hh]yp
 [Hh]ypercategories
 [Hh]ypermode
+HNSW
 Hyperbrowser
 [Ii]nferencing
 Jira
@@ -106,6 +109,8 @@ tokenizer
 URL|url
 UTC
 urql
+URI
+URIs
 UUID
 Warnf
 WASM
