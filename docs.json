@@ -69,9 +69,18 @@
                     "group": "Available Connections",
                     "pages": [
                       "agents/available-connections",
-                      "agents/connections/supabase",
-                      "agents/connections/neo4j",
-                      "agents/connections/mongodb"
+                      {
+                        "group": "Sales",
+                        "pages": ["agents/connections/attio"]
+                      },
+                      {
+                        "group": "Databases",
+                        "pages": [
+                          "agents/connections/supabase",
+                          "agents/connections/neo4j",
+                          "agents/connections/mongodb"
+                        ]
+                      }
                     ]
                   }
                 ]
