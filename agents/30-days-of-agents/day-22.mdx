@@ -1,0 +1,2105 @@
+---
+title: "Day 22: Dgraph - Querying Knowledge Graphs with DQL"
+sidebarTitle: "Day 22: Dgraph Querying"
+description:
+  "Master DQL (Dgraph Query Language) for complex graph queries, explore the
+  news knowledge graph with Ratel, and integrate Dgraph with agents using
+  Python, JavaScript, and Go clients."
+---
+
+<Card title="Day 22 challenge" icon="search">
+  **Goal**: master DQL querying and multi-language client integration with Dgraph
+
+**Theme**: context engineering week - advanced graph query mastery
+
+**Time investment**: ~30 minutes
+
+</Card>
+
+Welcome to Day 22! Yesterday you built sophisticated knowledge graphs with
+Dgraph. Today you'll master **DQL (Dgraph Query Language)** for complex graph
+queries and learn to integrate Dgraph with your agents using multiple
+programming languages.
+
+DQL enables sophisticated graph traversal and analysis that powers intelligent
+agent reasoning.
+
+## What you'll accomplish today
+
+- Master DQL syntax for complex graph queries
+- Use Ratel (Dgraph's UI) to explore the news knowledge graph
+- Learn multi-hop graph traversal and aggregation techniques
+- Integrate Dgraph with agents using Python, JavaScript, and Go clients
+- Build sophisticated graph-powered agent workflows
+
+<Warning>
+  This requires access to a Dgraph instance (free Cloud instance available) and
+  familiarity with basic programming concepts. Be sure to complete Day 21 first.
+  You'll work with multiple client libraries.
+</Warning>
+
+## Step 1: DQL fundamentals
+
+DQL (Dgraph Query Language) is designed specifically for graph traversal and
+analysis:
+
+### Basic DQL syntax
+
+```dql
+{
+  articles(func: type(Article)) {
+    Article.title
+    Article.abstract
+    Article.uri
+  }
+}
+```
+
+### Key DQL concepts
+
+- **Functions**: Entry points for queries (`type()`, `eq()`, `allofterms()`,
+  etc.)
+- **Predicates**: Properties to retrieve or traverse
+- **Variables**: Store intermediate results (`var(func: ...)`)
+- **Filters**: Refine results at any level(`@filter()`)
+- **Aggregations**: Calculate values across sets (`count`, `sum`, `avg`)
+
+### DQL vs. other query languages
+
+**DQL advantages**:
+
+- Native graph traversal with unlimited depth
+- Variables for complex multi-stage queries
+- Built-in aggregation and filtering at any level
+- Optimized for distributed graph operations
+
+<Tip>
+  **DQL thinking** Unlike SQL joins, DQL follows relationships naturally. Think
+  about traversing paths through connected data rather than combining tables.
+</Tip>
+
+## Step 2: Exploring with Ratel
+
+Ratel is Dgraph's built-in UI for query development and visualization. We'll use
+Ratel to execute queries and explore the results. Follow the steps described in
+Day 21 to connect Ratel to your Hypermode Graph.
+
+### Filtering and ordering
+
+You can filter results using the `@filter` directive:
+
+```graphql
+{
+  articles(func: type(Article)) @filter(has(Article.abstract)) {
+    Article.title
+    Article.abstract
+  }
+}
+```
+
+This returns only articles that have an abstract.
+
+To order results, use the `orderasc` or `orderdesc` parameter:
+
+```graphql
+{
+  articles(func: type(Article), orderasc: Article.title) {
+    Article.title
+    Article.abstract
+  }
+}
+```
+
+**Schema Improvement:** Add an `@index` to `Article.title` to enable fast
+sorting:
+
+```dql
+<Article.title>: string @index(exact) .
+```
+
+### Date filtering
+
+Your schema includes `Article.published` as a date field. To filter by date:
+
+```graphql
+{
+  recent_articles(func: type(Article)) @filter(ge(Article.published, "2025-01-01T00:00:00Z")) {
+    Article.title
+    Article.published
+  }
+}
+```
+
+**Schema Improvement** Add a `datetime` index for faster date-based queries:
+
+```dql
+<Article.published>: datetime @index(hour) .
+```
+
+### Nested traversals
+
+Follow relationships between entities with nested queries:
+
+```graphql
+{
+  topics(func: type(Topic)) {
+    Topic.name
+    ~Article.topic {  # Traverse reverse edge to articles
+      Article.title
+      Article.abstract
+    }
+  }
+}
+```
+
+You can also query articles and include their related entities:
+
+```graphql
+{
+  articles(func: type(Article)) {
+    Article.title
+    Article.topic {
+      Topic.name
+    }
+    Article.org {
+      Organization.name
+    }
+  }
+}
+```
+
+### Full-text search
+
+The schema has a full-text index on `Topic.name`, enabling text search:
+
+```graphql
+{
+  topics(func: anyoftext(Topic.name, "technology AI")) {
+    Topic.name
+    ~Article.topic {
+      Article.title
+    }
+  }
+}
+```
+
+**Schema Improvement** Add full-text search to Article titles and abstracts:
+
+```dql
+<Article.title>: string @index(fulltext) .
+<Article.abstract>: string @index(fulltext, term) .
+```
+
+### Geospatial queries
+
+Your schema has `Geo.location` as a `geo` field, enabling location-based
+queries:
+
+```graphql
+{
+  nearby_locations(func: near(Geo.location, [-74.0060, 40.7128], 50000)) {
+    Geo.name
+    Geo.location
+    ~Article.geo {
+      Article.title
+    }
+  }
+}
+```
+
+This finds locations within 10km of New York City coordinates and their
+associated articles.
+
+### Vector similarity search
+
+The schema includes `Article.embedding` with an HNSW vector index, allowing
+semantic searches:
+
+```graphql
+query vector_search($embedding: string, $limit: int) {
+          articles(func: similar_to(Article.embedding, $limit, $embedding)) {
+            uid
+            Article.title
+            Article.abstract
+            score
+          }
+        }
+```
+
+This finds the 5 articles with embeddings most similar to the given vector.
+
+### Advanced queries: Combining multiple filters
+
+Combine multiple filters for complex queries:
+
+```graphql
+{
+  tech_articles_2025(func: type(Article)) @filter(
+    anyoftext(Article.abstract, "technology AI") AND
+    ge(Article.published, "2025-01-01") AND
+    has(Article.geo)
+  ) {
+    Article.title
+    Article.abstract
+    Article.published
+    Article.geo {
+      Geo.name
+      Geo.location
+    }
+    Article.topic {
+      Topic.name
+    }
+  }
+}
+```
+
+### Additional schema improvements
+
+To enable more advanced queries, consider these improvements:
+
+1. Add indexes to organization and author names for searching:
+
+   ```dql
+   <Organization.name>: string @index(exact, term) .
+   <Author.name>: string @index(exact, term) .
+   ```
+
+2. Add count indexing to quickly count relationships:
+
+   ```dql
+   <Article.topic>: [uid] @count @reverse .
+   <Author.article>: [uid] @count @reverse .
+   ```
+
+3. Add unique ID constraints for article URIs:
+
+   ```dql
+   <Article.uri>: string @index(exact) @upsert .
+   ```
+
+4. Add date partitioning for more efficient date range queries:
+
+   ```dql
+   <Article.published>: datetime @index(year, month, day, hour) .
+   ```
+
+These enhancements will provide more query capabilities without requiring
+changes to your data model.
+
+### Client directives
+
+DQL offers several client-side directives that modify query behavior without
+affecting the underlying data.
+
+#### The `@cascade` directive
+
+The `@cascade` directive filters out nodes where any of the requested fields are
+null or empty:
+
+```graphql
+{
+  articles(func: type(Article)) @cascade {
+    Article.title
+    Article.abstract
+    Article.topic {
+      Topic.name
+    }
+  }
+}
+```
+
+This returns only articles that have all three fields: title, abstract, and at
+least one topic.
+
+#### The `@facets` directive
+
+While not currently configured in your schema, facets let you add metadata to
+edges. To add and query facets, you'd update your schema like this:
+
+```dql
+<Article.topic>: [uid] @reverse @facets(relevance: float) .
+```
+
+Then query with:
+
+```graphql
+{
+  articles(func: type(Article)) {
+    Article.title
+    Article.topic @facets(relevance) {
+      Topic.name
+    }
+  }
+}
+```
+
+#### The `@filter` directive (with multiple conditions)
+
+Combine multiple filter conditions using logical operators:
+
+```graphql
+{
+  articles(func: type(Article)) @filter(has(Article.abstract) AND (anyoftext(Article.abstract, "climate") OR anyoftext(Article.abstract, "weather"))) {
+    Article.title
+    Article.abstract
+  }
+}
+```
+
+#### The `@recurse` directive
+
+For recursive traversals (useful if your graph has hierarchical relationships):
+
+```graphql
+{
+  topics(func: type(Topic)) {
+    Topic.name
+    subtopics @recurse(depth: 3) {
+      name
+      subtopics
+    }
+  }
+}
+```
+
+**Note** This would require adding a self-referential `subtopics` predicate to
+your schema.
+
+### Aggregation queries
+
+DQL provides functions for aggregating data:
+
+#### Basic count
+
+```graphql
+{
+  total_articles(func: type(Article)) {
+    count(uid)
+  }
+}
+```
+
+#### Count with grouping
+
+```graphql
+{
+  topics(func: type(Topic)) {
+    Topic.name
+    article_count: count(~Article.topic)
+  }
+}
+```
+
+This counts how many articles are associated with each topic.
+
+#### Multiple aggregations
+
+```graphql
+{
+  articles(func: type(Article)) {
+    // trunk-ignore(vale/error)
+    topic_stats: Article.topic {
+      # Requires @index(exact) on Topic.name
+      topic_min: min(Topic.name)
+      topic_max: max(Topic.name)
+      topic_count: count(uid)
+    }
+  }
+}
+```
+
+{/* <!-- trunk-ignore-end(vale/error) --> */}
+
+#### Value-based aggregations
+
+For numeric fields with appropriate indexes (not in your current schema):
+
+```graphql
+{
+  # This would require adding a numeric wordCount field with an @index(int)
+  article_stats(func: type(Article)) {
+    min_words: min(Article.wordCount)
+    max_words: max(Article.wordCount)
+    avg_words: avg(Article.wordCount)
+    sum_words: sum(Article.wordCount)
+  }
+}
+```
+
+#### Grouping with `@groupby`
+
+Group and aggregate data (requires adding `@index` directives to the fields used
+in `@groupby`):
+
+```graphql
+{
+  articles(func: type(Article)) @groupby(Article.published) {
+    month: min(Article.published)
+    count: count(uid)
+  }
+}
+```
+
+**Note** This would require `<Article.published>: datetime @index(month)` in the
+schema.
+
+#### Date-based aggregations
+
+```graphql
+{
+  publications_by_month(func: type(Article)) {
+    count: count(uid)
+    month: datetrunc(Article.published, "month")
+  } @groupby(month)
+}
+```
+
+**Note** This requires the proper `datetime` index on Article.published.
+
+### Combined advanced example
+
+This example combines multiple directives and aggregations:
+
+```graphql
+{
+  topic_statistics(func: type(Topic)) @filter(has(~Article.topic)) {
+    Topic.name
+    articles: ~Article.topic @cascade {
+      count: count(uid)
+      recent_count: count(uid) @filter(ge(Article.published, "2025-01-01T00:00:00Z"))
+      oldest: min(Article.published)
+      newest: max(Article.published)
+    }
+  }
+}
+```
+
+This returns each topic with article statistics, including total count, recent
+count, and publication date ranges.
+
+## Step 4: Client integrations
+
+Dgraph provides clients for multiple programming languages, including Python,
+Go, and JavaScript. You can use these clients to connect to your Dgraph instance
+and perform operations like queries, mutations, and transactions.
+
+### Setup and basic connection
+
+<Tabs>
+<Tab title="Python">
+
+```python
+import pydgraph
+import grpc
+import json
+from datetime import datetime
+
+# Create Dgraph client
+def create_client():
+    stub = pydgraph.DgraphClientStub('localhost:9080')
+    client =pydgraph.open("dgraph://<YOUR_HYPERMODE_GRAPH_CONNECTION_STRING>")
+    return client
+
+# Example agent integration class
+class NewsGraphAgent:
+    def __init__(self):
+        self.client = create_client()
+
+    def search_articles_by_topic(self, topic_name, limit=10):
+        """Search articles using full-text search on topic names"""
+        query = f"""
+        {{
+          topics(func: anyoftext(Topic.name, "{topic_name}")) {{
+            Topic.name
+            articles: ~Article.topic (first: {limit}) {{
+              uid
+              Article.title
+              Article.abstract
+              Article.published
+              Article.uri
+            }}
+          }}
+        }}
+        """
+
+        txn = self.client.txn()
+        try:
+            response = txn.query(query)
+            return json.loads(response.json)
+        finally:
+            txn.discard()
+
+    def search_articles_by_content(self, search_terms, limit=10):
+        """Full-text search across article titles and abstracts"""
+        query = f"""
+        {{
+          articles(func: anyoftext(Article.title, "{search_terms}"), first: {limit}) {{
+            uid
+            Article.title
+            Article.abstract
+            Article.published
+            Article.topic {{
+              Topic.name
+            }}
+            Article.org {{
+              Organization.name
+            }}
+          }}
+        }}
+        """
+
+        txn = self.client.txn()
+        try:
+            response = txn.query(query)
+            return json.loads(response.json)
+        finally:
+            txn.discard()
+
+    def get_recent_articles(self, days_back=30, limit=20):
+        """Get articles published within the last N days"""
+        from datetime import datetime, timedelta
+        cutoff_date = (datetime.now() - timedelta(days=days_back)).isoformat() + "Z"
+
+        query = f"""
+        {{
+          recent_articles(func: type(Article)) @filter(ge(Article.published, "{cutoff_date}"))
+          (orderdesc: Article.published, first: {limit}) {{
+            uid
+            Article.title
+            Article.abstract
+            Article.published
+            Article.topic {{
+              Topic.name
+            }}
+            Article.org {{
+              Organization.name
+            }}
+            Article.geo {{
+              Geo.name
+              Geo.location
+            }}
+          }}
+        }}
+        """
+
+        txn = self.client.txn()
+        try:
+            response = txn.query(query)
+            return json.loads(response.json)
+        finally:
+            txn.discard()
+
+    def search_articles_near_location(self, latitude, longitude, radius_meters=50000, limit=10):
+        """Find articles associated with locations near given coordinates"""
+        query = f"""
+        {{
+          nearby_locations(func: near(Geo.location, [{longitude}, {latitude}], {radius_meters})) {{
+            Geo.name
+            Geo.location
+            articles: ~Article.geo (first: {limit}) {{
+              uid
+              Article.title
+              Article.abstract
+              Article.published
+              Article.topic {{
+                Topic.name
+              }}
+            }}
+          }}
+        }}
+        """
+
+        txn = self.client.txn()
+        try:
+            response = txn.query(query)
+            return json.loads(response.json)
+        finally:
+            txn.discard()
+
+    def vector_similarity_search(self, embedding_vector, limit=5):
+        """Perform semantic search using article embeddings"""
+        query = """
+        query vector_search($embedding: string, $limit: int) {
+          articles(func: similar_to(Article.embedding, $limit, $embedding)) {
+            uid
+            Article.title
+            Article.abstract
+            Article.published
+            score
+            Article.topic {
+              Topic.name
+            }
+            Article.org {
+              Organization.name
+            }
+          }
+        }
+        """
+
+        variables = {
+            "$embedding": json.dumps(embedding_vector),
+            "$limit": str(limit)
+        }
+
+        txn = self.client.txn()
+        try:
+            response = txn.query(query, variables=variables)
+            return json.loads(response.json)
+        finally:
+            txn.discard()
+
+    def get_topic_statistics(self):
+        """Get comprehensive statistics for each topic"""
+        query = """
+        {
+          topic_statistics(func: type(Topic)) @filter(has(~Article.topic)) {
+            Topic.name
+            total_articles: count(~Article.topic)
+            recent_articles: count(~Article.topic @filter(ge(Article.published, "2025-01-01T00:00:00Z")))
+            oldest_article: min(val(~Article.topic)) {
+              Article.published
+            }
+            newest_article: max(val(~Article.topic)) {
+              Article.published
+            }
+          }
+        }
+        """
+
+        txn = self.client.txn()
+        try:
+            response = txn.query(query)
+            return json.loads(response.json)
+        finally:
+            txn.discard()
+
+    def complex_filtered_search(self, content_terms, topic_terms=None, since_date="2025-01-01", has_location=False):
+        """Advanced search combining multiple filters and conditions"""
+        location_filter = "AND has(Article.geo)" if has_location else ""
+        topic_filter = f'AND anyoftext(Article.topic, "{topic_terms}")' if topic_terms else ""
+
+        query = f"""
+        {{
+          filtered_articles(func: type(Article)) @filter(
+            anyoftext(Article.abstract, "{content_terms}") AND
+            ge(Article.published, "{since_date}T00:00:00Z")
+            {topic_filter}
+            {location_filter}
+          ) @cascade {{
+            uid
+            Article.title
+            Article.abstract
+            Article.published
+            Article.topic {{
+              Topic.name
+            }}
+            Article.geo {{
+              Geo.name
+              Geo.location
+            }}
+            Article.org {{
+              Organization.name
+            }}
+          }}
+        }}
+        """
+
+        txn = self.client.txn()
+        try:
+            response = txn.query(query)
+            return json.loads(response.json)
+        finally:
+            txn.discard()
+
+    def analyze_publication_trends(self):
+        """Analyze publication patterns over time using groupby"""
+        query = """
+        {
+          publication_trends(func: type(Article)) @groupby(Article.published) {
+            month: datetrunc(Article.published, "month")
+            article_count: count(uid)
+          }
+        }
+        """
+
+        txn = self.client.txn()
+        try:
+            response = txn.query(query)
+            data = json.loads(response.json)
+            return self._process_publication_trends(data)
+        finally:
+            txn.discard()
+
+    def get_normalized_article_data(self, limit=10):
+        """Get flattened article data using @normalize"""
+        query = f"""
+        {{
+          articles(func: type(Article), first: {limit}) @normalize {{
+            title: Article.title
+            abstract: Article.abstract
+            published: Article.published
+            uri: Article.uri
+            topics: Article.topic {{
+              name: Topic.name
+            }}
+            organizations: Article.org {{
+              name: Organization.name
+            }}
+            location: Article.geo {{
+              name: Geo.name
+            }}
+          }}
+        }}
+        """
+
+        txn = self.client.txn()
+        try:
+            response = txn.query(query)
+            return json.loads(response.json)
+        finally:
+            txn.discard()
+
+    def _process_publication_trends(self, data):
+        """Process publication trend data into a more usable format"""
+        trends = data.get('publication_trends', [])
+        processed_trends = []
+
+        for trend in trends:
+            processed_trends.append({
+                'month': trend.get('month'),
+                'article_count': trend.get('article_count', 0)
+            })
+
+        # Sort by month
+        processed_trends.sort(key=lambda x: x['month'] if x['month'] else '')
+
+        return {
+            'trends': processed_trends,
+            'total_months': len(processed_trends),
+            'peak_month': max(processed_trends, key=lambda x: x['article_count']) if processed_trends else None
+        }
+
+```
+
+</Tab>
+
+<Tab title="JavaScript">
+
+```javascript
+const dgraph = require("dgraph-js")
+const grpc = require("grpc")
+const { URL } = require('url')
+
+class NewsGraphJS {
+  constructor(connectionString = "dgraph://<YOUR_DGRAPH_CONNECTION_STRING_HERE>") {
+    /**
+     * Initialize with Dgraph connection string.
+     * Examples:
+     * - dgraph://localhost:9080 (local development)
+     * - dgraph://dgraph.example.com:443?ssl=true (production with SSL)
+     */
+    this.connectionString = connectionString
+    this.client = this._createClient(connectionString)
+  }
+
+  _createClient(connectionString) {
+
+    const dgraphClient = await dgraph.open(
+    'dgraph://<YOUR_CONNECTION_STRING>',
+  )
+    return dgraphClient
+  }
+
+  async searchArticlesByTopic(topicName, limit = 10) {
+    /**
+     * Search articles using full-text search on topic names
+     */
+    const query = `
+      {
+        topics(func: anyoftext(Topic.name, "${topicName}")) {
+          Topic.name
+          articles: ~Article.topic (first: ${limit}) {
+            uid
+            Article.title
+            Article.abstract
+            Article.published
+            Article.uri
+          }
+        }
+      }
+    `
+
+    const txn = this.client.newTxn()
+    try {
+      const response = await txn.query(query)
+      return response.getJson()
+    } finally {
+      await txn.discard()
+    }
+  }
+
+  async searchArticlesByContent(searchTerms, limit = 10) {
+    /**
+     * Full-text search across article titles and abstracts
+     */
+    const query = `
+      {
+        articles(func: anyoftext(Article.title, "${searchTerms}"), first: ${limit}) {
+          uid
+          Article.title
+          Article.abstract
+          Article.published
+          Article.topic {
+            Topic.name
+          }
+          Article.org {
+            Organization.name
+          }
+        }
+      }
+    `
+
+    const txn = this.client.newTxn()
+    try {
+      const response = await txn.query(query)
+      return response.getJson()
+    } finally {
+      await txn.discard()
+    }
+  }
+
+  async getRecentArticles(daysBack = 30, limit = 20) {
+    /**
+     * Get articles published within the last N days
+     */
+    const cutoffDate = new Date(Date.now() - daysBack * 24 * 60 * 60 * 1000).toISOString()
+
+    const query = `
+      {
+        recent_articles(func: type(Article)) @filter(ge(Article.published, "${cutoffDate}"))
+        (orderdesc: Article.published, first: ${limit}) {
+          uid
+          Article.title
+          Article.abstract
+          Article.published
+          Article.topic {
+            Topic.name
+          }
+          Article.org {
+            Organization.name
+          }
+          Article.geo {
+            Geo.name
+            Geo.location
+          }
+        }
+      }
+    `
+
+    const txn = this.client.newTxn()
+    try {
+      const response = await txn.query(query)
+      return response.getJson()
+    } finally {
+      await txn.discard()
+    }
+  }
+
+  async searchArticlesNearLocation(latitude, longitude, radiusMeters = 50000, limit = 10) {
+    /**
+     * Find articles associated with locations near given coordinates
+     */
+    const query = `
+      {
+        nearby_locations(func: near(Geo.location, [${longitude}, ${latitude}], ${radiusMeters})) {
+          Geo.name
+          Geo.location
+          articles: ~Article.geo (first: ${limit}) {
+            uid
+            Article.title
+            Article.abstract
+            Article.published
+            Article.topic {
+              Topic.name
+            }
+          }
+        }
+      }
+    `
+
+    const txn = this.client.newTxn()
+    try {
+      const response = await txn.query(query)
+      return response.getJson()
+    } finally {
+      await txn.discard()
+    }
+  }
+
+  async vectorSimilaritySearch(embeddingVector, limit = 5) {
+    /**
+     * Perform semantic search using article embeddings
+     */
+    const query = `
+      query vector_search($embedding: string, $limit: int) {
+        articles(func: similar_to(Article.embedding, $limit, $embedding)) {
+          uid
+          Article.title
+          Article.abstract
+          Article.published
+          score
+          Article.topic {
+            Topic.name
+          }
+          Article.org {
+            Organization.name
+          }
+        }
+      }
+    `
+
+    const variables = {
+      $embedding: JSON.stringify(embeddingVector),
+      $limit: limit.toString()
+    }
+
+    const txn = this.client.newTxn()
+    try {
+      const response = await txn.queryWithVars(query, variables)
+      return response.getJson()
+    } finally {
+      await txn.discard()
+    }
+  }
+
+  async getTopicStatistics() {
+    /**
+     * Get comprehensive statistics for each topic
+     */
+    const query = `
+      {
+        topic_statistics(func: type(Topic)) @filter(has(~Article.topic)) {
+          Topic.name
+          total_articles: count(~Article.topic)
+          recent_articles: count(~Article.topic @filter(ge(Article.published, "2025-01-01T00:00:00Z")))
+          oldest_article: min(val(~Article.topic)) {
+            Article.published
+          }
+          newest_article: max(val(~Article.topic)) {
+            Article.published
+          }
+        }
+      }
+    `
+
+    const txn = this.client.newTxn()
+    try {
+      const response = await txn.query(query)
+      return response.getJson()
+    } finally {
+      await txn.discard()
+    }
+  }
+
+  async complexFilteredSearch(contentTerms, topicTerms = null, sinceDate = "2025-01-01", hasLocation = false) {
+    /**
+     * Advanced search combining multiple filters and conditions
+     */
+    const locationFilter = hasLocation ? "AND has(Article.geo)" : ""
+    const topicFilter = topicTerms ? `AND anyoftext(Article.topic, "${topicTerms}")` : ""
+
+    const query = `
+      {
+        filtered_articles(func: type(Article)) @filter(
+          anyoftext(Article.abstract, "${contentTerms}") AND
+          ge(Article.published, "${sinceDate}T00:00:00Z")
+          ${topicFilter}
+          ${locationFilter}
+        ) @cascade {
+          uid
+          Article.title
+          Article.abstract
+          Article.published
+          Article.topic {
+            Topic.name
+          }
+          Article.geo {
+            Geo.name
+            Geo.location
+          }
+          Article.org {
+            Organization.name
+          }
+        }
+      }
+    `
+
+    const txn = this.client.newTxn()
+    try {
+      const response = await txn.query(query)
+      return response.getJson()
+    } finally {
+      await txn.discard()
+    }
+  }
+
+  async analyzePublicationTrends() {
+    /**
+     * Analyze publication patterns over time using groupby
+     */
+    const query = `
+      {
+        publication_trends(func: type(Article)) @groupby(Article.published) {
+          month: datetrunc(Article.published, "month")
+          article_count: count(uid)
+        }
+      }
+    `
+
+    const txn = this.client.newTxn()
+    try {
+      const response = await txn.query(query)
+      const data = response.getJson()
+      return this._processPublicationTrends(data)
+    } finally {
+      await txn.discard()
+    }
+  }
+
+  async getNormalizedArticleData(limit = 10) {
+    /**
+     * Get flattened article data using @normalize
+     */
+    const query = `
+      {
+        articles(func: type(Article), first: ${limit}) @normalize {
+          title: Article.title
+          abstract: Article.abstract
+          published: Article.published
+          uri: Article.uri
+          topics: Article.topic {
+            name: Topic.name
+          }
+          organizations: Article.org {
+            name: Organization.name
+          }
+          location: Article.geo {
+            name: Geo.name
+          }
+        }
+      }
+    `
+
+    const txn = this.client.newTxn()
+    try {
+      const response = await txn.query(query)
+      return response.getJson()
+    } finally {
+      await txn.discard()
+    }
+  }
+
+  async testConnection() {
+    /**
+     * Test the Dgraph connection
+     */
+    try {
+      const query = "{ test(func: type(Article), first: 1) { uid } }"
+      const txn = this.client.newTxn()
+      try {
+        const response = await txn.query(query)
+        return {
+          status: "connected",
+          connectionString: this.connectionString,
+          response: "OK"
+        }
+      } finally {
+        await txn.discard()
+      }
+    } catch (error) {
+      return {
+        status: "error",
+        connectionString: this.connectionString,
+        error: error.message
+      }
+    }
+  }
+
+  _processPublicationTrends(data) {
+    /**
+     * Process publication trend data into a more usable format
+     */
+    const trends = data.publication_trends || []
+    const processedTrends = trends.map(trend => ({
+      month: trend.month,
+      article_count: trend.article_count || 0
+    }))
+
+    // Sort by month
+    processedTrends.sort((a, b) => {
+      if (!a.month) return 1
+      if (!b.month) return -1
+      return a.month.localeCompare(b.month)
+    })
+
+    const peakMonth = processedTrends.length > 0
+      ? processedTrends.reduce((max, trend) =>
+          trend.article_count > max.article_count ? trend : max
+        )
+      : null
+
+    return {
+      trends: processedTrends,
+      total_months: processedTrends.length,
+      peak_month: peakMonth
+    }
+  }
+
+  // Legacy methods for backward compatibility
+  async searchCompanyNews(companyName, daysBack = 30) {
+    /**
+     * Legacy method: search for organization-related articles
+     */
+    const query = `
+      {
+        company_news(func: anyoftext(Organization.name, "${companyName}")) {
+          Organization.name
+          recent_mentions: ~Article.org @filter(gt(Article.published, "2024-01-01")) (first: 20) {
+            Article.title
+            Article.published
+            Article.abstract
+            Article.topic {
+              Topic.name
+            }
+          }
+        }
+      }
+    `
+
+    const txn = this.client.newTxn()
+    try {
+      const response = await txn.query(query)
+      return response.getJson()
+    } finally {
+      await txn.discard()
+    }
+  }
+
+  async analyzeCompetitiveLandscape(companies) {
+    /**
+     * Legacy method: analyze competitive mentions across companies
+     */
+    const query = `
+      {
+        var(func: anyoftext(Organization.name, "${companies.join(" ")}")) {
+          competitor_articles as ~Article.org {
+            other_competitors: Article.org @filter(anyoftext(Organization.name, "${companies.join(" ")}"))
+          }
+        }
+
+        competitive_analysis(func: uid(competitor_articles)) {
+          Article.title
+          Article.published
+          Article.abstract
+          companies_mentioned: Article.org @filter(anyoftext(Organization.name, "${companies.join(" ")}")) {
+            Organization.name
+          }
+        }
+      }
+    `
+
+    const txn = this.client.newTxn()
+    try {
+      const response = await txn.query(query)
+      return this.processCompetitiveData(response.getJson())
+    } finally {
+      await txn.discard()
+    }
+  }
+
+  processCompetitiveData(data) {
+    /**
+     * Process competitive analysis data
+     */
+    const articles = data.competitive_analysis || []
+    const companyMentions = {}
+
+    articles.forEach((article) => {
+      article.companies_mentioned?.forEach((company) => {
+        if (!companyMentions[company["Organization.name"]]) {
+          companyMentions[company["Organization.name"]] = {
+            total_mentions: 0,
+            articles: [],
+          }
+        }
+        companyMentions[company["Organization.name"]].total_mentions++
+        companyMentions[company["Organization.name"]].articles.push(article)
+      })
+    })
+
+    return {
+      analysis_date: new Date().toISOString(),
+      companies_analyzed: Object.keys(companyMentions),
+      competitive_insights: companyMentions,
+      total_articles_analyzed: articles.length,
+    }
+  }
+}
+
+// Usage examples with different connection strings
+async function exampleUsage() {
+  try {
+    // Local development
+    const localAgent = new NewsGraphJS("dgraph://localhost:9080")
+
+    // Production with SSL
+    const prodAgent = new NewsGraphJS("dgraph://dgraph.example.com:443?ssl=true")
+
+    // Test connections
+    console.log("Local connection:", await localAgent.testConnection())
+    console.log("Production connection:", await prodAgent.testConnection())
+
+    // Use the agent
+    const recentArticles = await localAgent.getRecentArticles(7, 5)
+    console.log("Recent articles:", JSON.stringify(recentArticles, null, 2))
+
+    // Search by topic
+    const techArticles = await localAgent.searchArticlesByTopic("technology")
+    console.log("Tech articles:", JSON.stringify(techArticles, null, 2))
+
+    // Get topic statistics
+    const topicStats = await localAgent.getTopicStatistics()
+    console.log("Topic statistics:", JSON.stringify(topicStats, null, 2))
+
+  } catch (error) {
+    console.error("Error:", error.message)
+  }
+}
+
+module.exports = { NewsGraphJS, exampleUsage }
+
+```
+
+{/* <!-- markdownlint-disable MD013 --> */}
+
+</Tab>
+
+<Tab title="Go">
+
+```go
+package main
+
+import (
+    "context"
+    "encoding/json"
+    "fmt"
+    "log"
+    "net/url"
+    "strconv"
+    "strings"
+    "time"
+
+    "github.com/dgraph-io/dgo/v2"
+    "github.com/dgraph-io/dgo/v2/protos/api"
+    "google.golang.org/grpc"
+    "google.golang.org/grpc/credentials"
+)
+
+type NewsGraphGo struct {
+    client           *dgo.Dgraph
+    connectionString string
+}
+
+// NewNewsGraphClient creates a new Dgraph client with connection string support
+func NewNewsGraphClient(connectionString string) (*NewsGraphGo, error) {
+    if connectionString == "" {
+        connectionString = "dgraph://localhost:9080"
+    }
+
+    client, err := dgo.Open(connectionString)
+    if err != nil {
+        return nil, fmt.Errorf("failed to create Dgraph client: %v", err)
+    }
+
+    return &NewsGraphGo{
+        client:           client,
+        connectionString: connectionString,
+    }, nil
+}
+
+// SearchArticlesByTopic searches articles using full-text search on topic names
+func (ng *NewsGraphGo) SearchArticlesByTopic(topicName string, limit int) (*TopicSearchResult, error) {
+    query := fmt.Sprintf(`
+    {
+      topics(func: anyoftext(Topic.name, "%s")) {
+        Topic.name
+        articles: ~Article.topic (first: %d) {
+          uid
+          Article.title
+          Article.abstract
+          Article.published
+          Article.uri
+        }
+      }
+    }
+    `, topicName, limit)
+
+    txn := ng.client.NewTxn()
+    defer txn.Discard(context.Background())
+
+    response, err := txn.Query(context.Background(), query)
+    if err != nil {
+        return nil, err
+    }
+
+    var result TopicSearchResult
+    err = json.Unmarshal(response.Json, &result)
+    return &result, err
+}
+
+// SearchArticlesByContent performs full-text search across article titles and abstracts
+func (ng *NewsGraphGo) SearchArticlesByContent(searchTerms string, limit int) (*ArticleSearchResult, error) {
+    query := fmt.Sprintf(`
+    {
+      articles(func: anyoftext(Article.title, "%s"), first: %d) {
+        uid
+        Article.title
+        Article.abstract
+        Article.published
+        Article.topic {
+          Topic.name
+        }
+        Article.org {
+          Organization.name
+        }
+      }
+    }
+    `, searchTerms, limit)
+
+    txn := ng.client.NewTxn()
+    defer txn.Discard(context.Background())
+
+    response, err := txn.Query(context.Background(), query)
+    if err != nil {
+        return nil, err
+    }
+
+    var result ArticleSearchResult
+    err = json.Unmarshal(response.Json, &result)
+    return &result, err
+}
+
+// GetRecentArticles gets articles published within the last N days
+func (ng *NewsGraphGo) GetRecentArticles(daysBack, limit int) (*ArticleSearchResult, error) {
+    cutoffDate := time.Now().AddDate(0, 0, -daysBack).Format(time.RFC3339)
+
+    query := fmt.Sprintf(`
+    {
+      recent_articles(func: type(Article)) @filter(ge(Article.published, "%s"))
+      (orderdesc: Article.published, first: %d) {
+        uid
+        Article.title
+        Article.abstract
+        Article.published
+        Article.topic {
+          Topic.name
+        }
+        Article.org {
+          Organization.name
+        }
+        Article.geo {
+          Geo.name
+          Geo.location
+        }
+      }
+    }
+    `, cutoffDate, limit)
+
+    txn := ng.client.NewTxn()
+    defer txn.Discard(context.Background())
+
+    response, err := txn.Query(context.Background(), query)
+    if err != nil {
+        return nil, err
+    }
+
+    var result ArticleSearchResult
+    err = json.Unmarshal(response.Json, &result)
+    return &result, err
+}
+
+// SearchArticlesNearLocation finds articles associated with locations near given coordinates
+func (ng *NewsGraphGo) SearchArticlesNearLocation(latitude, longitude float64, radiusMeters, limit int) (*LocationSearchResult, error) {
+    query := fmt.Sprintf(`
+    {
+      nearby_locations(func: near(Geo.location, [%f, %f], %d)) {
+        Geo.name
+        Geo.location
+        articles: ~Article.geo (first: %d) {
+          uid
+          Article.title
+          Article.abstract
+          Article.published
+          Article.topic {
+            Topic.name
+          }
+        }
+      }
+    }
+    `, longitude, latitude, radiusMeters, limit)
+
+    txn := ng.client.NewTxn()
+    defer txn.Discard(context.Background())
+
+    response, err := txn.Query(context.Background(), query)
+    if err != nil {
+        return nil, err
+    }
+
+    var result LocationSearchResult
+    err = json.Unmarshal(response.Json, &result)
+    return &result, err
+}
+
+// VectorSimilaritySearch performs semantic search using article embeddings
+func (ng *NewsGraphGo) VectorSimilaritySearch(embeddingVector []float64, limit int) (*VectorSearchResult, error) {
+    // Convert embedding vector to string format
+    embeddingJSON, err := json.Marshal(embeddingVector)
+    if err != nil {
+        return nil, fmt.Errorf("failed to marshal embedding vector: %v", err)
+    }
+
+    query := `
+    query vector_search($embedding: string, $limit: int) {
+      articles(func: similar_to(Article.embedding, $limit, $embedding)) {
+        uid
+        Article.title
+        Article.abstract
+        Article.published
+        score
+        Article.topic {
+          Topic.name
+        }
+        Article.org {
+          Organization.name
+        }
+      }
+    }
+    `
+
+    variables := map[string]string{
+        "$embedding": string(embeddingJSON),
+        "$limit":     strconv.Itoa(limit),
+    }
+
+    txn := ng.client.NewTxn()
+    defer txn.Discard(context.Background())
+
+    response, err := txn.QueryWithVars(context.Background(), query, variables)
+    if err != nil {
+        return nil, err
+    }
+
+    var result VectorSearchResult
+    err = json.Unmarshal(response.Json, &result)
+    return &result, err
+}
+
+// GetTopicStatistics gets comprehensive statistics for each topic
+func (ng *NewsGraphGo) GetTopicStatistics() (*TopicStatsResult, error) {
+    query := `
+    {
+      topic_statistics(func: type(Topic)) @filter(has(~Article.topic)) {
+        Topic.name
+        total_articles: count(~Article.topic)
+        recent_articles: count(~Article.topic @filter(ge(Article.published, "2025-01-01T00:00:00Z")))
+        oldest_article: min(val(~Article.topic)) {
+          Article.published
+        }
+        newest_article: max(val(~Article.topic)) {
+          Article.published
+        }
+      }
+    }
+    `
+
+    txn := ng.client.NewTxn()
+    defer txn.Discard(context.Background())
+
+    response, err := txn.Query(context.Background(), query)
+    if err != nil {
+        return nil, err
+    }
+
+    var result TopicStatsResult
+    err = json.Unmarshal(response.Json, &result)
+    return &result, err
+}
+
+// ComplexFilteredSearch performs advanced search combining multiple filters and conditions
+func (ng *NewsGraphGo) ComplexFilteredSearch(contentTerms string, topicTerms *string, sinceDate string, hasLocation bool) (*ArticleSearchResult, error) {
+    locationFilter := ""
+    if hasLocation {
+        locationFilter = "AND has(Article.geo)"
+    }
+
+    topicFilter := ""
+    if topicTerms != nil {
+        topicFilter = fmt.Sprintf(`AND anyoftext(Article.topic, "%s")`, *topicTerms)
+    }
+
+    query := fmt.Sprintf(`
+    {
+      filtered_articles(func: type(Article)) @filter(
+        anyoftext(Article.abstract, "%s") AND
+        ge(Article.published, "%sT00:00:00Z")
+        %s
+        %s
+      ) @cascade {
+        uid
+        Article.title
+        Article.abstract
+        Article.published
+        Article.topic {
+          Topic.name
+        }
+        Article.geo {
+          Geo.name
+          Geo.location
+        }
+        Article.org {
+          Organization.name
+        }
+      }
+    }
+    `, contentTerms, sinceDate, topicFilter, locationFilter)
+
+    txn := ng.client.NewTxn()
+    defer txn.Discard(context.Background())
+
+    response, err := txn.Query(context.Background(), query)
+    if err != nil {
+        return nil, err
+    }
+
+    var result ArticleSearchResult
+    err = json.Unmarshal(response.Json, &result)
+    return &result, err
+}
+
+// AnalyzePublicationTrends analyzes publication patterns over time using groupby
+func (ng *NewsGraphGo) AnalyzePublicationTrends() (*PublicationTrendsResult, error) {
+    query := `
+    {
+      publication_trends(func: type(Article)) @groupby(Article.published) {
+        month: datetrunc(Article.published, "month")
+        article_count: count(uid)
+      }
+    }
+    `
+
+    txn := ng.client.NewTxn()
+    defer txn.Discard(context.Background())
+
+    response, err := txn.Query(context.Background(), query)
+    if err != nil {
+        return nil, err
+    }
+
+    var rawResult map[string]interface{}
+    err = json.Unmarshal(response.Json, &rawResult)
+    if err != nil {
+        return nil, err
+    }
+
+    return ng.processPublicationTrends(rawResult), nil
+}
+
+// GetNormalizedArticleData gets flattened article data using @normalize
+func (ng *NewsGraphGo) GetNormalizedArticleData(limit int) (*NormalizedArticleResult, error) {
+    query := fmt.Sprintf(`
+    {
+      articles(func: type(Article), first: %d) @normalize {
+        title: Article.title
+        abstract: Article.abstract
+        published: Article.published
+        uri: Article.uri
+        topics: Article.topic {
+          name: Topic.name
+        }
+        organizations: Article.org {
+          name: Organization.name
+        }
+        location: Article.geo {
+          name: Geo.name
+        }
+      }
+    }
+    `, limit)
+
+    txn := ng.client.NewTxn()
+    defer txn.Discard(context.Background())
+
+    response, err := txn.Query(context.Background(), query)
+    if err != nil {
+        return nil, err
+    }
+
+    var result NormalizedArticleResult
+    err = json.Unmarshal(response.Json, &result)
+    return &result, err
+}
+
+// TestConnection tests the Dgraph connection
+func (ng *NewsGraphGo) TestConnection() *ConnectionStatus {
+    query := "{ test(func: type(Article), first: 1) { uid } }"
+
+    txn := ng.client.NewTxn()
+    defer txn.Discard(context.Background())
+
+    _, err := txn.Query(context.Background(), query)
+    if err != nil {
+        return &ConnectionStatus{
+            Status:           "error",
+            ConnectionString: ng.connectionString,
+            Error:            err.Error(),
+        }
+    }
+
+    return &ConnectionStatus{
+        Status:           "connected",
+        ConnectionString: ng.connectionString,
+        Response:         "OK",
+    }
+}
+
+// Helper method to process publication trends
+func (ng *NewsGraphGo) processPublicationTrends(data map[string]interface{}) *PublicationTrendsResult {
+    trendsInterface, ok := data["publication_trends"].([]interface{})
+    if !ok {
+        return &PublicationTrendsResult{
+            Trends:      []TrendData{},
+            TotalMonths: 0,
+        }
+    }
+
+    var trends []TrendData
+    var peakMonth *TrendData
+
+    for _, trendInterface := range trendsInterface {
+        trendMap, ok := trendInterface.(map[string]interface{})
+        if !ok {
+            continue
+        }
+
+        trend := TrendData{
+            Month:        getString(trendMap, "month"),
+            ArticleCount: getInt(trendMap, "article_count"),
+        }
+
+        trends = append(trends, trend)
+
+        if peakMonth == nil || trend.ArticleCount > peakMonth.ArticleCount {
+            peakMonth = &trend
+        }
+    }
+
+    return &PublicationTrendsResult{
+        Trends:      trends,
+        TotalMonths: len(trends),
+        PeakMonth:   peakMonth,
+    }
+}
+
+// Legacy methods for backward compatibility
+func (ng *NewsGraphGo) SearchCompanyNews(companyName string, daysBack int) (*CompanyNewsResult, error) {
+    query := fmt.Sprintf(`
+    {
+      company_news(func: anyoftext(Organization.name, "%s")) {
+        Organization.name
+        recent_mentions: ~Article.org @filter(gt(Article.published, "2024-01-01")) (first: 20) {
+          Article.title
+          Article.published
+          Article.abstract
+          Article.topic {
+            Topic.name
+          }
+        }
+      }
+    }
+    `, companyName)
+
+    txn := ng.client.NewTxn()
+    defer txn.Discard(context.Background())
+
+    response, err := txn.Query(context.Background(), query)
+    if err != nil {
+        return nil, err
+    }
+
+    var result CompanyNewsResult
+    err = json.Unmarshal(response.Json, &result)
+    return &result, err
+}
+
+func (ng *NewsGraphGo) AnalyzeCompetitiveLandscape(companies []string) (*CompetitiveAnalysisResult, error) {
+    companiesStr := strings.Join(companies, " ")
+
+    query := fmt.Sprintf(`
+    {
+      var(func: anyoftext(Organization.name, "%s")) {
+        competitor_articles as ~Article.org {
+          other_competitors: Article.org @filter(anyoftext(Organization.name, "%s"))
+        }
+      }
+
+      competitive_analysis(func: uid(competitor_articles)) {
+        Article.title
+        Article.published
+        Article.abstract
+        companies_mentioned: Article.org @filter(anyoftext(Organization.name, "%s")) {
+          Organization.name
+        }
+      }
+    }
+    `, companiesStr, companiesStr, companiesStr)
+
+    txn := ng.client.NewTxn()
+    defer txn.Discard(context.Background())
+
+    response, err := txn.Query(context.Background(), query)
+    if err != nil {
+        return nil, err
+    }
+
+    var rawResult map[string]interface{}
+    err = json.Unmarshal(response.Json, &rawResult)
+    if err != nil {
+        return nil, err
+    }
+
+    return ng.processCompetitiveData(rawResult, companies), nil
+}
+
+func (ng *NewsGraphGo) processCompetitiveData(data map[string]interface{}, companies []string) *CompetitiveAnalysisResult {
+    articlesInterface, ok := data["competitive_analysis"].([]interface{})
+    if !ok {
+        articlesInterface = []interface{}{}
+    }
+
+    companyMentions := make(map[string]*CompanyMention)
+
+    for _, articleInterface := range articlesInterface {
+        articleMap, ok := articleInterface.(map[string]interface{})
+        if !ok {
+            continue
+        }
+
+        companiesInterface, ok := articleMap["companies_mentioned"].([]interface{})
+        if !ok {
+            continue
+        }
+
+        for _, companyInterface := range companiesInterface {
+            companyMap, ok := companyInterface.(map[string]interface{})
+            if !ok {
+                continue
+            }
+
+            companyName := getString(companyMap, "Organization.name")
+            if companyName == "" {
+                continue
+            }
+
+            if _, exists := companyMentions[companyName]; !exists {
+                companyMentions[companyName] = &CompanyMention{
+                    TotalMentions: 0,
+                    Articles:      []map[string]interface{}{},
+                }
+            }
+
+            companyMentions[companyName].TotalMentions++
+            companyMentions[companyName].Articles = append(
+                companyMentions[companyName].Articles,
+                articleMap,
+            )
+        }
+    }
+
+    var companiesAnalyzed []string
+    for company := range companyMentions {
+        companiesAnalyzed = append(companiesAnalyzed, company)
+    }
+
+    return &CompetitiveAnalysisResult{
+        AnalysisDate:           time.Now().Format(time.RFC3339),
+        CompaniesAnalyzed:      companiesAnalyzed,
+        CompetitiveInsights:    companyMentions,
+        TotalArticlesAnalyzed:  len(articlesInterface),
+    }
+}
+
+// Helper functions
+func getString(m map[string]interface{}, key string) string {
+    if val, ok := m[key].(string); ok {
+        return val
+    }
+    return ""
+}
+
+func getInt(m map[string]interface{}, key string) int {
+    if val, ok := m[key].(float64); ok {
+        return int(val)
+    }
+    return 0
+}
+
+// Type definitions
+type Article struct {
+    UID       string `json:"uid"`
+    Title     string `json:"Article.title"`
+    Abstract  string `json:"Article.abstract"`
+    Published string `json:"Article.published"`
+    URI       string `json:"Article.uri"`
+    Topic     []Topic `json:"Article.topic"`
+    Org       []Organization `json:"Article.org"`
+    Geo       []Geo `json:"Article.geo"`
+}
+
+type Topic struct {
+    Name string `json:"Topic.name"`
+}
+
+type Organization struct {
+    Name string `json:"Organization.name"`
+}
+
+type Geo struct {
+    Name     string `json:"Geo.name"`
+    Location string `json:"Geo.location"`
+}
+
+type TopicSearchResult struct {
+    Topics []struct {
+        Name     string    `json:"Topic.name"`
+        Articles []Article `json:"articles"`
+    } `json:"topics"`
+}
+
+type ArticleSearchResult struct {
+    Articles []Article `json:"articles,omitempty"`
+    RecentArticles []Article `json:"recent_articles,omitempty"`
+    FilteredArticles []Article `json:"filtered_articles,omitempty"`
+}
+
+type LocationSearchResult struct {
+    NearbyLocations []struct {
+        Name     string    `json:"Geo.name"`
+        Location string    `json:"Geo.location"`
+        Articles []Article `json:"articles"`
+    } `json:"nearby_locations"`
+}
+
+type VectorSearchResult struct {
+    Articles []struct {
+        Article
+        Score float64 `json:"score"`
+    } `json:"articles"`
+}
+
+type TopicStatsResult struct {
+    TopicStatistics []struct {
+        Name            string `json:"Topic.name"`
+        TotalArticles   int    `json:"total_articles"`
+        RecentArticles  int    `json:"recent_articles"`
+        OldestArticle   []struct {
+            Published string `json:"Article.published"`
+        } `json:"oldest_article"`
+        NewestArticle   []struct {
+            Published string `json:"Article.published"`
+        } `json:"newest_article"`
+    } `json:"topic_statistics"`
+}
+
+type PublicationTrendsResult struct {
+    Trends      []TrendData `json:"trends"`
+    TotalMonths int         `json:"total_months"`
+    PeakMonth   *TrendData  `json:"peak_month"`
+}
+
+type TrendData struct {
+    Month        string `json:"month"`
+    ArticleCount int    `json:"article_count"`
+}
+
+type NormalizedArticleResult struct {
+    Articles []struct {
+        Title         string `json:"title"`
+        Abstract      string `json:"abstract"`
+        Published     string `json:"published"`
+        URI           string `json:"uri"`
+        Topics        []struct {
+            Name string `json:"name"`
+        } `json:"topics"`
+        Organizations []struct {
+            Name string `json:"name"`
+        } `json:"organizations"`
+        Location      []struct {
+            Name string `json:"name"`
+        } `json:"location"`
+    } `json:"articles"`
+}
+
+type ConnectionStatus struct {
+    Status           string `json:"status"`
+    ConnectionString string `json:"connection_string"`
+    Response         string `json:"response,omitempty"`
+    Error            string `json:"error,omitempty"`
+}
+
+type CompanyNewsResult struct {
+    CompanyNews []struct {
+        Name            string `json:"Organization.name"`
+        RecentMentions  []Article `json:"recent_mentions"`
+    } `json:"company_news"`
+}
+
+type CompetitiveAnalysisResult struct {
+    AnalysisDate          string                    `json:"analysis_date"`
+    CompaniesAnalyzed     []string                  `json:"companies_analyzed"`
+    CompetitiveInsights   map[string]*CompanyMention `json:"competitive_insights"`
+    TotalArticlesAnalyzed int                       `json:"total_articles_analyzed"`
+}
+
+type CompanyMention struct {
+    TotalMentions int                      `json:"total_mentions"`
+    Articles      []map[string]interface{} `json:"articles"`
+}
+
+// Example usage
+func ExampleUsage() {
+    // Local development
+    localAgent, err := NewNewsGraphClient("dgraph://localhost:9080")
+    if err != nil {
+        log.Fatal("Failed to create local client:", err)
+    }
+
+    // Production with SSL
+    prodAgent, err := NewNewsGraphClient("dgraph://dgraph.example.com:443?ssl=true")
+    if err != nil {
+        log.Fatal("Failed to create production client:", err)
+    }
+
+    // Test connections
+    fmt.Println("Local connection:", localAgent.TestConnection())
+    fmt.Println("Production connection:", prodAgent.TestConnection())
+
+    // Use the agent
+    recentArticles, err := localAgent.GetRecentArticles(7, 5)
+    if err != nil {
+        log.Printf("Error getting recent articles: %v", err)
+    } else {
+        fmt.Printf("Recent articles: %+v\n", recentArticles)
+    }
+
+    // Search by topic
+    techArticles, err := localAgent.SearchArticlesByTopic("technology", 10)
+    if err != nil {
+        log.Printf("Error searching by topic: %v", err)
+    } else {
+        fmt.Printf("Tech articles: %+v\n", techArticles)
+    }
+
+    // Get topic statistics
+    topicStats, err := localAgent.GetTopicStatistics()
+    if err != nil {
+        log.Printf("Error getting topic statistics: %v", err)
+    } else {
+        fmt.Printf("Topic statistics: %+v\n", topicStats)
+    }
+}
+
+func main() {
+    ExampleUsage()
+}
+
+```
+
+{/* <!-- markdownlint-enable MD013 --> */}
+
+</Tab>
+</Tabs>
+
+## What you've accomplished
+
+In 30 minutes, you've mastered advanced graph querying:
+
+**DQL mastery**: learned sophisticated query patterns for graph traversal and
+analysis
+
+**Ratel exploration**: used visual tools to understand graph structure and
+optimize queries
+
+**Multi-language integration**: implemented Dgraph clients in Python,
+JavaScript, and Go
+
+**Agent integration**: connected graph reasoning capabilities to intelligent
+agents
+
+**Advanced patterns**: built complex analysis workflows using graph-native
+operations
+
+## The power of graph querying
+
+DQL enables reasoning that traditional databases can't:
+
+**Traditional queries**: "What articles mention OpenAI?"
+
+**Graph-powered queries**: "What entities are connected to OpenAI through 2-3
+degrees of separation, how has this network evolved over time, and what does the
+pattern suggest about competitive positioning?"
+
+This completes your mastery of context engineering fundamentals.
+
+<Card
+  title="Week 4 Complete"
+  icon="trophy"
+  href="/agents/30-days-of-agents/overview"
+>
+  You've mastered context engineering - from prompts to sophisticated graph
+  reasoning. Ready for production deployment in Week 5!
+</Card>
+
+## Pro tip for today
+
+Build a comprehensive graph analysis workflow:
+
+```text
+Create a complete analysis workflow that:
+1. Takes a business question (e.g., "How is the AI industry competitive landscape evolving?")
+2. Extracts relevant entities and relationships from the question
+3. Designs appropriate DQL queries to explore the graph
+4. Analyzes patterns across multiple dimensions (temporal, network, sentiment)
+5. Synthesizes insights that answer the original business question
+6. Explains the graph reasoning behind each conclusion
+
+Show me both the technical implementation and the business insights it reveals.
+```
+
+This demonstrates the full power of graph-powered agent reasoning.
+
+---
+
+**Time to complete**: ~30 minutes
+
+**Skills learned** DQL mastery, Ratel exploration, multi-language client
+integration, graph-powered agent reasoning, advanced analysis workflows
+
+**Week 4 complete**: context engineering mastery achieved!
+
+<Tip>
+  **Remember** Graph querying is about following the connections that reveal
+  hidden insights. The most valuable discoveries often come from relationships
+  that weren't obvious until you traversed the graph.
+</Tip>
+````

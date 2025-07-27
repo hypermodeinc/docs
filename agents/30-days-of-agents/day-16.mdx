@@ -1,0 +1,365 @@
+---
+title: "Day 16: Agent System Prompts - The Foundation of Agent Behavior"
+sidebarTitle: "Day 16: Agent System Prompts"
+description:
+  "Master the art of system prompt engineering to guide agent behavior, optimize
+  tool usage, and ensure structured outputs for reliable agent performance."
+---
+
+<Card title="Day 16 challenge" icon="cogs">
+  **Goal**: master system prompt engineering for reliable agent behavior
+
+**Theme**: context engineering week - prompt engineering fundamentals
+
+**Time investment**: ~25 minutes
+
+</Card>
+
+Welcome to Day 16 and Week 4! You've built sophisticated agents across multiple
+domains. Now you'll master **context engineering** - starting with the
+foundation: system prompts. Today you'll learn to craft prompts that reliably
+guide agent behavior, optimize tool usage, and produce structured outputs.
+
+System prompts are the invisible foundation that determines whether your agent
+is helpful or frustrating, reliable, or unpredictable.
+
+## What you'll accomplish today
+
+- Understand the anatomy of effective system prompts
+- Learn iterative prompt refinement techniques
+- Optimize prompts for better tool usage patterns
+- Master structured output generation
+- Apply prompt engineering best practices to your existing agents
+
+<Warning>
+  This builds on your agent creation experience from Weeks 2-3. You'll be
+  refining and optimizing the prompts of agents you've already built.
+</Warning>
+
+## Step 1: Anatomy of effective system prompts
+
+Before optimizing prompts, understand what makes them work:
+
+### Core prompt structure
+
+Effective system prompts follow a clear hierarchy:
+
+```text
+Identity: Who is the agent and what is their role?
+Context: What environment do they operate in?
+Capabilities: What can they do and how?
+Constraints: What should they avoid or be careful about?
+Output Format: How should they structure responses?
+Examples: What does good performance look like?
+```
+
+### The psychology of prompts
+
+Language models respond differently to different prompt styles:
+
+**Authoritative vs. Collaborative**: "You are an expert analyst" vs. "You help
+users analyze data"
+
+**Specific vs. General**: "Analyze Q3 revenue trends" vs. "Help with business
+analysis"
+
+**Process-oriented vs. Outcome-oriented**: "Follow these steps" vs. "Achieve
+this goal"
+
+<Tip>
+  **Prompt engineering mindset** Think of prompts as job descriptions combined
+  with training manuals. Be specific about both what to do and how to do it.
+</Tip>
+
+## Step 2: Analyze your current agent prompts
+
+Let's start by examining the prompts of agents you've built in previous weeks:
+
+**Access your agent's system prompt:**
+
+1. **Select one of your custom agents** from the sidebar
+2. **Click the agent's name** to open the About section
+3. **Review the current instructions** that define the agent's behavior
+
+**Evaluate your current prompt:**
+
+```text
+I want to analyze my current system prompt for effectiveness. Here's my current prompt:
+
+[Paste your agent's current system prompt]
+
+Can you evaluate this prompt across these dimensions:
+- Clarity of role and identity
+- Specificity of instructions
+- Tool usage guidance
+- Output format specifications
+- Potential ambiguities or gaps
+```
+
+Watch how your agent analyzes its own instructions and identifies improvement
+opportunities.
+
+### Common prompt issues
+
+Look for these patterns in your current prompts:
+
+- **Vague role definitions**: "You are a helpful assistant" vs. "You are a
+  revenue operations analyst"
+- **Missing tool guidance**: No instructions on when or how to use specific
+  tools
+- **Unclear output expectations**: No formatting or structure requirements
+- **Conflicting instructions**: Contradictory guidance that confuses the model
+- **Missing edge case handling**: No guidance for unusual or complex scenarios
+
+## Step 3: Iterative prompt refinement process
+
+Prompt engineering is iterative. Here's a systematic approach:
+
+### The refinement cycle
+
+1. **Identify specific issues** with current behavior
+2. **Hypothesize prompt changes** that might address the issues
+3. **Test changes** with specific examples
+4. **Measure improvement** objectively
+5. **Iterate** until desired behavior is achieved
+
+### Testing prompt changes
+
+**Create a test scenario:**
+
+```text
+I want to test a prompt refinement. Here's a specific scenario where my agent isn't performing optimally:
+
+[Describe the scenario and current behavior]
+
+Current prompt section that might be the issue:
+[Paste relevant prompt section]
+
+Proposed improvement:
+[Your suggested change]
+
+Can you help me test this change and predict likely improvements?
+```
+
+### Measuring improvement
+
+Track these metrics as you refine:
+
+- **Task completion rate**: Does the agent accomplish what's requested?
+- **Tool usage efficiency**: Does it choose the right tools at the right time?
+- **Output consistency**: Are responses formatted correctly and consistently?
+- **Error reduction**: Fewer hallucinations, mistakes, or inappropriate
+  responses?
+
+<Tip>
+  **Pro tip** Keep a "prompt lab notebook" documenting what changes led to what
+  improvements. This builds your intuition for effective prompt engineering.
+</Tip>
+
+## Step 4: Optimizing prompts for tool usage
+
+One of the most critical aspects of agent prompts is guiding effective tool
+usage:
+
+### Tool usage patterns
+
+**Tool selection guidance:**
+
+```text
+When deciding which tools to use:
+1. For data analysis tasks, prioritize Google Sheets for structured data
+2. For research tasks, use web search first, then supplement with specific databases
+3. For communication tasks, choose Slack for internal team updates, Gmail for external
+4. Always explain your tool selection reasoning to the user
+```
+
+**Tool sequencing instructions:**
+
+```text
+For complex workflows:
+1. Gather all necessary information before taking actions
+2. Confirm destructive actions (deleting, sending emails) with the user
+3. Use the most reliable tool first, then fall back to alternatives
+4. Report progress after each major tool usage
+```
+
+### Example tool optimization
+
+**Before optimization:**
+
+```text
+You can use various tools to help users with their tasks.
+```
+
+**After optimization:**
+
+```text
+Tool Usage Guidelines:
+- GitHub: Use for code review, repository management, and development workflows
+- Google Sheets: Use for data analysis, reporting, and collaborative documentation
+- Slack: Use for team communications and status updates (always prefix with "Agent:")
+- Gmail: Use for external communications and formal correspondence
+
+Always explain why you're choosing a specific tool and ask for confirmation before taking actions that affect external systems.
+```
+
+## Step 5: Structured output generation
+
+Reliable agents produce consistent, properly formatted outputs:
+
+### Output format specifications
+
+**Structured response templates:**
+
+```text
+For analysis tasks, use this format:
+## Executive Summary
+[2-3 sentence overview]
+
+## Key Findings
+- [Finding 1 with supporting data]
+- [Finding 2 with supporting data]
+- [Finding 3 with supporting data]
+
+## Recommendations
+1. [Priority 1 action with timeline]
+2. [Priority 2 action with timeline]
+3. [Priority 3 action with timeline]
+
+## Next Steps
+[Specific actions for follow-up]
+```
+
+**Conditional formatting:**
+
+```text
+Response format depends on request type:
+- For quick questions: Single paragraph answer
+- For analysis requests: Use the structured template above
+- For task completion: Bullet point summary of actions taken
+- For errors: Clear explanation of what went wrong and suggested alternatives
+```
+
+### JSON output for integration
+
+When agents need to produce data for other systems:
+
+```text
+For structured data requests, respond with valid JSON in this format:
+{
+  "status": "success|error",
+  "data": {
+    // Relevant data fields
+  },
+  "summary": "Human-readable explanation",
+  "next_actions": ["suggested", "follow-up", "actions"]
+}
+```
+
+## Step 6: Advanced prompt engineering techniques
+
+### Context management
+
+**Dynamic context inclusion:**
+
+```text
+Adapt your responses based on conversation history:
+- For first interactions: Provide more background and explanation
+- For ongoing conversations: Reference previous context and build on established understanding
+- For complex topics: Break information into digestible chunks
+```
+
+**Memory and state management:**
+
+```text
+Maintain awareness of:
+- User preferences established in previous conversations
+- Ongoing projects and their current status
+- Recent actions taken and their outcomes
+- Key relationships and context from user's work environment
+```
+
+### Error handling and edge cases
+
+**Graceful degradation:**
+
+```text
+When encountering errors or limitations:
+1. Clearly explain what went wrong
+2. Suggest alternative approaches
+3. Ask clarifying questions if the request was ambiguous
+4. Offer to break complex tasks into smaller steps
+```
+
+## What you've accomplished
+
+In 25 minutes, you've mastered system prompt engineering:
+
+**Prompt analysis skills**: learned to evaluate and identify weaknesses in
+existing prompts
+
+**Iterative refinement process**: developed a systematic approach to prompt
+improvement
+
+**Tool usage optimization**: crafted prompts that guide effective tool selection
+and usage
+
+**Structured output mastery**: created templates for consistent, reliable agent
+responses
+
+**Advanced techniques**: implemented context management and error handling in
+prompts
+
+## The power of engineered prompts
+
+Well-engineered prompts transform agent behavior:
+
+**Before optimization** Agents that are unpredictable, verbose, and make poor
+tool choices
+
+**After optimization** Agents that are reliable, focused, and strategically use
+tools to accomplish tasks
+
+This foundation enables everything else in context engineering - retrieval,
+memory, and complex reasoning.
+
+<Card
+  title="Tomorrow - Day 17"
+  icon="arrow-right"
+  href="/agents/30-days-of-agents/day-17"
+>
+  Master the art of user message engineering - crafting requests that elicit
+  optimal agent responses and enable complex task completion.
+</Card>
+
+## Pro tip for today
+
+After optimizing your prompts, test them with edge cases:
+
+```text
+Test my refined agent prompt with these challenging scenarios:
+1. Ambiguous requests that could be interpreted multiple ways
+2. Requests for information the agent doesn't have access to
+3. Tasks that require multiple tools in sequence
+4. Error conditions where tools fail or return unexpected results
+
+How does the agent handle these situations with the new prompt?
+```
+
+This reveals remaining prompt gaps and helps you build truly robust agent
+behavior.
+
+---
+
+**Time to complete**: ~25 minutes
+
+**Skills learned**: prompt structure analysis, iterative refinement, tool usage
+optimization, structured output design, advanced prompt engineering techniques
+
+**Next**: day 17 - User message engineering and communication optimization
+
+<Tip>
+  **Remember**: great prompts are invisible to users but obvious in their
+  effects. The best agents feel naturally intelligent because their prompts
+  guide behavior so effectively.
+</Tip>

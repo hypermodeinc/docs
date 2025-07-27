@@ -1,0 +1,281 @@
+---
+title: Using MongoDB with Hypermode
+sidebarTitle: MongoDB
+description:
+  Connect your Hypermode agent to MongoDB for scalable document database
+  operations
+---
+
+<div className="flex items-center gap-3 mb-6">
+  <img
+    src="/images/agents/connections/icons/mongodb.svg"
+    alt="MongoDB"
+    width={48}
+    height={48}
+  />
+  <div>
+    <h2 className="text-2xl font-bold m-0">MongoDB</h2>
+    <p className="text-gray-600 m-0">
+      Document-oriented NoSQL database platform
+    </p>
+  </div>
+</div>
+
+## Overview
+
+MongoDB is a popular NoSQL document database that provides flexible schema
+design and powerful querying capabilities. This guide will walk you through
+connecting your Hypermode agent to MongoDB, enabling seamless document
+operations and data management for your applications.
+
+## Prerequisites
+
+Before connecting MongoDB to Hypermode, you'll need:
+
+1. A [MongoDB Atlas account](https://www.mongodb.com/cloud/atlas) or local
+   MongoDB installation
+2. A MongoDB database with connection credentials
+3. A [Hypermode workspace](https://hypermode.com/)
+
+## Setting up MongoDB
+
+### Step 1: Create your MongoDB Atlas account
+
+If you haven't already, sign up for a
+[free MongoDB Atlas account](https://www.mongodb.com/cloud/atlas) to get started
+with cloud-hosted MongoDB.
+
+### Step 2: Create a cluster and database
+
+1. Create a new cluster in MongoDB Atlas
+2. Set up database access credentials
+3. Configure network access (whitelist IP addresses)
+4. Create your first database and collection
+
+Check the box to load sample data. This will create a movies database with
+sample data in several collections.
+
+![Create MongoDB cluster](/images/connections/mongodb/create-cluster.png)
+
+You'll also need to create a user and password for your database.
+
+![Create MongoDB user](/images/connections/mongodb/create-user.png)
+
+### Step 3: Generate connection string
+
+Navigate to your cluster and get the connection string:
+
+1. Click "Connect" on your cluster
+2. Choose "Connect"
+3. Copy the connection string and replace `<password>` with your database user
+   password. You'll use this connection string to connect your Hypermode agent
+   to MongoDB.
+
+![MongoDB connection string](/images/connections/mongodb/connection-string.png)
+
+<Note>
+  Your connection string will look like:
+  `mongodb+srv://username:password@cluster.mongodb.net/database?retryWrites=true&w=majority`
+</Note>
+
+### Step 4: Whitelist IP addresses
+
+Navigate to your cluster and whitelist IP addresses to allow connections from
+your Hypermode agent:
+
+1. Click "Network Access" on your cluster
+2. Add the IP address range `0.0.0.0/0` to allow connections from any IP address
+
+![Whitelist IP addresses](/images/connections/mongodb/mongodb-connection-ip-address.png)
+
+## Creating your MongoDB agent
+
+### Step 1: Create a new agent
+
+From the Hypermode interface, create a new agent manually:
+
+1. Click the agent dropdown menu
+2. Select "Create new Agent"
+
+### Step 2: Configure agent settings
+
+Use these recommended settings for your MongoDB agent:
+
+- **Agent Name**: MongoAgent
+- **Agent Title**: Connects to MongoDB
+- **Description**: MongoAgent manages document operations
+- **Instructions**: You have a connection to MongoDB and various other developer
+  tools to streamline document data access and management. You can perform CRUD
+  operations, aggregations, and complex queries on MongoDB collections.
+- **Model**: GPT-4.1
+
+![Create agent modal](/images/connections/mongodb/create-agent-modal.png)
+
+## Connecting to MongoDB
+
+### Step 1: Add the MongoDB connection
+
+Navigate to the **Connections** tab and add MongoDB:
+
+1. Click "Add connection"
+2. Select "MongoDB" from the dropdown
+
+![Add MongoDB connection](/images/connections/mongodb/add-mongodb-connection.png)
+
+### Step 2: Configure credentials
+
+Enter your MongoDB credentials:
+
+- **Username**: The username of your MongoDB user
+- **Password**: The password of your MongoDB user
+- **Database Name**: The default database to connect to
+- **Hostname**: The hostname of your MongoDB cluster. This is the part of your
+  MongoDB connection string that comes after `mongodb+srv://` and is a domain
+  name. For example given the connection string
+  `mongodb+srv://will:<db_password>@hypermodeturorials.o7ygcmn.mongodb.net/?retryWrites=true&w=majority&appName=HypermodeTurorials`,
+  the hostname is `hypermodeturorials.o7ygcmn.mongodb.net`
+
+![MongoDB connection modal](/images/connections/mongodb/mongodb-connection-modal.png)
+
+<Warning>
+  Keep your connection string secure! This contains your database credentials
+  and should never be exposed in client-side code.
+</Warning>
+
+## Testing the connection
+
+Your agent can create collections, add documents, and perform queries on your
+MongoDB database. Since we created a sample movies database, let's test it out
+using the sample data in MongoDB.
+
+### Test 1: Query empty collections
+
+Start a new thread and test with a simple query:
+
+```text
+Can you show me all movies in the database?
+```
+
+You should see a MongoDB tool call in the chat history, confirming the
+connection works:
+
+![Empty movies query](/images/connections/mongodb/empty-movies.png)
+
+### Test 2: Insert documents
+
+Now try adding data to your database:
+
+```text
+Can you add The Matrix from 1999 directed by the Wachowskis to my MongoDB database?
+```
+
+![Add Matrix movie](/images/connections/mongodb/add-matrix.png)
+
+### Test 3: Complex queries
+
+Test more advanced operations:
+
+```text
+Can you find all movies from the 1910s and show their average rating?
+```
+
+![Complex query](/images/connections/mongodb/complex-query.png)
+
+## What you can do
+
+With your MongoDB connection established, your agent can:
+
+- **Query documents** with complex filters and projections
+- **Insert, update, and delete** documents
+- **Perform aggregations** for data analysis and reporting
+- **Work with embedded documents** and arrays
+- **Execute transactions** for multi-document operations
+- **Create indexes** for improved query performance
+- **Integrate with other tools** like GitHub, Slack, and Stripe
+
+## Best practices
+
+1. **Schema design**: Design your document structure to match your query
+   patterns
+2. **Indexing**: Create indexes on frequently queried fields
+3. **Connection management**: Use connection pooling for better performance
+4. **Error handling**: Your agent will handle common database errors gracefully
+5. **Data validation**: Consider using MongoDB schema validation for data
+   consistency
+
+## Advanced operations
+
+### Aggregation pipelines
+
+Your agent can perform complex aggregation operations:
+
+```text
+Can you group movies by decade and show the count and average rating for each decade?
+```
+
+### Text search
+
+Enable text search on your collections:
+
+```text
+Can you find all movies that mention "robot" in their title or description?
+```
+
+### Geospatial queries
+
+For location-based data:
+
+```text
+Find all movie theaters within 10 miles of coordinates [40.7128, -74.0060]
+```
+
+## Troubleshooting
+
+### Common connection issues
+
+1. **Network access**: Ensure your IP is whitelisted in MongoDB Atlas
+2. **Authentication**: Verify your username and password are correct
+3. **Connection string**: Check that your connection string format is valid
+4. **Database permissions**: Ensure your user has appropriate read/write
+   permissions
+
+### Performance optimization
+
+1. **Query optimization**: Use explain() to analyze query performance
+2. **Index usage**: Monitor index usage and create appropriate indexes
+3. **Document size**: Keep documents reasonably sized for better performance
+4. **Connection pooling**: Configure appropriate connection pool settings
+
+## Learn more
+
+- [MongoDB Documentation](https://docs.mongodb.com/)
+- [MongoDB Atlas Documentation](https://docs.atlas.mongodb.com/)
+- [MongoDB Query Language](https://docs.mongodb.com/manual/tutorial/query-documents/)
+- [Aggregation Framework](https://docs.mongodb.com/manual/aggregation/)
+
+<Tip>
+  Combine MongoDB with other Hypermode connections to build powerful workflows.
+  For example, use GitHub to track code changes that affect your data models, or
+  Slack to notify your team of important database updates and analytics
+  insights.
+</Tip>
+
+## Example workflows
+
+### E-commerce integration
+
+```text
+Track inventory levels and automatically update product availability when stock changes
+```
+
+### Content management
+
+```text
+Manage blog posts, user comments, and media assets with flexible document structures
+```
+
+### Analytics and reporting
+
+```text
+Generate real-time reports on user behavior, sales metrics, and application performance
+```
