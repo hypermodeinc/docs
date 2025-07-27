@@ -225,3 +225,5 @@ signup
 [sS]upabase
 schemaless
 CRMAgent
+[aA]gent
+Hypermode

@@ -18,9 +18,9 @@ stores it as a knowledge graph in Neo4j. This powerful combination allows you to
 visualize relationships between products, founders, companies, and market
 trends.
 
-## What You'll Build
+## What you'll build
 
-By the end of this tutorial, you'll have an agent that:
+By the end of this tutorial, you'll have an Agent that:
 
 - Scrapes Product Hunt's homepage for trending products using web search
 - Enriches product data with founder and company information from LinkedIn
@@ -33,16 +33,16 @@ By the end of this tutorial, you'll have an agent that:
 - Neo4j AuraDB instance (free tier works fine)
 - Basic understanding of graph databases (helpful but not required)
 
-## What is a Hypermode Agent?
+## What's a Hypermode Agent?
 
 Hypermode Agents are AI-powered assistants that can understand instructions,
 interact with external services, and perform complex tasks on your behalf.
 Unlike traditional chatbots, Hypermode Agents can actually take actions—like
 scraping websites, querying databases, and transforming data.
 
-![Screenshot of Hypermode Agents interface showing an agent card with connections](/images/tutorials/knowledge-graph-extraction/agent-profile.png)
+![Screenshot of Hypermode Agents interface showing an Agent card with connections](/images/tutorials/knowledge-graph-extraction/agent-profile.png)
 
-### Key Features for This Tutorial
+### Key features for this tutorial
 
 - **Natural Language Understanding**: Give instructions in plain English
 - **Multiple Connections**: Integrate with web search, LinkedIn, and Neo4j
@@ -53,17 +53,17 @@ scraping websites, querying databases, and transforming data.
 
 ## Understanding the Technologies
 
-### Neo4j: The Graph Database
+### Neo4j: the graph database
 
 Neo4j is a graph database that stores data as nodes (entities) and relationships
 (connections between entities). Unlike traditional databases that use tables and
 rows, Neo4j excels at representing and querying interconnected data.
 
-![Simple diagram showing nodes for Product, Company, and Founder connected by relationships](/images/tutorials/knowledge-graph-extraction/product-hunt-to-nodes.png)
+![Neo4j Banner](/images/tutorials/knowledge-graph-extraction/what-is-neo4j.png)
 
-### Product Hunt: The Product Discovery Platform
+### Product hunt: the product discovery platform
 
-Product Hunt is where makers launch new products daily. It's a goldmine of data
+Product Hunt is where makers launch new products daily - it's a goldmine of data
 about:
 
 - Emerging products and startups
@@ -71,7 +71,9 @@ about:
 - Market trends and categories
 - User engagement metrics
 
-### Why Combine Them?
+![Extract Nodes](/images/tutorials/knowledge-graph-extraction/product-hunt-to-nodes.png)
+
+### Why combine them?
 
 By extracting Product Hunt data into Neo4j, you can:
 
@@ -80,11 +82,62 @@ By extracting Product Hunt data into Neo4j, you can:
 - Identify trending categories and technologies
 - Analyze competitive landscapes
 
-## Step 1: Create Your Knowledge Graph Agent
+![Why combine diagram](/images/tutorials/knowledge-graph-extraction/why-combine-graph.png)
 
-### Manual Agent Creation
+## Step 1: Set up Neo4j Sandbox
 
-First, let's create an agent with the following system prompt:
+### Create a Neo4j Sandbox
+
+First, you need to go to https://sandbox.neo4j.com/ and create an account. When
+you get to making a database, select a blank sandbox.
+
+![Create blank sandbox](/images/tutorials/knowledge-graph-extraction/blank-sandbox.png)
+
+<Note>
+  Neo4j Sandbox provides free temporary instances perfect for testing. For
+  production use, consider Neo4j Aura or a self-hosted instance.
+</Note>
+
+### Get your connection details
+
+Once created (it may take a moment), you can navigate to the HTTP tab and grab
+the URL. Note you will have to modify this to use the Neo4j HTTP v2 endpoint:
+
+- Remove `/db/neo4j/tx/commit`
+- Replace it with `/db/neo4j/query/v2`
+
+For example:
+
+- Original: `http://52.54.53.148:7474/db/neo4j/tx/commit`
+- Modified: `http://52.54.53.148:7474/db/neo4j/query/v2`
+
+![Connection details](/images/tutorials/knowledge-graph-extraction/neo4j-http-connect.png)
+
+### Get authentication credentials
+
+Save this URL and then move to the connection details to grab the username and
+password.
+
+Make sure to note these details - you'll need them when setting up the
+connection in Hypermode.
+
+## Step 2: Create your knowledge graph Agent
+
+### Manual Agent creation
+
+Let's create an Agent specifically designed for knowledge graph extraction.
+Navigate to your Hypermode workspace and create a new agent with these settings:
+
+- **Agent Name**: KnowledgeGraphBuilder
+- **Agent Title**: Product Hunt Knowledge Graph Extractor
+- **Description**: Extracts product data from Product Hunt and builds knowledge
+  graphs in Neo4j
+
+![Agent creation form](/images/tutorials/knowledge-graph-extraction/agent-creation.png)
+
+### System prompt
+
+Use this comprehensive system prompt for your agent:
 
 ```text
 Identity:
@@ -143,9 +196,7 @@ Not all products will have the same information, so create flexible queries that
 Always maintain data accuracy and provide clear explanations of the graph structure you're creating.
 ```
 
-![Screenshot showing the agent creation form with the system prompt filled in](/images/tutorials/knowledge-graph-extraction/agent-creation.png)
-
-### Select Your Model
+### Select your model
 
 For this use case, we recommend **Claude 4 Sonnet** or **GPT-4.1** as they excel
 at:
@@ -154,446 +205,187 @@ at:
 - Writing accurate Cypher queries
 - Managing multi-step workflows
 
-![Model selection dropdown showing recommended models highlighted](/images/tutorials/knowledge-graph-extraction/blank-sandbox.png)
+## Step 3: Add connections
 
-## Step 2: Set Up Initial Connections
+Your agent needs key connections to function properly:
 
-### Web Search Connection
+### Add Neo4j connection
 
-Start with the web search capability to extract Product Hunt data:
+1. Navigate to your agent's connections tab
+2. Click "Add connection"
+3. Search for "Neo4j" and select it
 
-1. Navigate to your agent's connections
-2. Add "Web Search" connection
-3. No authentication required for this connection
+![Add Neo4j connection](/images/tutorials/knowledge-graph-extraction/add-neo4j.png)
 
-![Adding web search connection to the agent](/images/tutorials/knowledge-graph-extraction/agent-landing.png)
+Configure the Neo4j connection with your Sandbox details:
 
-### Test Basic Extraction
+- **URL**: Your modified HTTP v2 endpoint
+- **Username**: `neo4j` (or your custom username)
+- **Password**: Your Sandbox password
 
-Let's test our agent with a simple request:
+![Neo4j MCP connection setup](/images/tutorials/knowledge-graph-extraction/neo4j-mcp-connect-http.png)
 
-```text
-You: Search for today's trending products on Product Hunt and show me the top 5 with their makers and upvote counts.
-```
+### Add LinkedIn connection
 
-Expected response structure:
+For enriching founder and company data:
 
-```text
-Agent: I'll search for today's trending products on Product Hunt.
+1. Add the "LinkedIn" connection
+2. Complete the OAuth flow to authorize access
+3. This enables the agent to gather professional information
 
-[Searching Product Hunt homepage...]
+![Add LinkedIn connection](/images/tutorials/knowledge-graph-extraction/add-linkedin.png)
 
-Here are today's top 5 trending products:
+### Add Product Hunt connection
 
-1. **ProductName** - "Tagline here"
-   - Makers: John Doe, Jane Smith
-   - Upvotes: 245
-   - Categories: AI, Productivity
+For direct Product Hunt API access (if available):
 
-2. **AnotherProduct** - "Revolutionary solution"
-   - Makers: Alex Johnson
-   - Upvotes: 189
-   - Categories: Developer Tools
+1. Add the "Product Hunt" connection if available in your workspace
+2. This provides structured access to Product Hunt data
 
-[... continues for all 5 products]
-```
+![Add Product Hunt connection](/images/tutorials/knowledge-graph-extraction/add-product-hunt.png)
 
-## Step 3: Transform Data to Cypher
+## Step 4: Test the connection
 
-Now let's have our agent convert this data into Cypher queries. Note that your
-agent may generate slightly different Cypher based on the data structure it
-finds:
+### Verify Neo4j connectivity
+
+Start a new thread with your agent and test the Neo4j connection:
 
 ```text
-You: Convert the Product Hunt data you found into Cypher queries that create nodes for products, makers, and categories, with appropriate relationships.
+Can you connect to Neo4j and run a simple query to check if the database is empty?
 ```
 
-The agent might generate queries like:
+Your agent should respond with a Cypher query and results showing the connection
+is working.
+
+### Test web search capabilities
+
+```text
+Search for Product Hunt's trending products and tell me what the top 3 are today.
+```
+
+This verifies that your agent can access and parse Product Hunt data.
+
+## Step 5: Extract your first knowledge graph
+
+### Start with a simple extraction
+
+Now let's extract some real data! Try this prompt:
+
+```text
+Extract the top 5 products from Product Hunt today. For each product:
+1. Get the basic product information (name, description, upvotes, etc.)
+2. Look up the founders on LinkedIn to get their background
+3. Create a knowledge graph in Neo4j with nodes for:
+   - Product
+   - Person (founders/makers)
+   - Company
+   - Category
+4. Create appropriate relationships between these entities
+
+Show me the Cypher queries you generate and the final graph structure.
+```
+
+### Example workflow
+
+Your agent will follow this process:
+
+1. **Data Search**: Search for Product Hunt trending products
+2. **Data Parsing**: Extract product details, maker information
+3. **LinkedIn Enrichment**: Search for founder profiles and company data
+4. **Graph Construction**: Generate Cypher queries to create nodes and
+   relationships
+5. **Data Storage**: Execute queries in Neo4j
+6. **Verification**: Query the graph to confirm data was stored correctly
+
+### Expected output structure
+
+Your knowledge graph will have this structure:
 
 ```cypher
-// Create category nodes
-MERGE (c1:Category {name: 'AI'})
-MERGE (c2:Category {name: 'Productivity'})
+// Products
+(:Product {name: "ProductName", description: "...", upvotes: 150, launch_date: "2025-01-27"})
 
-// Create maker nodes
-MERGE (m1:Person {name: 'John Doe'})
-  ON CREATE SET m1.source = 'Product Hunt',
-                m1.discovered_date = datetime()
+// People (founders/makers)
+(:Person {name: "Founder Name", title: "CEO", linkedin_url: "..."})
 
-// Create product node
-MERGE (p1:Product {name: 'ProductName'})
-  ON CREATE SET p1.tagline = 'Tagline here',
-                p1.launch_date = date('2024-12-20'),
-                p1.upvotes = 245,
-                p1.product_hunt_url = 'https://producthunt.com/posts/productname',
-                p1.scraped_date = datetime()
-  ON MATCH SET p1.upvotes = 245,
-               p1.last_updated = datetime()
+// Companies
+(:Company {name: "Company Name", size: "11-50", industry: "Technology"})
 
-// Create relationships
-MERGE (m1)-[:CREATED]->(p1)
-MERGE (p1)-[:BELONGS_TO]->(c1)
-MERGE (p1)-[:BELONGS_TO]->(c2)
+// Categories
+(:Category {name: "AI Tools"})
+
+// Relationships
+(:Person)-[:FOUNDED]->(:Product)
+(:Person)-[:WORKS_AT]->(:Company)
+(:Product)-[:BELONGS_TO]->(:Category)
+(:Company)-[:CREATED]->(:Product)
 ```
 
-Or it might structure them differently:
+## Step 6: Visualize your knowledge graph
+
+### Open Neo4j Browser
+
+Once your agent has populated the database, you can visualize the results:
+
+1. **Find your Neo4j Browser**: Go to your Sandbox console and click "Open with
+   Neo4j Browser"
+
+![Neo4j Browser access](/images/tutorials/knowledge-graph-extraction/neo4j-find-browser.png)
+
+2. **Run a visualization query**:
 
 ```cypher
-// Alternative structure with more detailed relationships
-MERGE (product:Product {name: 'ProductName', tagline: 'Tagline here'})
-SET product.upvotes = 245,
-    product.url = 'https://producthunt.com/posts/productname',
-    product.last_scraped = datetime()
-
-MERGE (maker:Maker {name: 'John Doe'})
-MERGE (maker)-[r:LAUNCHED {date: date('2024-12-20')}]->(product)
-
-FOREACH (cat in ['AI', 'Productivity'] |
-  MERGE (c:Category {name: cat})
-  MERGE (product)-[:IN_CATEGORY]->(c)
-)
+MATCH (n) RETURN n LIMIT 50
 ```
 
-## Step 4: Add LinkedIn Integration
+![Neo4j Browser query](/images/tutorials/knowledge-graph-extraction/neo4j-browser-query.png)
 
-### Connect LinkedIn
+### Explore relationships
 
-1. Add LinkedIn connection to your agent
-2. Complete OAuth authentication
-3. Grant necessary permissions
+[Content to be added - queries and graph exploration examples]
 
-![LinkedIn OAuth flow](/images/tutorials/knowledge-graph-extraction/add-linkedin.png)
+## Next steps
 
-### Enrich Maker Data
+### Expand your knowledge graph
 
-Now enhance your extraction with LinkedIn data:
+- **Add more data sources**: Crunchbase for funding data, GitHub for technical
+  metrics
+- **Include temporal data**: Track how products evolve over time
+- **Add sentiment analysis**: Analyze comments and reviews
+- **Geographic data**: Map where products and founders are located
 
-```text
-You: For each maker you found, search LinkedIn for their professional background and current company. Add this information to the Cypher queries.
-```
+### Build applications
 
-Enhanced Cypher output might look like:
+- **Recommendation engine**: Suggest products based on founder networks
+- **Trend analysis**: Identify emerging categories and technologies
+- **Investment insights**: Find promising startups based on founder backgrounds
+- **Competitive intelligence**: Track competitor products and strategies
 
-```cypher
-// Enhanced maker node with LinkedIn data
-MERGE (m1:Person {name: 'John Doe'})
-  SET m1.linkedin_headline = 'Founder & CEO at TechStartup',
-      m1.linkedin_url = 'https://linkedin.com/in/johndoe',
-      m1.current_position = 'CEO',
-      m1.location = 'San Francisco, CA',
-      m1.profile_updated = datetime()
+### Export and share
 
-// Create company node
-MERGE (comp1:Company {name: 'TechStartup'})
-  SET comp1.industry = 'Technology',
-      comp1.employee_range = '11-50',
-      comp1.founded_year = 2022
+Once you've built a comprehensive knowledge graph, you can:
 
-// Create employment relationship
-MERGE (m1)-[emp:WORKS_AT {title: 'Founder & CEO', current: true}]->(comp1)
-```
-
-## Step 5: Connect to Neo4j
-
-### Add Neo4j Connection
-
-1. In your agent connections, add Neo4j AuraDB
-2. Enter your connection details:
-   - URI: `neo4j+s://xxxxx.databases.neo4j.io`
-   - Username: `neo4j`
-   - Password: Your database password
-
-![Neo4j connection configuration](/images/tutorials/knowledge-graph-extraction/add-neo4j.png)
-
-### Finding Your Neo4j Connection Details
-
-To connect your agent to Neo4j, you'll need your database connection details.
-Here's how to find them:
-
-![Neo4j AuraDB connection details](/images/tutorials/knowledge-graph-extraction/neo4j-find-browser.png)
-
-1. Log into your Neo4j AuraDB console
-2. Navigate to your database instance
-3. Click on "Connect" to find your connection URI
-4. You'll see something like: `neo4j+s://xxxxx.databases.neo4j.io`
-
-### Execute Graph Creation
-
-```text
-You: Connect to my Neo4j database and execute the Cypher queries to create the knowledge graph. After execution, run a query to show me the total number of products, makers, and relationships created.
-```
-
-## Step 6: Product Hunt Connection (Coming Soon)
-
-<Note>
-  The Product Hunt MCP server is currently being enhanced. Once available,
-  you'll be able to connect directly to Product Hunt's API for more structured
-  data access. For now, web search provides excellent results for extracting
-  Product Hunt data.
-</Note>
-
-When the Product Hunt connection becomes available:
-
-1. Add Product Hunt connection
-2. Complete OAuth with Product Hunt
-3. This will provide structured data access including:
-   - Full product descriptions
-   - Maker profiles with Twitter handles
-   - Comment data and engagement metrics
-   - Historical launch data
-
-![Product Hunt connection card](/images/tutorials/knowledge-graph-extraction/add-product-hunt.png)
-
-## Step 7: Building Useful Queries
-
-### Create a Comprehensive Extract
-
-```text
-You: Search Product Hunt for the top 10 products launched this week. For each product:
-1. Extract all available product details
-2. Search LinkedIn for the makers
-3. Create a comprehensive graph structure
-4. Execute the queries in Neo4j
-5. Show me a summary of what was created
-```
-
-### Query Your Knowledge Graph
-
-Once your data is in Neo4j, here are powerful queries to explore your graph:
-
-**Find Serial Entrepreneurs:**
-
-```cypher
-MATCH (p:Person)-[:CREATED|LAUNCHED]->(prod:Product)
-WITH p, COUNT(prod) as product_count
-WHERE product_count > 2
-RETURN p.name, product_count, COLLECT(prod.name) as products
-ORDER BY product_count DESC
-```
-
-**Trending Categories:**
-
-```cypher
-MATCH (c:Category)<-[:BELONGS_TO|IN_CATEGORY]-(p:Product)
-WHERE p.scraped_date > datetime() - duration('P30D')
-RETURN c.name, COUNT(p) as product_count, AVG(p.upvotes) as avg_upvotes
-ORDER BY product_count DESC
-LIMIT 10
-```
-
-**Founder Networks:**
-
-```cypher
-MATCH (p1:Person)-[:CREATED]->(prod1:Product)-[:BELONGS_TO]->(c:Category)<-[:BELONGS_TO]-(prod2:Product)<-[:CREATED]-(p2:Person)
-WHERE p1 <> p2
-RETURN p1.name, p2.name, COUNT(DISTINCT c) as shared_categories
-ORDER BY shared_categories DESC
-```
-
-![Neo4j Browser showing graph visualization](/images/tutorials/knowledge-graph-extraction/neo4j-browser-query.png)
-
-## Advanced Techniques
-
-### Handling Data Variations
-
-Your agent will adapt its Cypher queries based on the data it finds. Here's how
-to guide it:
-
-```text
-You: When creating Cypher queries, handle these scenarios:
-- Some products may not have maker information
-- Categories might be tags or topics
-- Upvote counts might be ranges (e.g., "100+")
-- Companies might have multiple name variations
-
-Create flexible queries that handle missing data gracefully.
-```
-
-### Competitive Analysis
-
-Extend your agent to find relationships between products:
-
-```text
-You: For products in similar categories, create SIMILAR_TO relationships with a similarity score based on:
-- Shared categories
-- Similar keywords in taglines
-- Launch timing proximity
-```
-
-### Data Quality Checks
-
-Ensure your graph maintains quality:
-
-```text
-You: After adding new data, run these quality checks:
-1. Find any duplicate products (same name, different nodes)
-2. Identify makers without any products
-3. List products without categories
-4. Show me any data quality issues found
-```
-
-## Best Practices
-
-### Data Modeling
-
-- Use consistent node labels (Product, Person, Company, Category)
-- Keep relationship types descriptive (CREATED_BY, WORKS_AT, BELONGS_TO)
-- Add timestamps to track data freshness
-- Store source URLs for data verification
-
-### Performance Optimization
-
-- Create indexes on frequently queried properties:
-  ```cypher
-  CREATE INDEX product_name IF NOT EXISTS FOR (p:Product) ON (p.name);
-  CREATE INDEX person_name IF NOT EXISTS FOR (p:Person) ON (p.name);
-  CREATE INDEX category_name IF NOT EXISTS FOR (c:Category) ON (c.name);
-  ```
-
-### Error Handling
-
-- Your agent should handle missing data gracefully
-- Use MERGE to prevent duplicate nodes
-- Include data source attribution
-- Log any extraction failures for review
-
-## Troubleshooting
-
-### Common Issues
-
-**Web Search Limitations:**
-
-- Product Hunt may have anti-scraping measures
-- Data might be loaded dynamically
-- Solution: Try different search queries or specific Product Hunt URLs
-
-**Duplicate Nodes:**
-
-- Always use MERGE with unique identifiers
-- Normalize names (trim whitespace, consistent casing)
-- Run periodic deduplication:
-  ```cypher
-  MATCH (p1:Product), (p2:Product)
-  WHERE p1.name = p2.name AND id(p1) < id(p2)
-  RETURN p1.name, COUNT(*) as duplicates
-  ```
-
-**LinkedIn Rate Limiting:**
-
-- LinkedIn has strict rate limits
-- Solution: Process makers in batches
-- Cache LinkedIn data to avoid repeated lookups
-
-## Next Steps
-
-### Expand Your Graph
-
-1. **Add More Data Sources:**
-
-   - GitHub for technical products
-   - Twitter/X for social metrics
-   - Company websites for additional details
-
-2. **Build Analytics:**
-
-   - Create dashboards with Neo4j Bloom
-   - Export insights to visualization tools
-   - Track trends over time
-
-3. **Enhance the Agent:**
-   - Add specific industry focus
-   - Create custom extraction patterns
-   - Build comparison capabilities
-
-## Example Complete Workflow
-
-Here's a full conversation showing the complete process:
-
-````text
-You: Let's build a knowledge graph of this week's AI products on Product Hunt.
-Search for AI-related products, enrich with LinkedIn data, and create the graph in Neo4j.
-
-Agent: I'll help you build a knowledge graph of this week's AI products from Product Hunt.
-Let me break this down into steps:
-
-1. First, I'll search for recent AI products on Product Hunt
-2. Extract product details and maker information
-3. Enrich maker profiles using LinkedIn
-4. Generate and execute Cypher queries to build the graph
-5. Provide a summary of the created graph
-
-Let me start by searching for AI products...
-
-[Web search for "Product Hunt AI products this week"]
-
-I found several interesting AI products. Here are the top ones:
-
-1. **AI Code Assistant Pro** - "Your AI pair programmer for faster development"
-   - Maker: Sarah Chen
-   - Upvotes: 342
-   - Categories: AI, Developer Tools
-
-[... more products ...]
-
-Now let me search LinkedIn for the makers...
-
-[LinkedIn searches for each maker]
-
-I've found additional information about the makers. Now I'll create the Cypher queries:
-
-```cypher
-// Create AI category
-MERGE (ai:Category {name: 'AI'})
-
-// Create Sarah Chen with LinkedIn data
-MERGE (sarah:Person {name: 'Sarah Chen'})
-SET sarah.linkedin_headline = 'AI Engineer & Founder',
-    sarah.company = 'TechVentures',
-    sarah.location = 'San Francisco, CA',
-    sarah.profile_url = 'linkedin.com/in/sarahchen'
-
-// Create product
-MERGE (aicode:Product {name: 'AI Code Assistant Pro'})
-SET aicode.tagline = 'Your AI pair programmer for faster development',
-    aicode.upvotes = 342,
-    aicode.launch_week = date('2024-12-16'),
-    aicode.product_hunt_url = 'producthunt.com/posts/ai-code-assistant-pro'
-
-// Create relationships
-MERGE (sarah)-[:CREATED {role: 'Founder'}]->(aicode)
-MERGE (aicode)-[:IN_CATEGORY]->(ai)
-````
-
-[Executes queries in Neo4j]
-
-Graph successfully created! Summary:
-
-- Products added: 8
-- People added: 12
-- Companies added: 7
-- Categories: 5
-- Total relationships: 35
-
-The graph now contains this week's AI products with enriched founder
-information.
-
-```
+- Export data for external analysis
+- Create automated reports and dashboards
+- Share insights with your team
+- Build APIs on top of your graph data
 
 ## Conclusion
 
-You've successfully built an AI agent that transforms Product Hunt data into a rich knowledge graph. This foundation enables powerful analytics, pattern discovery, and competitive intelligence that would be impossible with traditional data storage methods.
+You've successfully built a Hypermode Agent that can extract, enrich, and store
+Product Hunt data as a knowledge graph in Neo4j. This powerful combination
+enables you to discover patterns and insights that would be impossible to find
+manually.
 
-The combination of Hypermode Agents' natural language understanding, multi-service integration, and Neo4j's graph capabilities creates a powerful system for understanding the product ecosystem.
+The beauty of Hypermode Agents is their flexibility - you can easily modify your
+agent's behavior, add new data sources, or change the graph structure without
+writing any code. As your needs evolve, your agent can evolve with them.
 
-### Key Takeaways
-
-- Hypermode Agents can orchestrate complex multi-step workflows
-- Web search provides flexible data extraction from Product Hunt
-- Graph databases excel at representing interconnected data
-- Enriching data from multiple sources creates exponential value
-- Agents adapt their approach based on the data they encounter
+Keep experimenting with different queries, data sources, and analysis
+techniques. The knowledge graph you've built is a living system that becomes
+more valuable as you add more data and connections.
 
 ---
 
-_Ready to build your own knowledge graphs? [Start with Hypermode Agents →](https://hypermode.com/login)_
-```
+_Ready to build more advanced knowledge graphs? Explore our other tutorials or
+join the Hypermode community to share your discoveries._
