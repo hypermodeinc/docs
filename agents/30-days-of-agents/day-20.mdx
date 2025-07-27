@@ -1,0 +1,467 @@
+---
+title: "Day 20: GraphRAG with Neo4j - Relationship-Based Knowledge Discovery"
+sidebarTitle: "Day 20: GraphRAG with Neo4j"
+description:
+  "Explore GraphRAG using Neo4j for complex relationship reasoning and knowledge
+  discovery. Build knowledge graphs dynamically and implement sophisticated
+  graph-based retrieval systems."
+---
+
+<Card title="Day 20 challenge" icon="share-alt">
+  **Goal**: build GraphRAG systems with Neo4j for relationship-based knowledge discovery
+
+**Theme**: context engineering week - graph-based retrieval and reasoning
+
+**Time investment**: ~30 minutes
+
+</Card>
+
+Welcome to Day 20! You've mastered structured and document-based RAG. Today
+you'll explore **GraphRAG** - retrieval augmented generation using graph
+databases. You'll learn to build knowledge graphs that capture relationships and
+enable sophisticated reasoning about connected information.
+
+GraphRAG excels when the connections between entities are as important as the
+entities themselves.
+
+## What you'll accomplish today
+
+- Set up Neo4j Sandbox for graph database experimentation
+- Construct a knowledge graph using web search and entity extraction
+- Connect Neo4j to your agent for graph-based retrieval
+- Understand GraphRAG principles and relationship reasoning
+- Use Neo4j developer tools to explore and visualize graph structures
+
+<Warning>
+  This introduces graph database concepts and requires Neo4j Sandbox setup
+  (free). Graph thinking is different from relational or document databases -
+  focus on relationships and connections.
+</Warning>
+
+## Step 1: Understanding GraphRAG
+
+GraphRAG represents a fundamentally different approach to information retrieval:
+
+### Traditional RAG and GraphRAG
+
+**Traditional RAG**:
+
+- Searches for similar content based on vector embeddings
+- Retrieves isolated pieces of information
+- Limited understanding of relationships between entities
+- Good for finding relevant documents or data points
+
+**GraphRAG**:
+
+- Traverses relationships between connected entities
+- Retrieves networks of related information
+- Understands complex multi-hop relationships
+- Excellent for answering questions that require reasoning across connections
+
+### When to use GraphRAG
+
+**Ideal for**:
+
+- Knowledge domains with complex relationships (research, business intelligence)
+- Questions requiring multi-step reasoning ("How are X and Y connected?")
+- Recommendation systems based on similarity and relationships
+- Analyzing networks, hierarchies, and influence patterns
+- Connecting disparate pieces of information through shared entities
+
+**Examples of GraphRAG queries**:
+
+- "What companies have partnerships with our competitors' suppliers?"
+- "How are these research papers connected through shared authors and
+  citations?"
+- "What are the indirect relationships between this customer and our product
+  roadmap?"
+
+<Tip>
+  **Graph thinking** Instead of asking "What documents contain X?", GraphRAG
+  asks "What's connected to X, and what does that network tell us?"
+</Tip>
+
+## Step 2: Set up Neo4j sandbox
+
+Neo4j Sandbox provides a free, hosted Neo4j instance for learning:
+
+### Create your Neo4j sandbox
+
+1. **Visit [sandbox.neo4j.com](https://sandbox.neo4j.com)** and create a free
+   account
+2. **Create a new project** and select "Blank Sandbox"
+3. **Note your connection details**: URL, username, and password
+4. **Open Neo4j Browser** to start working with your graph database
+
+### Understanding Neo4j concepts
+
+- **Nodes** Entities in your graph (People, Companies, Products, Concepts)
+- **Relationships** Connections between nodes (WORKS_FOR, COMPETES_WITH,
+  INFLUENCES)
+- **Properties** Attributes of nodes and relationships (name, date, strength)
+- **Labels** Categories for nodes (Person, Company, Technology)
+
+### Basic Cypher syntax
+
+Cypher is Neo4j's query language for graphs:
+
+```cypher
+// Create nodes
+CREATE (p:Person {name: "Alice", role: "Engineer"})
+CREATE (c:Company {name: "TechCorp", industry: "Software"})
+
+// Create relationships
+MATCH (p:Person {name: "Alice"}), (c:Company {name: "TechCorp"})
+CREATE (p)-[:WORKS_FOR {since: 2020}]->(c)
+
+// Query patterns
+MATCH (p:Person)-[:WORKS_FOR]->(c:Company)
+RETURN p.name, c.name
+```
+
+## Step 3: Construct knowledge graph using web search
+
+You'll build a knowledge graph by extracting entities and relationships from web
+research:
+
+### Create a technology company knowledge graph
+
+Let's build a graph about AI companies and their relationships:
+
+```cypher
+// Create AI companies
+CREATE (openai:Company {name: "OpenAI", founded: 2015, industry: "AI Research"})
+CREATE (anthropic:Company {name: "Anthropic", founded: 2021, industry: "AI Safety"})
+CREATE (google:Company {name: "Google", founded: 1998, industry: "Technology"})
+CREATE (microsoft:Company {name: "Microsoft", founded: 1975, industry: "Technology"})
+CREATE (meta:Company {name: "Meta", founded: 2004, industry: "Social Media"})
+
+// Create key people
+CREATE (sam:Person {name: "Sam Altman", role: "CEO"})
+CREATE (dario:Person {name: "Dario Amodei", role: "CEO"})
+CREATE (demis:Person {name: "Demis Hassabis", role: "CEO"})
+CREATE (satya:Person {name: "Satya Nadella", role: "CEO"})
+CREATE (mark:Person {name: "Mark Zuckerberg", role: "CEO"})
+
+// Create AI models/products
+CREATE (gpt4:Product {name: "GPT-4", type: "Language Model", release_year: 2023})
+CREATE (claude:Product {name: "Claude", type: "Language Model", release_year: 2022})
+CREATE (gemini:Product {name: "Gemini", type: "Language Model", release_year: 2023})
+CREATE (copilot:Product {name: "GitHub Copilot", type: "AI Assistant", release_year: 2021})
+CREATE (llama:Product {name: "LLaMA", type: "Language Model", release_year: 2023})
+
+// Create relationships - leadership
+MATCH (sam:Person {name: "Sam Altman"}), (openai:Company {name: "OpenAI"})
+CREATE (sam)-[:CEO_OF {since: 2019}]->(openai)
+
+MATCH (dario:Person {name: "Dario Amodei"}), (anthropic:Company {name: "Anthropic"})
+CREATE (dario)-[:CEO_OF {since: 2021}]->(anthropic)
+
+MATCH (demis:Person {name: "Demis Hassabis"}), (google:Company {name: "Google"})
+CREATE (demis)-[:LEADS_AI_AT {division: "DeepMind"}]->(google)
+
+MATCH (satya:Person {name: "Satya Nadella"}), (microsoft:Company {name: "Microsoft"})
+CREATE (satya)-[:CEO_OF {since: 2014}]->(microsoft)
+
+MATCH (mark:Person {name: "Mark Zuckerberg"}), (meta:Company {name: "Meta"})
+CREATE (mark)-[:CEO_OF {since: 2004}]->(meta)
+
+// Create product relationships
+MATCH (openai:Company {name: "OpenAI"}), (gpt4:Product {name: "GPT-4"})
+CREATE (openai)-[:DEVELOPS]->(gpt4)
+
+MATCH (anthropic:Company {name: "Anthropic"}), (claude:Product {name: "Claude"})
+CREATE (anthropic)-[:DEVELOPS]->(claude)
+
+MATCH (google:Company {name: "Google"}), (gemini:Product {name: "Gemini"})
+CREATE (google)-[:DEVELOPS]->(gemini)
+
+MATCH (microsoft:Company {name: "Microsoft"}), (copilot:Product {name: "GitHub Copilot"})
+CREATE (microsoft)-[:DEVELOPS]->(copilot)
+
+MATCH (meta:Company {name: "Meta"}), (llama:Product {name: "LLaMA"})
+CREATE (meta)-[:DEVELOPS]->(llama)
+
+// Create business relationships
+MATCH (microsoft:Company {name: "Microsoft"}), (openai:Company {name: "OpenAI"})
+CREATE (microsoft)-[:PARTNERS_WITH {investment: "10B", type: "Strategic Partnership"}]->(openai)
+
+MATCH (google:Company {name: "Google"}), (anthropic:Company {name: "Anthropic"})
+CREATE (google)-[:INVESTS_IN {amount: "300M", round: "Series B"}]->(anthropic)
+
+// Create competitive relationships
+MATCH (openai:Company {name: "OpenAI"}), (anthropic:Company {name: "Anthropic"})
+CREATE (openai)-[:COMPETES_WITH {market: "Enterprise AI"}]->(anthropic)
+
+MATCH (gpt4:Product {name: "GPT-4"}), (claude:Product {name: "Claude"})
+CREATE (gpt4)-[:COMPETES_WITH {category: "Large Language Models"}]->(claude)
+
+MATCH (gpt4:Product {name: "GPT-4"}), (gemini:Product {name: "Gemini"})
+CREATE (gpt4)-[:COMPETES_WITH {category: "Large Language Models"}]->(gemini)
+```
+
+### Add research topics and trends
+
+```cypher
+// Create research areas and trends
+CREATE (safety:Topic {name: "AI Safety", importance: "Critical"})
+CREATE (alignment:Topic {name: "AI Alignment", importance: "High"})
+CREATE (multimodal:Topic {name: "Multimodal AI", importance: "High"})
+CREATE (reasoning:Topic {name: "AI Reasoning", importance: "Medium"})
+CREATE (agents:Topic {name: "AI Agents", importance: "High"})
+
+// Connect companies to research focus areas
+MATCH (anthropic:Company {name: "Anthropic"}), (safety:Topic {name: "AI Safety"})
+CREATE (anthropic)-[:FOCUSES_ON {priority: "Primary"}]->(safety)
+
+MATCH (anthropic:Company {name: "Anthropic"}), (alignment:Topic {name: "AI Alignment"})
+CREATE (anthropic)-[:FOCUSES_ON {priority: "Primary"}]->(alignment)
+
+MATCH (openai:Company {name: "OpenAI"}), (agents:Topic {name: "AI Agents"})
+CREATE (openai)-[:FOCUSES_ON {priority: "High"}]->(agents)
+
+MATCH (google:Company {name: "Google"}), (multimodal:Topic {name: "Multimodal AI"})
+CREATE (google)-[:FOCUSES_ON {priority: "High"}]->(multimodal)
+
+// Connect products to capabilities
+MATCH (claude:Product {name: "Claude"}), (safety:Topic {name: "AI Safety"})
+CREATE (claude)-[:IMPLEMENTS]->(safety)
+
+MATCH (gpt4:Product {name: "GPT-4"}), (multimodal:Topic {name: "Multimodal AI"})
+CREATE (gpt4)-[:IMPLEMENTS]->(multimodal)
+```
+
+## Step 4: Connect Neo4j to your agent
+
+Integrate graph database capabilities with your Hypermode agent:
+
+### Add Neo4j connection
+
+1. **Navigate to your agent's connections** in the About section
+2. **Add Neo4j connection** with your Sandbox credentials
+3. **Test the connection** by running a simple Cypher query
+
+Refer to the [Neo4j connection documentation](agents/connections/neo4j) for more
+information on how to add the Neo4j connection to your Hypermode agent.
+
+### Create a GraphRAG agent
+
+Create an agent specialized in graph-based reasoning:
+
+```text
+I want to create a knowledge graph analyst agent that helps users discover relationships and insights from connected data.
+
+The agent should:
+- Query graph databases to find complex relationships between entities
+- Explain how different companies, people, and technologies are connected
+- Discover indirect relationships and influence patterns
+- Provide network analysis and relationship insights
+- Help users understand competitive landscapes and partnership networks
+- Reason about multi-hop relationships and their implications
+
+The agent should think like a business intelligence analyst who specializes in relationship mapping and network analysis.
+```
+
+### Configure GraphRAG patterns
+
+Add these instructions to enhance graph reasoning:
+
+```text
+Graph Analysis Guidelines:
+1. Use Cypher queries to explore relationships between entities
+2. Look for both direct and indirect connections (2-3 hops)
+3. Identify patterns in networks (clusters, influential nodes, bridges)
+4. Explain the significance of relationships, not just their existence
+5. Consider relationship strength, direction, and properties
+6. Provide visual descriptions of network structures when helpful
+7. Connect graph insights to business implications and strategic value
+```
+
+## Step 5: Explore GraphRAG capabilities
+
+Test sophisticated graph-based reasoning:
+
+### Relationship discovery queries
+
+```text
+How are OpenAI and Anthropic connected through their business relationships and competitive positioning? What does this network tell us about the AI industry?
+```
+
+Your agent should:
+
+1. **Query direct relationships** between the companies
+2. **Explore indirect connections** through shared partners, investors, or
+   competitors
+3. **Analyze the network structure** and identify patterns
+4. **Provide strategic insights** based on relationship analysis
+
+### Multi-hop reasoning
+
+```text
+Find all the ways that Microsoft's investment in OpenAI might influence competition with Google's AI products. Consider indirect effects and network implications.
+```
+
+This requires:
+
+- **Multi-step traversal** through the graph
+- **Reasoning about implications** of connected relationships
+- **Understanding competitive dynamics** through network analysis
+- **Identifying strategic advantages** or vulnerabilities
+
+### Network analysis
+
+```text
+Which companies or people are most central to the AI industry network? Who has the most influence based on their connections?
+```
+
+This tests:
+
+- **Centrality analysis** using graph algorithms
+- **Influence pattern recognition** based on relationship types
+- **Network structure understanding** and strategic positioning
+- **Competitive advantage assessment** through connectivity
+
+<Tip>
+  **GraphRAG insight** The most valuable insights often come from discovering
+  unexpected connections or understanding how influence flows through networks
+  of relationships.
+</Tip>
+
+## Step 6: Neo4j developer tools exploration
+
+Use Neo4j's visualization and analysis tools to understand your graph:
+
+### Neo4j Browser visualization
+
+In Neo4j Browser, run these queries to explore your graph visually:
+
+```cypher
+// Visualize the entire company network
+MATCH (c:Company)-[r]-(n)
+RETURN c, r, n
+LIMIT 50
+
+// Find the most connected entities
+MATCH (n)-[r]-()
+RETURN n, count(r) as connections
+ORDER BY connections DESC
+LIMIT 10
+
+// Explore competitive relationships
+MATCH (c1:Company)-[:COMPETES_WITH]-(c2:Company)
+RETURN c1, c2
+
+// Find partnership and investment networks
+MATCH path = (c1:Company)-[:PARTNERS_WITH|INVESTS_IN*1..2]-(c2:Company)
+RETURN path
+```
+
+### Graph algorithms for analysis
+
+```cypher
+// Find shortest paths between entities
+MATCH path = shortestPath((openai:Company {name: "OpenAI"})-[*]-(meta:Company {name: "Meta"}))
+RETURN path
+
+// Discover communities in the network
+CALL gds.louvain.stream('myGraph')
+YIELD nodeId, communityId
+RETURN gds.util.asNode(nodeId).name AS name, communityId
+ORDER BY communityId
+
+// Calculate centrality scores
+CALL gds.pageRank.stream('myGraph')
+YIELD nodeId, score
+RETURN gds.util.asNode(nodeId).name AS name, score
+ORDER BY score DESC
+```
+
+### Advanced graph patterns
+
+```cypher
+// Find triangular relationships (mutual connections)
+MATCH (a:Company)-[:PARTNERS_WITH]-(b:Company)-[:COMPETES_WITH]-(c:Company)-[:INVESTS_IN]-(a)
+RETURN a, b, c
+
+// Discover influence paths
+MATCH path = (p:Person)-[:CEO_OF]->(c:Company)-[:DEVELOPS]->(product:Product)-[:COMPETES_WITH]->(other:Product)
+RETURN path
+
+// Find similar companies based on shared relationships
+MATCH (c1:Company)-[:FOCUSES_ON]->(topic:Topic)<-[:FOCUSES_ON]-(c2:Company)
+WHERE c1 <> c2
+RETURN c1.name, c2.name, collect(topic.name) as shared_interests
+```
+
+## What you've accomplished
+
+In 30 minutes, you've mastered GraphRAG fundamentals:
+
+**Graph database setup**: configured Neo4j Sandbox for graph-based knowledge
+storage
+
+**Knowledge graph construction**: built a comprehensive network of AI industry
+relationships
+
+**GraphRAG implementation**: connected graph reasoning capabilities to your
+agent
+
+**Relationship analysis**: explored multi-hop reasoning and network pattern
+discovery
+
+**Visualization tools**: used Neo4j Browser for graph exploration and analysis
+
+## The power of GraphRAG
+
+GraphRAG enables reasoning that traditional RAG can't:
+
+**Traditional RAG**: "What companies work on AI safety?" → Returns individual
+documents about AI safety companies
+
+**GraphRAG**: "How does Anthropic's focus on AI safety create competitive
+advantages through their Google partnership while positioning them against
+OpenAI's Microsoft alliance?" → Returns network analysis of competitive
+positioning through relationship patterns
+
+This completes your foundation in context engineering fundamentals.
+
+<Card
+  title="Tomorrow - Day 21"
+  icon="arrow-right"
+  href="/agents/30-days-of-agents/day-21"
+>
+  Explore advanced graph data modeling with Dgraph, building sophisticated
+  knowledge graphs from real-world data sources.
+</Card>
+
+## Pro tip for today
+
+Experiment with graph pattern discovery:
+
+```text
+Using the AI industry knowledge graph we built, help me discover:
+1. What unexpected relationships exist between seemingly unrelated entities?
+2. Which entities serve as "bridges" connecting different parts of the network?
+3. How would adding a new company or partnership change the network dynamics?
+4. What competitive advantages emerge from specific relationship patterns?
+
+Show me both the graph queries and the strategic insights they reveal.
+```
+
+This develops intuition for thinking in graphs and understanding network
+effects.
+
+---
+
+**Time to complete**: ~30 minutes
+
+**Skills learned** Neo4j setup, knowledge graph construction, GraphRAG
+implementation, Cypher querying, network analysis, graph visualization
+
+**Next**: day 21 - Advanced graph data modeling with Dgraph
+
+<Tip>
+  **Remember** GraphRAG's power lies in understanding that knowledge isn't just
+  about individual facts, but about how those facts connect to create larger
+  patterns of meaning and influence.
+</Tip>

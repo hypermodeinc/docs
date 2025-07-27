@@ -1,0 +1,341 @@
+---
+title: "Day 18: Retrieval with PostgreSQL - Building Retrieval Systems"
+sidebarTitle: "Day 18: PostgreSQL Retrieval"
+description:
+  "Build sophisticated retrieval systems using PostgreSQL and Supabase,
+  implementing semantic search over structured product catalogs for intelligent
+  information retrieval."
+---
+
+<Card title="Day 18 challenge" icon="database">
+  **Goal**: build a production-ready RAG system using PostgreSQL and Supabase
+
+**Theme**: context engineering week - information retrieval systems
+
+**Time investment**: ~30 minutes
+
+</Card>
+
+Welcome to Day 18! You've mastered prompt and message engineering. Now you'll
+build **RAG (Retrieval Augmented Generation) systems** - the foundation of
+intelligent information access. Today you'll use PostgreSQL and Supabase to
+create semantic search over structured data.
+
+RAG systems enable agents to access current, relevant information dynamically
+rather than relying solely on training data.
+
+## What you'll accomplish today
+
+- Set up a Supabase PostgreSQL database
+- Load and index an Amazon product catalog as example data
+- Connect your agent to Supabase for intelligent retrieval
+- Implement semantic search queries that enhance agent responses
+- Build retrieval patterns that scale to real-world data volumes
+
+<Warning>
+  This requires setting up external services (Supabase). You'll need to create
+  accounts and configure database connections. The concepts apply to any
+  PostgreSQL-based retrieval system.
+</Warning>
+
+## Step 1: Understanding retrieval systems
+
+Before building, understand what makes retrieval powerful:
+
+### Retrieval architecture components
+
+- **Knowledge Base**: Structured or unstructured data that agents can search
+- **Embedding Model**: Converts text to vector representations for similarity
+  search
+- **Vector Database**: Stores and searches embeddings efficiently
+- **Retrieval System**: Finds relevant information based on user queries
+- **Generation**: Language model uses retrieved context to provide informed
+  responses
+
+### When to use retrieval vs. fine-tuning
+
+**Retrieval is ideal for**:
+
+- Dynamic information that changes frequently
+- Large knowledge bases that exceed context windows
+- Information that needs to be traceable and verifiable
+- Scenarios where you need to add new information without retraining
+
+**Fine-tuning is better for**:
+
+- Changing behavior patterns or writing style
+- Domain-specific reasoning capabilities
+- When information is stable and doesn't change often
+
+<Tip>
+  **Retrieval thinking** Think of retrieval as giving your agent access to a
+  dynamic, searchable library rather than memorizing everything up front.
+</Tip>
+
+## Set up Supabase
+
+Supabase provides PostgreSQL with built-in vector search capabilities:
+
+### Create your Supabase project
+
+1. **Visit [Supabase.com](https://supabase.com)** and create a free account
+2. **Create a new project** and note your project URL and API keys
+3. **Set up authentication** and database permissions
+
+## Load Amazon product catalog data
+
+Let's create a realistic product dataset for testing:
+
+### Sample product data
+
+Create sample product data that represents a typical e-commerce catalog.
+Navigate to the SQL editor in Supabase and run the following SQL:
+
+{/* <!-- markdownlint-disable MD013 --> */}
+
+```sql
+-- Insert sample Amazon-style product data
+INSERT INTO products (title, description, category, price, rating, metadata) VALUES
+('Apple iPhone 15 Pro', 'Latest iPhone with titanium design, A17 Pro chip, and advanced camera system', 'Electronics', 999.00, 4.5, '{"brand": "Apple", "features": ["A17 Pro chip", "Titanium", "Advanced camera"]}'),
+('Samsung Galaxy S24 Ultra', 'Premium Android smartphone with S Pen, 200MP camera, and AI features', 'Electronics', 1199.00, 4.3, '{"brand": "Samsung", "features": ["S Pen", "200MP camera", "AI features"]}'),
+('Sony WH-1000XM5 Headphones', 'Industry-leading noise canceling wireless headphones with 30-hour battery life', 'Audio', 399.99, 4.7, '{"brand": "Sony", "features": ["Noise canceling", "30-hour battery", "Wireless"]}'),
+('Dyson V15 Detect Vacuum', 'Cordless vacuum with laser dust detection and intelligent suction adjustment', 'Home & Garden', 749.99, 4.4, '{"brand": "Dyson", "features": ["Laser detection", "Cordless", "Intelligent suction"]}'),
+('Nike Air Max 270', 'Comfortable running shoes with Max Air cushioning and breathable mesh upper', 'Sports & Outdoors', 149.99, 4.2, '{"brand": "Nike", "features": ["Max Air cushioning", "Breathable mesh", "Running"]}'),
+('Instant Pot Duo 7-in-1', 'Multi-functional electric pressure cooker that replaces 7 kitchen appliances', 'Kitchen', 79.99, 4.6, '{"brand": "Instant Pot", "features": ["7-in-1", "Pressure cooker", "Electric"]}'),
+('MacBook Pro 16-inch M3', 'Professional laptop with M3 chip, stunning Liquid Retina XDR display', 'Computers', 2499.00, 4.8, '{"brand": "Apple", "features": ["M3 chip", "Liquid Retina XDR", "Professional"]}'),
+('Amazon Echo Dot 5th Gen', 'Smart speaker with Alexa, improved audio, and smart home control', 'Smart Home', 49.99, 4.1, '{"brand": "Amazon", "features": ["Alexa", "Smart home control", "Improved audio"]}'),
+('Fitbit Charge 6', 'Advanced fitness tracker with GPS, heart rate monitoring, and 6-day battery', 'Health & Fitness', 199.99, 4.3, '{"brand": "Fitbit", "features": ["GPS", "Heart rate monitoring", "6-day battery"]}'),
+('Weber Genesis E-325s', 'Premium gas grill with three burners, porcelain-enameled cast iron grates', 'Outdoor', 899.00, 4.5, '{"brand": "Weber", "features": ["Three burners", "Cast iron grates", "Premium gas grill"]}'),
+('OLED TV 55-inch 4K', 'Ultra-slim OLED television with perfect blacks and vibrant colors', 'Electronics', 1299.99, 4.6, '{"brand": "LG", "features": ["OLED", "4K", "Ultra-slim"]}'),
+('KitchenAid Stand Mixer', 'Professional-grade stand mixer with 10 speeds and tilt-head design', 'Kitchen', 329.99, 4.7, '{"brand": "KitchenAid", "features": ["10 speeds", "Tilt-head design", "Professional-grade"]}'),
+('Gaming Laptop RTX 4080', 'High-performance gaming laptop with RTX 4080 graphics and 16GB RAM', 'Computers', 1899.99, 4.4, '{"brand": "ASUS", "features": ["RTX 4080", "16GB RAM", "High-performance"]}'),
+('Wireless Charging Stand', 'Fast wireless charging stand compatible with iPhone and Android devices', 'Electronics', 39.99, 4.2, '{"brand": "Anker", "features": ["Fast charging", "Wireless", "Universal compatibility"]}'),
+('Espresso Machine Deluxe', 'Semi-automatic espresso machine with milk frother and programmable settings', 'Kitchen', 599.99, 4.5, '{"brand": "Breville", "features": ["Semi-automatic", "Milk frother", "Programmable"]}');
+```
+
+{/* <!-- markdownlint-enable MD013 --> */}
+
+## Connect your agent to Supabase
+
+Now integrate your retrieval system with your Hypermode agent:
+
+### Add Supabase connection
+
+1. **Navigate to your agent's connections** in the About section
+2. **Add Supabase connection** and configure with your project credentials
+3. **Test the connection** by querying the products table
+
+Refer to the [Hypermode Supabase connection docs](/agents/connections/supabase)
+for more information.
+
+### Create a retrieval-enabled agent
+
+If you don't have a suitable agent, create one with Concierge:
+
+```text
+I want to create a product recommendation agent that helps users find products based on their needs.
+
+The agent should:
+- Search to find relevant products from our catalog
+- Understand user preferences and requirements
+- Provide detailed product comparisons and recommendations
+- Explain why specific products match user needs
+- Handle follow-up questions about features, pricing, and alternatives
+
+The agent should act like a knowledgeable sales associate who understands both product details and customer needs.
+```
+
+### Configure retrieval workflows
+
+Add these patterns to your agent's instructions:
+
+```text
+Product Search Guidelines:
+1. When users ask about products, use search on the products database
+2. Search using natural language descriptions of user needs
+3. Include relevant product details: title, description, price, rating, and key features
+4. Explain why recommended products match the user's requirements
+5. Offer comparisons between similar products when helpful
+6. Always provide specific product information rather than generic advice
+```
+
+## Implement retrieval queries
+
+Test your retrieval system with real queries:
+
+### Basic product search
+
+```text
+I'm looking for a smartphone with good camera quality and long battery life under $800. What would you recommend?
+```
+
+Your agent should:
+
+1. **Query the products table**
+2. **Return relevant products** with explanations
+3. **Format results** with specific details and reasoning
+
+### Complex requirement matching
+
+```text
+I need a gift for someone who loves cooking and wants to save time in the kitchen. Budget is around $100. What products would be perfect?
+```
+
+Watch how semantic search finds relevant products even when the query doesn't
+contain exact product keywords.
+
+### Comparison queries
+
+```text
+Compare the top 3 headphones in your catalog and explain which is best for different use cases.
+```
+
+This tests the agent's ability to retrieve multiple products and synthesize
+comparative information.
+
+<Tip>
+  **Retrieval quality** Good retrieval systems return not just similar products,
+  but contextually relevant ones that actually answer the user's underlying
+  need.
+</Tip>
+
+### Contextual retrieval
+
+Help your agent understand search context:
+
+```text
+Retrieval Context Guidelines:
+- For gift recommendations: Consider price range, recipient interests, and occasion
+- For replacements: Find similar products with improvements or better value
+- For comparisons: Retrieve products in the same category with different strengths
+- For budget searches: Prioritize value and essential features within price range
+- For premium searches: Focus on quality, features, and brand reputation
+```
+
+### Advanced query examples
+
+Test sophisticated retrieval patterns:
+
+```text
+"I want to upgrade my home office setup for better productivity and comfort. I have a $1000 budget and work from home 8 hours a day."
+```
+
+```text
+"Find me eco-friendly alternatives to common household items that also save money in the long run."
+```
+
+```text
+"I'm a beginner cook who wants to make healthier meals but has limited time. What kitchen tools would be most impactful?"
+```
+
+## Performance optimization and monitoring
+
+Ensure your retrieval system performs well at scale:
+
+### Indexing optimization
+
+```sql
+-- Create additional indexes for common query patterns
+CREATE INDEX idx_products_category ON products(category);
+CREATE INDEX idx_products_price ON products(price);
+CREATE INDEX idx_products_rating ON products(rating);
+CREATE INDEX idx_products_brand ON products USING GIN ((metadata->>'brand'));
+
+-- Full-text search index
+CREATE INDEX idx_products_fulltext ON products USING GIN (to_tsvector('english', title || ' ' || description));
+```
+
+### Query performance monitoring
+
+```sql
+-- Enable query statistics
+SELECT pg_stat_statements_reset();
+
+-- Monitor slow queries
+SELECT query, calls, total_time, mean_time, rows
+FROM pg_stat_statements
+WHERE query LIKE '%products%'
+ORDER BY mean_time DESC
+LIMIT 10;
+```
+
+### Retrieval quality metrics
+
+Track these metrics to ensure good RAG performance:
+
+- **Retrieval precision**: How many retrieved items are relevant?
+- **Retrieval recall**: How many relevant items are retrieved?
+- **Response time**: How fast are queries executing?
+- **User satisfaction**: Are users finding what they need?
+
+## What you've accomplished
+
+In 30 minutes, you've built a production-ready RAG system:
+
+**Database foundation**: set up PostgreSQL with vector search capabilities
+
+**Data pipeline**: loaded and indexed structured product catalog with embeddings
+
+**Agent integration**: connected your agent to Supabase for dynamic information
+retrieval
+
+**Semantic search**: implemented vector similarity search for intelligent
+product discovery
+
+**Advanced patterns**: explored hybrid search, filtering, and contextual
+retrieval
+
+**Performance optimization**: learned indexing and monitoring strategies for
+production use
+
+## The power of retrieval systems
+
+Retrieval transforms static agents into dynamic information systems:
+
+**Before retrieval** Agents limited to training data and general knowledge
+
+**After retrieval** Agents with access to current, specific, searchable
+knowledge bases
+
+This foundation enables agents to provide accurate, up-to-date information from
+your own data sources.
+
+<Card
+  title="Tomorrow - Day 19"
+  icon="arrow-right"
+  href="/agents/30-days-of-agents/day-19"
+>
+  Implement document-based retrieval systems using MongoDB Atlas for
+  unstructured data like product reviews and feedback.
+</Card>
+
+## Pro tip for today
+
+Test retrieval quality with diverse queries:
+
+```text
+Test my retrieval system with these different query types:
+1. Specific product searches: "wireless noise-canceling headphones"
+2. Use case searches: "products for home office productivity"
+3. Comparative searches: "best value smartphones under $500"
+4. Problem-solving searches: "solutions for small kitchen storage"
+
+How well does semantic search understand intent vs. exact keywords?
+```
+
+This reveals the strengths and limitations of your retrieval system.
+
+---
+
+**Time to complete**: ~30 minutes
+
+**Skills learned** RAG system architecture, PostgreSQL vector search, embedding
+generation, semantic retrieval, hybrid search patterns, performance optimization
+
+**Next**: day 19 - Document retrieval with MongoDB for unstructured data
+
+<Tip>
+  **Remember** Retrieval quality depends on both the relevance of retrieved
+  information and how well your agent uses that information to generate
+  responses. Both sides matter equally.
+</Tip>

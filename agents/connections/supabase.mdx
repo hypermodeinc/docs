@@ -1,0 +1,220 @@
+---
+title: Using Supabase with Hypermode
+sidebarTitle: Supabase
+description:
+  Connect your Hypermode agent to Supabase for real-time database operations
+---
+
+<div className="flex items-center gap-3 mb-6">
+  <img
+    src="/images/agents/connections/icons/supabase.svg"
+    alt="Supabase"
+    width={48}
+    height={48}
+  />
+  <div>
+    <h2 className="text-2xl font-bold m-0">Supabase</h2>
+    <p className="text-gray-600 m-0">
+      Open source PostgreSQL development platform
+    </p>
+  </div>
+</div>
+
+## Overview
+
+Supabase is an open source alternative to Firebase that provides a complete
+backend solution with PostgreSQL at its core. This guide will walk you through
+connecting your Hypermode agent to Supabase, enabling powerful database
+operations and real-time interactions.
+
+## Prerequisites
+
+Before connecting Supabase to Hypermode, you'll need:
+
+1. A [Supabase account](https://supabase.com/)
+2. A Supabase project with API credentials
+3. A [Hypermode workspace](https://hypermode.com/)
+
+## Setting up Supabase
+
+### Step 1: Create your Supabase account
+
+If you haven't already, sign up for a free Supabase account.
+
+![Supabase signup](/images/connections/supabase/signup-supabase.png)
+
+### Step 2: Generate API credentials
+
+Navigate to your project settings and create a new API key:
+
+1. Go to **Settings** → **API** in your Supabase dashboard
+2. Create a new service role key (this bypasses Row Level Security)
+3. Copy your project URL to extract the subdomain ID
+
+![Create API key](/images/connections/supabase/create-key.png)
+
+<Note>
+  The subdomain ID is the part before `.supabase.co` in the project URL. For
+  example, if the URL is `https://supa-project-id.supabase.co`, then the
+  subdomain ID is `supa-project-id`.
+</Note>
+
+## Creating your Supabase agent
+
+### Step 1: Create a new agent
+
+From the Hypermode interface, create a new agent manually:
+
+1. Click the agent dropdown menu
+2. Select "Create new Agent"
+
+![Navigate to create agent](/images/connections/supabase/navigate-create-agent.png)
+
+### Step 2: Configure agent settings
+
+Use these recommended settings for your Supabase agent:
+
+- **Agent Name**: SupaAgent
+- **Agent Title**: Connects to Supabase
+- **Description**: SupaAgent issues queries
+- **Instructions**: You have a connection to Supabase and various other
+  developer tools to streamline data access and awareness
+- **Model**: GPT-4.1
+
+![Create agent modal](/images/connections/supabase/create-agent-modal.png)
+
+### Step 3: View your agent profile
+
+Once created, navigate to your agent's settings page to see the profile:
+
+![Agent profile](/images/connections/supabase/agent-profile.png)
+
+## Connecting to Supabase
+
+### Step 1: Add the Supabase connection
+
+Navigate to the **Connections** tab and add Supabase:
+
+1. Click "Add connection"
+2. Select "Supabase" from the dropdown
+
+![Add Supabase connection](/images/connections/supabase/add-supabase-connection.png)
+
+### Step 2: Configure credentials
+
+Enter your Supabase credentials:
+
+- **Subdomain ID**: Your project reference `supa-project-id`
+- **Service Key**: Your service role key from Supabase
+
+![Supabase connection modal](/images/connections/supabase/supabase-connection-modal.png)
+
+<Warning>
+  Keep your service key secure! This key bypasses Row Level Security and should
+  never be exposed in client-side code.
+</Warning>
+
+## Setting up your database
+
+<Note>
+  The Supabase connector allows you to query and manipulate data but doesn't
+  modify schemas. You'll need to create your database schema directly in
+  Supabase.
+</Note>
+
+### Step 1: Create your schema
+
+Navigate to the SQL editor in your Supabase dashboard and run this example
+schema:
+
+```sql
+-- 1. Movies Table
+CREATE TABLE IF NOT EXISTS public."Movies" (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    year INTEGER
+);
+
+-- 2. Actors Table
+CREATE TABLE IF NOT EXISTS public."Actors" (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- 3. MovieActors Join Table
+CREATE TABLE IF NOT EXISTS public."MovieActors" (
+    movie_id INTEGER NOT NULL REFERENCES public."Movies"(id) ON DELETE CASCADE,
+    actor_id INTEGER NOT NULL REFERENCES public."Actors"(id) ON DELETE CASCADE,
+    PRIMARY KEY (movie_id, actor_id)
+);
+```
+
+![Migrate database](/images/connections/supabase/migrate.png)
+
+### Step 2: View your schema
+
+Confirm your tables are created successfully:
+
+![Database schema](/images/connections/supabase/supabase-schema.png)
+
+### Step 3: Update agent instructions
+
+For your agent to understand your database structure, update its instructions
+with your schema information:
+
+![Update agent prompt](/images/connections/supabase/agent-update-prompt.png)
+
+## Testing the connection
+
+### Test 1: Query empty tables
+
+Start a new thread and test with a simple query:
+
+```text
+Can you list the movies?
+```
+
+You should see a Supabase tool call in the chat history, confirming the
+connection works:
+
+![Empty movies query](/images/connections/supabase/empty-movies.png)
+
+### Test 2: Insert data
+
+Now try adding data to your database:
+
+```text
+Can you add The Matrix 1999 and Neo the actor into my Supabase database?
+```
+
+![Add Matrix movie](/images/connections/supabase/add-matrix.png)
+
+## What you can do
+
+With your Supabase connection established, your agent can:
+
+- **Query data** with complex filters and joins
+- **Insert, update, and delete** records
+- **Execute transactions** for data consistency
+- **Work with relationships** between tables
+- **Integrate with other tools** like GitHub, Slack, and Stripe
+
+## Best practices
+
+1. **Schema documentation**: Keep your agent's instructions updated with your
+   current schema
+2. **Security**: Use Row Level Security policies for additional protection
+3. **Performance**: Create indexes for frequently queried columns
+4. **Error handling**: Your agent will handle common database errors gracefully
+
+## Learn more
+
+- [Supabase Documentation](https://supabase.com/docs)
+- [MCP Supabase Connector](https://mcp.pipedream.com/app/supabase)
+- [PostgreSQL Best Practices](https://www.postgresql.org/docs/current/index.html)
+
+<Tip>
+  Combine Supabase with other Hypermode connections to build powerful workflows.
+  For example, use GitHub to track code changes that affect your database, or
+  Slack to notify your team of important data updates.
+</Tip>
