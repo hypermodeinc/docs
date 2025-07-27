@@ -37,6 +37,7 @@ lint:
     - linters: [ALL]
       paths:
         - styles
+        - agents/available-connections.mdx
     - linters: [checkov]
       paths:
         - docs.json
