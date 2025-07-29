@@ -31,6 +31,7 @@ Dgraph
 [Ee]xecuteQuery
 [Ff]etch
 FAQs
+GDPR
 [Gg]etLabels
 [Gg]etModel
 [Gg]etNamespaces
@@ -60,8 +61,10 @@ OAuth
 [Oo]nboarding
 [Oo]perationalize
 [Pp]arams
+PCI
 [Qq]ueryScalar
 [Rr]eimagine
+SaaS
 [Ss]erializable
 [Ss]erverless
 [Tt]imeEnd
@@ -108,6 +111,7 @@ SDK|sdk
 [Ss]idekick
 Spotify
 Strava
+[Ss]tripe
 Supabase 
 TLS
 tokenizer
