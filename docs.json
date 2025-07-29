@@ -76,11 +76,15 @@
                     "pages": [
                       "agents/available-connections",
                       {
-                        "group": "Sales",
+                        "group": "CRM",
                         "pages": ["agents/connections/attio"]
                       },
                       {
-                        "group": "Databases",
+                        "group": "Commerce",
+                        "pages": ["agents/connections/stripe"]
+                      },
+                      {
+                        "group": "Database",
                         "pages": [
                           "agents/connections/supabase",
                           "agents/connections/neo4j",
