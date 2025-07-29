@@ -1,27 +1,33 @@
 ---
 title: Your First Sales Agent
-description:
-  "Ship a Sales Coach in 15 minutes—no code required"
-sidebarTitle: "Tutorial: Your First Sales Agent"
+description: "Ship a Sales Coach in 15 minutes—no code required"
+sidebarTitle: "Your First Sales Agent"
 ---
 
-In this tutorial, you’ll build your first AI sales agent—a sales coach agent that scores discovery calls against the MEDDPICC framework and posts feedback to Slack. When you’re done you’ll know the repeatable pattern for every other sales workflow in Hypermode.
+In this tutorial, you’ll build your first AI sales agent—a sales coach agent
+that scores discovery calls against the MEDDPICC framework and posts feedback to
+Slack. When you’re done you’ll know the repeatable pattern for every other sales
+workflow in Hypermode.
 
-*Who is this for?* Anyone new to Hypermode who wants to quickly build and deploy a sales-focused AI agent—no prior experience required.
+_Who is this for?_ Anyone new to Hypermode who wants to quickly build and deploy
+a sales-focused AI agent—no prior experience required.
 
 Along the way we'll introduce the basic concepts of working with agents in
 Hypermode, including the concepts of [connections](/agents/connections),
 [threads](/agents/work), and [tasks](/agents/tasks).
 
 ## Prerequisites
+
 - A Hypermode Pro workspace
-- Access to your sales tools (e.g., CRM, email, call recording platform, internal communications)
+- Access to your sales tools (for example, CRM, email, call recording platform,
+  internal communications)
 - Basic familiarity with modern chat interfaces (no coding required)
 - Estimated time: 15 minutes
 
 ## Step 1: Sign in and open your workspace
 
-Head to hypermode.com, sign in, and create your first workspace if you haven’t already.
+Head to hypermode.com, sign in, and create your first workspace if you haven’t
+already.
 
 ![Sign in to Hypermode](/images/tutorials/first-sales-agent/login.png)
 
@@ -29,7 +35,10 @@ Head to hypermode.com, sign in, and create your first workspace if you haven’t
 
 In the left sidebar, click [threads](/agents/work).
 
-Select the “Create new” option and select the [Hypermode Concierge + Agent builder](/agents/create-agent#build-a-new-agent-with-concierge). This is Hypermode’s AI-powered agent that transforms natural language descriptions into fully functional agents.
+Select the “Create new” option and select the
+[Hypermode Concierge + Agent builder](/agents/create-agent#build-a-new-agent-with-concierge).
+This is Hypermode’s AI-powered agent that transforms natural language
+descriptions into fully functional agents.
 
 ![Create new agent](/images/tutorials/first-sales-agent/create-new.png)
 
@@ -37,17 +46,20 @@ Select the “Create new” option and select the [Hypermode Concierge + Agent b
 
 In plain English, type something like:
 
-```
+```text
 Let's build a sales manager agent that is focused on sales coaching at scale.
 ```
 
-Concierge will ask clarifying questions, draft an initial system prompt, and suggest any connections for you.
+Concierge will ask clarifying questions, draft an initial system prompt, and
+suggest any connections for you.
 
 ![Create new agent with Concierge](/images/tutorials/first-sales-agent/create-new-concierge.png)
 
 ## Step 4: Refine and create your agent
 
-Follow the Concierge agent’s guided steps to fully refine your agents role, background, and instructions. The Concierge agent uses this information to construct a name, description, and system prompt for your agent. 
+Follow the Concierge agent’s guided steps to fully refine your agents role,
+background, and instructions. The Concierge agent uses this information to
+construct a name, description, and system prompt for your agent.
 
 Once you’ve fully specified the details, your new agent is created.
 
@@ -59,43 +71,49 @@ Your agent will now appear in the Agents page.
 
 ## Step 5: Review your agent details
 
-You can see the details of your agent, including the system prompt that Concierge created. 
+You can see the details of your agent, including the system prompt that
+Concierge created.
 
 ![Hypermode Agent details](/images/tutorials/first-sales-agent/hypermode-agent-details.png)
 
 ## Step 6: Refine your agent instructions
 
-You can review the Instructions. Hypermode Agents behave as the “system prompt” tells them. Edit the prompt by pasting the template below into the “Instructions” field:
+You can review the Instructions. Hypermode Agents behave as the “system prompt”
+tells them. Edit the prompt by pasting the template below into the
+“Instructions” field:
 
-```
+```text
 ## Description
 Coaches AE's on the application of MEDDPICC
 
 ## Instructions
 Identity: Hypermode MEDDPICC Sales Enablement Workflow
 
-System Prompt: You are a sales enablement AI assistant for {Company}, a {brief description of your company}. Your primary role is to help Account Executives (AEs) qualify, advance, and close opportunities using the MEDDPICC methodology, tailored to {Company's} value proposition.
+System Prompt:
+You are a sales enablement AI assistant for {Company}, a {brief description of your company}.
+Your primary role is to help Account Executives (AEs) qualify, advance, and close opportunities using the MEDDPICC methodology,
+tailored to {Company's} value proposition.
 
 Your Workflow:
-1. MEDDPICC Framework Reference    
+1. MEDDPICC Framework Reference
 - Always use this Notion/Google doc to understand our MEDDPICC methodology, grading rubric, and other company initiatives: {link to doc}
 
-2. Call Transcript Analysis    
-- When provided with a call transcript, analyze the conversation and:        
-	- Score each MEDDPICC element (1–5) with a brief rationale.        
-	- Identify at least five specific areas of improvement for the AE, referencing the framework.        
-	- For each area of improvement, provide a concrete alternative question, talk track, or action for future calls.
-	
-3. Slack-Optimized Feedback    
-- Summarize the scoring and feedback in a Slack-friendly format:        
-	- Use clear section headers, bullet points, and relevant emojis for each MEDDPICC element.        
-	- Use the star emoji to indicate a score (1-5)        
-	- Clearly separate “Misses” and “Alternatives” for easy reading.        
-	- End with a summary and actionable next steps.        
-	- Offer to provide custom call plans, email templates, or checklists if requested.
-	
-4. Message Delivery    
-- Always send the formatted feedback to every participant from {company}. Dont send to any other channels.    
+2. Call Transcript Analysis
+- When provided with a call transcript, analyze the conversation and:
+  - Score each MEDDPICC element (1–5) with a brief rationale.
+  - Identify at least five specific areas of improvement for the AE, referencing the framework.
+  - For each area of improvement, provide a concrete alternative question, talk track, or action for future calls.
+
+3. Slack-Optimized Feedback
+- Summarize the scoring and feedback in a Slack-friendly format:
+  - Use clear section headers, bullet points, and relevant emojis for each MEDDPICC element.
+  - Use the star emoji to indicate a score (1-5)
+  - Clearly separate “Misses” and “Alternatives” for easy reading.
+  - End with a summary and actionable next steps.
+  - Offer to provide custom call plans, email templates, or checklists if requested.
+
+4. Message Delivery
+- Always send the formatted feedback to every participant from {company}. Dont send to any other channels.
 - If the message fails, try four more times
 
 Tone & Style:
@@ -104,68 +122,82 @@ Tone & Style:
 - Always focus on helping the AE improve MEDDPICC rigor and move deals forward.
 
 Example Output Structure:
-📋 MEDDPICC Call Review – Hypermode Framework 📋 
-📊 Metrics: 2 > [Rationale] 
-💸 Economic Buyer: 2 > [Rationale] ... 
-🚨 Where We Missed the Mark & How to Improve 
-1️⃣ [Miss] 💡_Try next time:_ [Alternative] ... 
-🌟 Summary & Next Steps 🌟 
+📋 MEDDPICC Call Review – Hypermode Framework 📋
+📊 Metrics: 2 > [Rationale]
+💸 Economic Buyer: 2 > [Rationale] ...
+🚨 Where We Missed the Mark & How to Improve
+1️⃣ [Miss] 💡_Try next time:_ [Alternative] ...
+🌟 Summary & Next Steps 🌟
 - [Actionable bullet points] ...
 
 Always ask if the user wants a custom call plan, email template, or checklist for their next meeting.
 ```
+
 Press **Save**.
 
 ## Step 7: Add the required connections
 
-Let’s configure the required connections so your agent can access your sales tools. Select the **“Add connection”** button on the [Connections](/agents/connections) tab. Follow the authorization flow to connect to your sales tools.
+Let’s configure the required connections so your agent can access your sales
+tools. Select the **“Add connection”** button on the
+[Connections](/agents/connections) tab. Follow the authorization flow to connect
+to your sales tools.
 
 ![Connect your agent](/images/tutorials/first-sales-agent/add-connection.png)
 
 Authorize tools such as:
 
-- **CRM** (Salesforce, HubSpot, Attio) for *read/write*
-- **Transcript records** (Notion or Google Docs) for *read*
-- **Internal communications** (Slack, Teams) for *write only*
+- **CRM** (Salesforce, HubSpot, Attio) for _read/write_
+- **Transcript records** (Notion or Google Docs) for _read_
+- **Internal communications** (Slack, Teams) for _write only_
 
-You can review and edit existing connections based on what your sales agent needs.
+You can review and edit existing connections based on what your sales agent
+needs.
 
 ![Hypermode Connections](/images/tutorials/first-sales-agent/hypermode-connections.png)
 
 ## Step 8: Test with a transcript
 
-Back in threads, share a call transcript (or paste a few paragraphs). 
+Back in threads, share a call transcript (or paste a few paragraphs).
 
-Then, interact with your agent through natural language chat. Try asking, “can you review this transcript?””
+Then, interact with your agent through natural language chat. Try asking, “can
+you review this transcript?””
 
-You can watch the agent think, call the Notion tool to access the transcript and provide the feedback on the meeting based on the sales methodology.
+You can watch the agent think, call the Notion tool to access the transcript and
+provide the feedback on the meeting based on the sales methodology.
 
 ![Test with a sales transcript](/images/tutorials/first-sales-agent/test-transcript.png)
 
-You can also push these notifications directly to a channel or direct message using the Slack connection.
+You can also push these notifications directly to a channel or direct message
+using the Slack connection.
 
 ![Push notifications to Slack](/images/tutorials/first-sales-agent/push-notifications.png)
 
 ## What’s next?
 
-You can expand what your sales agent can do for you. Edit the “Instructions” from your agent profile to expand its capabilities, or create a new agent with these instructions.
+You can expand what your sales agent can do for you. Edit the “Instructions”
+from your agent profile to expand its capabilities, or create a new agent with
+these instructions.
 
 <Tabs>
 
 <Tab title="Auto-update CRM">
 Add a second agent that patches Opportunities after every call.
 
-```
+```text
 ## Description
 Analyzes calls, updates CRM.
 
 ## Instructions
 
 Identity:
-You are DealBuddy, a friendly assistant for {Company Name}. Your job is to analyze call transcripts and keep the CRM up to date with the latest opportunity details.
+You are DealBuddy, a friendly assistant for {Company Name}.
+Your job is to analyze call transcripts and keep the CRM up to date with the latest opportunity details.
 
 Context:
-Hypermode uses {CRM Name} as its CRM. For every call transcript you review, extract and update (or create) opportunities with these fields: Account, Expected Close Date, Opportunity Stage, Deal Value, and Next Steps. Begin analyzing the transcript when notified via webhook. Try four more times if the API call fails.
+Hypermode uses {CRM Name} as its CRM.
+For every call transcript you review, extract and update (or create) opportunities with these fields:
+  Account, Expected Close Date, Opportunity Stage, Deal Value, and Next Steps.
+Begin analyzing the transcript when notified via webhook. Try four more times if the API call fails.
 
 You do not need to create an account for new opportunities. If an opportunity exists, overwrite fields that are inaccurate.
 
@@ -197,14 +229,17 @@ If there is no opportunity for the "Account" in the database, always create a ne
 <Tab title="Meeting‑prep briefs">
 Ask your agent before a meeting to assemble notes, LinkedIn snippets, and recent emails based on your calendar.
 
-```
+```text
 ## Description
 Preps reps with timely briefs.
 
 ## Instructions
 
 Objective:
-When the user requests meeting preparation, automatically identify their next meeting with at least one participant (internal or external) using their calendar. For meetings with external participants, research the topic, company, and each external attendee. Provide a concise, actionable brief and suggest three hyper-personalized agenda items.
+When the user requests meeting preparation, automatically identify their next meeting
+with at least one participant (internal or external) using their calendar.
+For meetings with external participants, research the topic, company, and each external attendee.
+Provide a concise, actionable brief and suggest three hyper-personalized agenda items.
 
 Instructions:
 
@@ -243,10 +278,14 @@ Constraints:
 </Tab>
 </Tabs>
 
-## More Resources
+## More resources
 
 <CardGroup cols={3}>
-  <Card title="Read" icon="book-open-cover" href="https://hypermode.com/blog/why-contextual-ai-agents-beat-chatgpt-for-enterprise-sales">
+  <Card
+    title="Read"
+    icon="book-open-cover"
+    href="https://hypermode.com/blog/why-contextual-ai-agents-beat-chatgpt-for-enterprise-sales"
+  >
     *Why contextual AI agents beat ChatGPT for enterprise sales*
   </Card>
   <Card
@@ -256,7 +295,11 @@ Constraints:
   >
     Connect your Hypermode agent to Attio for CRM operations
   </Card>
-  <Card title="Bootcamp" icon="dumbbell" href="https://docs.hypermode.com/agents/30-days-of-agents/overview">
+  <Card
+    title="Bootcamp"
+    icon="dumbbell"
+    href="https://docs.hypermode.com/agents/30-days-of-agents/overview"
+  >
     Level up your agent skills in 30 days
   </Card>
 </CardGroup>

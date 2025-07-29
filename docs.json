@@ -51,9 +51,14 @@
             "group": "Hypermode",
             "pages": [
               "introduction",
-              "first-hypermode-agent",
-              "semantic-search",
-              "first-sales-agent"
+              {
+                "group": "Tutorials",
+                "pages": [
+                  "first-hypermode-agent",
+                  "first-sales-agent",
+                  "semantic-search"
+                ]
+              }
             ]
           },
           {
