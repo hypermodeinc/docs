@@ -1,0 +1,389 @@
+---
+title: Using Stripe with Hypermode
+sidebarTitle: Stripe
+description:
+  Connect your Hypermode agent to Stripe for automated payment processing and
+  financial operations
+---
+
+<div className="flex items-center gap-3 mb-6">
+  <img
+    src="/images/agents/connections/icons/stripe.png"
+    alt="Stripe"
+    width={48}
+    height={48}
+  />
+  <div>
+    <h2 className="text-2xl font-bold m-0">Stripe</h2>
+    <p className="text-gray-600 m-0">
+      Stripe powers online and in-person payment processing and financial
+      solutions for businesses of all sizes.
+    </p>
+  </div>
+</div>
+
+## Overview
+
+Stripe is a comprehensive payments platform that handles everything from payment
+processing to financial reporting. This guide will walk you through connecting
+your Hypermode agent to Stripe, enabling automated payment operations, customer
+management, and financial data analysis.
+
+## Prerequisites
+
+Before connecting Stripe to Hypermode, you'll need:
+
+1. A [Stripe account](https://stripe.com/) (individual or business)
+2. Stripe API credentials (publishable and secret keys)
+3. A [Hypermode workspace](https://hypermode.com/)
+
+## Setting up Stripe
+
+### Create your Stripe account
+
+If you haven't already, sign up for a Stripe account. You can start with a test
+account to experiment safely.
+
+### Access your API keys
+
+Navigate to your Stripe dashboard to find your API credentials:
+
+1. Go to **Developers** → **API keys** in your Stripe dashboard
+2. You'll see both test and live API keys
+3. Start with test keys for development
+
+![Stripe API keys](/images/connections/stripe/stripe-api-keys-dashboard.png)
+
+<Note>
+  Stripe provides separate test and live environments. Always start with test
+  keys during development to avoid processing real payments accidentally.
+</Note>
+
+### Create a restricted API token (Recommended)
+
+For enhanced security, create a restricted API token with only the permissions
+your agent needs:
+
+1. Go to **Developers** → **API keys**
+2. Click **Create restricted key**
+3. Select specific permissions based on your use case
+
+![Create restricted key](/images/connections/stripe/stripe-restricted-key.png)
+
+**Recommended permissions for most agents:**
+
+- **Customers**: Read and Write
+- **Payment Intents**: Read and Write
+- **Charges**: Read
+- **Invoices**: Read and Write
+- **Products**: Read and Write
+- **Subscriptions**: Read and Write
+
+<Warning>
+  Only grant the minimum permissions your agent actually needs. This follows the
+  principle of least privilege and enhances security.
+</Warning>
+
+## Creating your Stripe agent
+
+### Create a new agent
+
+From the Hypermode interface, create a new agent manually:
+
+1. Click the agent dropdown menu
+2. Select "Create new Agent"
+
+### Configure agent settings
+
+Use these recommended settings for your Stripe agent:
+
+- **Agent Name**: StripeSleuth
+- **Agent Title**: Connects to Stripe Payments
+- **Description**: StripeSleuth handles payment processing and customer
+  management
+- **Instructions**: You have a connection to Stripe and various other developer
+  tools to streamline payment operations, customer management, and financial
+  reporting. You can process payments, manage subscriptions, handle refunds, and
+  analyze financial data.
+- **Model**: GPT-4.1
+
+![Create agent modal](/images/connections/stripe/stripe-create-agent.png)
+
+## Connecting to Stripe
+
+### Add the Stripe connection
+
+Select the Agents tab in the left navigation bar, then click your StripeSleuth
+agent. Select the "Connections" tab.
+
+1. Click "Add connection"
+2. Select "Stripe" from the dropdown
+
+![Add Stripe connection](/images/connections/stripe/stripe-add-connection.png)
+
+### Configure credentials
+
+Enter your Stripe credentials:
+
+- **API Key**: Your Stripe secret key (starts with `sk_test_` for test mode or
+  `sk_live_` for live mode)
+
+![Stripe connection modal](/images/connections/stripe/stripe-configure-connection.png)
+
+<Warning>
+  Keep your secret API key secure! This key provides full access to your Stripe
+  account and should never be exposed in client-side code or shared publicly.
+
+We recommend using a Stripe Sandbox environment for development and testing.
+
+</Warning>
+
+## Verifying the Stripe connection
+
+### Test basic connectivity
+
+Start a new thread and test the connection with a simple query:
+
+```text
+Can you check my Stripe account balance?
+```
+
+You should see a Stripe tool call in the chat history, confirming the connection
+works:
+
+![Test connection](/images/connections/stripe/stripe-test-connection.png)
+
+### Test permissions
+
+Verify your API key has the necessary permissions:
+
+```text
+Can you list my recent customers and products?
+```
+
+If you see permission errors, you may need to update your API key permissions or
+use a different key.
+
+![Test permissions](/images/connections/stripe/stripe-test-permissions.png)
+
+## Setting up your Stripe environment
+
+<Note>
+  Unlike databases, Stripe doesn't require schema setup. However, you'll want to
+  configure products, pricing, and webhook endpoints for a complete integration.
+</Note>
+
+### Create test products
+
+Set up some test products to work with:
+
+```text
+Can you create a test product called "Premium Subscription" with a monthly price of $29.99?
+```
+
+### Update agent instructions
+
+Enhance your agent's understanding by updating its instructions with your
+business context:
+
+```text
+You are connected to a Stripe account for [Your Business Name]. Our main products include:
+
+1. **Premium Subscription** - $29.99/month recurring
+2. **Basic Plan** - $9.99/month recurring
+3. **One-time Setup** - $99 one-time payment
+
+When processing payments, always:
+- Verify customer information
+- Use appropriate product IDs
+- Handle errors gracefully
+- Provide clear confirmation messages
+
+For subscription management, monitor for failed payments and proactively communicate with customers about billing issues.
+```
+
+## Testing payment operations
+
+### Test 1: Create a customer
+
+Test customer creation capability:
+
+```text
+Can you create a new customer with email bob.loblaw@example.com and name "Bob Loblaw"?
+```
+
+![Create customer](/images/connections/stripe/stripe-create-customer.png)
+
+### Test 2: Process a test payment
+
+Try processing a payment using Stripe's test card numbers:
+
+```text
+Can you create a payment intent for $50 for customer bob.loblaw@example.com?
+```
+
+<Note>
+  In test mode, use Stripe's test card numbers like `4242424242424242` for
+  successful payments or `4000000000000002` for declined cards.
+</Note>
+
+![Process payment](/images/connections/stripe/stripe-process-payment.png)
+
+### Test 3: Handle subscriptions
+
+Test subscription management:
+
+```text
+Can you create a monthly subscription for Bob Loblaw using the Premium Subscription product?
+```
+
+![Create subscription](/images/connections/stripe/stripe-create-subscription.png)
+
+## What you can do
+
+With your Stripe connection established, your agent can:
+
+- **Process payments** with various payment methods
+- **Manage customers** and their payment information
+- **Handle subscriptions** including creation, updates, and cancellations
+- **Process refunds** and handle disputes
+- **Generate invoices** and manage billing
+- **Analyze financial data** and generate reports
+- **Manage products and pricing** dynamically
+- **Integrate with other tools** like CRM systems, email marketing, and
+  accounting software
+
+## Best practices
+
+1. **Security first**: Always use restricted API keys with minimal required
+   permissions
+2. **Test thoroughly**: Use Stripe's test environment before going live
+3. **Error handling**: Implement robust error handling for payment failures
+4. **Compliance**: Ensure PCI compliance and follow data protection regulations
+5. **Monitoring**: Set up alerts for failed payments and unusual activity
+
+## Advanced operations
+
+### Payment processing workflows
+
+Your agent can handle complex payment scenarios:
+
+```text
+Process a payment for a customer, and if it fails, try their backup payment method, then send them an email notification
+```
+
+### Subscription management
+
+Automate subscription lifecycle management:
+
+```text
+Check for subscriptions that failed payment in the last 24 hours and send dunning emails to those customers
+```
+
+### Financial reporting
+
+Generate comprehensive financial reports:
+
+```text
+Create a monthly revenue report showing breakdown by product, including refunds and net revenue
+```
+
+### Dispute handling
+
+Manage chargebacks and disputes:
+
+```text
+List all open disputes and provide evidence suggestions for each case
+```
+
+## Integration examples
+
+### E-commerce automation
+
+```text
+When a customer places an order, create a payment intent, and if successful, fulfill the order and send a confirmation email
+```
+
+### SaaS billing management
+
+```text
+Monitor subscription statuses and automatically downgrade accounts when payments fail after the grace period
+```
+
+## Troubleshooting
+
+### Common connection issues
+
+1. **Invalid API key**: Verify your key is correct and has proper permissions
+2. **Test vs Live mode**: Ensure your API key matches the intended environment
+3. **Rate limiting**: Stripe has rate limits; your agent will handle these
+   automatically
+4. **Insufficient permissions**: Update your restricted key permissions as
+   needed
+
+### Payment failures
+
+1. **Declined cards**: Use appropriate test card numbers in test mode
+2. **Authentication required**: Handle 3D Secure authentication flows
+3. **Insufficient funds**: Test with appropriate test card numbers
+4. **Invalid parameters**: Verify all required fields are provided correctly
+
+### Webhook issues
+
+1. **Endpoint verification**: Ensure your webhook endpoint is accessible
+2. **Event handling**: Verify you're listening for the correct event types
+3. **Signature verification**: Implement proper webhook signature verification
+
+## Security considerations
+
+<Warning>
+  Never expose your Stripe secret keys in client-side code, logs, or public
+  repositories. Always use environment variables or secure key management
+  systems.
+</Warning>
+
+1. **API key rotation**: Regularly rotate your API keys
+2. **Webhook signatures**: Always verify webhook signatures to ensure
+   authenticity
+3. **PCI compliance**: Follow PCI requirements when handling card data
+4. **Audit logs**: Monitor your Stripe dashboard for unusual activity
+5. **Two-factor authentication**: Enable 2FA on your Stripe account
+
+## Learn more
+
+- [Stripe Documentation](https://stripe.com/docs)
+- [Stripe API Reference](https://stripe.com/docs/api)
+- [Payment Intents Guide](https://stripe.com/docs/payments/payment-intents)
+- [Testing Guide](https://stripe.com/docs/testing)
+
+<Tip>
+  Combine Stripe with other Hypermode connections to create powerful business
+  workflows. For example, use Slack to notify your team of large payments,
+  GitHub to track payment-related code changes, or your CRM to update customer
+  information after successful payments.
+</Tip>
+
+## Compliance and regulations
+
+### PCI compliance
+
+When handling payment card data:
+
+- Use Stripe's secure payment forms
+- Never store card details directly
+- Implement proper access controls
+- Regularly monitor for vulnerabilities
+
+### Data protection
+
+- Follow GDPR requirements for customer data
+- Implement proper data retention policies
+- Provide mechanisms for data deletion
+- Ensure proper consent management
+
+### Financial regulations
+
+- Comply with local financial regulations
+- Implement proper record keeping
+- Ensure accurate tax reporting
+- Handle dispute resolution appropriately
