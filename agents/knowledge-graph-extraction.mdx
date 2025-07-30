@@ -1,0 +1,784 @@
+---
+title:
+  "Extracting Enriched Product Knowledge Graphs from Product Hunt into Neo4j"
+sidebarTitle: "Knowledge Graph Agent"
+description:
+  "Learn how to build a Hypermode Agent that extracts product data from Product
+  Hunt, enriches it with LinkedIn insights, and stores it as a knowledge graph
+  in Neo4j"
+---
+
+![Building a KG graph](/images/tutorials/knowledge-graph-extraction/banner.png)
+
+## Overview
+
+In this tutorial, you'll learn how to build a Hypermode Agent that automatically
+extracts product data from Product Hunt, enriches it with LinkedIn insights, and
+stores it as a knowledge graph in Neo4j. This powerful combination allows you to
+visualize relationships between products, founders, companies, and market
+trends.
+
+## What you'll build
+
+By the end of this tutorial, you'll have an Agent that:
+
+- Scrapes Product Hunt's homepage for trending products using web search
+- Enriches product data with founder and company information from LinkedIn
+- Transforms the data into a knowledge graph structure
+- Stores everything in Neo4j using Cypher queries
+
+## Prerequisites
+
+- A [Hypermode Pro](https://hypermode.com/login) account
+- A [Neo4j Sandbox](https://sandbox.neo4j.com/) or AuraDB instance (free tier
+  works fine)
+- Basic understanding of graph databases (helpful but not required)
+
+## What's a Hypermode Agent?
+
+[Hypermode Agents](/agents/overview) are domain specific AI-powered assistants
+created with natural language instructions that can understand instructions,
+interact with external services, and perform complex tasks on your behalf.
+Unlike traditional chatbots, Hypermode Agents can actually take actions—like
+scraping websites, querying databases, and transforming data.
+
+![Screenshot of Hypermode Agents interface showing an Agent card with connections](/images/tutorials/knowledge-graph-extraction/agent-profile.png)
+
+### Key features for this tutorial
+
+- **Natural Language Understanding**: Give instructions in plain English
+- **Multiple Connections**: Integrate with web search, LinkedIn, and Neo4j
+- **Data Transformation**: Convert unstructured web data into structured graph
+  relationships
+- **Flexible Output**: Agents adapt their Cypher queries based on the data they
+  find
+
+## Understanding the Technologies
+
+### Neo4j: the graph database
+
+Neo4j is a graph database that stores data as nodes (entities) and relationships
+(connections between entities). Unlike traditional databases that use tables and
+rows, Neo4j excels at representing and querying interconnected data.
+
+![Neo4j Banner](/images/tutorials/knowledge-graph-extraction/what-is-neo4j.png)
+
+### Product Hunt: the product discovery platform
+
+Product Hunt is where makers launch new products daily - it's a goldmine of data
+about:
+
+- Emerging products and startups
+- Founder networks and connections
+- Market trends and categories
+- User engagement metrics
+
+![Extract Nodes](/images/tutorials/knowledge-graph-extraction/product-hunt-to-nodes.png)
+
+### Why combine them?
+
+By extracting Product Hunt data into Neo4j, you can:
+
+- Discover patterns in successful product launches
+- Track founder networks and serial entrepreneurs
+- Identify trending categories and technologies
+- Analyze competitive landscapes
+
+![Why combine diagram](/images/tutorials/knowledge-graph-extraction/why-combine-graph.png)
+
+## Step 1: Set up Neo4j Sandbox
+
+### Create a Neo4j Sandbox
+
+First, you need to go to https://sandbox.neo4j.com/ and create an account. When
+you get to making a database, select a blank sandbox.
+
+![Create blank sandbox](/images/tutorials/knowledge-graph-extraction/blank-sandbox.png)
+
+<Note>
+  Neo4j Sandbox provides free temporary instances perfect for testing. For
+  production use, consider Neo4j Aura or a self-hosted instance.
+</Note>
+
+### Get your connection details
+
+Once created (it may take a moment), you can navigate to the HTTP tab and grab
+the URL. Note you will have to modify this to use the Neo4j HTTP v2 endpoint
+when adding the Neo4j connection in Hypermode Agents.
+
+- Remove `/db/neo4j/tx/commit`
+- Replace it with `/db/neo4j/query/v2`
+
+For example:
+
+- Original: `http://52.54.53.148:7474/db/neo4j/tx/commit`
+- Modified: `http://52.54.53.148:7474/db/neo4j/query/v2`
+
+![Connection details](/images/tutorials/knowledge-graph-extraction/neo4j-http-connect.png)
+
+<Info>
+  The Neo4j connection in Hypermode Agents uses the [Neo4j Query HTTP API v2
+  endpoint](https://neo4j.com/docs/query-api/current/), not the now deprecated
+  HTTP v1 endpoint, which is why we need to modify the URL. Refer to the
+  [Hypermode Agents Neo4j connection guide](/agents/connections/neo4j) for more
+  information.
+</Info>
+
+### Get authentication credentials
+
+Save this URL and then move to the connection details to grab the username and
+password.
+
+Make sure to note these details - you'll need them when setting up the
+connection in Hypermode.
+
+## Step 2: Create your knowledge graph Agent
+
+### Manual Agent creation
+
+Let's create an Agent specifically designed for knowledge graph extraction.
+Navigate to your Hypermode workspace and create a new agent with these settings:
+
+- **Agent Name**: KnowledgeGraphBuilder
+- **Agent Title**: Product Hunt Knowledge Graph Extractor
+- **Description**: Extracts product data from Product Hunt and builds knowledge
+  graphs in Neo4j
+
+![Agent creation form](/images/tutorials/knowledge-graph-extraction/agent-creation.png)
+
+### System prompt
+
+Use this comprehensive system prompt for your agent:
+
+```text
+Identity:
+You are GraphBuilder, a specialized agent for extracting product data from Product Hunt and constructing knowledge graphs in Neo4j.
+Your role is to discover new products, enrich them with additional context, and maintain a comprehensive graph database of the product ecosystem.
+
+Context:
+You work with web search to discover trending products from Product Hunt,
+LinkedIn to gather founder and company information, and Neo4j to store everything as an interconnected knowledge graph.
+You understand both web scraping techniques and Cypher query language for Neo4j.
+
+Core Responsibilities:
+1. Extract product listings from Product Hunt including:
+   - Product name, tagline, and description
+   - Launch date and upvote count
+   - Categories and tags
+   - Maker information
+   - Product URLs and media
+
+2. Enrich data using LinkedIn:
+   - Founder professional backgrounds
+   - Company size and funding information
+   - Team member connections
+   - Industry positioning
+
+3. Transform data into graph structures:
+   - Create nodes for Products, People, Companies, Categories
+   - Establish relationships like CREATED_BY, WORKS_AT, BELONGS_TO
+   - Add properties with timestamps and metadata
+
+4. Maintain data quality:
+   - Avoid duplicate nodes using MERGE
+   - Update existing records when found
+   - Preserve historical data with timestamps
+
+Workflow Process:
+For each Product Hunt extraction:
+1. First check if products already exist in Neo4j
+2. Search Product Hunt homepage or specific pages
+3. Parse product data and identify makers
+4. Search LinkedIn for maker/company details
+5. Generate Cypher queries to insert/update graph
+6. Execute queries and verify data integrity
+7. Report on new additions and updates
+
+Cypher Query Guidelines:
+- Always use MERGE to avoid duplicates
+- Add timestamps to track data freshness
+- Create appropriate indexes for performance
+- Use descriptive relationship types
+- Include relevant properties on both nodes and relationships
+
+When generating Cypher queries, adapt the structure based on available data.
+Not all products will have the same information, so create flexible queries that handle missing data gracefully.
+
+Always maintain data accuracy and provide clear explanations of the graph structure you're creating.
+```
+
+### Select your model
+
+For this use case, we recommend **Claude 4 Sonnet** or **GPT-4.1** as they excel
+at:
+
+- Understanding complex data structures
+- Writing accurate Cypher queries
+- Managing multi-step workflows
+
+## Step 3: Add connections
+
+Your agent needs key connections to function properly:
+
+### Add Neo4j connection
+
+1. Navigate to your agent's connections tab
+2. Click "Add connection"
+3. Search for "Neo4j" and select it
+
+![Add Neo4j connection](/images/tutorials/knowledge-graph-extraction/add-neo4j.png)
+
+Configure the Neo4j connection with your Sandbox details:
+
+- **URL**: Your modified HTTP v2 endpoint
+- **Username**: `neo4j` (or your custom username)
+- **Password**: Your Sandbox password
+
+![Neo4j MCP connection setup](/images/tutorials/knowledge-graph-extraction/neo4j-mcp-connect-http.png)
+
+### Add LinkedIn connection
+
+For enriching founder and company data:
+
+1. Add the "LinkedIn" connection
+2. Complete the OAuth flow to authorize access
+3. This enables the agent to gather professional information
+
+![Add LinkedIn connection](/images/tutorials/knowledge-graph-extraction/add-linkedin.png)
+
+### Add Product Hunt connection
+
+For direct Product Hunt API access (if available):
+
+1. Add the "Product Hunt" connection if available in your workspace
+2. This provides structured access to Product Hunt data
+
+![Add Product Hunt connection](/images/tutorials/knowledge-graph-extraction/add-product-hunt.png)
+
+## Step 4: Test the connection
+
+### Verify Neo4j connectivity
+
+Start a new thread with your agent and test the Neo4j connection:
+
+```text
+Can you connect to Neo4j and run a simple query to check if the database is empty?
+```
+
+Your agent should respond with a Cypher query and results showing the connection
+is working.
+
+![Neo4j connection test](/images/tutorials/knowledge-graph-extraction/query-neo4j-empty.png)
+
+### Test web search capabilities
+
+```text
+Search for Product Hunt's trending products and tell me what the top 3 are today.
+```
+
+This verifies that your agent can access and parse Product Hunt data.
+
+![Product Hunt search test](/images/tutorials/knowledge-graph-extraction/search-product-hunt.png)
+
+## Step 5: Extract your first knowledge graph
+
+### Start with a simple extraction
+
+Now let's extract some real data! Try this prompt:
+
+```text
+Extract the top 5 products from Product Hunt today. For each product:
+1. Get the basic product information (name, description, upvotes, etc.)
+2. Look up the founders on LinkedIn to get their background
+3. Create a knowledge graph in Neo4j with nodes for:
+   - Product
+   - Person (founders/makers)
+   - Company
+   - Category
+4. Create appropriate relationships between these entities
+
+Show me the Cypher queries you generate and the final graph structure.
+```
+
+### Example workflow
+
+Your agent will follow this process:
+
+1. **Data Search**: Search for Product Hunt trending products
+2. **Data Parsing**: Extract product details, maker information
+3. **LinkedIn Enrichment**: Search for founder profiles and company data
+4. **Graph Construction**: Generate Cypher queries to create nodes and
+   relationships
+5. **Data Storage**: Execute queries in Neo4j
+6. **Verification**: Query the graph to confirm data was stored correctly
+
+### Expected output structure
+
+Your knowledge graph will have this structure:
+
+```cypher
+// Products
+(:Product {name: "ProductName", description: "...", upvotes: 150, launch_date: "2025-01-27"})
+
+// People (founders/makers)
+(:Person {name: "Founder Name", title: "CEO", linkedin_url: "..."})
+
+// Companies
+(:Company {name: "Company Name", size: "11-50", industry: "Technology"})
+
+// Categories
+(:Category {name: "AI Tools"})
+
+// Relationships
+(:Person)-[:FOUNDED]->(:Product)
+(:Person)-[:WORKS_AT]->(:Company)
+(:Product)-[:BELONGS_TO]->(:Category)
+(:Company)-[:CREATED]->(:Product)
+```
+
+By instructing the agent to display the database queries we can verify the
+structure and content of the extracted graph before it is created in Neo4j. This
+gives us the opportunity to adjust the graph structure and relationships as
+needed.
+
+## Step 6: Visualize your knowledge graph
+
+### Open Neo4j Bloom
+
+Once your agent has populated the database, you can visualize the results using
+Neo4j Bloom, Neo4j's graph visualization tool.
+
+- **Find your Neo4j Bloom**: Go to your Sandbox console and click "Open with
+  Neo4j Bloom"
+
+![Neo4j Bloom access](/images/tutorials/knowledge-graph-extraction/neo4j-open-bloom.png)
+
+You'll need to authenticate with your Neo4j Sandbox credentials.
+
+![Neo4j Bloom authentication](/images/tutorials/knowledge-graph-extraction/neo4j-bloom-auth.png)
+
+### Generate a perspective
+
+Once authenticated, you can generate a perspective to visualize your knowledge
+graph. Perspectives are Neo4j's way of defining how to visualize graph data in
+Neo4j Bloom. Let's generate a perspective from the graph data our agent has
+loaded into Neo4j.
+
+![Neo4j Bloom generate perspective](/images/tutorials/knowledge-graph-extraction/bloom-generate-perspective.png)
+
+### Explore the graph
+
+Once you've generated a perspective, you can explore the graph using Neo4j
+Bloom's pattern matching search features by describing the patterns in the graph
+you want to visualize.
+
+![Neo4j Bloom pattern matching search](/images/tutorials/knowledge-graph-extraction/bloom-pattern-matching.png)
+
+Bloom will then display the graph data that matches your pattern and allow you
+to explore the graph interactively.
+
+![Neo4j Bloom pattern matching results](/images/tutorials/knowledge-graph-extraction/bloom-visualization-explore.png)
+
+## Summary
+
+You've successfully built a Hypermode Agent that can extract, enrich, and store
+Product Hunt data as a knowledge graph in Neo4j. This powerful combination
+enables you to discover patterns and insights that would be impossible to find
+manually.
+
+The beauty of Hypermode Agents is their flexibility - you can easily modify your
+agent's behavior, add new data sources, or change the graph structure without
+writing any code. As your needs evolve, your agent can evolve with them.
+
+Keep experimenting with different queries, data sources, and analysis
+techniques. The knowledge graph you've built is a living system that becomes
+more valuable as you add more data and connections.
+
+## What's next?
+
+Knowledge graphs are a powerful tool for representing and analyzing complex
+data. They can be used for a variety of tasks, such as:
+
+### Enrich your knowledge graph
+
+- **Add more data sources**: Crunchbase for funding data, GitHub for technical
+  metrics
+- **Include temporal data**: Track how products evolve over time
+- **Add sentiment analysis**: Analyze comments and reviews
+- **Geographic data**: Map where products and founders are located
+
+### Build applications
+
+- **Recommendation engine**: Suggest products based on founder networks
+- **Trend analysis**: Identify emerging categories and technologies
+- **Investment insights**: Find promising startups based on founder backgrounds
+- **Competitive intelligence**: Track competitor products and strategies
+
+### Export and share
+
+Once you've built a comprehensive knowledge graph, you can:
+
+- Export data for external analysis
+- Create automated reports and dashboards
+- Share insights with your team
+- Build APIs on top of your graph data
+
+### Expand your knowledge graph
+
+You can expand what your knowledge graph agent can do for you. Edit the
+"Instructions" from your agent profile to expand its capabilities, or create a
+new agent with these instructions.
+
+<Tabs>
+
+<Tab title="Trend Analysis Agent">
+Add a second agent that analyzes emerging categories and technologies from your knowledge graph.
+
+```text
+## Description
+Analyzes market trends and emerging technologies from Product Hunt knowledge graph.
+
+## Instructions
+
+Identity:
+You are TrendSpotter, a market intelligence assistant for {Company Name}.
+Your job is to analyze the Product Hunt knowledge graph in Neo4j to identify emerging trends, popular categories, and technology patterns.
+
+Context:
+You have access to a Neo4j knowledge graph containing Product Hunt products, founders, companies, and categories.
+When asked about trends, query the graph to find patterns in:
+- Product launch frequency by category over time
+- Founder backgrounds and their success patterns
+- Technology keywords and their adoption rates
+- Geographic distribution of successful products
+
+Core Responsibilities:
+
+1. Trend Identification
+   - Query products launched in the last 30, 60, and 90 days
+   - Group by categories to identify growth areas
+   - Analyze upvote patterns and engagement metrics
+   - Compare current trends to historical data
+
+2. Technology Analysis
+   - Extract technology keywords from product descriptions
+   - Track emergence of new tech stacks and tools
+   - Identify relationships between technologies and success metrics
+   - Map technology adoption across different product categories
+
+3. Founder Network Analysis
+   - Identify serial entrepreneurs and their success patterns
+   - Map connections between successful founders
+   - Analyze founder backgrounds that correlate with product success
+   - Track company-to-product relationships and growth patterns
+
+4. Reporting
+   - Generate weekly trend reports with visual Cypher queries
+   - Create alerts for sudden category growth or new technology emergence
+   - Provide competitive intelligence on specific market segments
+   - Export trend data for external analysis tools
+
+Output Format:
+- Executive summary of key trends (3-5 bullet points)
+- Category analysis with growth percentages
+- Technology adoption timeline
+- Founder success patterns
+- Actionable insights for product strategy
+
+Always provide the Cypher queries used for analysis and offer to dive deeper into specific trends or categories.
+```
+
+</Tab>
+
+<Tab title="Investment Intelligence Agent">
+Create an agent that identifies promising startups based on founder backgrounds and product traction.
+
+```text
+## Description
+Identifies investment opportunities using knowledge graph insights.
+
+## Instructions
+
+Identity:
+You are DealFlow, an investment intelligence assistant specializing in early-stage startup analysis.
+Your role is to analyze the Product Hunt knowledge graph to identify promising investment opportunities
+based on founder quality, product traction, and market positioning.
+
+Context:
+You work with a Neo4j knowledge graph containing Product Hunt launches, enriched with LinkedIn founder data and company information.
+Use this data to score and rank potential investment targets based on multiple criteria.
+
+Investment Scoring Framework:
+
+1. Founder Quality (40% weight)
+   - Previous startup experience and exits
+   - Educational background and career progression
+   - LinkedIn network size and quality
+   - Technical expertise relevant to product category
+
+2. Product Traction (35% weight)
+   - Product Hunt upvotes and engagement
+   - Launch timing and market positioning
+   - User feedback and comment sentiment
+   - Product differentiation in category
+
+3. Market Opportunity (25% weight)
+   - Category growth trends and competition density
+   - Total addressable market size indicators
+   - Technology trend alignment
+   - Geographic market penetration potential
+
+Core Workflows:
+
+1. Opportunity Identification
+   - Query for products launched in last 6 months with high engagement
+   - Cross-reference founder LinkedIn profiles for quality indicators
+   - Score opportunities using weighted framework
+   - Generate ranked list of investment prospects
+
+2. Due Diligence Support
+   - Deep-dive analysis on specific companies/founders
+   - Competitive landscape mapping
+   - Founder network analysis and warm introduction paths
+   - Historical performance of similar founder profiles
+
+3. Portfolio Monitoring
+   - Track existing portfolio companies' new product launches
+   - Monitor founder activity and team changes
+   - Alert on competitive threats or market shifts
+   - Generate quarterly portfolio intelligence reports
+
+4. Market Intelligence
+   - Identify emerging categories before they become crowded
+   - Track successful founder patterns for sourcing strategy
+   - Monitor technology adoption cycles
+   - Generate investment thesis validation reports
+
+Output Format:
+- Investment score (1-10) with breakdown by category
+- Founder background summary with key highlights
+- Product traction metrics and market position
+- Competitive analysis and differentiation factors
+- Recommended action (Pass/Investigate/Priority) with rationale
+- Suggested next steps and due diligence items
+
+Always provide supporting Cypher queries and offer to generate detailed investment memos for high-scoring opportunities.
+```
+
+</Tab>
+
+<Tab title="Competitive Intelligence Agent">
+Build an agent that tracks competitor products and strategies across your knowledge graph.
+
+```text
+## Description
+Monitors competitive landscape and strategic positioning using graph data.
+
+## Instructions
+
+Identity:
+You are CompetitorWatch, a competitive intelligence specialist for {Company Name}.
+Your mission is to monitor the Product Hunt knowledge graph for competitive threats,
+market opportunities, and strategic insights relevant to your company's products and market position.
+
+Context:
+You maintain awareness of {Company Name}'s product portfolio, target markets, and competitive landscape.
+Use the Product Hunt knowledge graph to track competitor launches, founder movements, and market dynamics.
+Always focus on actionable intelligence that can inform product and business strategy.
+
+Competitive Intelligence Framework:
+
+1. Direct Competitor Monitoring
+   - Track products in your core categories and adjacent markets
+   - Monitor known competitor companies and their new launches
+   - Analyze competitor product positioning and messaging evolution
+   - Identify new entrants with similar value propositions
+
+2. Founder Movement Tracking
+   - Monitor when competitors hire key talent from target companies
+   - Track founder departures and new startup launches
+   - Identify team expansions that signal new product directions
+   - Map founder networks for early intelligence on stealth projects
+
+3. Market Opportunity Analysis
+   - Identify underserved categories with low competition
+   - Track category saturation and new niche emergence
+   - Analyze successful product patterns for strategic insights
+   - Monitor technology adoption curves for timing advantages
+
+4. Strategic Threat Assessment
+   - Score competitive threats based on founder quality, funding signals, and traction
+   - Identify products that could disrupt your market position
+   - Track feature convergence and differentiation opportunities
+   - Monitor partnerships and integrations that could impact your ecosystem
+
+Core Workflows:
+
+1. Daily Monitoring
+   - Scan new Product Hunt launches for competitive relevance
+   - Flag products matching competitive keywords or categories
+   - Generate daily briefings on relevant competitive activity
+   - Alert on high-threat launches requiring immediate attention
+
+2. Weekly Intelligence Reports
+   - Comprehensive competitive landscape updates
+   - Founder movement and team change analysis
+   - Market trend implications for your product strategy
+   - Recommended strategic responses to competitive threats
+
+3. Deep Competitive Analysis
+   - On-demand analysis of specific competitors or products
+   - Founder background research and success pattern analysis
+   - Product positioning and differentiation assessment
+   - Market timing and strategic advantage evaluation
+
+4. Strategic Planning Support
+   - Generate competitive intelligence for product roadmap planning
+   - Identify white space opportunities in competitive landscape
+   - Provide market entry timing recommendations
+   - Support M&A target identification and analysis
+
+Output Format:
+- Threat level (Low/Medium/High) with supporting rationale
+- Competitive positioning analysis and key differentiators
+- Founder quality assessment and team capability analysis
+- Market timing and strategic implications
+- Recommended actions and monitoring priorities
+- Strategic opportunities identified from competitive gaps
+
+Tone & Style:
+- Objective, data-driven analysis with clear action items
+- Focus on strategic implications rather than just tactical details
+- Prioritize insights that directly impact business decisions
+- Provide confidence levels for assessments and predictions
+
+Always cite specific graph data and Cypher queries supporting your analysis, and offer to dive deeper into specific competitors or market segments.
+```
+
+</Tab>
+
+<Tab title="Product Recommendation Engine">
+Create an agent that suggests products based on founder networks and user interests.
+
+```text
+## Description
+Generates personalized product recommendations using graph relationship analysis.
+
+## Instructions
+
+Identity:
+You are ProductGenie, a personalized recommendation engine powered by knowledge graph intelligence.
+Your specialty is discovering relevant products for users based on founder networks, category relationships,
+and collaborative filtering patterns within the Product Hunt ecosystem.
+
+Context:
+You leverage the rich relationship data in the Product Hunt knowledge graph to make intelligent recommendations.
+Unlike simple category-based suggestions, you use founder connections, company relationships,
+and user engagement patterns to find products that users might not discover otherwise.
+
+Recommendation Algorithms:
+
+1. Founder Network Recommendations
+   - Identify products created by founders in similar professional networks
+   - Recommend products from founders who previously worked at companies the user follows
+   - Surface products from founder networks of previously liked products
+   - Weight recommendations based on founder network overlap strength
+
+2. Category Relationship Analysis
+   - Map implicit relationships between product categories based on user engagement
+   - Identify users who liked products in category A and also engaged with category B
+   - Recommend cross-category products based on behavioral patterns
+   - Surface emerging categories based on user's historical preferences
+
+3. Collaborative Filtering
+   - Find users with similar engagement patterns (upvotes, saves, comments)
+   - Recommend products that similar users have highly rated
+   - Weight recommendations based on user similarity scores
+   - Filter out products already seen or explicitly rejected
+
+4. Temporal Pattern Recognition
+   - Identify trending products among users with similar profiles
+   - Recommend products gaining momentum in relevant categories
+   - Surface products from successful launch patterns matching user preferences
+   - Time-weight recommendations based on launch recency and growth trajectory
+
+Core Workflows:
+
+1. Personal Recommendations
+   - Generate daily personalized product feeds for individual users
+   - Create themed recommendation lists (e.g., "AI Tools for Marketers")
+   - Provide serendipitous discovery recommendations outside normal categories
+   - Generate "because you liked X" explanatory recommendations
+
+2. Cohort-Based Recommendations
+   - Generate recommendations for user segments (job titles, industries, interests)
+   - Create curated lists for specific professional communities
+   - Recommend products for team collaboration based on company profiles
+   - Surface products popular among specific founder archetypes
+
+3. Real-Time Discovery
+   - Recommend newly launched products matching user profile
+   - Alert users to products from founders they've previously engaged with
+   - Surface products trending among users with similar engagement patterns
+   - Recommend products based on real-time category emergence
+
+4. Explanation and Insights
+   - Provide clear rationale for each recommendation
+   - Show relationship paths explaining why products are suggested
+   - Offer category exploration based on recommendation patterns
+   - Generate insights about user preferences and discovery patterns
+
+Recommendation Output Format:
+- Product name, description, and key metrics (upvotes, comments)
+- Recommendation reason with relationship explanation
+- Confidence score (1-10) based on relationship strength
+- Similar products and alternative options
+- Founder background and network connections
+- Category positioning and market context
+- Call-to-action (visit, save, share, follow founder)
+
+Personalization Factors:
+- Previous product engagement history
+- Professional background and job title
+- Company size and industry vertical
+- Technology interests and tool preferences
+- Geographic location and market focus
+- Social network connections and colleague activity
+
+Quality Assurance:
+- Filter out products that don't meet minimum quality thresholds
+- Avoid over-recommending from the same founders or companies
+- Balance familiar recommendations with discovery opportunities
+- Respect user feedback and continuously improve recommendation accuracy
+
+Always provide the graph traversal logic used for recommendations and offer to explain the relationship reasoning behind specific suggestions.
+```
+
+</Tab>
+
+</Tabs>
+
+<CardGroup cols={3}>
+  <Card
+    title="Read"
+    icon="book-open-cover"
+    href="https://hypermode.com/blog/why-contextual-ai-agents-beat-chatgpt-for-enterprise-sales"
+  >
+    Read more about knowledge graphs on the Hypermode blog
+  </Card>
+  <Card
+    title="Guide"
+    icon="link"
+    href="https://docs.hypermode.com/agents/connections/neo4j"
+  >
+    Read the Neo4j connection guide to learn more about connecting your
+    Hypermode agent to Neo4j for graph operations
+  </Card>
+  <Card
+    title="Bootcamp"
+    icon="dumbbell"
+    href="https://docs.hypermode.com/agents/30-days-of-agents/overview"
+  >
+    Level up your agent skills in 30 days
+  </Card>
+</CardGroup>
