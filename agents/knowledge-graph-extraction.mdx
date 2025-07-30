@@ -257,6 +257,8 @@ Can you connect to Neo4j and run a simple query to check if the database is empt
 Your agent should respond with a Cypher query and results showing the connection
 is working.
 
+![Neo4j connection test](/images/tutorials/knowledge-graph-extraction/query-neo4j-empty.png)
+
 ### Test web search capabilities
 
 ```text
@@ -264,6 +266,8 @@ Search for Product Hunt's trending products and tell me what the top 3 are today
 ```
 
 This verifies that your agent can access and parse Product Hunt data.
+
+![Product Hunt search test](/images/tutorials/knowledge-graph-extraction/search-product-hunt.png)
 
 ## Step 5: Extract your first knowledge graph
 
@@ -321,28 +325,48 @@ Your knowledge graph will have this structure:
 (:Company)-[:CREATED]->(:Product)
 ```
 
+By instructing the agent to display the database queries we can verify the
+structure and content of the extracted graph before it is created in Neo4j. This
+gives us the opportunity to adjust the graph structure and relationships as
+needed.
+
 ## Step 6: Visualize your knowledge graph
 
-### Open Neo4j Browser
+### Open Neo4j Bloom
 
-Once your agent has populated the database, you can visualize the results:
+Once your agent has populated the database, you can visualize the results using
+Neo4j Bloom, Neo4j's graph visualization tool.
 
-1. **Find your Neo4j Browser**: Go to your Sandbox console and click "Open with
-   Neo4j Browser"
+- **Find your Neo4j Bloom**: Go to your Sandbox console and click "Open with
+  Neo4j Bloom"
 
-![Neo4j Browser access](/images/tutorials/knowledge-graph-extraction/neo4j-find-browser.png)
+![Neo4j Bloom access](/images/tutorials/knowledge-graph-extraction/neo4j-open-bloom.png)
 
-2. **Run a visualization query**:
+You'll need to authenticate with your Neo4j Sandbox credentials.
 
-```cypher
-MATCH (n) RETURN n LIMIT 50
-```
+![Neo4j Bloom authentication](/images/tutorials/knowledge-graph-extraction/neo4j-bloom-auth.png)
 
-![Neo4j Browser query](/images/tutorials/knowledge-graph-extraction/neo4j-browser-query.png)
+### Generate a perspective
 
-### Explore relationships
+Once authenticated, you can generate a perspective to visualize your knowledge
+graph. Perspectives are Neo4j's way of defining how to visualize graph data in
+Neo4j Bloom. Let's generate a perspective from the graph data our agent has
+loaded into Neo4j.
 
-[Content to be added - queries and graph exploration examples]
+![Neo4j Bloom generate perspective](/images/tutorials/knowledge-graph-extraction/bloom-generate-perspective.png)
+
+### Explore the graph
+
+Once you've generated a perspective, you can explore the graph using Neo4j
+Bloom's pattern matching search features by describing the patterns in the graph
+you want to visualize.
+
+![Neo4j Bloom pattern matching search](/images/tutorials/knowledge-graph-extraction/bloom-pattern-matching.png)
+
+Bloom will then display the graph data that matches your pattern and allow you
+to explore the graph interactively.
+
+![Neo4j Bloom pattern matching results](/images/tutorials/knowledge-graph-extraction/bloom-visualization-explore.png)
 
 ## Next steps
 
@@ -385,7 +409,27 @@ Keep experimenting with different queries, data sources, and analysis
 techniques. The knowledge graph you've built is a living system that becomes
 more valuable as you add more data and connections.
 
----
-
-_Ready to build more advanced knowledge graphs? Explore our other tutorials or
-join the Hypermode community to share your discoveries._
+<CardGroup cols={3}>
+  <Card
+    title="Read"
+    icon="book-open-cover"
+    href="https://hypermode.com/blog/why-contextual-ai-agents-beat-chatgpt-for-enterprise-sales"
+  >
+    Read more about knowledge graphs on the Hypermode blog
+  </Card>
+  <Card
+    title="Guide"
+    icon="link"
+    href="https://docs.hypermode.com/agents/connections/neo4j"
+  >
+    Read the Neo4j connection guide to learn more about connecting your
+    Hypermode agent to Neo4j for graph operations
+  </Card>
+  <Card
+    title="Bootcamp"
+    icon="dumbbell"
+    href="https://docs.hypermode.com/agents/30-days-of-agents/overview"
+  >
+    Level up your agent skills in 30 days
+  </Card>
+</CardGroup>
