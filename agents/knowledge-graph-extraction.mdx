@@ -29,13 +29,15 @@ By the end of this tutorial, you'll have an Agent that:
 
 ## Prerequisites
 
-- A Hypermode account
-- Neo4j AuraDB instance (free tier works fine)
+- A [Hypermode Pro](https://hypermode.com/login) account
+- A [Neo4j Sandbox](https://sandbox.neo4j.com/) or AuraDB instance (free tier
+  works fine)
 - Basic understanding of graph databases (helpful but not required)
 
 ## What's a Hypermode Agent?
 
-Hypermode Agents are AI-powered assistants that can understand instructions,
+[Hypermode Agents](/agents/overview) are domain specific AI-powered assistants
+created with natural language instructions that can understand instructions,
 interact with external services, and perform complex tasks on your behalf.
 Unlike traditional chatbots, Hypermode Agents can actually take actions—like
 scraping websites, querying databases, and transforming data.
@@ -101,7 +103,8 @@ you get to making a database, select a blank sandbox.
 ### Get your connection details
 
 Once created (it may take a moment), you can navigate to the HTTP tab and grab
-the URL. Note you will have to modify this to use the Neo4j HTTP v2 endpoint:
+the URL. Note you will have to modify this to use the Neo4j HTTP v2 endpoint
+when adding the Neo4j connection in Hypermode Agents.
 
 - Remove `/db/neo4j/tx/commit`
 - Replace it with `/db/neo4j/query/v2`
@@ -112,6 +115,14 @@ For example:
 - Modified: `http://52.54.53.148:7474/db/neo4j/query/v2`
 
 ![Connection details](/images/tutorials/knowledge-graph-extraction/neo4j-http-connect.png)
+
+<Info>
+  The Neo4j connection in Hypermode Agents uses the [Neo4j Query HTTP API v2
+  endpoint](https://neo4j.com/docs/query-api/current/), not the now deprecated
+  HTTP v1 endpoint, which is why we need to modify the URL. Refer to the
+  [Hypermode Agents Neo4j connection guide](/agents/connections/neo4j) for more
+  information.
+</Info>
 
 ### Get authentication credentials
 
