@@ -56,6 +56,7 @@
                 "pages": [
                   "first-hypermode-agent",
                   "first-sales-agent",
+                  "agents/knowledge-graph-extraction",
                   "semantic-search"
                 ]
               }
