@@ -1,0 +1,499 @@
+---
+title: Your First Operations Agent
+description:
+  "Build a Financial Operations Agent in 15 minutes using Stripe and natural
+  language—no code required"
+sidebarTitle: "Your First Operations Agent"
+---
+
+In this tutorial, you'll build your first AI operations agent—a financial
+operations agent that processes payments, manages refunds, and analyzes
+financial data using Stripe through natural language commands. When you're done,
+you'll understand how Hypermode Agents enables domain-specific automation
+through MCP server connections.
+
+_Who is this for?_ Anyone new to Hypermode who wants to quickly build and deploy
+an operations-focused AI agent that can handle real financial workflows—no prior
+experience required.
+
+Along the way we'll explore how Hypermode Agents transforms natural language
+into powerful financial operations, including the concepts of
+[connections](/agents/connections) and [threads](/agents/work), specifically
+applied to payment processing and financial data management.
+
+## Prerequisites
+
+- A [Hypermode Pro workspace](https://hypermode.com/login)
+- A [Stripe account](https://stripe.com) (test mode is perfect for this
+  tutorial)
+- Access to your operations tools (for example, internal knowledge base) - we'll
+  use Notion for this tutorial
+- Basic familiarity with modern chat interfaces (no coding required)
+- Estimated time: 15 minutes
+
+## Step 1: Sign in and open your workspace
+
+Head to [hypermode.com](https://hypermode.com), sign in, and create your first
+workspace if you haven't already.
+
+## Step 2: Open Hypermode Concierge + Agent builder
+
+In the left sidebar, click the [threads](/agents/work) icon.
+
+Select the "Create new" option and select the
+[Hypermode Concierge + Agent builder](/agents/create-agent#build-a-new-agent-with-concierge).
+This is Hypermode's AI-powered agent that transforms natural language
+descriptions into fully functional agents that can work with specialized tools
+like Stripe.
+
+![Create new agent](/images/tutorials/first-operations-agent/create-new.png)
+
+## Step 3: Describe the job
+
+In plain English, type something like:
+
+```text
+Let's build a financial operations agent that can process payments, handle refunds,
+create invoices, and analyze financial data using Stripe. It should be able to
+work with our internal policies from Notion to make decisions about refunds.
+```
+
+Concierge will ask clarifying questions about your specific operations needs,
+draft an initial system prompt, and suggest the Stripe connection along with any
+other tools you mention.
+
+![Create new agent with Concierge](/images/tutorials/first-operations-agent/create-new-concierge.png)
+
+## Step 4: Refine and create your agent
+
+Follow the Concierge agent's guided steps to fully specify your agent's
+operational scope. The Concierge will help you define what financial operations
+your agent should handle, from simple payment processing to complex refund
+policy decisions.
+
+Once you've fully specified the details, your new operations agent is created
+and ready to connect to Stripe.
+
+![Hypermode Create Agent](/images/tutorials/first-operations-agent/hypermode-create-agent.png)
+
+Your agent will now appear in the Agents page, ready to be configured with
+Stripe access.
+
+![Hypermode Agent page](/images/tutorials/first-operations-agent/hypermode-agent-page.png)
+
+## Step 5: Review your agent details
+
+You can see the details of your agent, including the system prompt that
+Concierge created for financial operations.
+
+![Hypermode Agent details](/images/tutorials/first-operations-agent/hypermode-agent-details.png)
+
+## Step 6: Refine your agent instructions
+
+You can review the Instructions. Hypermode Agents behave as the "system prompt"
+tells them. Edit the prompt by pasting the template below into the
+"Instructions" field:
+
+```text
+## Description
+Handles financial operations, payment processing, and refund management using Stripe
+
+## Instructions
+Identity: Hypermode Financial Operations AI Assistant
+
+System Prompt:
+You are a financial operations AI assistant for {Company}, specializing in automated payment processing,
+refund management, and financial data analysis using Stripe.
+
+Your core capabilities include:
+- Processing payments and creating payment intents
+- Managing customer subscriptions and billing
+- Analyzing transaction data and generating financial reports
+- Applying company refund policies to determine refund eligibility
+- Creating and managing invoices
+- Handling dispute and chargeback information
+
+Your Workflow:
+
+1. Payment Processing
+- When asked to process a payment, always confirm the amount, currency, and customer details
+- Use Stripe's payment processing capabilities to create payment intents
+- Provide clear confirmation of successful transactions with transaction IDs
+- Handle failed payments gracefully with clear explanations
+
+2. Refund Management
+- Before processing any refund, consult our internal refund policy document: {link to Notion refund policy}
+- Analyze the refund request against our policies (timeframe, reason, customer history)
+- Provide detailed reasoning for refund decisions
+- Process approved refunds through Stripe with proper documentation
+- For denied refunds, explain the policy violation clearly
+
+3. Invoice Operations
+- Create detailed invoices with line items, tax calculations, and due dates
+- Send invoices to customers through Stripe's invoice system
+- Track invoice status and send payment reminders
+- Generate invoice reports for accounting purposes
+
+4. Financial Analysis
+- Query Stripe data to provide insights on revenue, transaction volumes, and trends
+- Generate reports on successful payments, refunds, and failed transactions
+- Analyze customer payment patterns and subscription metrics
+- Provide actionable insights for business decision-making
+
+5. Error Handling & Communication
+- Always provide clear, actionable error messages when operations fail
+- Suggest alternative solutions when primary approaches don't work
+- Maintain detailed logs of all financial operations for audit purposes
+- Escalate complex issues to human operators when appropriate
+
+Security & Compliance:
+- Never expose sensitive payment information in responses
+- Always use Stripe's test mode for tutorial and development work
+- Confirm destructive operations (large refunds, subscription cancellations) before execution
+- Maintain PCI compliance in all payment handling operations
+
+Tone & Style:
+- Be precise and professional when handling financial operations
+- Provide clear confirmations and receipts for all transactions
+- Use {Company}-specific language and policies
+- Always prioritize accuracy and security over speed
+
+Example Output Structure:
+💳 Payment Processed Successfully 💳
+- Transaction ID: [ID]
+- Amount: $[amount] [currency]
+- Customer: [customer_name]
+- Status: [status]
+
+📊 Financial Analysis Report 📊
+- Total Revenue: $[amount]
+- Transaction Count: [count]
+- Success Rate: [percentage]
+- Key Insights: [bullet points]
+
+🔄 Refund Decision 🔄
+- Request: [summary]
+- Policy Check: [result with reasoning]
+- Action: [approved/denied]
+- Next Steps: [instructions]
+
+Always ask if the user needs additional financial reports, policy clarifications, or transaction details.
+```
+
+Press **Save**.
+
+## Step 7: Add the Stripe connection
+
+Let's configure the Stripe connection so your agent can access your payment
+processing capabilities. Select the **"Add connection"** button on the
+[Connections](/agents/connections) tab.
+
+![Connect your agent](/images/tutorials/first-operations-agent/add-connection.png)
+
+Search for and select **Stripe** from the available connections. You'll need to
+authorize with your Stripe account credentials.
+
+For this tutorial, we'll use Stripe's test mode. When prompted for your API key,
+use your test key (starts with `sk_test_`).
+
+<Warning>
+  We recommend creating a Stripe Sandbox environment for testing and development
+  purposes and creating a restricted API key for your agent. This will allow you
+  to test your agent without impacting production data in your Stripe account.
+  Refer to the [Hypermode Stripe connection guide](/agents/connections/stripe)
+  for connection details.
+</Warning>
+
+You can also add additional connections for your operations workflow:
+
+- **Knowledge base** (Notion or Google Docs) for _refund policies and
+  procedures_
+- **Internal communications** (Slack, Teams) for _notifications and approvals_
+- **Accounting tools** (QuickBooks, Xero) for _financial record keeping_
+
+![Hypermode Connections](/images/tutorials/first-operations-agent/hypermode-connections.png)
+
+## Step 8: Test with payment operations
+
+Back in threads, let's test your operations agent with some real scenarios. Try
+these example requests:
+
+### Create a test payment
+
+```text
+Can you create a payment intent for $50.00 USD for customer john@example.com?
+```
+
+Your agent will use Stripe to create the payment intent and provide you with the
+details.
+
+![Test payment creation](/images/tutorials/first-operations-agent/test-payment.png)
+
+### Analyze financial data
+
+```text
+Can you show me a summary of all transactions from the past 30 days?
+```
+
+Watch as your agent queries Stripe's API to gather transaction data and provide
+insights.
+
+![Financial analysis](/images/tutorials/first-operations-agent/financial-analysis.png)
+
+### Process a refund request
+
+Let's test your agent's refund processing capabilities and the ability for the
+agent to access knowledge base information. Our refund policy is stored in an
+internal Notion page. By granting our agent access to Notion this policy can be
+retrieved and applied by our agent.
+
+![Refund policy](/images/tutorials/first-operations-agent/refund-policy.png)
+
+```text
+A customer is requesting a refund for transaction pi_3Rq5PfGb0nZyxz610ZOBBXqt.
+They purchased our premium plan 3 days ago but say it doesn't meet their needs.
+```
+
+Your agent will check your refund policies and make a decision based on your
+company guidelines.
+
+![Refund processing](/images/tutorials/first-operations-agent/refund-processing.png)
+
+## Step 9: Set up your Stripe test environment
+
+To fully test your operations agent, let's populate your Stripe test environment
+with sample data. Ask your agent:
+
+```text
+Can you help me set up some test data in Stripe? I need a few customers,
+some sample transactions, and maybe a subscription or two for testing.
+```
+
+Your agent will create realistic test data including:
+
+- Sample customers with various profiles
+- Test payment methods using Stripe's test card numbers
+- Sample successful and failed transactions
+- Basic subscription plans
+
+## What's next?
+
+You can expand what your operations agent can do for you. Edit the
+"Instructions" from your agent profile to expand its capabilities, or create
+specialized agents for different operational workflows.
+
+<Tabs>
+
+<Tab title="Subscription Management">
+Create a specialized agent for recurring billing and subscription operations.
+
+```text
+## Description
+Manages customer subscriptions, billing cycles, and recurring payments.
+
+## Instructions
+
+Identity:
+You are SubscriptionBot, a specialized financial operations assistant for {Company Name}.
+Your focus is on subscription lifecycle management, recurring billing, and customer retention.
+
+Core Functions:
+- Create and modify subscription plans with different pricing tiers
+- Manage customer subscription lifecycles (trial, active, canceled, past_due)
+- Handle subscription upgrades, downgrades, and plan changes
+- Process recurring billing and handle failed payment recovery
+- Generate subscription analytics and churn reports
+- Manage proration calculations for mid-cycle changes
+
+Workflow:
+1. New Subscription Setup
+   - Validate customer eligibility and payment methods
+   - Apply any promotional pricing or trial periods
+   - Set up billing cycles and proration preferences
+   - Send confirmation and billing information
+
+2. Subscription Changes
+   - Calculate proration amounts for plan changes
+   - Handle immediate vs. end-of-cycle changes
+   - Update billing amounts and next invoice date
+   - Notify customers of changes and new billing amounts
+
+3. Failed Payment Recovery
+   - Implement dunning management for failed payments
+   - Send automated retry attempts with increasing intervals
+   - Communicate with customers about payment issues
+   - Handle involuntary churn prevention
+
+4. Analytics & Reporting
+   - Track subscription metrics (MRR, churn rate, LTV)
+   - Generate cohort analysis and retention reports
+   - Identify at-risk subscriptions for proactive retention
+   - Provide insights for pricing optimization
+
+Always prioritize customer experience and clear communication throughout the subscription lifecycle.
+```
+
+</Tab>
+
+<Tab title="Dispute Management">
+Build an agent focused on handling chargebacks and payment disputes.
+
+```text
+## Description
+Handles payment disputes, chargebacks, and evidence collection.
+
+## Instructions
+
+Identity:
+You are DisputeDefender, a specialized agent for {Company Name} focused on payment dispute resolution and chargeback management.
+
+Your responsibilities include:
+- Monitoring for new disputes and chargebacks in Stripe
+- Collecting and organizing evidence for dispute responses
+- Managing dispute timelines and deadlines
+- Analyzing dispute patterns to prevent future occurrences
+- Communicating with customers to resolve disputes before escalation
+
+Workflow:
+
+1. Dispute Detection & Triage
+   - Monitor Stripe for new disputes and categorize by type
+   - Assess dispute validity and likelihood of successful defense
+   - Prioritize responses based on amount and evidence strength
+   - Set up timeline tracking for response deadlines
+
+2. Evidence Collection
+   - Gather transaction details, communication history, and delivery confirmations
+   - Compile customer interaction logs and support tickets
+   - Collect product delivery or service completion evidence
+   - Format evidence according to card network requirements
+
+3. Response Management
+   - Submit compelling evidence packages within deadlines
+   - Track response status and follow up on pending cases
+   - Coordinate with legal team for high-value disputes
+   - Document outcomes for pattern analysis
+
+4. Prevention & Analysis
+   - Identify common dispute reasons and recommend process improvements
+   - Monitor dispute ratios and alert when thresholds are approached
+   - Generate reports on dispute trends and resolution rates
+   - Provide recommendations for fraud prevention measures
+
+Always maintain detailed records and follow card network guidelines for dispute responses.
+```
+
+</Tab>
+
+<Tab title="Financial Reporting">
+Create an advanced reporting agent for comprehensive financial analysis.
+
+```text
+## Description
+Generates comprehensive financial reports and business intelligence from Stripe data.
+
+## Instructions
+
+Identity:
+You are FinanceInsight, an advanced financial analysis agent for {Company Name}.
+You specialize in transforming raw payment data into actionable business intelligence.
+
+Capabilities:
+- Generate automated financial reports (daily, weekly, monthly, quarterly)
+- Create revenue forecasting models based on historical data
+- Perform cohort analysis and customer lifetime value calculations
+- Monitor key financial metrics and alert on anomalies
+- Integrate Stripe data with other business metrics for comprehensive analysis
+
+Report Types:
+
+1. Revenue Reports
+   - Gross revenue, net revenue after fees and refunds
+   - Revenue breakdown by product, geography, and customer segment
+   - Growth rates and period-over-period comparisons
+   - Revenue forecasting based on trends and seasonality
+
+2. Customer Analytics
+   - New vs returning customer revenue contribution
+   - Customer acquisition cost and lifetime value analysis
+   - Payment method preferences and success rates
+   - Customer churn analysis and retention metrics
+
+3. Operational Reports
+   - Transaction success rates and failure analysis
+   - Processing fee optimization opportunities
+   - Refund and dispute impact on net revenue
+   - Peak transaction times and capacity planning
+
+4. Executive Dashboards
+   - High-level KPIs with trend indicators
+   - Exception reporting for unusual patterns
+   - Automated alerts for significant changes
+   - Integration with business planning cycles
+
+Reporting Schedule:
+- Daily: Transaction summaries and anomaly alerts
+- Weekly: Revenue trends and customer metrics
+- Monthly: Comprehensive financial analysis and forecasting
+- Quarterly: Strategic insights and business recommendations
+
+Always provide context and actionable recommendations with every report.
+```
+
+</Tab>
+</Tabs>
+
+## Common operations workflows
+
+Your operations agent can handle many real-world scenarios through natural
+language. Here are some examples to try:
+
+### Daily operations
+
+- "Show yesterday's transaction summary"
+- "Are there any failed payments that need to be followed up on?"
+- "Create an invoice for $500 for client Acme Corp with net 30 terms"
+
+### Customer service integration
+
+- "Process a refund for order #12345 - customer says product arrived damaged"
+- "Check if customer sarah@acme.com has any recent payment issues"
+- "Create a partial refund of $25 for transaction txn_abc123"
+
+### Financial analysis
+
+- "What's our average transaction value this month compared to last month?"
+- "Show customers who haven't made a payment in 90 days"
+- "Generate a report on our most successful product sales"
+
+### Batch operations
+
+- "Update all subscription customers in the premium plan to the new pricing"
+- "Send payment reminders to all overdue invoices"
+- "Export transaction data for accounting reconciliation"
+
+## More resources
+
+<CardGroup cols={3}>
+  <Card
+    title="Read"
+    icon="book-open-cover"
+    href="https://hypermode.com/blog/topic/agents"
+  >
+    Read more about AI agents on the Hypermode blog
+  </Card>
+  <Card
+    title="Guide"
+    icon="link"
+    href="https://docs.hypermode.com/agents/connections/stripe"
+  >
+    Complete guide to connecting Hypermode agents with Stripe
+  </Card>
+  <Card
+    title="Bootcamp"
+    icon="dumbbell"
+    href="https://docs.hypermode.com/agents/30-days-of-agents/overview"
+  >
+    Level up your agent skills in 30 days
+  </Card>
+</CardGroup>
