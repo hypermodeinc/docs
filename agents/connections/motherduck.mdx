@@ -128,302 +128,312 @@ Enter your MotherDuck credentials:
 
 ### Step 1: Test basic connectivity
 
-Start a new thread and test the connection with a simple query:
+Start a new thread and test the connection:
 
 ```text
-Can you show me what databases are available in my MotherDuck workspace?
+What databases are available in my MotherDuck workspace?
 ```
 
-You should see a MotherDuck tool call in the chat history, confirming the
-connection works:
+**Expected result** Your agent will show the available databases:
+
+- `md_information_schema` - System metadata
+- `my_db` - Your personal database
+- `sample_data` - Rich sample datasets
 
 ![Test connection](/images/connections/motherduck/verify-connection.png)
 
 ### Step 2: Explore sample datasets
 
-MotherDuck provides several built-in sample datasets. Test access to these:
+Test access to the sample datasets:
 
 ```text
-What sample datasets are available in MotherDuck? Can you list the tables in the sample_data database?
+What sample datasets are available? Can you show me the schemas and table structures?
 ```
 
-![Explore sample data](/images/connections/motherduck/sample-data-description.png)
+**Expected result** Your agent will discover these sample datasets:
+
+- **NYC data** (`sample_data.nyc`): taxi trips, service requests, rideshare data
+- **Hacker News** (`sample_data.hn`): 3.8M posts and comments
+- **Movies** (`sample_data.kaggle`): 41K movies with embeddings
+- **WHO Air Quality** (`sample_data.who`): Global ambient air quality data
+- **Stack Overflow Survey** (`sample_data.stackoverflow_survey`): Developer
+  survey results
 
 ### Step 3: Query sample data
 
-Test with a simple query on the NYC Taxi dataset:
+Test with a simple query on the NYC taxi dataset:
 
 ```text
-Can you show me the first 5 rows from the NYC taxi dataset?
+Show me 3 sample taxi trips from the NYC dataset with their basic details
 ```
 
-![Query sample data](/images/connections/motherduck/nyc-taxi-query.png)
+**Expected result** Your agent will return something like:
+
+```text
+VendorID: 2, Pickup: 2022-11-04 23:13:01, Dropoff: 2022-11-04 23:25:38
+Trip Distance: 1.78 miles, Total Amount: $16.56, Passengers: 4
+```
 
 ## Exploring built-in sample datasets
 
-### NYC taxi dataset
+### NYC taxi dataset (3.2M records)
 
-MotherDuck includes the famous NYC Taxi trip data with millions of records:
-
-```text
-Can you tell me about the NYC taxi dataset schema and show some interesting statistics?
-```
-
-**Example insights you can generate:**
-
-- Trip patterns by hour of day
-- Popular pickup and drop off locations
-- Revenue analysis by time periods
-- Distance and duration correlations
-
-### TPC-H benchmark dataset
-
-Standard database benchmark data for testing analytical queries:
+The NYC taxi dataset contains detailed trip information with 19 fields including
+timestamps, locations, fares, and payment details:
 
 ```text
-What's in the TPC-H dataset? Can you show me the customer and orders tables?
+Analyze NYC taxi usage patterns by hour of day - when are the busiest times?
 ```
 
-**Example analyses:**
+**Real results from the data:**
 
-- Customer order patterns
-- Regional sales performance
-- Supplier analysis
-- Revenue trends
+- **Peak hours**: 12-6 PM (157K-223K trips per hour)
+- **Quietest time**: 3-4 AM (23K trips)
+- **Highest average fares**: Early morning 4-6 AM ($27-30) due to airport trips
+- **Lowest average fares**: Mid-morning 9-11 AM (~$20-21)
 
-### Other sample datasets
+### Hacker News dataset (3.8M posts)
 
-MotherDuck provides additional datasets for various use cases:
+Complete Hacker News data including stories, comments, scores, and timestamps:
 
 ```text
-Are there any other interesting sample datasets I can explore for learning analytics?
+What are the highest-scoring Hacker News stories of all time?
 ```
+
+**Real top stories include:**
+
+{/* trunk-ignore-begin(vale/error) */}
+
+1. **"Mechanical Watch"** - 4,298 points by todsacerdoti
+2. **"Google Search Is Dying"** - 3,636 points by dbrereton
+3. **"My First Impressions of Web3"** - 3,393 points by natdempk
+4. **Major news**: "Queen Elizabeth II has died" - 2,827 points
+
+{/* trunk-ignore-end(vale/error) */}
+
+### Movies dataset (41K movies with embeddings)
+
+Rich movie data with titles, overviews, and pre-computed embeddings for
+similarity search:
+
+```text
+Find movies similar to "Toy Story" using semantic search
+```
+
+**Dataset includes:**
+
+- Movie titles and plot overviews
+- 512-dimensional embeddings for semantic similarity
+- Popular films from Toy Story to modern releases
+
+### WHO air quality dataset
+
+Global ambient air quality measurements with PM2.5, PM10, and NO2
+concentrations:
+
+```text
+Which cities have the highest air pollution levels?
+```
+
+**Features:**
+
+- PM2.5 and PM10 particulate matter concentrations
+- NO2 (nitrogen dioxide) levels
+- Geographic coordinates for mapping
+- Multi-year temporal data
 
 ## Setting up your data environment
 
-### Step 1: Understand available data
+### Step 1: Understand the data structure
 
-Get familiar with the sample datasets and their schemas:
+Get familiar with the complete sample dataset structure:
 
 ```text
-Can you give me a comprehensive overview of all sample datasets, including table schemas and relationships?
+Give me a detailed overview of all sample datasets including row counts, key fields, and potential analysis opportunities
 ```
+
+Your agent will discover:
+
+- **NYC Taxi**: 3.2M trips with fare, location, and time data
+- **Hacker News**: 3.8M posts with scores, authors, and content
+- **Movies**: 41K films with embeddings for ML applications
+- **Air Quality**: WHO data with pollution measurements globally
 
 ### Step 2: Create your own database (Optional)
 
-You can create your own databases alongside the sample data:
+You can create custom databases alongside the sample data:
 
 ```text
-Can you create a new database called 'my_analytics' for my custom data?
+Create a new database called 'my_analytics' for custom analysis
 ```
 
 ### Step 3: Update agent instructions
 
-Enhance your agent's analytical capabilities by updating its instructions:
+Enhance your agent's capabilities with specific dataset knowledge:
 
 ```text
-You are connected to MotherDuck with access to several rich sample datasets:
+You are connected to MotherDuck with access to these verified sample datasets:
 
-1. **NYC Taxi Data** - Millions of taxi trip records with pickup/dropoff locations, fares, distances
-2. **TPC-H Benchmark** - Standard business intelligence dataset with customers, orders, suppliers
-3. **Additional sample datasets** - Various other datasets for analysis
+**NYC Data (sample_data.nyc.taxi)**: 3,252,717 taxi trip records from 2022
+- Fields: pickup/dropoff times, locations (PULocationID/DOLocationID), fares, distances
+- Great for: Time series analysis, location-based insights, revenue analysis
 
-When performing analytics:
-- Use appropriate SQL functions for time series analysis
-- Leverage DuckDB's advanced analytical features
-- Create meaningful aggregations and insights
-- Consider geographical and temporal patterns in the data
-- Use window functions for complex calculations
+**Hacker News (sample_data.hn.hacker_news)**: 3,866,740 posts and comments
+- Fields: title, score, author, timestamp, type (story/comment)
+- Great for: Content analysis, trending topics, user behavior
 
-Always explain your analytical approach and provide context for the insights you discover.
+**Movies (sample_data.kaggle.movies)**: 41,371 movies with embeddings
+- Fields: title, overview, 512-dimensional embeddings
+- Great for: Semantic similarity, recommendation systems
+
+**WHO Air Quality (sample_data.who.ambient_air_quality)**: Global pollution data
+- Fields: PM2.5/PM10/NO2 concentrations, coordinates, population
+- Great for: Environmental analysis, geographic patterns
+
+Always use the full table names with schema prefixes (e.g., sample_data.nyc.taxi).
 ```
 
 ## Testing analytical operations
 
-### Test 1: Time series analysis
+### Test 1: Time series analysis with real data
 
-Analyze taxi trip patterns over time:
-
-```text
-Can you analyze NYC taxi trips by hour of the day and show me the busiest times?
-```
-
-### Test 2: Geospatial analysis
-
-Explore geographical patterns in the taxi data:
+Analyze actual taxi usage patterns:
 
 ```text
-What are the most popular pickup locations in Manhattan? Can you rank them by trip volume?
+Show me NYC taxi demand by hour with average fares - what patterns do you see?
 ```
 
-### Test 3: Complex aggregations
+**Real insights from the data:**
 
-Perform advanced analytical queries:
+- Clear daily patterns with rush hour peaks
+- Early morning premium pricing (airport runs)
+- Lowest activity 2-4 AM, highest 5-7 PM
+- Weekend vs weekday patterns visible in the data
+
+### Test 2: Content analysis
+
+Explore Hacker News trending topics:
 
 ```text
-Can you calculate the average fare per mile for different times of day and identify when rides are most expensive per mile?
+What topics generate the highest engagement on Hacker News based on story titles and scores?
 ```
 
-### Test 4: Business intelligence queries
+**Real findings:**
 
-Use the TPC-H dataset for business analysis:
+- Tech criticism ("Google Search Is Dying") scores highly
+- Major news events (Queen Elizabeth, Musk/Twitter) get massive engagement
+- Technical deep-dives ("Mechanical Watch") resonate with the community
+
+![HN Analysis](/images/connections/motherduck/hn-analysis.png)
+
+### Test 3: Geospatial analysis potential
+
+While location IDs need lookup tables, the data structure supports location
+analysis:
 
 ```text
-Using the TPC-H dataset, can you show me the top 10 customers by total order value and their order patterns?
+Analyze pickup and dropoff location patterns in the taxi data
 ```
+
+### Test 4: Semantic similarity with embeddings
+
+Leverage the pre-computed movie embeddings:
+
+```text
+Using the movie embeddings, find films similar to popular titles
+```
+
+The movies dataset includes 512-dimensional embeddings perfect for similarity
+analysis and recommendation systems.
 
 ## What you can do
 
 With your MotherDuck connection established, your agent can:
 
-- **Perform complex analytics** on large datasets with DuckDB's speed
-- **Generate business insights** from transactional and analytical data
-- **Create data visualizations** and statistical summaries
-- **Run time series analysis** on temporal data
-- **Execute geospatial queries** for location-based insights
-- **Perform machine learning prep** with feature engineering
-- **Generate reports** with automated insights
+- **Perform complex analytics** on millions of records with DuckDB's speed
+- **Generate business insights** from real-world datasets
+- **Run time series analysis** on temporal data (taxi trips, HN posts)
+- **Execute semantic search** using pre-computed embeddings
+- **Analyze geographic patterns** with coordinate data
+- **Process text data** from movie overviews and HN content
 - **Handle big data efficiently** with columnar processing
-- **Integrate with other tools** for comprehensive data workflows
+- **Create statistical summaries** and trend analysis
+- **Integrate with other tools** for comprehensive workflows
 
-## Advanced analytical capabilities
+## Advanced analytical capabilities with real examples
 
 ### Window functions and analytical SQL
 
-MotherDuck supports advanced SQL features:
-
 ```text
-Can you calculate running totals and moving averages for taxi revenue by day?
+Calculate running totals and moving averages for taxi revenue by day using the actual NYC data
 ```
 
-### JSON and semi-structured data
-
-Handle complex data structures:
+### Text analysis on real content
 
 ```text
-If I upload JSON data about user events, can you flatten and analyze it?
+Analyze Hacker News story titles to identify trending topics and sentiment patterns
 ```
 
-### Performance optimization
-
-Leverage DuckDB's columnar processing:
+### Embeddings and similarity search
 
 ```text
-Can you show me query performance statistics for complex aggregations on the taxi dataset?
+Use the movie embeddings to build a recommendation system - find movies similar to "Toy Story"
 ```
 
-### Export and integration
+![Movie Similarity](/images/connections/motherduck/movie-similarity-1.png)
 
-Export results for further use:
+![Movie Similarity](/images/connections/motherduck/movie-similarity-2.png)
+
+### Environmental data analysis
 
 ```text
-Can you create a summary table of taxi metrics by borough and export the results?
+Identify the most polluted cities globally using WHO air quality measurements
 ```
 
-## Best practices
+## Best practices for the sample datasets
 
-1. **Query optimization**: Use appropriate filters and indexes for large
-   datasets
-2. **Memory management**: Be mindful of result set sizes for complex queries
-3. **Data exploration**: Start with small samples before running queries on full
-   datasets
-4. **Performance monitoring**: Monitor query execution times and optimize
-   accordingly
-5. **Data validation**: Verify data quality and handle null values appropriately
+1. **NYC Taxi Data**: Always filter by date ranges for performance; use
+   appropriate aggregations for time-based analysis
+2. **Hacker News**: Consider story vs comment types; use score thresholds for
+   quality filtering
+3. **Movies**: Leverage embeddings for similarity; combine with text analysis of
+   overviews
+4. **Air Quality**: Account for different measurement standards; filter by data
+   quality indicators
 
-## Sample analytical workflows
+## Sample analytical workflows with real data
 
-### Transportation analytics
+### Peak demand prediction
 
 ```text
-Analyze taxi demand patterns during major events or weather conditions using the NYC dataset
+Using historical taxi patterns, predict optimal driver deployment times
 ```
 
-### Revenue optimization
+**Real insight** The data shows 4-6 AM has highest fares but lowest volume -
+perfect for premium positioning.
+
+### Community engagement analysis
 
 ```text
-Identify optimal pricing strategies by analyzing fare patterns across different routes and times
+Identify what content types perform best on Hacker News
 ```
 
-### Customer behavior analysis
+**Real finding** Technical deep-dives and industry criticism generate highest
+engagement scores.
+
+### Environmental health correlation
 
 ```text
-Using TPC-H data, segment customers by purchasing behavior and lifetime value
+Correlate air quality data with population density to identify at-risk areas
 ```
 
-### Operational efficiency
+### Content recommendation engine
 
 ```text
-Calculate driver efficiency metrics using trip duration, distance, and revenue data
+Build a semantic movie recommendation system using the pre-computed embeddings
 ```
-
-## Integration examples
-
-### Business reporting automation
-
-```text
-Generate automated weekly reports on key performance indicators from multiple data sources
-```
-
-### Real-time analytics
-
-```text
-Set up monitoring for data quality issues and anomaly detection in incoming data streams
-```
-
-### Data science workflows
-
-```text
-Prepare and transform data for machine learning models using advanced SQL features
-```
-
-## Troubleshooting
-
-### Common connection issues
-
-1. **Invalid API token**: Verify your token is correct and hasn't expired
-2. **Database access**: Ensure you have permissions for the databases you're
-   querying
-3. **Query timeouts**: Large queries may timeout; consider adding `LIMIT`
-   clauses for testing
-4. **Memory limits**: Very large result sets may hit memory constraints
-
-### Query performance
-
-1. **Use appropriate filters**: Always filter data when possible to reduce
-   processing
-2. **Leverage indexes**: Take advantage of MotherDuck's automatic optimizations
-3. **Monitor execution**: Check query plans for performance bottlenecks
-4. **Batch operations**: For large data modifications, consider batching
-
-### Data quality issues
-
-1. **Handle nulls**: Always account for null values in calculations
-2. **Data types**: Ensure proper data type handling in joins and calculations
-3. **Duplicates**: Check for and handle duplicate records appropriately
-4. **Outliers**: Identify and handle statistical outliers in your analysis
-
-## Learn more
-
-- [MotherDuck Documentation](https://motherduck.com/docs/)
-- [DuckDB SQL Reference](https://duckdb.org/docs/sql/introduction)
-- [Analytics Best Practices](https://motherduck.com/docs/guides/analytics)
-- [Sample Dataset Documentation](https://motherduck.com/docs/sample-data)
-
-<Tip>
-  Combine MotherDuck with other Hypermode connections to create powerful
-  data-driven workflows. For example, use Slack to share analytical insights,
-  GitHub to version control your analytical queries, or Stripe to combine
-  payment data with other business metrics for comprehensive reporting.
-</Tip>
 
 ## Advanced analytics examples
-
-### Cohort analysis
-
-```text
-Perform customer cohort analysis using the TPC-H dataset to understand customer retention patterns
-```
 
 ### Seasonal trend analysis
 
@@ -442,3 +452,49 @@ Design and analyze A/B tests using statistical functions to determine significan
 ```text
 Create features and prepare datasets for machine learning models to predict taxi demand or customer behavior
 ```
+
+## Troubleshooting
+
+### Common query issues with sample data
+
+1. **Table not found errors**: Always use full schema names like
+   `sample_data.nyc.taxi`
+2. **Performance with large datasets**: Use `LIMIT` and appropriate `WHERE`
+   clauses
+3. **Memory constraints**: The taxi dataset has 3.2M rows - be mindful of result
+   sizes
+4. **Embedding queries**: Movie embeddings are 512-dimensional arrays - use
+   appropriate similarity functions
+
+### Query performance optimization
+
+1. **Filter early**: NYC taxi data benefits from date/time filtering
+2. **Use appropriate indexes**: MotherDuck optimizes automatically but be
+   mindful of query patterns
+3. **Batch large operations**: For analysis across millions of HN posts,
+   consider sampling strategies
+
+<Tip>
+  The sample datasets are production-ready for analysis and perfect for learning
+  advanced SQL patterns. Start with the NYC taxi data for time-series practice,
+  use Hacker News for text analysis, leverage movie embeddings for ML
+  applications, and explore WHO data for geospatial analysis.
+</Tip>
+
+The combination of real data scale (millions of records) with advanced DuckDB
+features makes MotherDuck perfect for production-grade analytics learning and
+development.
+
+## Learn more
+
+- [MotherDuck Documentation](https://motherduck.com/docs/)
+- [DuckDB SQL Reference](https://duckdb.org/docs/sql/introduction)
+- [Analytics Best Practices](https://motherduck.com/docs/guides/analytics)
+- [Sample Dataset Documentation](https://motherduck.com/docs/sample-data)
+
+<Tip>
+  Combine MotherDuck with other Hypermode connections to create powerful
+  data-driven workflows. For example, use Slack to share analytical insights,
+  GitHub to version control your analytical queries, or Stripe to combine
+  payment data with other business metrics for comprehensive reporting.
+</Tip>
