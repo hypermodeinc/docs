@@ -90,7 +90,8 @@
                         "pages": [
                           "agents/connections/supabase",
                           "agents/connections/neo4j",
-                          "agents/connections/mongodb"
+                          "agents/connections/mongodb",
+                          "agents/connections/motherduck"
                         ]
                       }
                     ]
