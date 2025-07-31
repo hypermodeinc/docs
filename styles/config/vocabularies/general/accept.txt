@@ -97,6 +97,7 @@ GitHub|github
 GraphiQL
 GraphQL|graphql
 gRPC
+Hacker News
 HTTP|http
 Hugging Face
 IANA
@@ -104,6 +105,7 @@ Infof
 ISO
 LLM
 Logf
+(?i)m
 MySQL|mysql
 [Nn]eo4j
 NPM|npm
@@ -115,6 +117,7 @@ recompiles
 repo
 RDF
 REST|[Rr]est
+rideshare
 Scattergories
 SDK|sdk
 [Ss]idekick
@@ -135,6 +138,7 @@ Warnf
 WASM
 waitlist
 Weaviate
+(?i)WHO
 Xero
 Zendesk
 
