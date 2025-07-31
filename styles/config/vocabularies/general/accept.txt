@@ -1,5 +1,6 @@
 8B
 [Aa]gentic
+A/B
 Ahrefs
 Airtable
 [Aa]rticle
@@ -54,11 +55,13 @@ Jira
 maxWidth
 (?i)mcp
 [Mm]odus
+MotherDuck
 Nano
 [Nn]amespace
 [Nn]amespaces
 [Nn]nClassify
 Nomic
+NYC
 OAuth
 [Oo]nboarding
 [Oo]perationalize
@@ -74,6 +77,8 @@ Product Hunt
 [Tt]imeEnd
 [Tt]imeLog
 [Tt]riaging
+TPC
+TPC-H
 [Uu]nexported
 [Uu]psert
 [Uu]psertBatch
