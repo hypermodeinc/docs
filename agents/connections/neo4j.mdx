@@ -27,18 +27,23 @@ Hypermode agent to Neo4j.
 
 ## Prerequisites
 
-Before connecting Neo4j to Hypermode, you'll need:
+Before connecting Neo4j to Hypermode Agents, you'll need:
 
-1. A [Neo4j account](https://neo4j.com/)
-2. A Neo4j instance (we'll use Neo4j Sandbox for this guide)
-3. A [Hypermode workspace](https://hypermode.com/)
+1. A Neo4j database instance (free options include
+   [Neo4j Sandbox](https://sandbox.neo4j.com) and Neo4j Aura free tier)
+2. A [Hypermode Agents](https://agents.hypermode.com) account
+
+<Note>
+  This guide will walk you through the steps of connecting to Neo4j using the
+  free Neo4j Sandbox, but you can also use Neo4j Aura or a self-hosted instance.
+</Note>
 
 ## Setting up Neo4j
 
 ### Step 1: Create a Neo4j Sandbox
 
-First, you need to go to https://sandbox.neo4j.com/ and create an account. When
-you get to making a database, select a blank sandbox.
+First, navigate to https://sandbox.neo4j.com/ and create an account. Choose
+"Blank Sandbox" from the list of available options.
 
 ![Create blank sandbox](/images/connections/neo4j/blank-sandbox.png)
 
@@ -47,89 +52,58 @@ you get to making a database, select a blank sandbox.
   production use, consider Neo4j Aura or a self-hosted instance.
 </Note>
 
-### Step 2: Get your connection details
+### Step 2: Note your connection details
 
-Once created (it may take a moment), you can navigate to the HTTP tab and grab
-the URL. Note you will have to modify this to use the Neo4j HTTP v2 endpoint:
+Once your Neo4j sandbox instance is created (it may take a moment), you can
+navigate to the "Connection details" tab to view the connection credentials for
+your Neo4j sandbox instance.
 
-- Remove `/db/neo4j/tx/commit`
-- Replace it with `/db/neo4j/query/v2`
-
-For example:
-
-- Original: `http://52.54.53.148:7474/db/neo4j/tx/commit`
-- Modified: `http://52.54.53.148:7474/db/neo4j/query/v2`
-
-![http tab](/images/connections/neo4j/neo4j-http-connection.png)
-
-### Step 3: Get authentication credentials
-
-Save this URL and then move to the connection details to grab the username and
-password.
-
-![Connection details](/images/connections/neo4j/neo4j-user-password.png)
-
-Now we've got the URL, username, and password we can create a new agent in
-Hypermode.
+Note the username, password, and Bolt URL - you'll use these in the next step to
+create a Neo4j connection in Hypermode Agents.
+![Connection details](/images/connections/neo4j/sandbox-credentials.png)
 
 ## Creating your Neo4j agent
 
 ### Step 1: Create a new agent
 
-From the Hypermode interface, create a new agent:
+From the Hypermode Agents dashboard, create a new agent:
 
-1. Click the agent dropdown menu
-2. Select "Create new Agent"
-
-![Navigate to create agent](/images/connections/neo4j/navigate-create-agent.png)
-
-### Step 2: Configure agent settings
-
-Use these recommended settings for your Neo4j agent:
-
-- **Agent Name**: GraphExplorer
-- **Agent Title**: Neo4j Graph Analysis Agent
-- **Description**: Analyzes graph relationships and patterns in Neo4j
-- **Instructions**: You have a connection to a Neo4j graph database. You can
-  create nodes with any labels and properties, create relationships of any type,
-  and run Cypher queries. Neo4j is schemaless, so you can dynamically add data
-  without predefined structures.
-- **Model**: GPT-4.1
+1. Select the "Create agent" button
+2. Describe your agent in a few sentences, we'll use "The agent is a Neo4j
+   expert"
 
 ![Create agent modal](/images/connections/neo4j/create-agent-modal.png)
 
 ### Step 3: View your agent profile
 
-Once created, navigate to your agent's settings page:
+Once created, navigate to your agent's details page. Here you can view and edit
+the agent instructions that were created from your initial agent description
+preceding the agent creation process.
 
 ![Agent profile](/images/connections/neo4j/agent-profile.png)
+
+You can update the agent instructions at any time to help align the agent's
+background and skills with your use case.
 
 ## Connecting to Neo4j
 
 ### Step 1: Add the Neo4j connection
 
-Navigate to the **Connections** tab and add Neo4j:
+Navigate to the **Connections** tab in Hypermode Agents and add Neo4j:
 
 1. Click "Add connection"
-2. Search for "Neo4j" in the available connections
+2. Select the "Connect" button next to Neo4j in the list of available
+   connections
 
 ![Add Neo4j connection](/images/connections/neo4j/add-neo4j-connection.png)
 
 ### Step 2: Configure credentials
 
-Enter your Neo4j credentials:
-
-- **URL**: Your modified HTTP v2 endpoint
-  (`http://52.54.53.148:7474/db/neo4j/query/v2`)
-- **Username**: Your Neo4j username (usually `neo4j`)
-- **Password**: Your Neo4j password
+Enter your Neo4j credentials from the Neo4j Sandbox details page.
 
 ![Neo4j connection modal](/images/connections/neo4j/neo4j-connection-modal.png)
 
-<Warning>
-  Ensure you're using the HTTP v2 endpoint format. The connection will fail with
-  the default transaction endpoint.
-</Warning>
+<Warning>Ensure you're using the Bolt URL endpoint format.</Warning>
 
 ## Understanding Neo4j's schemaless nature
 
@@ -149,6 +123,8 @@ This flexibility makes Neo4j perfect for:
 - Rapidly evolving data models
 - Complex, heterogeneous datasets
 - Real-world relationship modeling
+
+![Neo4j Graph Model](/images/connections/neo4j/what-data.png)
 
 ## Example graph model
 
@@ -189,8 +165,6 @@ Create these relationships:
 - GraphApp is BY_COMPANY TechCorp
 ```
 
-![Create relationships result](/images/connections/neo4j/create-relationships-result.png)
-
 ### Test 3: Visualize in Neo4j Browser
 
 After your agent creates the data, switch to Neo4j Browser to see the results:
@@ -212,7 +186,7 @@ Back in your agent thread, use Cypher to explore your data:
 Run a Cypher query to find all products made by people who work at TechCorp, showing the full relationship path.
 ```
 
-![Query result](/images/connections/neo4j/cypher-query-result.png)
+![Query result](/images/connections/neo4j/query-your-graph.png)
 
 ## Example: Building a dynamic knowledge graph
 
@@ -228,12 +202,16 @@ Let's expand our graph with more data:
 5. Add a COMPETES_WITH relationship between the two companies
 ```
 
+![Graph with more data](/images/connections/neo4j/dynamic-graph-query-agent.png)
+
 Your agent can dynamically add:
 
 - New node types as you discover them
 - Properties specific to each entity
 - Relationships that make sense in context
 - No need to predefine any structure!
+
+![Graph with more data](/images/connections/neo4j/dynamic-graph-query-results.png)
 
 ## What you can do
 
@@ -254,7 +232,6 @@ With your Neo4j connection and its three core tools, your agent can:
 
 #### Connection refused error
 
-- Verify you're using the HTTP v2 endpoint format
 - Check if your sandbox is still active (they expire after 3 days)
 - Ensure the URL includes the correct port (usually 7474)
 
@@ -264,17 +241,8 @@ With your Neo4j connection and its three core tools, your agent can:
 - Sandbox passwords are auto-generated - copy carefully
 - Try resetting the password in the sandbox console
 
-#### Tool execution errors
-
-- Check the
-  [MCP Neo4j documentation](https://mcp.pipedream.com/app/neo4j_auradb) for
-  correct parameter formats
-- Ensure node IDs exist before creating relationships
-- Verify Cypher syntax in your queries
-
 ## Learn more
 
 - [Neo4j Documentation](https://neo4j.com/docs/)
 - [Cypher Query Language](https://neo4j.com/docs/cypher-manual/current/)
-- [MCP Neo4j AuraDB Server](https://mcp.pipedream.com/app/neo4j_auradb)
-- [Graph Data Science Library](https://neo4j.com/docs/graph-data-science/current/)
+- [Tutorial: Using Hypermode Agents to extract and build knowledge graphs](/agents/knowledge-graph-extraction)

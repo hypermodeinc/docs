@@ -42,8 +42,6 @@ interact with external services, and perform complex tasks on your behalf.
 Unlike traditional chatbots, Hypermode Agents can actually take actions—like
 scraping websites, querying databases, and transforming data.
 
-![Screenshot of Hypermode Agents interface showing an Agent card with connections](/images/tutorials/knowledge-graph-extraction/agent-profile.png)
-
 ### Key features for this tutorial
 
 - **Natural Language Understanding**: Give instructions in plain English
@@ -88,6 +86,12 @@ By extracting Product Hunt data into Neo4j, you can:
 
 ## Step 1: Set up Neo4j Sandbox
 
+<Note>
+  Refer to the [Hypermode Agents Neo4j connection
+  guide](/agents/connections/neo4j) for more details on how to connect your
+  agent to Neo4j.
+</Note>
+
 ### Create a Neo4j Sandbox
 
 First, you need to go to https://sandbox.neo4j.com/ and create an account. When
@@ -100,55 +104,41 @@ you get to making a database, select a blank sandbox.
   production use, consider Neo4j Aura or a self-hosted instance.
 </Note>
 
-### Get your connection details
+### Note your connection details
 
-Once created (it may take a moment), you can navigate to the HTTP tab and grab
-the URL. Note you will have to modify this to use the Neo4j HTTP v2 endpoint
-when adding the Neo4j connection in Hypermode Agents.
+Once your Neo4j sandbox instance is created (it may take a moment), you can
+navigate to the "Connection details" tab to view the connection credentials for
+your Neo4j sandbox instance.
 
-- Remove `/db/neo4j/tx/commit`
-- Replace it with `/db/neo4j/query/v2`
+Note the username, password, and Bolt URL - you'll use these in the next step to
+create a Neo4j connection in Hypermode Agents.
+![Connection details](/images/connections/neo4j/sandbox-credentials.png)
 
-For example:
+## Creating your Neo4j agent
 
-- Original: `http://52.54.53.148:7474/db/neo4j/tx/commit`
-- Modified: `http://52.54.53.148:7474/db/neo4j/query/v2`
+### Step 1: Create a new agent
 
-![Connection details](/images/tutorials/knowledge-graph-extraction/neo4j-http-connect.png)
+From the Hypermode Agents dashboard, create a new agent:
 
-<Info>
-  The Neo4j connection in Hypermode Agents uses the [Neo4j Query HTTP API v2
-  endpoint](https://neo4j.com/docs/query-api/current/), not the now deprecated
-  HTTP v1 endpoint, which is why we need to modify the URL. Refer to the
-  [Hypermode Agents Neo4j connection guide](/agents/connections/neo4j) for more
-  information.
-</Info>
+1. Select the "Create agent" button
+2. Describe your agent in a few sentences, we'll use "Extracts product data from
+   Product Hunt and builds knowledge graphs in Neo4j"
 
-### Get authentication credentials
+![Create agent modal](/images/tutorials/knowledge-graph-extraction/create-agent.png)
 
-Save this URL and then move to the connection details to grab the username and
-password.
+### Step 2: View your agent profile
 
-Make sure to note these details - you'll need them when setting up the
-connection in Hypermode.
+Once created, navigate to your agent's details page. Here you can view and edit
+the agent instructions that were created from your initial agent description
+preceding the agent creation process.
 
-## Step 2: Create your knowledge graph Agent
+![Agent profile](/images/tutorials/knowledge-graph-extraction/agent-profile.png)
 
-### Manual Agent creation
+You can update the agent instructions at any time to help align the agent's
+background and skills with your use case.
 
-Let's create an Agent specifically designed for knowledge graph extraction.
-Navigate to your Hypermode workspace and create a new agent with these settings:
-
-- **Agent Name**: KnowledgeGraphBuilder
-- **Agent Title**: Product Hunt Knowledge Graph Extractor
-- **Description**: Extracts product data from Product Hunt and builds knowledge
-  graphs in Neo4j
-
-![Agent creation form](/images/tutorials/knowledge-graph-extraction/agent-creation.png)
-
-### System prompt
-
-Use this comprehensive system prompt for your agent:
+For example, you can update the agent instructions to include more explicit
+workflows:
 
 ```text
 Identity:
@@ -207,53 +197,27 @@ Not all products will have the same information, so create flexible queries that
 Always maintain data accuracy and provide clear explanations of the graph structure you're creating.
 ```
 
-### Select your model
+## Connecting to Neo4j
 
-For this use case, we recommend **Claude 4 Sonnet** or **GPT-4.1** as they excel
-at:
+### Step 1: Add the Neo4j connection
 
-- Understanding complex data structures
-- Writing accurate Cypher queries
-- Managing multi-step workflows
+Navigate to the **Connections** tab in Hypermode Agents and add Neo4j:
 
-## Step 3: Add connections
+1. Click "Add connection"
+2. Select the "Connect" button next to Neo4j in the list of available
+   connections
 
-Your agent needs key connections to function properly:
+![Add Neo4j connection](/images/connections/neo4j/add-neo4j-connection.png)
 
-### Add Neo4j connection
+### Step 2: Configure credentials
 
-1. Navigate to your agent's connections tab
-2. Click "Add connection"
-3. Search for "Neo4j" and select it
+Enter your Neo4j credentials from the Neo4j Sandbox details page.
 
-![Add Neo4j connection](/images/tutorials/knowledge-graph-extraction/add-neo4j.png)
+![Neo4j connection modal](/images/connections/neo4j/neo4j-connection-modal.png)
 
-Configure the Neo4j connection with your Sandbox details:
+<Warning>Ensure you're using the Bolt URL endpoint format.</Warning>
 
-- **URL**: Your modified HTTP v2 endpoint
-- **Username**: `neo4j` (or your custom username)
-- **Password**: Your Sandbox password
-
-![Neo4j MCP connection setup](/images/tutorials/knowledge-graph-extraction/neo4j-mcp-connect-http.png)
-
-### Add LinkedIn connection
-
-For enriching founder and company data:
-
-1. Add the "LinkedIn" connection
-2. Complete the OAuth flow to authorize access
-3. This enables the agent to gather professional information
-
-![Add LinkedIn connection](/images/tutorials/knowledge-graph-extraction/add-linkedin.png)
-
-### Add Product Hunt connection
-
-For direct Product Hunt API access (if available):
-
-1. Add the "Product Hunt" connection if available in your workspace
-2. This provides structured access to Product Hunt data
-
-![Add Product Hunt connection](/images/tutorials/knowledge-graph-extraction/add-product-hunt.png)
+### Step 3: Update your agent instructions
 
 ## Step 4: Test the connection
 
@@ -762,7 +726,7 @@ Always provide the graph traversal logic used for recommendations and offer to e
   <Card
     title="Read"
     icon="book-open-cover"
-    href="https://hypermode.com/blog/why-contextual-ai-agents-beat-chatgpt-for-enterprise-sales"
+    href="https://hypermode.com/blog/topic/knowledge-graphs"
   >
     Read more about knowledge graphs on the Hypermode blog
   </Card>
