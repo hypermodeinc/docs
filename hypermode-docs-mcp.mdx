@@ -108,17 +108,17 @@ An array of search results, each containing:
    - **Endpoint**: `https://docs.hypermode.com/mcp`
 5. Save and restart Cursor
 
-## Tool Call Examples
+## Tool call examples
 
 Here are actual examples of what the Hypermode Docs MCP server tool calls and
 responses look like:
 
 ### Example 1: Searching for Dgraph DQL Examples
 
-**User Query**: "How do I write a DQL query to find all users with a specific
-age range?"
+**User Query**: "How to write a DQL query to find all users with a specific age
+range?"
 
-**MCP Search**: The assistant can search the Hypermode docs for DQL examples,
+**MCP Search** The assistant can search the Hypermode docs for DQL examples,
 finding relevant documentation about:
 
 - Basic DQL query syntax
@@ -126,7 +126,7 @@ finding relevant documentation about:
 - User data models
 - Specific examples from tutorials
 
-**Result**: The assistant provides a contextual answer with:
+**Result** The assistant provides a contextual answer with:
 
 - Relevant DQL query examples
 - Links to specific documentation pages
@@ -164,11 +164,11 @@ finding relevant documentation about:
 }
 ```
 
-### Example 2: Finding Hypermode Agent Connection Guides
+### Example 2: Finding Hypermode agent connection guides
 
-**User Query**: "How do I connect my agent to Stripe?"
+**User Query**: "How to connect an agent to Stripe?"
 
-**MCP Search**: The assistant searches for Stripe connection documentation,
+**MCP Search** The assistant searches for Stripe connection documentation,
 finding:
 
 - Step-by-step connection guides
@@ -176,7 +176,7 @@ finding:
 - Example agent configurations
 - Troubleshooting tips
 
-**Result**: The assistant delivers comprehensive setup instructions with direct
+**Result** The assistant delivers comprehensive setup instructions with direct
 links to relevant documentation sections.
 
 **MCP Tool Call**:
@@ -211,12 +211,12 @@ links to relevant documentation sections.
 }
 ```
 
-### Example 3: Python Dgraph Connection Syntax
+### Example 3: Python Dgraph connection syntax
 
 **User Query**: "What's the syntax to create a connection to Hypermode graphs
 using the dgraph:// connection string in Python?"
 
-**MCP Search**: The assistant searches for Python Dgraph connection
+**MCP Search** The assistant searches for Python Dgraph connection
 documentation, finding:
 
 - Python SDK examples and tutorials
@@ -224,7 +224,7 @@ documentation, finding:
 - Hypermode graph connection guides
 - Code samples for dgraph:// protocol
 
-**Result**: The assistant provides Python code examples with connection syntax
+**Result** The assistant provides Python code examples with connection syntax
 and links to relevant documentation.
 
 **MCP Tool Call**:
@@ -259,7 +259,7 @@ and links to relevant documentation.
 }
 ```
 
-## Benefits of Using the MCP Server
+## Benefits of using the MCP server
 
 1. **Real-time Information**: Always access the latest documentation
 2. **Contextual Results**: Get relevant information based on your specific query
@@ -271,25 +271,25 @@ and links to relevant documentation.
 
 ### Common Issues
 
-**Server Connection Failed**
+#### Server connection failed
 
 - Verify the URL: `https://docs.hypermode.com/mcp`
 - Check your internet connection
 - Ensure the MCP client supports HTTPS connections
 
-**Search Not Working**
+#### Search not working
 
-- Restart your MCP client application
+- Restart your MCP client app
 - Verify the server is properly configured
 - Check if the server requires authentication (currently none required)
 
-**No Results Found**
+#### No results found
 
 - Try different search terms
 - Use more specific queries
 - Check if the documentation covers your topic
 
-### Getting Help
+### Getting help
 
 If you encounter issues with the MCP server:
 
@@ -298,16 +298,16 @@ If you encounter issues with the MCP server:
 3. Ensure you're using a supported MCP client
 4. Contact Hypermode support if issues persist
 
-## Advanced Usage
+## Advanced usage
 
-### Optimizing Searches
+### Optimizing searches
 
-- Use specific technical terms (e.g., "DQL aggregation" instead of "how to
-  count")
-- Include feature names (e.g., "Hypermode agents" instead of "agents")
+- Use specific technical terms (for example, "DQL aggregation" instead of "how
+  to count")
+- Include feature names (for example, "Hypermode agents" instead of "agents")
 - Reference specific error messages or code snippets
 
-### Integration with Development Workflow
+### Integration with development workflow
 
 - Use the MCP server during code reviews
 - Get instant help with Dgraph queries
