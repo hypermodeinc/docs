@@ -1,0 +1,319 @@
+---
+title: "Hypermode Documentation MCP Server"
+description:
+  "Learn how to use the Hypermode documentation MCP server to search
+  documentation and get help with Dgraph DQL queries"
+sidebarTitle: "Docs MCP Server"
+---
+
+The Hypermode docs MCP (Model Context Protocol) server provides AI assistants
+with direct access to search across the Hypermode documentation. This enables
+more accurate and contextual assistance when working with Hypermode features,
+Dgraph DQL queries, and development workflows.
+
+The MCP server is available as a remote MCP at `https://docs.hypermode.com/mcp`.
+
+## What's the Hypermode docs MCP server?
+
+The Hypermode docs MCP server is a specialized tool that allows AI assistants to
+search and retrieve information from the Hypermode documentation in real-time.
+It acts as a bridge between your AI assistant and the comprehensive Hypermode
+knowledge base, ensuring you get the most up-to-date and relevant information.
+
+## Available tools
+
+### Search
+
+Search across the Hypermode documentation to find relevant information, code
+examples, API references, and guides.
+
+**Parameters:**
+
+- `query` (string, required): The search query to execute across the
+  documentation
+
+**Returns:**
+
+An array of search results, each containing:
+
+- `title` (string): The title of the documentation page
+- `content` (string): A brief description of the content
+- `url` (string): Direct link to the documentation page
+- `snippet` (string): Relevant text snippet from the documentation
+
+**Example tool call:**
+
+```json
+{
+  "name": "search",
+  "arguments": {
+    "query": "DQL query examples"
+  }
+}
+```
+
+**Example response:**
+
+```json
+{
+  "results": [
+    {
+      "title": "DQL Query Examples",
+      "content": "Learn how to write DQL queries with filtering and range operations...",
+      "url": "https://docs.hypermode.com/dgraph/dql/query",
+      "snippet": "Use the @filter directive with ge() and le() functions to find users within age ranges..."
+    }
+  ]
+}
+```
+
+**Use this tool when you need to:**
+
+- Answer questions about Hypermode features
+- Find specific documentation or guides
+- Understand how features work
+- Locate implementation details
+- Get help with Dgraph DQL queries
+
+## Setup Instructions
+
+### Claude desktop
+
+1. Open Claude desktop
+2. Go to **Settings** → **MCP Servers**
+3. Click **Add Server**
+4. Enter the following details:
+   - **Name**: `Hypermode docs`
+   - **URL**: `https://docs.hypermode.com/mcp`
+5. Click **Save**
+6. Restart Claude desktop
+
+### VS code
+
+1. Install the **MCP Client** extension from the VS code marketplace
+2. Open Command Palette (`Cmd/Ctrl + Shift + P`)
+3. Type "MCP: Add Server" and select it
+4. Enter the server details:
+   - **Name**: `Hypermode docs`
+   - **URL**: `https://docs.hypermode.com/mcp`
+5. The MCP server will be available in your AI assistant interactions
+
+### Cursor
+
+1. Open Cursor
+2. Navigate to **Settings** → **AI** → **MCP Servers**
+3. Click **Add Server**
+4. Configure the server:
+   - **Name**: `Hypermode docs`
+   - **Endpoint**: `https://docs.hypermode.com/mcp`
+5. Save and restart Cursor
+
+## Tool Call Examples
+
+Here are actual examples of what the Hypermode Docs MCP server tool calls and
+responses look like:
+
+### Example 1: Searching for Dgraph DQL Examples
+
+**User Query**: "How do I write a DQL query to find all users with a specific
+age range?"
+
+**MCP Search**: The assistant can search the Hypermode docs for DQL examples,
+finding relevant documentation about:
+
+- Basic DQL query syntax
+- Filtering and range queries
+- User data models
+- Specific examples from tutorials
+
+**Result**: The assistant provides a contextual answer with:
+
+- Relevant DQL query examples
+- Links to specific documentation pages
+- Additional context about Dgraph query patterns
+
+**MCP Tool Call**:
+
+```json
+{
+  "name": "search",
+  "arguments": {
+    "query": "DQL query find users age range filtering"
+  }
+}
+```
+
+**MCP Response**:
+
+```json
+{
+  "results": [
+    {
+      "title": "DQL Query Examples",
+      "content": "Learn how to write DQL queries with filtering and range operations...",
+      "url": "https://docs.hypermode.com/dgraph/dql/query",
+      "snippet": "Use the @filter directive with ge() and le() functions to find users within age ranges..."
+    },
+    {
+      "title": "Basic DQL Operations",
+      "content": "Master the fundamentals of DQL query syntax...",
+      "url": "https://docs.hypermode.com/dgraph/dql/basic-operations",
+      "snippet": "Filtering with @filter allows you to narrow down results based on specific conditions..."
+    }
+  ]
+}
+```
+
+### Example 2: Finding Hypermode Agent Connection Guides
+
+**User Query**: "How do I connect my agent to Stripe?"
+
+**MCP Search**: The assistant searches for Stripe connection documentation,
+finding:
+
+- Step-by-step connection guides
+- Required configuration details
+- Example agent configurations
+- Troubleshooting tips
+
+**Result**: The assistant delivers comprehensive setup instructions with direct
+links to relevant documentation sections.
+
+**MCP Tool Call**:
+
+```json
+{
+  "name": "search",
+  "arguments": {
+    "query": "Stripe agent connection setup guide"
+  }
+}
+```
+
+**MCP Response**:
+
+```json
+{
+  "results": [
+    {
+      "title": "Stripe Connection Guide",
+      "content": "Step-by-step instructions for connecting your Hypermode agent to Stripe...",
+      "url": "https://docs.hypermode.com/agents/connections/stripe",
+      "snippet": "Add your Stripe API keys and configure webhook endpoints for your agent..."
+    },
+    {
+      "title": "Available Connections",
+      "content": "Overview of all supported payment and commerce connections...",
+      "url": "https://docs.hypermode.com/agents/available-connections",
+      "snippet": "Stripe is fully supported with payment processing and customer management capabilities..."
+    }
+  ]
+}
+```
+
+### Example 3: Python Dgraph Connection Syntax
+
+**User Query**: "What's the syntax to create a connection to Hypermode graphs
+using the dgraph:// connection string in Python?"
+
+**MCP Search**: The assistant searches for Python Dgraph connection
+documentation, finding:
+
+- Python SDK examples and tutorials
+- Connection string syntax and format
+- Hypermode graph connection guides
+- Code samples for dgraph:// protocol
+
+**Result**: The assistant provides Python code examples with connection syntax
+and links to relevant documentation.
+
+**MCP Tool Call**:
+
+```json
+{
+  "name": "search",
+  "arguments": {
+    "query": "Python dgraph connection string dgraph:// syntax"
+  }
+}
+```
+
+**MCP Response**:
+
+```json
+{
+  "results": [
+    {
+      "title": "Python SDK Documentation",
+      "content": "Learn how to connect to Dgraph from Python applications...",
+      "url": "https://docs.hypermode.com/dgraph/sdks/python",
+      "snippet": "Use the dgraph:// protocol to connect to Hypermode graphs with Python client libraries..."
+    },
+    {
+      "title": "Graph Connection Guide",
+      "content": "Step-by-step instructions for connecting to Hypermode graphs...",
+      "url": "https://docs.hypermode.com/graphs/connect",
+      "snippet": "Python connection examples using dgraph:// connection strings for Hypermode graphs..."
+    }
+  ]
+}
+```
+
+## Benefits of Using the MCP Server
+
+1. **Real-time Information**: Always access the latest documentation
+2. **Contextual Results**: Get relevant information based on your specific query
+3. **Direct Links**: Navigate directly to the source documentation
+4. **Comprehensive Coverage**: Search across all Hypermode resources
+5. **AI-Optimized**: Designed specifically for AI assistant interactions
+
+## Troubleshooting
+
+### Common Issues
+
+**Server Connection Failed**
+
+- Verify the URL: `https://docs.hypermode.com/mcp`
+- Check your internet connection
+- Ensure the MCP client supports HTTPS connections
+
+**Search Not Working**
+
+- Restart your MCP client application
+- Verify the server is properly configured
+- Check if the server requires authentication (currently none required)
+
+**No Results Found**
+
+- Try different search terms
+- Use more specific queries
+- Check if the documentation covers your topic
+
+### Getting Help
+
+If you encounter issues with the MCP server:
+
+1. Verify your configuration matches the setup instructions
+2. Check the MCP client's error logs
+3. Ensure you're using a supported MCP client
+4. Contact Hypermode support if issues persist
+
+## Advanced Usage
+
+### Optimizing Searches
+
+- Use specific technical terms (e.g., "DQL aggregation" instead of "how to
+  count")
+- Include feature names (e.g., "Hypermode agents" instead of "agents")
+- Reference specific error messages or code snippets
+
+### Integration with Development Workflow
+
+- Use the MCP server during code reviews
+- Get instant help with Dgraph queries
+- Find examples for specific use cases
+- Access troubleshooting guides in real-time
+
+The Hypermode Docs MCP server transforms your AI assistant into a knowledgeable
+Hypermode expert, providing instant access to comprehensive documentation and
+helping you build better applications with confidence.
