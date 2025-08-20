@@ -23,7 +23,7 @@ applied to payment processing and financial data management.
 
 ## Prerequisites
 
-- A [Hypermode Pro workspace](https://hypermode.com/login)
+- A [Hypermode Agents workspace](https://hypermode.com/login)
 - A [Stripe account](https://stripe.com) (test mode is perfect for this
   tutorial)
 - Access to your operations tools (for example, internal knowledge base) - we'll
@@ -31,68 +31,51 @@ applied to payment processing and financial data management.
 - Basic familiarity with modern chat interfaces (no coding required)
 - Estimated time: 15 minutes
 
-## Step 1: Sign in and open your workspace
+## Sign in to Hypermode Agents
 
-Head to [hypermode.com](https://hypermode.com), sign in, and create your first
-workspace if you haven't already.
+Head to [hypermode.com](https://hypermode.com) and sign in to Hypermode Agents.
 
-## Step 2: Open Hypermode Concierge + Agent builder
+## Creating your Stripe agent
 
-In the left sidebar, click the [threads](/agents/work) icon.
+![Create new agent](/images/connections/stripe/create-new-agent-button.png)
 
-Select the "Create new" option and select the
-[Hypermode Concierge + Agent builder](/agents/create-agent#build-a-new-agent-with-concierge).
-This is Hypermode's AI-powered agent that transforms natural language
-descriptions into fully functional agents that can work with specialized tools
-like Stripe.
+### Create a new agent
 
-![Create new agent](/images/tutorials/first-operations-agent/create-new.png)
+From the Hypermode Agents console, create a new agent:
 
-## Step 3: Describe the job
+1. Click the **Create new Agent** button from the agents view or select _Create
+   new >> Create new agent_ from the threads view.
+2. Enter a description of your agent
 
-In plain English, type something like:
+We'll use the following description for our financial operations agent:
 
 ```text
-Let's build a financial operations agent that can process payments, handle refunds,
-create invoices, and analyze financial data using Stripe. It should be able to
-work with our internal policies from Notion to make decisions about refunds.
+Let's build a financial operations agent that can process payments, handle
+refunds, create invoices, and analyze financial data using Stripe.
 ```
 
-Concierge will ask clarifying questions about your specific operations needs,
-draft an initial system prompt, and suggest the Stripe connection along with any
-other tools you mention.
+![Create new agent modal](/images/tutorials/first-operations-agent/operations-agent-description.png)
 
-![Create new agent with Concierge](/images/tutorials/first-operations-agent/create-new-concierge.png)
+### Agent profile
 
-## Step 4: Refine and create your agent
+You can view and edit agent details in the agent profile. The agent profile
+includes the agent name, description, and instructions. You can also view your
+threads with this agent as well as manage the agent's tasks and knowledge.
 
-Follow the Concierge agent's guided steps to fully specify your agent's
-operational scope. The Concierge will help you define what financial operations
-your agent should handle, from simple payment processing to complex refund
-policy decisions.
+![Agent profile](/images/tutorials/first-operations-agent/operations-agent-profile-view.png)
 
-Once you've fully specified the details, your new operations agent is created
-and ready to connect to Stripe.
+### Agent instructions
 
-![Hypermode Create Agent](/images/tutorials/first-operations-agent/hypermode-create-agent.png)
+You can edit the agent instructions in the agent profile. Editing the agent's
+instructions is useful for personalizing your agent and customizing how your
+agent will work with you and your team.
 
-Your agent will now appear in the Agents page, ready to be configured with
-Stripe access.
+![Create agent modal](/images/tutorials/first-operations-agent/edit-operations-agent-instructions.png)
 
-![Hypermode Agent page](/images/tutorials/first-operations-agent/hypermode-agent-page.png)
+## Refine your agent instructions
 
-## Step 5: Review your agent details
-
-You can see the details of your agent, including the system prompt that
-Concierge created for financial operations.
-
-![Hypermode Agent details](/images/tutorials/first-operations-agent/hypermode-agent-details.png)
-
-## Step 6: Refine your agent instructions
-
-You can review the Instructions. Hypermode Agents behave as the "system prompt"
-tells them. Edit the prompt by pasting the template below into the
-"Instructions" field:
+Optionally, you can edit the agent instructions by pasting the template below
+into the "Instructions" field:
 
 ```text
 ## Description
@@ -180,18 +163,26 @@ Example Output Structure:
 Always ask if the user needs additional financial reports, policy clarifications, or transaction details.
 ```
 
-Press **Save**.
-
-## Step 7: Add the Stripe connection
+## Add the Stripe connection
 
 Let's configure the Stripe connection so your agent can access your payment
-processing capabilities. Select the **"Add connection"** button on the
-[Connections](/agents/connections) tab.
+processing capabilities.
 
-![Connect your agent](/images/tutorials/first-operations-agent/add-connection.png)
+To add the Stripe connection:
 
-Search for and select **Stripe** from the available connections. You'll need to
-authorize with your Stripe account credentials.
+1. Select the Connection tab
+2. Select "Connect" next to Stripe in the list of available connections
+
+![Add Stripe connection](/images/connections/stripe/stripe-add-connection.png)
+
+### Configure credentials
+
+Enter your Stripe credentials:
+
+- **API Key**: Your Stripe secret key (starts with `sk_test_` for test mode or
+  `sk_live_` for live mode)
+
+![Stripe connection modal](/images/connections/stripe/stripe-configure-connection.png)
 
 For this tutorial, we'll use Stripe's test mode. When prompted for your API key,
 use your test key (starts with `sk_test_`).
@@ -204,6 +195,19 @@ use your test key (starts with `sk_test_`).
   for connection details.
 </Warning>
 
+### Test basic connectivity
+
+Start a new thread and test the connection with a simple query:
+
+```text
+Can you check my Stripe account balance?
+```
+
+You should see a Stripe tool call in the chat history, confirming the connection
+works:
+
+![Test connection](/images/connections/stripe/stripe-test-connection.png)
+
 You can also add additional connections for your operations workflow:
 
 - **Knowledge base** (Notion or Google Docs) for _refund policies and
@@ -211,12 +215,7 @@ You can also add additional connections for your operations workflow:
 - **Internal communications** (Slack, Teams) for _notifications and approvals_
 - **Accounting tools** (QuickBooks, Xero) for _financial record keeping_
 
-![Hypermode Connections](/images/tutorials/first-operations-agent/hypermode-connections.png)
-
-## Step 8: Test with payment operations
-
-Back in threads, let's test your operations agent with some real scenarios. Try
-these example requests:
+## Test with payment operations
 
 ### Create a test payment
 
@@ -259,7 +258,7 @@ company guidelines.
 
 ![Refund processing](/images/tutorials/first-operations-agent/refund-processing.png)
 
-## Step 9: Set up your Stripe test environment
+## Set up your Stripe test environment
 
 To fully test your operations agent, let's populate your Stripe test environment
 with sample data. Ask your agent:
@@ -275,6 +274,40 @@ Your agent will create realistic test data including:
 - Test payment methods using Stripe's test card numbers
 - Sample successful and failed transactions
 - Basic subscription plans
+
+## Comprehensive financial reporting
+
+Our agent can generate a comprehensive financial report and email it to our
+stakeholders. We'll use the following instructions to generate the report:
+
+```text
+Can you generate a Core Financial Monthly Report? Include:
+
+- Total gross revenue (before fees/refunds)
+- Net revenue (after Stripe fees, refunds, and disputes)
+- Number of payments processed
+- Number of refunds processed
+- Number of chargebacks processed
+- Number of disputes processed
+- Average order value (AOV)
+- Customer lifetime value (LTV)
+- Churn rate
+- MRR
+```
+
+After fetching the relevant data from Stripe, our agent will generate a report:
+
+![Financial report](/images/tutorials/first-operations-agent/operations-agent-financial-report.png)
+
+We can then ask our agent to email the report to our stakeholders. We'll first
+need to add the Gmail connection to our agent.
+
+![email financial report](/images/tutorials/first-operations-agent/email-draft-toolcall.png)
+
+If we check the email draft, we'll see that our agent has created a draft email
+with the report attached.
+
+![email financial report](/images/tutorials/first-operations-agent/email-draft.png)
 
 ## What's next?
 
