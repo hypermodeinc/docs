@@ -86,28 +86,34 @@ your agent needs:
 
 ## Creating your Stripe agent
 
+![Create new agent](/images/connections/stripe/create-new-agent-button.png)
+
 ### Create a new agent
 
-From the Hypermode interface, create a new agent manually:
+From the Hypermode Agents console, create a new agent:
 
-1. Click the agent dropdown menu
-2. Select "Create new Agent"
+1. Click the **Create new Agent** button from the agents view or select _Create
+   new >> Create new agent_ from the threads view.
+2. Enter a name for your agent
+3. Click the **Create Agent** button
 
-### Configure agent settings
+![Create new agent modal](/images/connections/stripe/create-new-agent-description.png)
 
-Use these recommended settings for your Stripe agent:
+### Agent profile
 
-- **Agent Name**: StripeSleuth
-- **Agent Title**: Connects to Stripe Payments
-- **Description**: StripeSleuth handles payment processing and customer
-  management
-- **Instructions**: You have a connection to Stripe and various other developer
-  tools to streamline payment operations, customer management, and financial
-  reporting. You can process payments, manage subscriptions, handle refunds, and
-  analyze financial data.
-- **Model**: GPT-4.1
+You can view and edit agent details in the agent profile. The agent profile
+includes the agent name, description, and instructions. You can also view your
+threads with this agent as well as manage the agent's tasks and knowledge.
 
-![Create agent modal](/images/connections/stripe/stripe-create-agent.png)
+![Agent profile](/images/connections/stripe/agent-profile-view.png)
+
+### Agent instructions
+
+You can edit the agent instructions in the agent profile. Editing the agent's
+instructions is useful for personalizing your agent and customizing how your
+agent will work with you and your team.
+
+![Create agent modal](/images/connections/stripe/edit-agent-instructions.png)
 
 ## Connecting to Stripe
 
@@ -116,8 +122,8 @@ Use these recommended settings for your Stripe agent:
 Select the Agents tab in the left navigation bar, then click your StripeSleuth
 agent. Select the "Connections" tab.
 
-1. Click "Add connection"
-2. Select "Stripe" from the dropdown
+1. Select the Connection tab
+2. Select "Connect" next to Stripe in the list of available connections
 
 ![Add Stripe connection](/images/connections/stripe/stripe-add-connection.png)
 
@@ -138,7 +144,12 @@ We recommend using a Stripe Sandbox environment for development and testing.
 
 </Warning>
 
-## Verifying the Stripe connection
+## Create a new thread with your agent
+
+![Create agent thread](/images/connections/stripe/agent-new-thread.png)
+
+From the threads view, select "Create new" then select your "Stripe Sleuth"
+agent from the list of agents.
 
 ### Test basic connectivity
 
