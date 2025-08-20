@@ -23,6 +23,7 @@ CRM
 Crunchbase
 [Cc]ryptocurrency
 [Cc]ypher
+Claude Desktop
 datetime
 [Dd]eserialize
 Dgraph
@@ -170,6 +171,7 @@ subgraph
 tablet
 UID|UIDs
 [Uu]psert|[Uu]pserts
+VS Code
 [Zz]ero
 
 # Badger terms
