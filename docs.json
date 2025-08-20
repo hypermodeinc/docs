@@ -200,7 +200,7 @@
           },
           {
             "group": "Resources",
-            "pages": ["security", "community-and-support"]
+            "pages": ["security", "community-and-support", "hypermode-docs-mcp"]
           }
         ]
       },
