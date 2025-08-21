@@ -85,15 +85,13 @@ contain the term "GraphQL".
 
 ```graphql
 queryAuthor(filter: { name: { eq: "Diggy" } } ) {
-    posts(filter: { title: { anyofterms: "GraphQL" }}) {
-        title
     }
 }
 ```
 
 Dgraph can build search types with the ability to search between a range. For
-example with the above Post type with datePublished field, a query can find
-publish dates within a range
+example, with the preceding Post type with the `datePublished` field, a query
+can find publish dates within a range.
 
 ```graphql
 query {
@@ -104,8 +102,8 @@ query {
 ```
 
 Dgraph can also build GraphQL search ability to find match a value from a list.
-For example with the above Author type with the name field, a query can return
-the Authors that match a list
+For example with the preceding Author type with the name field, a query can
+return the Authors that match a list
 
 ```graphql
 queryAuthor(filter: { name: { in: ["Diggy", "Jarvis"] } } ) {
@@ -115,13 +113,13 @@ queryAuthor(filter: { name: { in: ["Diggy", "Jarvis"] } } ) {
 
 There's different search possible for each type as explained below.
 
-### Int, Float and DateTime
+### Int, float and dateTime
 
 | argument | constructed filter                                |
 | -------- | ------------------------------------------------- |
 | none     | `lt`, `le`, `eq`, `in`, `between`, `ge`, and `gt` |
 
-Search for fields of types `Int`, `Float` and `DateTime` is enabled by adding
+Search for fields of types `Int`, `Float` and `dateTime` is enabled by adding
 `@search` to the field with no arguments. For example, if a schema contains:
 
 ```graphql
@@ -187,7 +185,7 @@ queryAuthor(filter: { name: { eq: "Diggy" } } ) {
 }
 ```
 
-### DateTime
+### dateTime
 
 | argument                          | constructed filters                               |
 | --------------------------------- | ------------------------------------------------- |
@@ -198,14 +196,14 @@ the search index should be built: by year, month, day or hour. `@search`
 defaults to year, but once you understand your data and query patterns, you
 might want to changes that like `@search(by: [day])`.
 
-### Boolean
+### Boolean fields
 
 | argument | constructed filter |
 | -------- | ------------------ |
 | none     | `true` and `false` |
 
-Booleans can only be tested for true or false. If `isPublished: Boolean @search`
-is in the schema, then the search allows
+Boolean fields can only be tested for `true` or `false`. If
+`isPublished: Boolean @search` is in the schema, then the search allows
 
 ```graphql
 filter: { isPublished: true }
@@ -229,6 +227,7 @@ you have the following options as arguments to `@search`.
 | `regexp`   | `regexp` (regular expressions)                                        |
 | `term`     | `allofterms` and `anyofterms`                                         |
 | `fulltext` | `alloftext` and `anyoftext`                                           |
+| `ngram`    | `ngram`                                                               |
 
 - _Schema rule_: `hash` and `exact` can't be used together.
 
@@ -250,7 +249,7 @@ query {
 }
 ```
 
-to find users with names lexicographically after "Diggy".
+to find users with names lexicographically after "Diggy."
 
 #### String regular expression search
 
@@ -283,12 +282,8 @@ query {
 }
 ```
 
-will match all posts with both "GraphQL and "tutorial" in the title, while
 `anyofterms: "GraphQL tutorial"` would match posts with either "GraphQL" or
-"tutorial".
 
-`fulltext` search is Google-stye text search with stop words, stemming. etc. So
-`alloftext: "run woman"` would match "run" as well as "running", etc. For
 example, to find posts that talk about fantastic GraphQL tutorials:
 
 ```graphql
@@ -296,6 +291,32 @@ query {
     queryPost(filter: { title: { `alloftext: "fantastic GraphQL tutorials"` } } ) { ... }
 }
 ```
+
+#### String ngram search
+
+The `ngram` index tokenizes a string into contiguous sequences of n words, with
+support for stop word removal and stemming. N-gram search matches if the indexed
+string contains the given sequence of terms.
+
+If the schema has
+
+```graphql
+type Post {
+    title: String @search(by: [ngram])
+    ...
+}
+```
+
+then
+
+```graphql
+query {
+    queryPost(filter: { title: { ngram: "quick brown fox" } } ) { ... }
+}
+```
+
+will match all posts that contain the contiguous sequence "quick brown fox" in
+the title.
 
 #### Strings with multiple searches
 
@@ -310,7 +331,7 @@ type Author {
 }
 ```
 
-### Enums
+### enums
 
 | argument | constructed searches                                                  |
 | -------- | --------------------------------------------------------------------- |
@@ -319,8 +340,8 @@ type Author {
 | `exact`  | `lt`, `le`, `eq`, `in`, `between`, `ge`, and `gt` (lexicographically) |
 | `regexp` | `regexp` (regular expressions)                                        |
 
-Enums are serialized in Dgraph as strings. `@search` with no arguments is the
-same as `@search(by: [hash])` and provides `eq` and `in` searches. Also
+enum fields are serialized in Dgraph as strings. `@search` with no arguments is
+the same as `@search(by: [hash])` and provides `eq` and `in` searches. Also
 available for enums are `exact` and `regexp`. For hash and exact search on
 enums, the literal enum value, without quotes `"..."`, is used, for regexp,
 strings are required. For example:
@@ -387,7 +408,7 @@ type Hotel {
 }
 ```
 
-#### near
+#### Near
 
 The `near` filter matches all entities where the location given by a field is
 within a distance `meters` from a coordinate.
@@ -408,7 +429,7 @@ queryHotel(filter: {
 }
 ```
 
-#### within
+#### Within
 
 The `within` filter matches all entities where the location given by a field is
 within a defined `polygon`.
@@ -441,7 +462,7 @@ queryHotel(filter: {
 }
 ```
 
-#### contains
+#### Contains
 
 The `contains` filter matches all entities where the `Polygon` or `MultiPolygon`
 field contains another given `point` or `polygon`.
@@ -489,7 +510,7 @@ A `contains` example using `polygon`:
 }
 ```
 
-#### intersects
+#### Intersects
 
 The `intersects` filter matches all entities where the `Polygon` or
 `MultiPolygon` field intersects another given `polygon` or `multiPolygon`.
@@ -579,8 +600,8 @@ Unions can be queried only as a field of a type. Union queries can't be ordered,
 but you can filter and paginate them.
 
 <Note>
-  Union queries do not support the `order` argument. The results will be ordered
-  by the `uid` of each node in ascending order.
+  Union queries don't support the `order` argument. The results will be ordered
+  by the UID of each node in ascending order.
 </Note>
 
 For example, the following schema will enable to query the `members` union field
