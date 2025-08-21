@@ -80,8 +80,8 @@ Schema Types: `string`
 
 Index Required: `term`
 
-Matches strings that have any of the specified terms in any order; case
-insensitive.
+Matches strings that have any of the specified terms in any order (case
+insensitive).
 
 #### Usage at root
 
@@ -113,6 +113,31 @@ Steven Spielberg.
     name@en
     director.film
     @filter(anyofterms(name@en, "war spies")) { name@en }
+  }
+}
+```
+
+## N-gram search
+
+Syntax Examples: `ngram(predicate, "a string of text")`
+
+Schema Types: `string`
+
+Index Required: `ngram`
+
+The `ngram` index tokenizes a string into shingles (contiguous sequences of n
+words), with support for stop word removal and stemming. The `ngram` function
+matches strings that contain the given sequence of terms.
+
+#### Usage at root
+
+Query example: all nodes that have a `name` containing `quick`, `brown`, and
+`fox`.
+
+```json
+{
+  me(func: ngram(name@en, "quick brown fox")) {
+    name@en
   }
 }
 ```
@@ -474,7 +499,7 @@ Query Example: Movies initially released in 1977, listed by genre.
 }
 ```
 
-## uid
+## UID
 
 Syntax Examples:
 
