@@ -10,7 +10,7 @@ permissions: read-all
 jobs:
   no-broken-links:
     name: Broken Link Checker
-    runs-on: warp-ubuntu-latest-x64-2x
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
