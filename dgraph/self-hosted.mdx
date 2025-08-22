@@ -404,32 +404,7 @@ curl -X POST https://your-cluster.grpc.cloud.dgraph.io/admin \
 
 </CodeGroup>
 
-### 2. Plan Downtime Window
-
-<Tabs>
-  <Tab title="Minimal Downtime Strategy">
-    **Recommended for**: Production systems with high availability requirements
-    - **Read-only period**: 15-30 minutes - **Full downtime**: 30-60 minutes -
-    **Strategy**: Blue-green deployment with data sync - **Tools**: Load
-    balancer for traffic switching
-  </Tab>
-
-<Tab title="Maintenance Window Strategy">
-  **Recommended for**: Systems with scheduled maintenance windows - **Read-only
-  period**: 1-2 hours - **Full downtime**: 2-4 hours - **Strategy**: Traditional
-  migration during off-peak hours - **Tools**: Application-level maintenance
-  mode
-</Tab>
-
-  <Tab title="Extended Migration Strategy">
-    **Recommended for**: Large datasets or complex environments - **Read-only
-    period**: 4-8 hours - **Full downtime**: 8-12 hours - **Strategy**: Bulk
-    load with extended testing period - **Tools**: Comprehensive monitoring and
-    rollback plan
-  </Tab>
-</Tabs>
-
-### 3. Infrastructure Sizing
+### 2. Infrastructure Sizing
 
 <CardGroup cols={2}>
   <Card title="CPU Requirements" icon="microchip">
@@ -1491,61 +1466,104 @@ curl http://10.0.1.10:8080/health
 ### 2. Import Schema
 
 <Tabs>
-  <Tab title="Kubernetes">
-    ```bash kubectl port-forward -n dgraph svc/dgraph-dgraph-alpha 8080:8080 &
-    curl -X POST localhost:8080/admin/schema \ -H "Content-Type:
-    application/json" \ -d @schema_backup.json ```
-  </Tab>
 
-<Tab title="Docker Compose">
-  ```bash curl -X POST localhost:8080/admin/schema \ -H "Content-Type:
-  application/json" \ -d @schema_backup.json ```
+<Tab title="Kubernetes">
+
+```bash
+
+kubectl port-forward -n dgraph svc/dgraph-dgraph-alpha 8080:8080 &
+curl -X POST localhost:8080/admin/schema -H "Content-Type: application/json"
+\ -d @schema_backup.json
+
+```
+
 </Tab>
 
-  <Tab title="Linux VPS">
-    ```bash curl -X POST 10.0.1.10:8080/admin/schema \ -H "Content-Type:
-    application/json" \ -d @schema_backup.json ```
-  </Tab>
+<Tab title="Docker Compose">
+
+```bash
+
+curl -X POST localhost:8080/admin/schema \ -H "Content-Type:
+application/json" \ -d @schema_backup.json
+
+```
+
+</Tab>
+
+<Tab title="Linux VPS">
+  
+  ```bash
+  
+  curl -X POST 10.0.1.10:8080/admin/schema \ 
+  -H "Content-Type: application/json" \ 
+  -d @schema_backup.json 
+  
+  ```
+
+</Tab>
 </Tabs>
 
 ### 3. Import Data
 
 <Tabs>
-  <Tab title="Live Loader (Kubernetes)">
-    ```bash kubectl run dgraph-live-loader \ --image=dgraph/dgraph:v23.1.0 \
-    --restart=Never \ --namespace=dgraph \ --command -- dgraph live \ --files
-    /data/export.rdf.gz \ --alpha dgraph-dgraph-alpha:9080 \ --zero
-    dgraph-dgraph-zero:5080 ```
-  </Tab>
 
-<Tab title="Live Loader (Docker Compose)">
-  ```bash # Copy data files to container docker cp exported_data.rdf.gz
-  dgraph-alpha-1:/dgraph/ # Run live loader docker exec dgraph-alpha-1 dgraph
-  live \ --files /dgraph/exported_data.rdf.gz \ --alpha localhost:9080 \ --zero
-  dgraph-zero-1:5080 ```
+<Tab title="Live Loader (Kubernetes)">
+
+```bash
+
+kubectl run dgraph-live-loader \
+--image=dgraph/dgraph:v23.1.0 \
+--restart=Never \
+--namespace=dgraph \
+--command -- dgraph live \
+--files
+/data/export.rdf.gz \
+--alpha dgraph-dgraph-alpha:9080 \ --zero
+dgraph-dgraph-zero:5080
+```
+
 </Tab>
 
-  <Tab title="Live Loader (Linux VPS)">
-    ```bash # Copy data to server scp exported_data.rdf.gz user@10.0.1.10:/tmp/
-    # Run live loader ssh user@10.0.1.10 sudo -u dgraph dgraph live \ --files
-    /tmp/exported_data.rdf.gz \ --alpha localhost:9080 \ --zero 10.0.1.10:5080
-    ```
-  </Tab>
+<Tab title="Live Loader (Docker Compose)">
+
+```bash
+
+# Copy data files to container docker cp exported_data.rdf.gz
+  dgraph-alpha-1:/dgraph/ # Run live loader docker exec dgraph-alpha-1 dgraph
+  live \ --files /dgraph/exported_data.rdf.gz \ --alpha localhost:9080 \ --zero
+  dgraph-zero-1:5080
+
+```
+
+</Tab>
+
+<Tab title="Live Loader (Linux VPS)">
+
+```bash
+
+# Copy data to server scp exported_data.rdf.gz user@10.0.1.10:/tmp/
+# Run live loader ssh user@10.0.1.10 sudo -u dgraph dgraph live \ --files
+/tmp/exported_data.rdf.gz \ --alpha localhost:9080 \ --zero 10.0.1.10:5080
+```
+
+</Tab>
 </Tabs>
 
 ### 4. Restore ACL Configuration
 
 <Tabs>
-  <Tab title="All Deployments">
-    ```bash
-    # Replace with your actual endpoint
-    DGRAPH_ENDPOINT="localhost:8080"  # Adjust for your deployment
-    
-    curl -X POST $DGRAPH_ENDPOINT/admin \
-      -H "Content-Type: application/json" \
-      -d '{"query": "mutation { addUser(input: {name: \"admin\", password: \"password\"}) { user { name } } }"}'
-    ```
-  </Tab>
+<Tab title="All Deployments">
+  ```bash
+  # Replace with your actual endpoint
+  DGRAPH_ENDPOINT="localhost:8080"  # Adjust for your deployment
+
+curl -X POST $DGRAPH_ENDPOINT/admin \
+ -H "Content-Type: application/json" \
+ -d '{"query": "mutation { addUser(input: {name: \"admin\", password:
+\"password\"}) { user { name } } }"}'
+
+````
+</Tab>
 </Tabs>
 
 ---
@@ -1553,8 +1571,8 @@ curl http://10.0.1.10:8080/health
 ## Post-Migration Verification
 
 <Card title="Data Integrity Checklist" icon="check-circle">
-  - Count total nodes and compare with original - Verify specific data samples -
-  Test query performance - Validate application connections
+- Count total nodes and compare with original - Verify specific data samples -
+Test query performance - Validate application connections
 </Card>
 
 ### 1. Data Integrity Check
@@ -1562,9 +1580,9 @@ curl http://10.0.1.10:8080/health
 <CodeGroup>
 ```bash Count Nodes
 curl -X POST localhost:8080/query \
-  -H "Content-Type: application/json" \
-  -d '{"query": "{ nodeCount(func: has(_predicate_)) { count(uid) } }"}'
-```
+-H "Content-Type: application/json" \
+-d '{"query": "{ nodeCount(func: has(_predicate_)) { count(uid) } }"}'
+````
 
 ```bash Verify Sample Data
 curl -X POST localhost:8080/query \
@@ -1889,97 +1907,50 @@ kubectl create cronjob dgraph-backup \
   may encounter during and after migration.
 </Info>
 
-#### Hypermode Operations Runbooks
-
-<CardGroup cols={1}>
-  <Card
-    title="Hypermode Ops Runbooks Repository"
-    icon="book"
-    href="https://github.com/hypermodeinc/ops-runbooks"
-  >
-    Repository for operational runbooks - A collection of step by step guides
-    for fixing common problems **Contains runbooks for**:
-
-    * Database operations
-    * Infrastructure monitoring and alerting
-    * Performance optimization procedures
-    * Security incident response
-    * Backup and recovery operations
-    * Scaling and capacity planning
-    * Security incident response
-
-  </Card>
-</CardGroup>
-
-#### Community Runbook Resources
+#### Dgraph Operations Runbooks
 
 <CardGroup cols={2}>
   <Card
-    title="Awesome Runbook Collection"
-    icon="star"
-    href="https://github.com/runbear-io/awesome-runbook"
+    title="High-Availability Management"
+    icon="settings"
+    href="https://github.com/hypermodeinc/ops-runbooks/blob/main/Enabling%20or%20Disabling%20High-Availability%20for%20a%20Dgraph%20Cluster.md"
   >
-    A curated list of awesome runbook documents, guidebooks, software and
-    resources
+    Enable or disable high-availability (HA) for Dgraph clusters, scale replicas, and manage cluster topology.
   </Card>
 
 <Card
-  title="SRE Runbook Template"
-  icon="file-alt"
-  href="https://github.com/SkeltonThatcher/run-book-template"
+  title="Zero Node Recovery"
+  icon="refresh"
+  href="https://github.com/hypermodeinc/ops-runbooks/blob/main/Freshly%20Rebuilding%20Zero%20to%20avoid%20idx%20issue.md"
 >
-  Run Book / Operations Manual template for modern software systems
+  Freshly rebuild Zero nodes to avoid idx issues and restore cluster stability.
 </Card>
 
 <Card
-  title="Kubernetes Runbooks"
-  icon="dharmachakra"
-  href="https://github.com/openshift/runbooks"
+  title="HA Cluster Rebuild"
+  icon="wrench"
+  href="https://github.com/hypermodeinc/ops-runbooks/blob/main/Rebuild%20a%20Dgraph%20HA%20Cluster%20using%20an%20existing%20p%20directory%20.md"
 >
-  Runbooks for Alerts on OCP - Runbooks in this repository are grouped by the
-  operator that is responsible for shipping the respective alert
+  Rebuild high-availability clusters using existing p directories while
+  preserving data.
+</Card>
+
+<Card
+  title="RAFT Group Management"
+  icon="users"
+  href="https://github.com/hypermodeinc/ops-runbooks/blob/main/Remove%20and%20re-add%20a%20bad%20Alpha%20to%20a%20RAFT%20Group.md"
+>
+  Remove and re-add problematic Alpha nodes to RAFT groups for cluster health.
 </Card>
 
   <Card
-    title="CloudOps Automation"
-    icon="cloud"
-    href="https://github.com/unskript/Awesome-CloudOps-Automation"
+    title="Cluster Unsharding"
+    icon="merge"
+    href="https://github.com/hypermodeinc/ops-runbooks/blob/main/Unsharding%20a%20Sharded%20Cluster.md"
   >
-    Cloud-ops automation runbooks that are ready to use. Build your own
-    automations using the hundreds of drag and drop actions included in the
-    repository
+    Convert sharded clusters back to non-sharded configuration safely.
   </Card>
 </CardGroup>
-
-### Security and Compliance
-
-<Tabs>
-  <Tab title="Security Best Practices">
-    - [CIS Kubernetes
-    Benchmark](https://www.cisecurity.org/benchmark/kubernetes) - [NIST
-    Cybersecurity Framework](https://www.nist.gov/cyberframework) - [OWASP
-    Kubernetes Security Cheat
-    Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Kubernetes_Security_Cheat_Sheet.html)
-    - [Falco Runtime Security](https://falco.org/docs/)
-  </Tab>
-
-<Tab title="Compliance Frameworks">
-  - [SOC 2 Compliance
-  Guide](https://www.aicpa.org/interestareas/frc/assuranceadvisoryservices/aicpasoc2report.html)
-  - [GDPR Compliance](https://gdpr.eu/) - [HIPAA Security
-  Rule](https://www.hhs.gov/hipaa/for-professionals/security/index.html) - [PCI
-  DSS Requirements](https://www.pcisecuritystandards.org/pci_security/)
-</Tab>
-
-  <Tab title="Security Tools">
-    - [Trivy Container Scanning](https://aquasecurity.github.io/trivy/) - [Open
-    Policy Agent (OPA)](https://www.openpolicyagent.org/docs/latest/) -
-    [Gatekeeper Policy
-    Controller](https://open-policy-agent.github.io/gatekeeper/website/docs/) -
-    [Network Policy
-    Recipes](https://github.com/ahmetb/kubernetes-network-policy-recipes)
-  </Tab>
-</Tabs>
 
 ### Performance and Optimization
 
