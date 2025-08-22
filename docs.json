@@ -78,44 +78,18 @@
                     "pages": [
                       "agents/available-connections",
                       {
-                        "group": "CRM",
-                        "pages": ["agents/connections/attio"]
-                      },
-                      {
                         "group": "Commerce",
                         "pages": ["agents/connections/stripe"]
                       },
                       {
                         "group": "Database",
                         "pages": [
-                          "agents/connections/supabase",
                           "agents/connections/neo4j",
-                          "agents/connections/mongodb",
                           "agents/connections/motherduck"
                         ]
                       }
                     ]
                   }
-                ]
-              },
-              "agents/model-selection",
-              {
-                "group": "Example Agents",
-                "pages": [
-                  "agents/example-agents",
-                  "agents/agent-gallery/gtm-engineer",
-                  "agents/agent-gallery/market-researcher",
-                  "agents/agent-gallery/channelpulse",
-                  "agents/agent-gallery/persona-builder",
-                  "agents/agent-gallery/competitor-content-tracker",
-                  "agents/agent-gallery/pr-opportunity-scout",
-                  "agents/agent-gallery/event-webinar-optimizer",
-                  "agents/agent-gallery/social-media",
-                  "agents/agent-gallery/workout-scheduling",
-                  "agents/agent-gallery/music-recommendation",
-                  "agents/agent-gallery/github-review-bot",
-                  "agents/agent-gallery/linkedin-intelligence",
-                  "agents/agent-gallery/inventory-tracker"
                 ]
               },
               {
