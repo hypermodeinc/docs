@@ -291,7 +291,8 @@
               "dgraph/why-dgraph",
               "dgraph/quickstart",
               "dgraph/guides",
-              "dgraph/v25-preview"
+              "dgraph/v25-preview",
+              "dgraph/self-hosted"
             ]
           },
           {

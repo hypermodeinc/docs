@@ -1,0 +1,2213 @@
+---
+title: "Self Hosting Dgraph Guide"
+description:
+  "Complete guide for migrating Dgraph clusters from Dgraph Cloud and Hypermode
+  Graph to self-hosted environments across AWS, GCP, Azure, and Digital Ocean"
+sidebarTitle: "Self Hosting Guide"
+---
+
+## Overview
+
+This comprehensive guide walks you through migrating your Dgraph database from
+managed cloud services (Dgraph Cloud or Hypermode Graph) to self-hosted
+environments. Whether you're looking to reduce costs, gain more control, or meet
+specific compliance requirements, this guide provides detailed instructions for
+deploying across multiple cloud providers and deployment methods.
+
+### What You'll Learn
+
+<CardGroup cols={2}>
+  <Card title="Migration Planning" icon="clipboard-list">
+    - Assessment and planning strategies
+    - Downtime minimization techniques
+    - Resource requirement calculations
+    - Risk mitigation approaches
+  </Card>
+
+<Card title="Data Export & Import" icon="database">
+  - Exporting from Dgraph Cloud and Hypermode Graph - Schema and ACL backup
+  procedures - Bulk and live loading methods - Data integrity verification
+</Card>
+
+<Card title="Infrastructure Deployment" icon="server">
+  - Kubernetes deployments (EKS, GKE, AKS, DOKS) - Docker Compose setups - Linux
+  VPS configurations - Load balancing and storage setup
+</Card>
+
+  <Card title="Operations & Monitoring" icon="chart-line">
+    - Monitoring and alerting setup
+    - Backup and disaster recovery
+    - Performance optimization
+    - Security hardening
+  </Card>
+</CardGroup>
+
+### Deployment Options
+
+When migrating to self-hosted Dgraph, your deployment choice depends on several
+key factors: data size, team expertise, budget constraints, and control
+requirements. Here's how these factors influence your deployment decision:
+
+**Data Size Considerations:**
+
+- **Under 100GB**: Docker Compose or Linux VPS are suitable options
+- **100GB to 1TB**: Kubernetes or Linux VPS can handle the load
+- **Over 1TB**: Kubernetes is required for proper scaling and management
+
+**Team Expertise Factors:**
+
+- **High Kubernetes Experience**: Kubernetes deployment is recommended
+- **Limited Kubernetes Experience**: Docker Compose or Linux VPS are more
+  approachable
+
+**Budget Constraints:**
+
+- **Cost Optimized**: Linux VPS provides the most economical option
+- **Balanced**: Docker Compose offers a good middle ground
+- **Enterprise**: Kubernetes provides enterprise-grade features
+
+**Control Requirements:**
+
+- **Maximum Control**: Linux VPS gives you full control over the environment
+- **Managed Infrastructure**: Kubernetes provides managed infrastructure
+  capabilities
+
+**Available Deployment Methods:**
+
+- **Kubernetes**: Best for large-scale deployments, enterprise environments, and
+  teams with K8s expertise
+- **Docker Compose**: Ideal for development, testing, and smaller production
+  workloads
+- **Linux VPS**: Perfect for cost-conscious deployments and teams wanting
+  maximum control
+
+---
+
+## Prerequisites
+
+Before starting your migration, ensure you have the necessary tools, access, and
+resources.
+
+### Required Tools
+
+<CardGroup cols={2}>
+  <Card title="Command Line Tools" icon="terminal">
+    - `kubectl` (v1.24+)
+    - `helm` (v3.8+)
+    - `dgraph` CLI tool
+    - `curl` or similar HTTP client
+    - Cloud provider CLI tools
+  </Card>
+
+  <Card title="Development Tools" icon="code">
+    - Docker (for local testing)
+    - Git (for configuration management)
+    - Text editor or IDE
+    - SSH client
+  </Card>
+</CardGroup>
+
+### Access Requirements
+
+<Tabs>
+  <Tab title="Source Systems">
+    - **Dgraph Cloud**: Admin access to export data
+    - **Hypermode Graph**: Database access credentials
+    - **Network**: Ability to download large datasets
+  </Tab>
+
+  <Tab title="Target Infrastructure">
+    - **Cloud Provider**: Account with appropriate permissions
+    - **Kubernetes**: Cluster admin privileges (if using K8s)
+    - **SSL/TLS**: Certificate management capability
+    - **DNS**: Domain management for load balancers
+  </Tab>
+</Tabs>
+
+### Minimum resource requirements
+
+<Tabs>
+  <Tab title="Small Cluster (< 100 GB)">
+    - **Nodes**: 3 x 4 vCPU, 8 GB RAM
+    - **Storage**: 200 GB solid-state drive per node
+    - **Network**: 1 Gbps bandwidth
+    - **Estimated Cost**: $150-300/month
+  </Tab>
+
+<Tab title="Medium Cluster (100 GB - 1 TB)">
+  - **Nodes**: 6 x 8 vCPU, 16 GB RAM - **Storage**: 500 GB solid-state drive per
+  node - **Network**: 1 Gbps bandwidth - **Estimated Cost**: $500-800/month
+</Tab>
+
+  <Tab title="Large Cluster (> 1 TB)">
+    - **Nodes**: 9+ x 16 vCPU, 32 GB RAM
+    - **Storage**: 1 TB+ solid-state drive per node
+    - **Network**: 10 Gbps bandwidth
+    - **Estimated Cost**: $1500-3000/month
+  </Tab>
+</Tabs>
+
+---
+
+## Data export from source systems
+
+The first step in migration is safely exporting your data from your current
+managed service. This section covers export procedures for both Dgraph Cloud and
+Hypermode Graph.
+
+### Exporting from Dgraph Cloud
+
+Dgraph Cloud provides several methods for exporting your data, including admin
+API endpoints and the web interface.
+
+#### Method 1: Using the Web Interface
+
+<Steps>
+  <Step title="Access Export Function">
+    Log into your Dgraph Cloud dashboard and navigate to your cluster.
+    ![Dgraph Cloud Dashboard](/images/dgraph-cloud-dashboard.png)
+    <Note>
+      Screenshot placeholder: Show the main dashboard with cluster overview
+    </Note>
+  </Step>
+
+<Step title="Navigate to Export">
+  Click on the "Export" tab in your cluster management interface. ![Export Tab
+  Location](/images/dgraph-cloud-export-tab.png)
+  <Note>
+    Screenshot placeholder: Highlight the export tab in the navigation
+  </Note>
+</Step>
+
+<Step title="Configure Export Settings">
+  Select your export format and destination. Dgraph Cloud supports: -
+  **Format**: JSON or RDF - **Destination**: Download link or cloud storage -
+  **Compression**: Optional gzip compression ![Export
+  Configuration](/images/dgraph-cloud-export-config.png)
+  <Note>Screenshot placeholder: Show export configuration options</Note>
+</Step>
+
+<Step title="Start Export Process">
+  Click "Start Export" and monitor the progress. Large datasets may take several
+  hours. ![Export Progress](/images/dgraph-cloud-export-progress.png)
+  <Note>Screenshot placeholder: Show export progress indicator</Note>
+</Step>
+
+  <Step title="Download Exported Data">
+    Once complete, download your exported data files.
+    ![Export Download](/images/dgraph-cloud-export-download.png)
+    <Note>
+      Screenshot placeholder: Show download links for completed export
+    </Note>
+  </Step>
+</Steps>
+
+#### Method 2: Using Admin API
+
+<CodeGroup>
+```bash Check Cluster Status
+curl -X POST https://your-cluster.grpc.cloud.dgraph.io/admin \
+  -H "Content-Type: application/json" \
+  -d '{"query": "{ state { groups { id members { id addr leader lastUpdate } } } }"}'
+```
+
+```bash Export Schema
+curl -X POST https://your-cluster.grpc.cloud.dgraph.io/admin \
+  -H "Content-Type: application/json" \
+  -d '{"query": "schema {}"}' > schema_backup.json
+```
+
+```bash Export Data (Small Datasets)
+curl -X POST https://your-cluster.grpc.cloud.dgraph.io/admin \
+  -H "Content-Type: application/json" \
+  -d '{"query": "{ backup(destination: \"s3://your-bucket/backup\") { response { message code } } }"}'
+```
+
+```bash Export Data (Alternative Method)
+dgraph export --alpha=your-cluster.grpc.cloud.dgraph.io:443 \
+  --output=/path/to/export \
+  --format=json
+```
+
+</CodeGroup>
+
+#### Method 3: Bulk Export for Large Datasets
+
+For datasets larger than 10GB, use the bulk export feature:
+
+<CodeGroup>
+```bash Request Bulk Export
+curl -X POST https://your-cluster.grpc.cloud.dgraph.io/admin \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "mutation { 
+      export(input: {
+        destination: \"s3://your-backup-bucket/$(date +%Y-%m-%d)\",
+        format: \"rdf\",
+        namespace: 0
+      }) { 
+        response { 
+          message 
+          code 
+        } 
+      } 
+    }"
+  }'
+```
+
+```bash Check Export Status
+curl -X POST https://your-cluster.grpc.cloud.dgraph.io/admin \
+  -H "Content-Type: application/json" \
+  -d '{"query": "{ state { ongoing } }"}'
+```
+
+</CodeGroup>
+
+### Exporting from Hypermode Graph
+
+Hypermode Graph provides native export capabilities through both API and
+interface methods.
+
+#### Using The `admin` endpoint
+
+```bash
+curl --location 'https://<YOUR_CLUSTER_NAME>.hypermode.host/dgraph/admin' \
+--header 'Content-Type: application/json' \
+--header 'Dg-Auth: ••••••' \
+--data '{"query":"mutation {\n  export(input: { format: \"rdf\" }) {\n    response {\n      message\n      code\n    }\n  }\n}","variables":{}}'
+```
+
+### Export Validation and Preparation
+
+<Warning>
+  Always validate your exported data before proceeding with the migration.
+</Warning>
+
+#### Data Integrity Checks
+
+<CodeGroup>
+
+```bash Verify Export Completeness
+# Check file sizes and contents
+ls -lah exported_data/
+file exported_data/*
+
+# For RDF exports, count triples
+
+if [[-f "exported_data/g01.rdf.gz"]]; then zcat exported_data/g01.rdf.gz | wc -l
+fi
+
+# For JSON exports, validate structure
+
+if [[-f "exported_data/g01.json.gz"]]; then zcat exported_data/g01.json.gz | jq
+'.[] | keys' | head -10 fi
+
+```
+
+```bash Schema Validation
+# Validate schema syntax
+if [[ -f "schema.graphql" ]]; then
+  # Basic GraphQL syntax check
+  node -e "
+    const fs = require('fs');
+    const schema = fs.readFileSync('schema.graphql', 'utf8');
+    console.log('Schema length:', schema.length);
+    console.log('Types defined:', (schema.match(/type \w+/g) || []).length);
+  "
+fi
+
+# Check for required predicates
+grep -E "(uid|dgraph\.|type)" schema_backup.json || echo "Warning: System predicates missing"
+```
+
+```bash Calculate Dataset Metrics
+# Estimate import time and resources needed
+echo "=== Dataset Analysis ==="
+echo "Total files: $(find exported_data/ -name "*.gz" | wc -l)"
+echo "Total size: $(du -sh exported_data/ | cut -f1)"
+echo "Largest file: $(find exported_data/ -name "*.gz" -exec ls -lah {} \; | sort -k5 -hr | head -1)"
+
+# Estimate nodes and edges
+if [[ -f "exported_data/g01.rdf.gz" ]]; then
+  echo "Estimated triples: $(zcat exported_data/g01.rdf.gz | wc -l)"
+fi
+```
+
+</CodeGroup>
+
+#### Prepare for Transfer
+
+<Steps>
+  <Step title="Organize Export Files">
+    ```bash
+    # Create organized directory structure
+    mkdir -p migration_data/{data,schema,acl,scripts}
+    
+    # Move files to appropriate directories
+    mv exported_data/*.rdf.gz migration_data/data/
+    mv schema* migration_data/schema/
+    mv acl* migration_data/acl/
+    ```
+  </Step>
+
+<Step title="Create Checksums">
+  ```bash # Generate checksums for integrity verification cd migration_data find
+  . -type f -name "*.gz" -exec sha256sum {} \; > checksums.txt find . -type f
+  -name "*.json" -exec sha256sum {} \; >> checksums.txt ```
+</Step>
+
+  <Step title="Compress for Transfer">
+    ```bash
+    # Create final migration package
+    cd ..
+    tar -czf migration_package_$(date +%Y%m%d).tar.gz migration_data/
+    
+    # Verify package
+    tar -tzf migration_package_*.tar.gz | head -10
+    ```
+  </Step>
+</Steps>
+
+---
+
+## Pre-Migration Planning
+
+Proper planning is crucial for a successful migration. This section helps you
+assess your current environment and plan the migration strategy.
+
+### 1. Assess Current Environment
+
+<CodeGroup>
+```bash Analyze Current Usage
+# For Dgraph Cloud
+curl -X POST https://your-cluster.grpc.cloud.dgraph.io/admin \
+  -H "Content-Type: application/json" \
+  -d '{"query": "{ state { groups { id checksum tablets { predicate space } } } }"}'
+
+# For Hypermode Graph
+
+hypermode graph stats --detailed
+
+````
+
+```bash Check Performance Metrics
+# Query response times
+time curl -X POST https://your-cluster.grpc.cloud.dgraph.io/query \
+  -H "Content-Type: application/json" \
+  -d '{"query": "{ nodeCount(func: has(_predicate_)) { count(uid) } }"}'
+
+# Memory and storage usage
+curl -X POST https://your-cluster.grpc.cloud.dgraph.io/admin \
+  -H "Content-Type: application/json" \
+  -d '{"query": "{ state { groups { id members { groupId addr } } } }"}'
+````
+
+</CodeGroup>
+
+### 2. Plan Downtime Window
+
+<Tabs>
+  <Tab title="Minimal Downtime Strategy">
+    **Recommended for**: Production systems with high availability requirements
+    - **Read-only period**: 15-30 minutes - **Full downtime**: 30-60 minutes -
+    **Strategy**: Blue-green deployment with data sync - **Tools**: Load
+    balancer for traffic switching
+  </Tab>
+
+<Tab title="Maintenance Window Strategy">
+  **Recommended for**: Systems with scheduled maintenance windows - **Read-only
+  period**: 1-2 hours - **Full downtime**: 2-4 hours - **Strategy**: Traditional
+  migration during off-peak hours - **Tools**: Application-level maintenance
+  mode
+</Tab>
+
+  <Tab title="Extended Migration Strategy">
+    **Recommended for**: Large datasets or complex environments - **Read-only
+    period**: 4-8 hours - **Full downtime**: 8-12 hours - **Strategy**: Bulk
+    load with extended testing period - **Tools**: Comprehensive monitoring and
+    rollback plan
+  </Tab>
+</Tabs>
+
+### 3. Infrastructure Sizing
+
+<CardGroup cols={2}>
+  <Card title="CPU Requirements" icon="microchip">
+    **Alpha Nodes**: 2-4 cores per 1M edges
+    **Zero Nodes**: 1-2 cores (coordination only)
+    **Load Balancer**: 2-4 cores
+    **Monitoring**: 1-2 cores
+  </Card>
+
+  <Card title="Memory Requirements" icon="memory">
+    **Alpha Nodes**: 4-8 GB base + 1 GB per 10M edges
+    **Zero Nodes**: 2-4 GB (metadata storage)
+    **Load Balancer**: 2-4 GB
+    **Monitoring**: 4-8 GB
+  </Card>
+</CardGroup>
+
+<CardGroup cols={2}>
+  <Card title="Storage Requirements" icon="hard-drive">
+    **Data Volume**: 3-5x compressed export size **WAL Logs**: 20-50 GB per node
+    **Backup Space**: 2x data volume **Monitoring**: 50-100 GB
+  </Card>
+
+  <Card title="Network Requirements" icon="network-wired">
+    **Internal**: 1 Gbps minimum between nodes **External**: 100 Mbps minimum
+    for clients **Bandwidth**: Plan for 3x normal traffic during migration
+    **Latency**: &lt;10 ms between data nodes
+  </Card>
+</CardGroup>
+
+---
+
+## AWS Deployment
+
+Deploy your self-hosted Dgraph cluster on Amazon Web Services using Elastic
+Kubernetes Service (EKS).
+
+```mermaid
+graph TB
+    subgraph "AWS Architecture"
+        A[Application Load Balancer] --> B[EKS Cluster]
+        B --> C[Dgraph Alpha Pods]
+        B --> D[Dgraph Zero Pods]
+        C --> E[EBS Volumes]
+        D --> F[EBS Volumes]
+
+        subgraph "EKS Cluster"
+            C
+            D
+            G[Monitoring]
+            H[Ingress Controller]
+        end
+
+        I[S3 Backup] --> C
+        J[CloudWatch] --> G
+    end
+```
+
+### 1. Infrastructure Setup
+
+#### EKS Cluster Creation
+
+<CodeGroup>
+```bash Create EKS Cluster
+aws eks create-cluster \
+  --name dgraph-cluster \
+  --version 1.28 \
+  --role-arn arn:aws:iam::ACCOUNT:role/eks-service-role \
+  --resources-vpc-config subnetIds=subnet-12345,securityGroupIds=sg-12345
+```
+
+```bash Update Kubeconfig
+aws eks update-kubeconfig --region us-west-2 --name dgraph-cluster
+```
+
+```bash Create Node Group
+aws eks create-nodegroup \
+  --cluster-name dgraph-cluster \
+  --nodegroup-name dgraph-nodes \
+  --instance-types t3.xlarge \
+  --ami-type AL2_x86_64 \
+  --capacity-type ON_DEMAND \
+  --scaling-config minSize=3,maxSize=9,desiredSize=6 \
+  --disk-size 100 \
+  --node-role arn:aws:iam::ACCOUNT:role/NodeInstanceRole
+```
+
+</CodeGroup>
+
+#### Storage Class Configuration
+
+```yaml aws-storage-class.yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: dgraph-storage
+provisioner: ebs.csi.aws.com
+parameters:
+  type: gp3
+  iops: "3000"
+  throughput: "125"
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+```
+
+### 2. Dgraph Deployment on AWS
+
+<Steps>
+  <Step title="Apply Storage Class">
+    ```bash kubectl apply -f aws-storage-class.yaml ```
+  </Step>
+
+<Step title="Add Helm Repository">
+  ```bash helm repo add dgraph https://charts.dgraph.io helm repo update ```
+</Step>
+
+<Step title="Create Namespace">
+  ```bash kubectl create namespace dgraph ```
+</Step>
+
+  <Step title="Deploy Dgraph">
+    ```bash
+    helm install dgraph dgraph/dgraph \
+      --namespace dgraph \
+      --set image.tag="v23.1.0" \
+      --set alpha.persistence.storageClass="dgraph-storage" \
+      --set alpha.persistence.size="500Gi" \
+      --set zero.persistence.storageClass="dgraph-storage" \
+      --set zero.persistence.size="100Gi" \
+      --set alpha.replicaCount=3 \
+      --set zero.replicaCount=3 \
+      --set alpha.resources.requests.memory="8Gi" \
+      --set alpha.resources.requests.cpu="2000m"
+    ```
+  </Step>
+</Steps>
+
+### 3. Load Balancer Configuration
+
+```yaml aws-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dgraph-ingress
+  namespace: dgraph
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:REGION:ACCOUNT:certificate/CERT-ID
+spec:
+  rules:
+    - host: dgraph.yourdomain.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: dgraph-dgraph-alpha
+                port:
+                  number: 8080
+```
+
+---
+
+## Google Cloud Platform Deployment
+
+Deploy your self-hosted Dgraph cluster on Google Cloud Platform using Google
+Kubernetes Engine (GKE).
+
+```mermaid
+graph TB
+    subgraph "GCP Architecture"
+        A[Cloud Load Balancer] --> B[GKE Cluster]
+        B --> C[Dgraph Alpha Pods]
+        B --> D[Dgraph Zero Pods]
+        C --> E[Persistent Disks]
+        D --> F[Persistent Disks]
+
+        subgraph "GKE Cluster"
+            C
+            D
+            G[GKE Monitoring]
+            H[Ingress]
+        end
+
+        I[Cloud Storage] --> C
+        J[Cloud Monitoring] --> G
+    end
+```
+
+### 1. GKE Cluster Setup
+
+<CodeGroup>
+```bash Create GKE Cluster
+gcloud container clusters create dgraph-cluster \
+  --zone=us-central1-a \
+  --machine-type=e2-standard-4 \
+  --num-nodes=3 \
+  --disk-size=100GB \
+  --disk-type=pd-ssd \
+  --enable-autoscaling \
+  --min-nodes=3 \
+  --max-nodes=9 \
+  --enable-autorepair \
+  --enable-autoupgrade
+```
+
+```bash Get Credentials
+gcloud container clusters get-credentials dgraph-cluster --zone=us-central1-a
+```
+
+```bash Create Storage Class
+kubectl apply -f - <<EOF
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: dgraph-storage
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-ssd
+  zones: us-central1-a,us-central1-b,us-central1-c
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+EOF
+```
+
+</CodeGroup>
+
+### 2. Deploy Dgraph on GKE
+
+```bash
+# Create namespace
+kubectl create namespace dgraph
+
+# Deploy with Helm
+helm install dgraph dgraph/dgraph \
+  --namespace dgraph \
+  --set alpha.persistence.storageClass="dgraph-storage" \
+  --set zero.persistence.storageClass="dgraph-storage" \
+  --set alpha.persistence.size="500Gi" \
+  --set zero.persistence.size="100Gi" \
+  --set alpha.replicaCount=3 \
+  --set zero.replicaCount=3
+```
+
+### 3. Load Balancer Setup
+
+```yaml gcp-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dgraph-ingress
+  namespace: dgraph
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: dgraph-ip
+    networking.gke.io/managed-certificates: dgraph-ssl-cert
+spec:
+  rules:
+    - host: dgraph.yourdomain.com
+      http:
+        paths:
+          - path: /*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: dgraph-dgraph-alpha
+                port:
+                  number: 8080
+```
+
+---
+
+## Azure Deployment
+
+Deploy your self-hosted Dgraph cluster on Microsoft Azure using Azure Kubernetes
+Service (AKS).
+
+```mermaid
+graph TB
+    subgraph "Azure Architecture"
+        A[Application Gateway] --> B[AKS Cluster]
+        B --> C[Dgraph Alpha Pods]
+        B --> D[Dgraph Zero Pods]
+        C --> E[Azure Disks]
+        D --> F[Azure Disks]
+
+        subgraph "AKS Cluster"
+            C
+            D
+            G[Azure Monitor]
+            H[Ingress Controller]
+        end
+
+        I[Azure Storage] --> C
+        J[Azure Monitor] --> G
+    end
+```
+
+### 1. AKS Cluster Creation
+
+<CodeGroup>
+```bash Create Resource Group
+az group create --name dgraph-rg --location eastus
+```
+
+```bash Create AKS Cluster
+az aks create \
+  --resource-group dgraph-rg \
+  --name dgraph-cluster \
+  --node-count 3 \
+  --node-vm-size Standard_D4s_v3 \
+  --node-osdisk-size 100 \
+  --enable-addons monitoring \
+  --generate-ssh-keys
+```
+
+```bash Get Credentials
+az aks get-credentials --resource-group dgraph-rg --name dgraph-cluster
+```
+
+```bash Create Storage Class
+kubectl apply -f - <<EOF
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: dgraph-storage
+provisioner: kubernetes.io/azure-disk
+parameters:
+  storageaccounttype: Premium_LRS
+  kind: Managed
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+EOF
+```
+
+</CodeGroup>
+
+### 2. Deploy Dgraph on AKS
+
+```bash
+# Create namespace
+kubectl create namespace dgraph
+
+# Deploy with Helm
+helm install dgraph dgraph/dgraph \
+  --namespace dgraph \
+  --set alpha.persistence.storageClass="dgraph-storage" \
+  --set zero.persistence.storageClass="dgraph-storage" \
+  --set alpha.persistence.size="500Gi" \
+  --set zero.persistence.size="100Gi"
+```
+
+---
+
+## Digital Ocean Deployment
+
+### Kubernetes Deployment (DOKS)
+
+```mermaid
+graph TB
+    subgraph "Digital Ocean Kubernetes Architecture"
+        A[Load Balancer] --> B[DOKS Cluster]
+        B --> C[Dgraph Alpha Pods]
+        B --> D[Dgraph Zero Pods]
+        C --> E[Block Storage]
+        D --> F[Block Storage]
+
+        subgraph "DOKS Cluster"
+            C
+            D
+            G[DO Monitoring]
+        end
+
+        I[Spaces Storage] --> C
+    end
+```
+
+#### 1. DOKS Cluster Setup
+
+<CodeGroup>
+```bash Create Cluster
+doctl kubernetes cluster create dgraph-cluster \
+  --region nyc1 \
+  --version 1.28.2-do.0 \
+  --node-pool="name=worker-pool;size=s-4vcpu-8gb;count=3;auto-scale=true;min-nodes=3;max-nodes=9"
+```
+
+```bash Get Kubeconfig
+doctl kubernetes cluster kubeconfig save dgraph-cluster
+```
+
+```bash Apply Storage Class
+kubectl apply -f - <<EOF
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: dgraph-storage
+provisioner: dobs.csi.digitalocean.com
+allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer
+EOF
+```
+
+</CodeGroup>
+
+#### 2. Deploy Dgraph on DOKS
+
+```bash
+# Create namespace
+kubectl create namespace dgraph
+
+# Deploy with Helm
+helm install dgraph dgraph/dgraph \
+  --namespace dgraph \
+  --set alpha.persistence.storageClass="dgraph-storage" \
+  --set zero.persistence.storageClass="dgraph-storage" \
+  --set alpha.persistence.size="500Gi" \
+  --set zero.persistence.size="100Gi"
+```
+
+### Docker Compose Deployment
+
+```mermaid
+graph TB
+    subgraph "Docker Compose Architecture"
+        A[Nginx Load Balancer] --> B[Dgraph Alpha 1]
+        A --> C[Dgraph Alpha 2]
+        A --> D[Dgraph Alpha 3]
+
+        B --> E[Dgraph Zero 1]
+        C --> F[Dgraph Zero 2]
+        D --> G[Dgraph Zero 3]
+
+        subgraph "Shared Storage"
+            H[Docker Volumes]
+            I[Host Directories]
+        end
+
+        B --> H
+        C --> H
+        D --> H
+        E --> I
+        F --> I
+        G --> I
+
+        J[Backup Scripts] --> H
+        K[Monitoring] --> B
+        K --> C
+        K --> D
+    end
+```
+
+#### 1. Prepare Docker Compose Environment
+
+<Steps>
+  <Step title="Create Directory Structure">
+    ```bash
+    mkdir -p dgraph-compose/{data,config,backups,nginx}
+    cd dgraph-compose
+    ```
+  </Step>
+  
+  <Step title="Create Docker Compose File">
+    ```yaml docker-compose.yml
+    version: '3.8'
+    
+    services:
+      # Dgraph Zero nodes
+      dgraph-zero-1:
+        image: dgraph/dgraph:v23.1.0
+        container_name: dgraph-zero-1
+        ports:
+          - "5080:5080"
+          - "6080:6080"
+        volumes:
+          - ./data/zero1:/dgraph
+        command: dgraph zero --my=dgraph-zero-1:5080 --replicas=3 --idx=1
+        restart: unless-stopped
+        networks:
+          - dgraph-network
+    
+      dgraph-zero-2:
+        image: dgraph/dgraph:v23.1.0
+        container_name: dgraph-zero-2
+        ports:
+          - "5081:5080"
+          - "6081:6080"
+        volumes:
+          - ./data/zero2:/dgraph
+        command: dgraph zero --my=dgraph-zero-2:5080 --replicas=3 --peer=dgraph-zero-1:5080 --idx=2
+        restart: unless-stopped
+        networks:
+          - dgraph-network
+        depends_on:
+          - dgraph-zero-1
+    
+      dgraph-zero-3:
+        image: dgraph/dgraph:v23.1.0
+        container_name: dgraph-zero-3
+        ports:
+          - "5082:5080"
+          - "6082:6080"
+        volumes:
+          - ./data/zero3:/dgraph
+        command: dgraph zero --my=dgraph-zero-3:5080 --replicas=3 --peer=dgraph-zero-1:5080 --idx=3
+        restart: unless-stopped
+        networks:
+          - dgraph-network
+        depends_on:
+          - dgraph-zero-1
+    
+      # Dgraph Alpha nodes
+      dgraph-alpha-1:
+        image: dgraph/dgraph:v23.1.0
+        container_name: dgraph-alpha-1
+        ports:
+          - "8080:8080"
+          - "9080:9080"
+        volumes:
+          - ./data/alpha1:/dgraph
+        command: dgraph alpha --my=dgraph-alpha-1:7080 --zero=dgraph-zero-1:5080,dgraph-zero-2:5080,dgraph-zero-3:5080 --security whitelist=0.0.0.0/0
+        restart: unless-stopped
+        networks:
+          - dgraph-network
+        depends_on:
+          - dgraph-zero-1
+          - dgraph-zero-2
+          - dgraph-zero-3
+    
+      dgraph-alpha-2:
+        image: dgraph/dgraph:v23.1.0
+        container_name: dgraph-alpha-2
+        ports:
+          - "8081:8080"
+          - "9081:9080"
+        volumes:
+          - ./data/alpha2:/dgraph
+        command: dgraph alpha --my=dgraph-alpha-2:7080 --zero=dgraph-zero-1:5080,dgraph-zero-2:5080,dgraph-zero-3:5080 --security whitelist=0.0.0.0/0
+        restart: unless-stopped
+        networks:
+          - dgraph-network
+        depends_on:
+          - dgraph-zero-1
+          - dgraph-zero-2
+          - dgraph-zero-3
+    
+      dgraph-alpha-3:
+        image: dgraph/dgraph:v23.1.0
+        container_name: dgraph-alpha-3
+        ports:
+          - "8082:8080"
+          - "9082:9080"
+        volumes:
+          - ./data/alpha3:/dgraph
+        command: dgraph alpha --my=dgraph-alpha-3:7080 --zero=dgraph-zero-1:5080,dgraph-zero-2:5080,dgraph-zero-3:5080 --security whitelist=0.0.0.0/0
+        restart: unless-stopped
+        networks:
+          - dgraph-network
+        depends_on:
+          - dgraph-zero-1
+          - dgraph-zero-2
+          - dgraph-zero-3
+    
+      # Load Balancer
+      nginx:
+        image: nginx:alpine
+        container_name: dgraph-nginx
+        ports:
+          - "80:80"
+          - "443:443"
+        volumes:
+          - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+          - ./nginx/ssl:/etc/nginx/ssl
+        restart: unless-stopped
+        networks:
+          - dgraph-network
+        depends_on:
+          - dgraph-alpha-1
+          - dgraph-alpha-2
+          - dgraph-alpha-3
+    
+      # Monitoring
+      prometheus:
+        image: prom/prometheus:latest
+        container_name: dgraph-prometheus
+        ports:
+          - "9090:9090"
+        volumes:
+          - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+        restart: unless-stopped
+        networks:
+          - dgraph-network
+    
+      grafana:
+        image: grafana/grafana:latest
+        container_name: dgraph-grafana
+        ports:
+          - "3000:3000"
+        volumes:
+          - ./data/grafana:/var/lib/grafana
+        environment:
+          - GF_SECURITY_ADMIN_PASSWORD=admin
+        restart: unless-stopped
+        networks:
+          - dgraph-network
+    
+    networks:
+      dgraph-network:
+        driver: bridge
+    
+    volumes:
+      dgraph-data:
+    ```
+  </Step>
+  
+  <Step title="Create Nginx Configuration">
+    ```nginx nginx/nginx.conf
+    events {
+        worker_connections 1024;
+    }
+    
+    http {
+        upstream dgraph_alpha {
+            least_conn;
+            server dgraph-alpha-1:8080;
+            server dgraph-alpha-2:8080;
+            server dgraph-alpha-3:8080;
+        }
+        
+        upstream dgraph_grpc {
+            least_conn;
+            server dgraph-alpha-1:9080;
+            server dgraph-alpha-2:9080;
+            server dgraph-alpha-3:9080;
+        }
+    
+        server {
+            listen 80;
+            server_name localhost;
+    
+            location / {
+                proxy_pass http://dgraph_alpha;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            }
+        }
+        
+        # HTTPS configuration (uncomment and configure as needed)
+        # server {
+        #     listen 443 ssl http2;
+        #     server_name your-domain.com;
+        #     
+        #     ssl_certificate /etc/nginx/ssl/cert.pem;
+        #     ssl_certificate_key /etc/nginx/ssl/key.pem;
+        #     
+        #     location / {
+        #         proxy_pass http://dgraph_alpha;
+        #         proxy_set_header Host $host;
+        #         proxy_set_header X-Real-IP $remote_addr;
+        #         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        #         proxy_set_header X-Forwarded-Proto $scheme;
+        #     }
+        # }
+    }
+    ```
+  </Step>
+  
+  <Step title="Create Prometheus Configuration">
+    ```yaml config/prometheus.yml
+    global:
+      scrape_interval: 15s
+    
+    scrape_configs:
+      - job_name: 'dgraph-alpha'
+        static_configs:
+          - targets: 
+            - 'dgraph-alpha-1:8080'
+            - 'dgraph-alpha-2:8080'
+            - 'dgraph-alpha-3:8080'
+        metrics_path: '/debug/prometheus_metrics'
+        
+      - job_name: 'dgraph-zero'
+        static_configs:
+          - targets: 
+            - 'dgraph-zero-1:6080'
+            - 'dgraph-zero-2:6080'
+            - 'dgraph-zero-3:6080'
+        metrics_path: '/debug/prometheus_metrics'
+    ```
+  </Step>
+</Steps>
+
+#### 2. Deploy and Manage Docker Compose Cluster
+
+<CodeGroup>
+```bash Start Cluster
+# Start the entire cluster
+docker-compose up -d
+
+# Check status
+
+docker-compose ps
+
+# View logs
+
+docker-compose logs -f dgraph-alpha-1
+
+````
+
+```bash Scale Cluster
+# Add more alpha replicas
+docker-compose up -d --scale dgraph-alpha=5
+
+# Remove specific services
+docker-compose stop dgraph-alpha-3
+docker-compose rm dgraph-alpha-3
+````
+
+```bash Backup and Restore
+# Create backup script
+cat > backup.sh << 'EOF'
+#!/bin/bash
+DATE=$(date +%Y%m%d_%H%M%S)
+BACKUP_DIR="./backups/$DATE"
+mkdir -p $BACKUP_DIR
+
+# Export data
+docker exec dgraph-alpha-1 dgraph export --alpha localhost:9080 --destination /dgraph/export
+
+# Copy to backup directory
+docker cp dgraph-alpha-1:/dgraph/export $BACKUP_DIR/
+echo "Backup completed: $BACKUP_DIR"
+EOF
+
+chmod +x backup.sh
+./backup.sh
+```
+
+</CodeGroup>
+
+### Linux VPS Deployment
+
+```mermaid
+graph TB
+    subgraph "Linux VPS Architecture"
+        A[Load Balancer VPS] --> B[Dgraph Node 1]
+        A --> C[Dgraph Node 2]
+        A --> D[Dgraph Node 3]
+
+        subgraph "Node 1 (10.0.1.10)"
+            B1[Dgraph Alpha]
+            B2[Dgraph Zero]
+            B3[Local Storage]
+        end
+
+        subgraph "Node 2 (10.0.1.11)"
+            C1[Dgraph Alpha]
+            C2[Dgraph Zero]
+            C3[Local Storage]
+        end
+
+        subgraph "Node 3 (10.0.1.12)"
+            D1[Dgraph Alpha]
+            D2[Dgraph Zero]
+            D3[Local Storage]
+        end
+
+        B1 --> B2
+        C1 --> C2
+        D1 --> D2
+
+        B2 -.->|Raft| C2
+        C2 -.->|Raft| D2
+        D2 -.->|Raft| B2
+
+        E[Backup Server] --> B3
+        E --> C3
+        E --> D3
+
+        F[Monitoring Server] --> B1
+        F --> C1
+        F --> D1
+    end
+```
+
+#### 1. VPS Infrastructure Setup
+
+<Steps>
+  <Step title="Provision VPS Instances">
+    Create 3-5 VPS instances with the following specifications: - **CPU**: 4-8
+    cores - **RAM**: 16-32GB - **Storage**: 500GB+ SSD - **OS**: Ubuntu 22.04
+    LTS - **Network**: Private networking enabled
+  </Step>
+
+<Step title="Configure Base System">
+  ```bash # Update system (run on all nodes) sudo apt update && sudo apt upgrade
+  -y # Install required packages sudo apt install -y curl wget unzip htop iotop
+  # Configure firewall sudo ufw allow ssh sudo ufw allow 8080 # Dgraph Alpha
+  HTTP sudo ufw allow 9080 # Dgraph Alpha gRPC sudo ufw allow 5080 # Dgraph Zero
+  sudo ufw allow 6080 # Dgraph Zero HTTP sudo ufw enable # Set up swap (if
+  needed) sudo fallocate -l 4G /swapfile sudo chmod 600 /swapfile sudo mkswap
+  /swapfile sudo swapon /swapfile echo '/swapfile none swap sw 0 0' | sudo tee
+  -a /etc/fstab ```
+</Step>
+
+  <Step title="Install Dgraph">
+    ```bash
+    # Download and install Dgraph (run on all nodes)
+    curl -sSf https://get.dgraph.io | bash
+    
+    # Move to system path
+    sudo mv dgraph /usr/local/bin/
+    
+    # Create dgraph user
+    sudo useradd -r -s /bin/false dgraph
+    
+    # Create directories
+    sudo mkdir -p /opt/dgraph/{data,logs}
+    sudo chown -R dgraph:dgraph /opt/dgraph
+    ```
+  </Step>
+</Steps>
+
+#### 2. Configure Dgraph Services
+
+<Tabs>
+  <Tab title="Node 1 Configuration">
+    ```bash
+    # Create systemd service for Zero
+    sudo tee /etc/systemd/system/dgraph-zero.service << 'EOF'
+    [Unit]
+    Description=Dgraph Zero
+    After=network.target
+    
+    [Service]
+    Type=simple
+    User=dgraph
+    Group=dgraph
+    ExecStart=/usr/local/bin/dgraph zero --my=10.0.1.10:5080 --replicas=3 --idx=1 --wal=/opt/dgraph/data/zw --bindall
+    WorkingDirectory=/opt/dgraph
+    Restart=always
+    RestartSec=5
+    StandardOutput=journal
+    StandardError=journal
+    SyslogIdentifier=dgraph-zero
+    
+    [Install]
+    WantedBy=multi-user.target
+    EOF
+    
+    # Create systemd service for Alpha
+    sudo tee /etc/systemd/system/dgraph-alpha.service << 'EOF'
+    [Unit]
+    Description=Dgraph Alpha
+    After=network.target dgraph-zero.service
+    Requires=dgraph-zero.service
+    
+    [Service]
+    Type=simple
+    User=dgraph
+    Group=dgraph
+    ExecStart=/usr/local/bin/dgraph alpha --my=10.0.1.10:7080 --zero=10.0.1.10:5080,10.0.1.11:5080,10.0.1.12:5080 --postings=/opt/dgraph/data/p --wal=/opt/dgraph/data/w --bindall --security whitelist=0.0.0.0/0
+    WorkingDirectory=/opt/dgraph
+    Restart=always
+    RestartSec=5
+    StandardOutput=journal
+    StandardError=journal
+    SyslogIdentifier=dgraph-alpha
+    
+    [Install]
+    WantedBy=multi-user.target
+    EOF
+    
+    # Enable and start services
+    sudo systemctl daemon-reload
+    sudo systemctl enable dgraph-zero dgraph-alpha
+    sudo systemctl start dgraph-zero
+    sleep 10
+    sudo systemctl start dgraph-alpha
+    ```
+  </Tab>
+  
+  <Tab title="Node 2 Configuration">
+    ```bash
+    # Create systemd service for Zero
+    sudo tee /etc/systemd/system/dgraph-zero.service << 'EOF'
+    [Unit]
+    Description=Dgraph Zero
+    After=network.target
+    
+    [Service]
+    Type=simple
+    User=dgraph
+    Group=dgraph
+    ExecStart=/usr/local/bin/dgraph zero --my=10.0.1.11:5080 --replicas=3 --peer=10.0.1.10:5080 --idx=2 --wal=/opt/dgraph/data/zw --bindall
+    WorkingDirectory=/opt/dgraph
+    Restart=always
+    RestartSec=5
+    StandardOutput=journal
+    StandardError=journal
+    SyslogIdentifier=dgraph-zero
+    
+    [Install]
+    WantedBy=multi-user.target
+    EOF
+    
+    # Create systemd service for Alpha
+    sudo tee /etc/systemd/system/dgraph-alpha.service << 'EOF'
+    [Unit]
+    Description=Dgraph Alpha
+    After=network.target dgraph-zero.service
+    Requires=dgraph-zero.service
+    
+    [Service]
+    Type=simple
+    User=dgraph
+    Group=dgraph
+    ExecStart=/usr/local/bin/dgraph alpha --my=10.0.1.11:7080 --zero=10.0.1.10:5080,10.0.1.11:5080,10.0.1.12:5080 --postings=/opt/dgraph/data/p --wal=/opt/dgraph/data/w --bindall --security whitelist=0.0.0.0/0
+    WorkingDirectory=/opt/dgraph
+    Restart=always
+    RestartSec=5
+    StandardOutput=journal
+    StandardError=journal
+    SyslogIdentifier=dgraph-alpha
+    
+    [Install]
+    WantedBy=multi-user.target
+    EOF
+    
+    # Enable and start services
+    sudo systemctl daemon-reload
+    sudo systemctl enable dgraph-zero dgraph-alpha
+    sudo systemctl start dgraph-zero
+    sleep 10
+    sudo systemctl start dgraph-alpha
+    ```
+  </Tab>
+  
+  <Tab title="Node 3 Configuration">
+    ```bash
+    # Create systemd service for Zero
+    sudo tee /etc/systemd/system/dgraph-zero.service << 'EOF'
+    [Unit]
+    Description=Dgraph Zero
+    After=network.target
+    
+    [Service]
+    Type=simple
+    User=dgraph
+    Group=dgraph
+    ExecStart=/usr/local/bin/dgraph zero --my=10.0.1.12:5080 --replicas=3 --peer=10.0.1.10:5080 --idx=3 --wal=/opt/dgraph/data/zw --bindall
+    WorkingDirectory=/opt/dgraph
+    Restart=always
+    RestartSec=5
+    StandardOutput=journal
+    StandardError=journal
+    SyslogIdentifier=dgraph-zero
+    
+    [Install]
+    WantedBy=multi-user.target
+    EOF
+    
+    # Create systemd service for Alpha
+    sudo tee /etc/systemd/system/dgraph-alpha.service << 'EOF'
+    [Unit]
+    Description=Dgraph Alpha
+    After=network.target dgraph-zero.service
+    Requires=dgraph-zero.service
+    
+    [Service]
+    Type=simple
+    User=dgraph
+    Group=dgraph
+    ExecStart=/usr/local/bin/dgraph alpha --my=10.0.1.12:7080 --zero=10.0.1.10:5080,10.0.1.11:5080,10.0.1.12:5080 --postings=/opt/dgraph/data/p --wal=/opt/dgraph/data/w --bindall --security whitelist=0.0.0.0/0
+    WorkingDirectory=/opt/dgraph
+    Restart=always
+    RestartSec=5
+    StandardOutput=journal
+    StandardError=journal
+    SyslogIdentifier=dgraph-alpha
+    
+    [Install]
+    WantedBy=multi-user.target
+    EOF
+    
+    # Enable and start services
+    sudo systemctl daemon-reload
+    sudo systemctl enable dgraph-zero dgraph-alpha
+    sudo systemctl start dgraph-zero
+    sleep 10
+    sudo systemctl start dgraph-alpha
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+## Data Migration and Import
+
+```mermaid
+sequenceDiagram
+    participant Source as Source System
+    participant Backup as Backup Storage
+    participant Target as Self-Hosted Cluster
+    participant App as Application
+
+    Note over Source,App: Migration Process
+
+    Source->>Backup: 1. Export schema
+    Source->>Backup: 2. Export data
+    Source->>Backup: 3. Export ACL config
+
+    Note over Target: 4. Deploy cluster
+
+    Backup->>Target: 5. Import schema
+    Backup->>Target: 6. Import data
+    Backup->>Target: 7. Import ACL config
+
+    Target->>App: 8. Update connection
+    App->>Target: 9. Verify connectivity
+```
+
+### 1. Verify Cluster Status
+
+<CodeGroup>
+```bash Check Pods (Kubernetes)
+kubectl get pods -n dgraph
+```
+
+```bash Check Containers (Docker Compose)
+docker-compose ps
+```
+
+```bash Check Services (Linux VPS)
+systemctl status dgraph-alpha dgraph-zero
+```
+
+</CodeGroup>
+
+<CodeGroup>
+```bash Port Forward and Health Check (Kubernetes)
+kubectl port-forward -n dgraph svc/dgraph-dgraph-alpha 8080:8080 &
+curl http://localhost:8080/health
+```
+
+```bash Health Check (Docker Compose)
+curl http://localhost:8080/health
+```
+
+```bash Health Check (Linux VPS)
+curl http://10.0.1.10:8080/health
+```
+
+</CodeGroup>
+
+### 2. Import Schema
+
+<Tabs>
+  <Tab title="Kubernetes">
+    ```bash kubectl port-forward -n dgraph svc/dgraph-dgraph-alpha 8080:8080 &
+    curl -X POST localhost:8080/admin/schema \ -H "Content-Type:
+    application/json" \ -d @schema_backup.json ```
+  </Tab>
+
+<Tab title="Docker Compose">
+  ```bash curl -X POST localhost:8080/admin/schema \ -H "Content-Type:
+  application/json" \ -d @schema_backup.json ```
+</Tab>
+
+  <Tab title="Linux VPS">
+    ```bash curl -X POST 10.0.1.10:8080/admin/schema \ -H "Content-Type:
+    application/json" \ -d @schema_backup.json ```
+  </Tab>
+</Tabs>
+
+### 3. Import Data
+
+<Tabs>
+  <Tab title="Live Loader (Kubernetes)">
+    ```bash kubectl run dgraph-live-loader \ --image=dgraph/dgraph:v23.1.0 \
+    --restart=Never \ --namespace=dgraph \ --command -- dgraph live \ --files
+    /data/export.rdf.gz \ --alpha dgraph-dgraph-alpha:9080 \ --zero
+    dgraph-dgraph-zero:5080 ```
+  </Tab>
+
+<Tab title="Live Loader (Docker Compose)">
+  ```bash # Copy data files to container docker cp exported_data.rdf.gz
+  dgraph-alpha-1:/dgraph/ # Run live loader docker exec dgraph-alpha-1 dgraph
+  live \ --files /dgraph/exported_data.rdf.gz \ --alpha localhost:9080 \ --zero
+  dgraph-zero-1:5080 ```
+</Tab>
+
+  <Tab title="Live Loader (Linux VPS)">
+    ```bash # Copy data to server scp exported_data.rdf.gz user@10.0.1.10:/tmp/
+    # Run live loader ssh user@10.0.1.10 sudo -u dgraph dgraph live \ --files
+    /tmp/exported_data.rdf.gz \ --alpha localhost:9080 \ --zero 10.0.1.10:5080
+    ```
+  </Tab>
+</Tabs>
+
+### 4. Restore ACL Configuration
+
+<Tabs>
+  <Tab title="All Deployments">
+    ```bash
+    # Replace with your actual endpoint
+    DGRAPH_ENDPOINT="localhost:8080"  # Adjust for your deployment
+    
+    curl -X POST $DGRAPH_ENDPOINT/admin \
+      -H "Content-Type: application/json" \
+      -d '{"query": "mutation { addUser(input: {name: \"admin\", password: \"password\"}) { user { name } } }"}'
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+## Post-Migration Verification
+
+<Card title="Data Integrity Checklist" icon="check-circle">
+  - Count total nodes and compare with original - Verify specific data samples -
+  Test query performance - Validate application connections
+</Card>
+
+### 1. Data Integrity Check
+
+<CodeGroup>
+```bash Count Nodes
+curl -X POST localhost:8080/query \
+  -H "Content-Type: application/json" \
+  -d '{"query": "{ nodeCount(func: has(_predicate_)) { count(uid) } }"}'
+```
+
+```bash Verify Sample Data
+curl -X POST localhost:8080/query \
+  -H "Content-Type: application/json" \
+  -d '{"query": "{ users(func: type(User), first: 10) { uid name email } }"}'
+```
+
+</CodeGroup>
+
+### 2. Performance Testing
+
+```bash
+time curl -X POST localhost:8080/query \
+  -H "Content-Type: application/json" \
+  -d '{"query": "{ users(func: allofterms(name, \"john\")) { name email } }"}'
+```
+
+### 3. Application Connection Testing
+
+```bash
+kubectl run test-connection \
+  --image=appropriate/curl \
+  --restart=Never \
+  --namespace=dgraph \
+  --command -- curl -X POST dgraph-dgraph-alpha:8080/health
+```
+
+---
+
+## Deployment Comparison and Best Practices
+
+### Deployment Method Comparison
+
+<CardGroup cols={3}>
+  <Card title="Kubernetes" icon="dharmachakra">
+    **Best For**: Production environments, auto-scaling, enterprise deployments
+    **Pros**: - Automatic scaling and healing - Rolling updates - Resource
+    management - Service discovery - Built-in monitoring **Cons**: - Complex
+    setup - Higher resource overhead - Learning curve - Vendor lock-in potential
+  </Card>
+
+<Card title="Docker Compose" icon="docker">
+  **Best For**: Development, testing, small to medium production **Pros**: -
+  Simple deployment - Easy local development - Version control friendly - Quick
+  setup and teardown - Cost-effective **Cons**: - Limited scaling options - No
+  automatic failover - Single host limitation - Manual monitoring setup
+</Card>
+
+  <Card title="Linux VPS" icon="server">
+    **Best For**: Full control, cost optimization, legacy environments **Pros**:
+    - Maximum control - Cost-effective - No abstraction layers - Predictable
+    performance - Easy debugging **Cons**: - Manual scaling - More maintenance
+    overhead - No built-in redundancy - Manual backup management
+  </Card>
+</CardGroup>
+
+### Cost Analysis
+
+<CardGroup cols={3}>
+  <Card title="AWS EKS" icon="aws">
+    **Small**: $300-500/month - EKS cluster: $72 - 3 x t3.large: $150 - EBS
+    storage: $50 - Load balancer: $25 **Medium**: $800-1200/month - EKS cluster:
+    $72 - 6 x t3.xlarge: $600 - EBS storage: $150 - Load balancer: $25
+    **Large**: $2000-3000/month - EKS cluster: $72 - 9+ x m5.2xlarge: $1800 -
+    EBS storage: $300 - Load balancer: $50
+  </Card>
+
+<Card title="Docker Compose VPS" icon="docker">
+  **Small**: $50-100/month - 1 x 8vCPU/32GB: $80 **Medium**: $150-250/month - 1
+  x 16vCPU/64GB: $160 - Or 2 x smaller: $120 **Large**: $300-500/month - 3 x
+  12vCPU/48GB: $360
+</Card>
+
+  <Card title="Linux VPS" icon="server">
+    **Small**: $100-150/month - 3 x 4vCPU/16GB: $120 - 1 x load balancer: $20
+    **Medium**: $250-400/month - 3 x 8vCPU/32GB: $300 - 1 x load balancer: $40
+    **Large**: $500-800/month - 6 x 8vCPU/32GB: $600 - 2 x load balancers: $80 -
+    1 x monitoring: $40
+  </Card>
+</CardGroup>
+
+---
+
+## Monitoring and Maintenance
+
+### 1. Setup Monitoring Stack
+
+```mermaid
+graph LR
+    A[Dgraph Metrics] --> B[Prometheus]
+    B --> C[Grafana Dashboard]
+    B --> D[AlertManager]
+    D --> E[Notifications]
+
+    subgraph "Monitoring Stack"
+        B
+        C
+        D
+    end
+```
+
+<CodeGroup>
+```bash Install Prometheus
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm install monitoring prometheus-community/kube-prometheus-stack \
+  --namespace monitoring \
+  --create-namespace
+```
+
+```yaml Configure Service Monitor
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: dgraph-alpha
+  namespace: dgraph
+spec:
+  selector:
+    matchLabels:
+      app: dgraph-alpha
+  endpoints:
+    - port: http
+      path: /debug/prometheus_metrics
+```
+
+</CodeGroup>
+
+### 2. Backup Strategy
+
+<Info>Set up automated daily backups to ensure data protection.</Info>
+
+```bash
+kubectl create cronjob dgraph-backup \
+  --image=dgraph/dgraph:v23.1.0 \
+  --schedule="0 2 * * *" \
+  --restart=OnFailure \
+  --namespace=dgraph \
+  -- dgraph export \
+  --alpha dgraph-dgraph-alpha:9080 \
+  --destination s3://your-backup-bucket/$(date +%Y-%m-%d)
+```
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Pod Startup Failures">
+    <CodeGroup>
+    ```bash Check Pod Status
+    kubectl describe pod -n dgraph dgraph-dgraph-alpha-0
+    ```
+    
+    ```bash Check Logs
+    kubectl logs -n dgraph dgraph-dgraph-alpha-0 --previous
+    ```
+    </CodeGroup>
+  </Accordion>
+  
+  <Accordion title="Storage Issues">
+    <CodeGroup>
+    ```bash Check PVC Status
+    kubectl get pvc -n dgraph
+    ```
+    
+    ```bash Expand Volume
+    kubectl patch pvc alpha-claim-dgraph-dgraph-alpha-0 \
+      -n dgraph \
+      -p '{"spec":{"resources":{"requests":{"storage":"1Ti"}}}}'
+    ```
+    </CodeGroup>
+  </Accordion>
+  
+  <Accordion title="Network Connectivity">
+    ```bash Test Internal DNS
+    kubectl run debug --image=busybox -it --rm --restart=Never -- \
+      nslookup dgraph-dgraph-alpha.dgraph.svc.cluster.local
+    ```
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Resources
+
+### Official Documentation
+
+<CardGroup cols={2}>
+  <Card
+    title="Dgraph Documentation"
+    icon="book-open"
+    href="https://dgraph.io/docs/"
+  >
+    Complete official documentation for Dgraph database
+  </Card>
+  <Card
+    title="Dgraph GraphQL"
+    icon="code"
+    href="https://dgraph.io/docs/graphql/"
+  >
+    GraphQL schema and API documentation
+  </Card>
+  <Card title="Dgraph Community" icon="users" href="https://discuss.dgraph.io/">
+    Official community forum for questions and discussions
+  </Card>
+  <Card
+    title="Dgraph GitHub"
+    icon="github"
+    href="https://github.com/dgraph-io/dgraph"
+  >
+    Source code and issue tracking
+  </Card>
+</CardGroup>
+
+### Cloud Provider Resources
+
+<Tabs>
+  <Tab title="AWS">
+    - [Amazon EKS Documentation](https://docs.aws.amazon.com/eks/) - [AWS CLI
+    Installation](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+    - [EBS CSI
+    Driver](https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html) -
+    [Application Load Balancer
+    Controller](https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html)
+    - [AWS VPC CNI
+    Plugin](https://docs.aws.amazon.com/eks/latest/userguide/managing-vpc-cni.html)
+  </Tab>
+
+<Tab title="Google Cloud">
+  - [Google Kubernetes Engine
+  (GKE)](https://cloud.google.com/kubernetes-engine/docs) - [gcloud CLI
+  Installation](https://cloud.google.com/sdk/docs/install) - [GKE Persistent
+  Volumes](https://cloud.google.com/kubernetes-engine/docs/concepts/persistent-volumes)
+  - [GKE
+  Ingress](https://cloud.google.com/kubernetes-engine/docs/concepts/ingress) -
+  [Google Cloud Load Balancing](https://cloud.google.com/load-balancing/docs)
+</Tab>
+
+<Tab title="Azure">
+  - [Azure Kubernetes Service
+  (AKS)](https://docs.microsoft.com/en-us/azure/aks/) - [Azure CLI
+  Installation](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) -
+  [Azure Disk
+  Storage](https://docs.microsoft.com/en-us/azure/aks/azure-disks-dynamic-pv) -
+  [Application Gateway Ingress
+  Controller](https://docs.microsoft.com/en-us/azure/application-gateway/ingress-controller-overview)
+  - [Azure Monitor for
+  Containers](https://docs.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-overview)
+</Tab>
+
+  <Tab title="Digital Ocean">
+    - [DigitalOcean Kubernetes
+    (DOKS)](https://docs.digitalocean.com/products/kubernetes/) - [doctl CLI
+    Installation](https://docs.digitalocean.com/reference/doctl/how-to/install/)
+    - [Block Storage Volumes](https://docs.digitalocean.com/products/volumes/) -
+    [Load
+    Balancers](https://docs.digitalocean.com/products/networking/load-balancers/)
+    - [DigitalOcean
+    Monitoring](https://docs.digitalocean.com/products/monitoring/)
+  </Tab>
+</Tabs>
+
+### Kubernetes and Container Resources
+
+<CardGroup cols={2}>
+  <Card
+    title="Kubernetes Documentation"
+    icon="dharmachakra"
+    href="https://kubernetes.io/docs/"
+  >
+    Official Kubernetes documentation and tutorials
+  </Card>
+  <Card title="Helm Documentation" icon="anchor" href="https://helm.sh/docs/">
+    Package manager for Kubernetes applications
+  </Card>
+  <Card
+    title="Docker Documentation"
+    icon="docker"
+    href="https://docs.docker.com/"
+  >
+    Containerization platform documentation
+  </Card>
+  <Card
+    title="Docker Compose"
+    icon="layer-group"
+    href="https://docs.docker.com/compose/"
+  >
+    Multi-container Docker application definitions
+  </Card>
+</CardGroup>
+
+### Monitoring and Observability
+
+<AccordionGroup>
+  <Accordion title="Prometheus Ecosystem">
+    - [Prometheus Documentation](https://prometheus.io/docs/) - [Grafana
+    Documentation](https://grafana.com/docs/) - [AlertManager
+    Documentation](https://prometheus.io/docs/alerting/latest/alertmanager/) -
+    [Prometheus
+    Operator](https://github.com/prometheus-operator/prometheus-operator) -
+    [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
+  </Accordion>
+
+<Accordion title="Logging Solutions">
+  - [ELK Stack Documentation](https://www.elastic.co/guide/index.html) -
+  [Fluentd Documentation](https://docs.fluentd.org/) - [Loki
+  Documentation](https://grafana.com/docs/loki/latest/) - [Vector
+  Documentation](https://vector.dev/docs/)
+</Accordion>
+
+  <Accordion title="APM and Tracing">
+    - [Jaeger Documentation](https://www.jaegertracing.io/docs/) -
+    [OpenTelemetry Documentation](https://opentelemetry.io/docs/) - [Zipkin
+    Documentation](https://zipkin.io/) - [New Relic
+    Documentation](https://docs.newrelic.com/)
+  </Accordion>
+</AccordionGroup>
+
+### Operational Runbooks and Best Practices
+
+<Info>
+  The following runbooks provide operational guidance for various scenarios you
+  may encounter during and after migration.
+</Info>
+
+#### Hypermode Operations Runbooks
+
+<CardGroup cols={1}>
+  <Card
+    title="Hypermode Ops Runbooks Repository"
+    icon="book"
+    href="https://github.com/hypermodeinc/ops-runbooks"
+  >
+    Repository for operational runbooks - A collection of step by step guides
+    for fixing common problems **Contains runbooks for**:
+
+    * Database operations
+    * Infrastructure monitoring and alerting
+    * Performance optimization procedures
+    * Security incident response
+    * Backup and recovery operations
+    * Scaling and capacity planning
+    * Security incident response
+
+  </Card>
+</CardGroup>
+
+#### Community Runbook Resources
+
+<CardGroup cols={2}>
+  <Card
+    title="Awesome Runbook Collection"
+    icon="star"
+    href="https://github.com/runbear-io/awesome-runbook"
+  >
+    A curated list of awesome runbook documents, guidebooks, software and
+    resources
+  </Card>
+
+<Card
+  title="SRE Runbook Template"
+  icon="file-alt"
+  href="https://github.com/SkeltonThatcher/run-book-template"
+>
+  Run Book / Operations Manual template for modern software systems
+</Card>
+
+<Card
+  title="Kubernetes Runbooks"
+  icon="dharmachakra"
+  href="https://github.com/openshift/runbooks"
+>
+  Runbooks for Alerts on OCP - Runbooks in this repository are grouped by the
+  operator that is responsible for shipping the respective alert
+</Card>
+
+  <Card
+    title="CloudOps Automation"
+    icon="cloud"
+    href="https://github.com/unskript/Awesome-CloudOps-Automation"
+  >
+    Cloud-ops automation runbooks that are ready to use. Build your own
+    automations using the hundreds of drag and drop actions included in the
+    repository
+  </Card>
+</CardGroup>
+
+### Security and Compliance
+
+<Tabs>
+  <Tab title="Security Best Practices">
+    - [CIS Kubernetes
+    Benchmark](https://www.cisecurity.org/benchmark/kubernetes) - [NIST
+    Cybersecurity Framework](https://www.nist.gov/cyberframework) - [OWASP
+    Kubernetes Security Cheat
+    Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Kubernetes_Security_Cheat_Sheet.html)
+    - [Falco Runtime Security](https://falco.org/docs/)
+  </Tab>
+
+<Tab title="Compliance Frameworks">
+  - [SOC 2 Compliance
+  Guide](https://www.aicpa.org/interestareas/frc/assuranceadvisoryservices/aicpasoc2report.html)
+  - [GDPR Compliance](https://gdpr.eu/) - [HIPAA Security
+  Rule](https://www.hhs.gov/hipaa/for-professionals/security/index.html) - [PCI
+  DSS Requirements](https://www.pcisecuritystandards.org/pci_security/)
+</Tab>
+
+  <Tab title="Security Tools">
+    - [Trivy Container Scanning](https://aquasecurity.github.io/trivy/) - [Open
+    Policy Agent (OPA)](https://www.openpolicyagent.org/docs/latest/) -
+    [Gatekeeper Policy
+    Controller](https://open-policy-agent.github.io/gatekeeper/website/docs/) -
+    [Network Policy
+    Recipes](https://github.com/ahmetb/kubernetes-network-policy-recipes)
+  </Tab>
+</Tabs>
+
+### Performance and Optimization
+
+<AccordionGroup>
+  <Accordion title="Database Performance">
+    - [Dgraph Performance Tuning
+    Guide](https://dgraph.io/docs/deploy/dgraph-administration/#performance-tuning)
+    - [Dgraph Metrics and
+    Monitoring](https://dgraph.io/docs/deploy/dgraph-administration/#metrics) -
+    [Database Optimization Patterns](https://use-the-index-luke.com/) - [Query
+    Performance Analysis](https://dgraph.io/docs/query-language/debugging/)
+  </Accordion>
+
+<Accordion title="Kubernetes Performance">
+  - [Kubernetes Performance
+  Tuning](https://kubernetes.io/docs/concepts/cluster-administration/system-logs/)
+  - [Resource Management Best
+  Practices](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+  - [Node Performance
+  Tuning](https://kubernetes.io/docs/tasks/administer-cluster/reserve-compute-resources/)
+  - [Network Performance
+  Optimization](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+</Accordion>
+
+  <Accordion title="Storage Performance">
+    - [Storage Class
+    Optimization](https://kubernetes.io/docs/concepts/storage/storage-classes/)
+    - [Volume Performance
+    Tuning](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#performance)
+    - [CSI Driver Best Practices](https://kubernetes-csi.github.io/docs/) -
+    [Backup Performance
+    Optimization](https://velero.io/docs/main/performance-guidance/)
+  </Accordion>
+</AccordionGroup>
+
+### Migration and Disaster Recovery
+
+<CardGroup cols={2}>
+  <Card
+    title="Velero Backup Solution"
+    icon="shield-alt"
+    href="https://velero.io/docs/"
+  >
+    Kubernetes native backup and disaster recovery
+  </Card>
+
+<Card
+  title="Chaos Engineering"
+  icon="exclamation-triangle"
+  href="https://chaostoolkit.org/"
+>
+  Test system resilience and failure scenarios
+</Card>
+
+<Card
+  title="Database Migration Tools"
+  icon="exchange-alt"
+  href="https://github.com/golang-migrate/migrate"
+>
+  Database schema migration utilities
+</Card>
+
+  <Card
+    title="GitOps Best Practices"
+    icon="git-alt"
+    href="https://argoproj.github.io/argo-cd/"
+  >
+    Continuous deployment using Git workflows
+  </Card>
+</CardGroup>
+
+### Community and Support
+
+<CardGroup cols={3}>
+  <Card title="Dgraph Slack" icon="slack" href="https://dgraph.slack.com/">
+    Real-time community support and discussions
+  </Card>
+
+<Card title="CNCF Community" icon="users" href="https://www.cncf.io/community/">
+  Cloud Native Computing Foundation resources
+</Card>
+
+  <Card
+    title="SRE Community"
+    icon="globe"
+    href="https://www.usenix.org/conferences/srecon"
+  >
+    Site Reliability Engineering conferences and resources
+  </Card>
+</CardGroup>
+
+### Learning Resources
+
+<Tabs>
+  <Tab title="Kubernetes">
+    - [Kubernetes Academy](https://kube.academy/) - [CKAD
+    Certification](https://www.cncf.io/certification/ckad/) - [CKA
+    Certification](https://www.cncf.io/certification/cka/) - [Kubernetes the
+    Hard Way](https://github.com/kelseyhightower/kubernetes-the-hard-way)
+  </Tab>
+
+<Tab title="Graph Databases">
+  - [Graph Database Concepts](https://neo4j.com/developer/graph-database/) -
+  [Graph Algorithms](https://github.com/neo4j-contrib/neo4j-graph-algorithms) -
+  [GraphQL Best Practices](https://graphql.org/learn/best-practices/) -
+  [Property Graph Model](https://github.com/opencypher/openCypher)
+</Tab>
+
+  <Tab title="SRE & Operations">
+    - [Google SRE Book](https://sre.google/sre-book/table-of-contents/) - [Site
+    Reliability Workbook](https://sre.google/workbook/table-of-contents/) -
+    [Observability
+    Engineering](https://www.oreilly.com/library/view/observability-engineering/9781492076438/)
+    - [Building Secure and Reliable
+    Systems](https://sre.google/static/pdf/building_secure_and_reliable_systems.pdf)
+  </Tab>
+</Tabs>
+
+### Tools and Utilities
+
+<AccordionGroup>
+  <Accordion title="CLI Tools">
+    - [kubectl](https://kubernetes.io/docs/reference/kubectl/) - Kubernetes
+    command-line tool - [helm](https://helm.sh/) - Kubernetes package manager -
+    [kubectx/kubens](https://github.com/ahmetb/kubectx) - Context and namespace
+    switching - [k9s](https://k9scli.io/) - Terminal UI for Kubernetes -
+    [stern](https://github.com/stern/stern) - Multi-pod log tailing - [dgraph
+    CLI](https://dgraph.io/docs/deploy/cli-command-reference/) - Dgraph
+    command-line tools
+  </Accordion>
+
+<Accordion title="Development Tools">
+  - [Skaffold](https://skaffold.dev/) - Kubernetes development workflow -
+  [Tilt](https://tilt.dev/) - Local development environment -
+  [Garden](https://garden.io/) - Development orchestration tool -
+  [DevSpace](https://devspace.sh/) - Developer tool for Kubernetes
+</Accordion>
+
+  <Accordion title="Networking Tools">
+    - [Istio Service Mesh](https://istio.io/latest/docs/) - [Linkerd Service
+    Mesh](https://linkerd.io/2.12/overview/) - [Cilium
+    Networking](https://docs.cilium.io/en/stable/) - [Calico Network
+    Policies](https://docs.projectcalico.org/security/kubernetes-network-policy)
+  </Accordion>
+</AccordionGroup>
+
+### Migration Validation Checklist
+
+<Card title="Post-Migration Validation" icon="check-circle">
+
+Use this checklist to ensure your migration was successful:
+
+**Data Integrity**
+
+- [ ] Total node count matches source
+- [ ] Random data samples verified
+- [ ] Schema imported correctly
+- [ ] Indexes functioning properly
+
+**Performance**
+
+- [ ] Query response times acceptable
+- [ ] Throughput meets requirements
+- [ ] Resource utilization within limits
+- [ ] No memory leaks detected
+
+**Operations**
+
+- [ ] Monitoring and alerting active
+- [ ] Backup procedures tested
+- [ ] Scaling mechanisms verified
+- [ ] Security policies enforced
+
+**Application Integration**
+
+- [ ] All clients connecting successfully
+- [ ] Authentication working
+- [ ] API endpoints responding
+- [ ] Load balancing functional
+
+</Card>
+
+---
+
+## Conclusion
+
+<Card title="Migration Success Factors" icon="trophy">
+
+- Thorough planning and testing
+- Proper resource provisioning
+- Systematic data migration
+- Comprehensive monitoring setup
+- Regular backup procedures
+
+</Card>
+
+This migration guide provides comprehensive steps for moving from Dgraph Cloud
+and Hypermode Graph to self-hosted clusters across major cloud providers. The
+combination of detailed export procedures, multiple deployment options, and
+extensive operational guidance ensures a successful migration regardless of your
+technical requirements or constraints.
+
+<Info>
+  This migration guide is a living document. Please contribute improvements,
+  report issues, or share your experiences to help the community. For additional
+  support, join the Dgraph community or consult the operational runbooks in the
+  Hypermode ops-runbooks repository.
+</Info>
+
+### Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Plan Your Migration" icon="calendar">
+    Use the decision matrix and resource calculators to plan your specific
+    migration approach
+  </Card>
+
+<Card title="Join the Community" icon="users">
+  Connect with other users who have completed similar migrations for advice and
+  support
+</Card>
+
+<Card title="Monitor and Optimize" icon="chart-line">
+  Implement comprehensive monitoring and continue optimizing performance
+  post-migration
+</Card>
+
+  <Card title="Contribute Back" icon="heart">
+    Share your migration experience and lessons learned with the community
+  </Card>
+</CardGroup>
