@@ -172,7 +172,7 @@
               "agents/faq"
             ]
           },
-                    {
+          {
             "group": "Tools",
             "pages": ["hyp-cli"]
           },
