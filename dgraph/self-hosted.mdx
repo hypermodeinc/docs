@@ -1,44 +1,33 @@
 ---
 title: "Self Hosting Dgraph Guide"
 description:
-  "Complete guide for migrating Dgraph clusters from Dgraph Cloud and Hypermode
-  Graph to self-hosted environments across AWS, GCP, Azure, and Digital Ocean"
+  "Complete guide for migrating managed Dgraph clusters to self-hosted infrastructure"
 sidebarTitle: "Self Hosting Guide"
 ---
 
 ## Overview
 
-This comprehensive guide walks you through migrating your Dgraph database from
-managed cloud services (Dgraph Cloud or Hypermode Graph) to self-hosted
-environments. Whether you're looking to reduce costs, gain more control, or meet
-specific compliance requirements, this guide provides detailed instructions for
-deploying across multiple cloud providers and deployment methods.
+This guide walks you through migrating your Dgraph database from
+managed cloud services to a self-hosted
+environment.  It covers step-by-step instructions for deployment using various cloud providers and methods, supporting goals like cost savings, increased control, and compliance.
 
 ### What You'll Learn
 
 <CardGroup cols={2}>
   <Card title="Migration Planning" icon="clipboard-list">
-    - Assessment and planning strategies
-    - Downtime minimization techniques
-    - Resource requirement calculations
-    - Risk mitigation approaches
+    Assessment and planning strategies—including downtime minimization, resource calculations, and risk mitigation
   </Card>
 
 <Card title="Data Export & Import" icon="database">
-  - Exporting from Dgraph Cloud and Hypermode Graph - Schema and ACL backup
-  procedures - Bulk and live loading methods - Data integrity verification
+  Instructions for exporting data, backing up schema and ACLs, loading via bulk or live methods, and verifying data integrity
 </Card>
 
 <Card title="Infrastructure Deployment" icon="server">
-  - Kubernetes deployments (EKS, GKE, AKS, DOKS) - Docker Compose setups - Linux
-  VPS configurations - Load balancing and storage setup
+  Deployment guidance for Kubernetes clusters, Docker Compose on Linux, and VPS configurations with load balancing and storage setup
 </Card>
 
   <Card title="Operations & Monitoring" icon="chart-line">
-    - Monitoring and alerting setup
-    - Backup and disaster recovery
-    - Performance optimization
-    - Security hardening
+    Monitoring and alerting, backup and disaster recovery, performance optimization, and security hardening practices.
   </Card>
 </CardGroup>
 
@@ -135,8 +124,10 @@ resources.
   </Tab>
 
 <Tab title="Medium Cluster (100 GB - 1 TB)">
-  - **Nodes**: 6 x 8 vCPU, 16 GB RAM - **Storage**: 500 GB solid-state drive per
-  node - **Network**: 1 Gbps bandwidth - **Estimated Cost**: $500-800/month
+  - **Nodes**: 6 x 8 vCPU, 16 GB RAM 
+  - **Storage**: 500 GB solid-state drive per node 
+  - **Network**: 1 Gbps bandwidth 
+  - **Estimated Cost**: $500-800/month
 </Tab>
 
   <Tab title="Large Cluster (> 1 TB)">
@@ -153,7 +144,7 @@ resources.
 
 The first step in migration is safely exporting your data from your current
 managed service. This section covers export procedures for both Dgraph Cloud and
-Hypermode Graph.
+Hypermode Graphs.
 
 ### Exporting from Dgraph Cloud
 
@@ -263,12 +254,12 @@ curl -X POST https://your-cluster.grpc.cloud.dgraph.io/admin \
 
 </CodeGroup>
 
-### Exporting from Hypermode Graph
+### Exporting from Hypermode Graphs
 
-Hypermode Graph provides native export capabilities through both API and
+Hypermode Graphs provides native export capabilities through both API and
 interface methods.
 
-#### Using The `admin` endpoint
+#### Using `admin` endpoint
 
 ```bash
 curl --location 'https://<YOUR_CLUSTER_NAME>.hypermode.host/dgraph/admin' \
@@ -1765,149 +1756,14 @@ kubectl create cronjob dgraph-backup \
 
 ---
 
-## Resources
+## Additional Resources
 
-### Official Documentation
-
-<CardGroup cols={2}>
-  <Card
-    title="Dgraph Documentation"
-    icon="book-open"
-    href="https://dgraph.io/docs/"
-  >
-    Complete official documentation for Dgraph database
-  </Card>
-  <Card
-    title="Dgraph GraphQL"
-    icon="code"
-    href="https://dgraph.io/docs/graphql/"
-  >
-    GraphQL schema and API documentation
-  </Card>
-  <Card title="Dgraph Community" icon="users" href="https://discuss.dgraph.io/">
-    Official community forum for questions and discussions
-  </Card>
-  <Card
-    title="Dgraph GitHub"
-    icon="github"
-    href="https://github.com/dgraph-io/dgraph"
-  >
-    Source code and issue tracking
-  </Card>
-</CardGroup>
-
-### Cloud Provider Resources
-
-<Tabs>
-  <Tab title="AWS">
-    - [Amazon EKS Documentation](https://docs.aws.amazon.com/eks/) - [AWS CLI
-    Installation](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-    - [EBS CSI
-    Driver](https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html) -
-    [Application Load Balancer
-    Controller](https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html)
-    - [AWS VPC CNI
-    Plugin](https://docs.aws.amazon.com/eks/latest/userguide/managing-vpc-cni.html)
-  </Tab>
-
-<Tab title="Google Cloud">
-  - [Google Kubernetes Engine
-  (GKE)](https://cloud.google.com/kubernetes-engine/docs) - [gcloud CLI
-  Installation](https://cloud.google.com/sdk/docs/install) - [GKE Persistent
-  Volumes](https://cloud.google.com/kubernetes-engine/docs/concepts/persistent-volumes)
-  - [GKE
-  Ingress](https://cloud.google.com/kubernetes-engine/docs/concepts/ingress) -
-  [Google Cloud Load Balancing](https://cloud.google.com/load-balancing/docs)
-</Tab>
-
-<Tab title="Azure">
-  - [Azure Kubernetes Service
-  (AKS)](https://docs.microsoft.com/en-us/azure/aks/) - [Azure CLI
-  Installation](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) -
-  [Azure Disk
-  Storage](https://docs.microsoft.com/en-us/azure/aks/azure-disks-dynamic-pv) -
-  [Application Gateway Ingress
-  Controller](https://docs.microsoft.com/en-us/azure/application-gateway/ingress-controller-overview)
-  - [Azure Monitor for
-  Containers](https://docs.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-overview)
-</Tab>
-
-  <Tab title="Digital Ocean">
-    - [DigitalOcean Kubernetes
-    (DOKS)](https://docs.digitalocean.com/products/kubernetes/) - [doctl CLI
-    Installation](https://docs.digitalocean.com/reference/doctl/how-to/install/)
-    - [Block Storage Volumes](https://docs.digitalocean.com/products/volumes/) -
-    [Load
-    Balancers](https://docs.digitalocean.com/products/networking/load-balancers/)
-    - [DigitalOcean
-    Monitoring](https://docs.digitalocean.com/products/monitoring/)
-  </Tab>
-</Tabs>
-
-### Kubernetes and Container Resources
-
-<CardGroup cols={2}>
-  <Card
-    title="Kubernetes Documentation"
-    icon="dharmachakra"
-    href="https://kubernetes.io/docs/"
-  >
-    Official Kubernetes documentation and tutorials
-  </Card>
-  <Card title="Helm Documentation" icon="anchor" href="https://helm.sh/docs/">
-    Package manager for Kubernetes applications
-  </Card>
-  <Card
-    title="Docker Documentation"
-    icon="docker"
-    href="https://docs.docker.com/"
-  >
-    Containerization platform documentation
-  </Card>
-  <Card
-    title="Docker Compose"
-    icon="layer-group"
-    href="https://docs.docker.com/compose/"
-  >
-    Multi-container Docker application definitions
-  </Card>
-</CardGroup>
-
-### Monitoring and Observability
-
-<AccordionGroup>
-  <Accordion title="Prometheus Ecosystem">
-    - [Prometheus Documentation](https://prometheus.io/docs/) - [Grafana
-    Documentation](https://grafana.com/docs/) - [AlertManager
-    Documentation](https://prometheus.io/docs/alerting/latest/alertmanager/) -
-    [Prometheus
-    Operator](https://github.com/prometheus-operator/prometheus-operator) -
-    [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
-  </Accordion>
-
-<Accordion title="Logging Solutions">
-  - [ELK Stack Documentation](https://www.elastic.co/guide/index.html) -
-  [Fluentd Documentation](https://docs.fluentd.org/) - [Loki
-  Documentation](https://grafana.com/docs/loki/latest/) - [Vector
-  Documentation](https://vector.dev/docs/)
-</Accordion>
-
-  <Accordion title="APM and Tracing">
-    - [Jaeger Documentation](https://www.jaegertracing.io/docs/) -
-    [OpenTelemetry Documentation](https://opentelemetry.io/docs/) - [Zipkin
-    Documentation](https://zipkin.io/) - [New Relic
-    Documentation](https://docs.newrelic.com/)
-  </Accordion>
-</AccordionGroup>
-
-### Operational Runbooks and Best Practices
+### Dgraph Operational Runbooks
 
 <Info>
   The following runbooks provide operational guidance for various scenarios you
   may encounter during and after migration.
 </Info>
-
-#### Dgraph Operations Runbooks
 
 <CardGroup cols={2}>
   <Card
@@ -1951,151 +1807,6 @@ kubectl create cronjob dgraph-backup \
     Convert sharded clusters back to non-sharded configuration safely.
   </Card>
 </CardGroup>
-
-### Performance and Optimization
-
-<AccordionGroup>
-  <Accordion title="Database Performance">
-    - [Dgraph Performance Tuning
-    Guide](https://dgraph.io/docs/deploy/dgraph-administration/#performance-tuning)
-    - [Dgraph Metrics and
-    Monitoring](https://dgraph.io/docs/deploy/dgraph-administration/#metrics) -
-    [Database Optimization Patterns](https://use-the-index-luke.com/) - [Query
-    Performance Analysis](https://dgraph.io/docs/query-language/debugging/)
-  </Accordion>
-
-<Accordion title="Kubernetes Performance">
-  - [Kubernetes Performance
-  Tuning](https://kubernetes.io/docs/concepts/cluster-administration/system-logs/)
-  - [Resource Management Best
-  Practices](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
-  - [Node Performance
-  Tuning](https://kubernetes.io/docs/tasks/administer-cluster/reserve-compute-resources/)
-  - [Network Performance
-  Optimization](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
-</Accordion>
-
-  <Accordion title="Storage Performance">
-    - [Storage Class
-    Optimization](https://kubernetes.io/docs/concepts/storage/storage-classes/)
-    - [Volume Performance
-    Tuning](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#performance)
-    - [CSI Driver Best Practices](https://kubernetes-csi.github.io/docs/) -
-    [Backup Performance
-    Optimization](https://velero.io/docs/main/performance-guidance/)
-  </Accordion>
-</AccordionGroup>
-
-### Migration and Disaster Recovery
-
-<CardGroup cols={2}>
-  <Card
-    title="Velero Backup Solution"
-    icon="shield-alt"
-    href="https://velero.io/docs/"
-  >
-    Kubernetes native backup and disaster recovery
-  </Card>
-
-<Card
-  title="Chaos Engineering"
-  icon="exclamation-triangle"
-  href="https://chaostoolkit.org/"
->
-  Test system resilience and failure scenarios
-</Card>
-
-<Card
-  title="Database Migration Tools"
-  icon="exchange-alt"
-  href="https://github.com/golang-migrate/migrate"
->
-  Database schema migration utilities
-</Card>
-
-  <Card
-    title="GitOps Best Practices"
-    icon="git-alt"
-    href="https://argoproj.github.io/argo-cd/"
-  >
-    Continuous deployment using Git workflows
-  </Card>
-</CardGroup>
-
-### Community and Support
-
-<CardGroup cols={3}>
-  <Card title="Dgraph Slack" icon="slack" href="https://dgraph.slack.com/">
-    Real-time community support and discussions
-  </Card>
-
-<Card title="CNCF Community" icon="users" href="https://www.cncf.io/community/">
-  Cloud Native Computing Foundation resources
-</Card>
-
-  <Card
-    title="SRE Community"
-    icon="globe"
-    href="https://www.usenix.org/conferences/srecon"
-  >
-    Site Reliability Engineering conferences and resources
-  </Card>
-</CardGroup>
-
-### Learning Resources
-
-<Tabs>
-  <Tab title="Kubernetes">
-    - [Kubernetes Academy](https://kube.academy/) - [CKAD
-    Certification](https://www.cncf.io/certification/ckad/) - [CKA
-    Certification](https://www.cncf.io/certification/cka/) - [Kubernetes the
-    Hard Way](https://github.com/kelseyhightower/kubernetes-the-hard-way)
-  </Tab>
-
-<Tab title="Graph Databases">
-  - [Graph Database Concepts](https://neo4j.com/developer/graph-database/) -
-  [Graph Algorithms](https://github.com/neo4j-contrib/neo4j-graph-algorithms) -
-  [GraphQL Best Practices](https://graphql.org/learn/best-practices/) -
-  [Property Graph Model](https://github.com/opencypher/openCypher)
-</Tab>
-
-  <Tab title="SRE & Operations">
-    - [Google SRE Book](https://sre.google/sre-book/table-of-contents/) - [Site
-    Reliability Workbook](https://sre.google/workbook/table-of-contents/) -
-    [Observability
-    Engineering](https://www.oreilly.com/library/view/observability-engineering/9781492076438/)
-    - [Building Secure and Reliable
-    Systems](https://sre.google/static/pdf/building_secure_and_reliable_systems.pdf)
-  </Tab>
-</Tabs>
-
-### Tools and Utilities
-
-<AccordionGroup>
-  <Accordion title="CLI Tools">
-    - [kubectl](https://kubernetes.io/docs/reference/kubectl/) - Kubernetes
-    command-line tool - [helm](https://helm.sh/) - Kubernetes package manager -
-    [kubectx/kubens](https://github.com/ahmetb/kubectx) - Context and namespace
-    switching - [k9s](https://k9scli.io/) - Terminal UI for Kubernetes -
-    [stern](https://github.com/stern/stern) - Multi-pod log tailing - [dgraph
-    CLI](https://dgraph.io/docs/deploy/cli-command-reference/) - Dgraph
-    command-line tools
-  </Accordion>
-
-<Accordion title="Development Tools">
-  - [Skaffold](https://skaffold.dev/) - Kubernetes development workflow -
-  [Tilt](https://tilt.dev/) - Local development environment -
-  [Garden](https://garden.io/) - Development orchestration tool -
-  [DevSpace](https://devspace.sh/) - Developer tool for Kubernetes
-</Accordion>
-
-  <Accordion title="Networking Tools">
-    - [Istio Service Mesh](https://istio.io/latest/docs/) - [Linkerd Service
-    Mesh](https://linkerd.io/2.12/overview/) - [Cilium
-    Networking](https://docs.cilium.io/en/stable/) - [Calico Network
-    Policies](https://docs.projectcalico.org/security/kubernetes-network-policy)
-  </Accordion>
-</AccordionGroup>
 
 ### Migration Validation Checklist
 
@@ -2159,26 +1870,3 @@ technical requirements or constraints.
   support, join the Dgraph community or consult the operational runbooks in the
   Hypermode ops-runbooks repository.
 </Info>
-
-### Next Steps
-
-<CardGroup cols={2}>
-  <Card title="Plan Your Migration" icon="calendar">
-    Use the decision matrix and resource calculators to plan your specific
-    migration approach
-  </Card>
-
-<Card title="Join the Community" icon="users">
-  Connect with other users who have completed similar migrations for advice and
-  support
-</Card>
-
-<Card title="Monitor and Optimize" icon="chart-line">
-  Implement comprehensive monitoring and continue optimizing performance
-  post-migration
-</Card>
-
-  <Card title="Contribute Back" icon="heart">
-    Share your migration experience and lessons learned with the community
-  </Card>
-</CardGroup>
