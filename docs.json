@@ -172,31 +172,9 @@
               "agents/faq"
             ]
           },
-          {
-            "group": "Apps",
-            "pages": [
-              "apps/overview",
-              "apps/create-app",
-              "apps/connect-app",
-              "apps/develop-app",
-              "apps/deploy-app"
-            ]
-          },
-          {
-            "group": "Graphs",
-            "pages": [
-              "graphs/overview",
-              "graphs/provision",
-              "graphs/connect",
-              "graphs/manage-schema",
-              "graphs/manage-data",
-              "graphs/manage-graph",
-              "graphs/graph-mcp"
-            ]
-          },
-          {
+                    {
             "group": "Tools",
-            "pages": ["model-router", "hyp-cli"]
+            "pages": ["hyp-cli"]
           },
           {
             "group": "Resources",
