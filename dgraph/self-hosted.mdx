@@ -279,7 +279,14 @@ if [[-f "exported_data/g01.json.gz"]]; then zcat exported_data/g01.json.gz | jq
 
 ```bash Schema Validation
 # Validate schema syntax
-if [[ -f "schema.graphql" ]]; then
+if [ -f "exported_data/g01.rdf.gz" ]; then zcat exported_data/g01.rdf.gz | wc -l
+fi
+
+# For JSON exports, validate structure
+
+if [ -f "exported_data/g01.json.gz" ]; then zcat exported_data/g01.json.gz | jq '.[] | keys' | head -10
+fi
+
   # Basic GraphQL syntax check
   node -e "
     const fs = require('fs');
