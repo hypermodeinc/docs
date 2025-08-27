@@ -15,31 +15,13 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Hypermode Graphs (preview)",
-          "icon": "chart-network",
+          "anchor": "Hypermode Agents (beta)",
+          "icon": "robot",
           "color": {
             "light": "#FF00EE",
             "dark": "#CC00BE"
           },
           "href": "https://hypermode.com/login"
-        },
-        {
-          "anchor": "Dgraph Cloud",
-          "icon": "cloud",
-          "color": {
-            "light": "#FF00EE",
-            "dark": "#CC00BE"
-          },
-          "href": "https://cloud.dgraph.io"
-        },
-        {
-          "anchor": "Agents Bootcamp",
-          "icon": "calendar",
-          "color": {
-            "light": "#FF00EE",
-            "dark": "#CC00BE"
-          },
-          "href": "https://docs.hypermode.com/agents/30-days-of-agents/overview"
         }
       ]
     },
