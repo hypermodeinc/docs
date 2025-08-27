@@ -571,7 +571,8 @@ dgraph-dgraph-zero:5080
 curl -X POST $DGRAPH_ENDPOINT/admin \
  -H "Content-Type: application/json" \
  -d '{"query": "mutation { addUser(input: {name: \"admin\", password:
-\"password\"}) { user { name } } }"}'
+  -H "Content-Type: application/json" \
+  -d '{"query": "mutation { addUser(input: {name: \"admin\", password: \"password\"}) { user { name } } }"}'
 
 ````
 </Tab>
