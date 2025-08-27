@@ -1,35 +1,17 @@
 ---
 title: "Self Hosting Dgraph Guide"
 description:
-  "Complete guide for migrating managed Dgraph clusters to self-hosted infrastructure"
+  "Complete guide for migrating managed Dgraph clusters to self-hosted
+  infrastructure"
 sidebarTitle: "Self Hosting Guide"
 ---
 
 ## Overview
 
-This guide walks you through migrating your Dgraph database from
-managed cloud services to a self-hosted
-environment.  It covers step-by-step instructions for deployment using various cloud providers and methods, supporting goals like cost savings, increased control, and compliance.
-
-### What You'll Learn
-
-<CardGroup cols={2}>
-  <Card title="Migration Planning" icon="clipboard-list">
-    Assessment and planning strategies—including downtime minimization, resource calculations, and risk mitigation
-  </Card>
-
-<Card title="Data Export & Import" icon="database">
-  Instructions for exporting data, backing up schema and ACLs, loading via bulk or live methods, and verifying data integrity
-</Card>
-
-<Card title="Infrastructure Deployment" icon="server">
-  Deployment guidance for Kubernetes clusters, Docker Compose on Linux, and VPS configurations with load balancing and storage setup
-</Card>
-
-  <Card title="Operations & Monitoring" icon="chart-line">
-    Monitoring and alerting, backup and disaster recovery, performance optimization, and security hardening practices.
-  </Card>
-</CardGroup>
+This guide walks you through migrating your Dgraph database from managed cloud
+services to a self-hosted environment. It covers step-by-step instructions for
+deployment using various cloud providers and methods, supporting goals like cost
+savings, increased control, and compliance.
 
 ### Deployment Options
 
@@ -124,10 +106,8 @@ resources.
   </Tab>
 
 <Tab title="Medium Cluster (100 GB - 1 TB)">
-  - **Nodes**: 6 x 8 vCPU, 16 GB RAM 
-  - **Storage**: 500 GB solid-state drive per node 
-  - **Network**: 1 Gbps bandwidth 
-  - **Estimated Cost**: $500-800/month
+  - **Nodes**: 6 x 8 vCPU, 16 GB RAM - **Storage**: 500 GB solid-state drive per
+  node - **Network**: 1 Gbps bandwidth - **Estimated Cost**: $500-800/month
 </Tab>
 
   <Tab title="Large Cluster (> 1 TB)">
@@ -156,37 +136,30 @@ API endpoints and the web interface.
 <Steps>
   <Step title="Access Export Function">
     Log into your Dgraph Cloud dashboard and navigate to your cluster.
-    ![Dgraph Cloud Dashboard](/images/dgraph-cloud-dashboard.png)
-    <Note>
-      Screenshot placeholder: Show the main dashboard with cluster overview
-    </Note>
+    ![Dgraph Cloud Dashboard](/images/dgraph/self-managed/dg-cloud-export-1.png)
+    
   </Step>
 
 <Step title="Navigate to Export">
   Click on the "Export" tab in your cluster management interface. ![Export Tab
-  Location](/images/dgraph-cloud-export-tab.png)
-  <Note>
-    Screenshot placeholder: Highlight the export tab in the navigation
-  </Note>
+  Location](/images/dgraph/self-managed/dg-cloud-export-2.png)
 </Step>
 
 <Step title="Configure Export Settings">
   Select your export format and destination. Dgraph Cloud supports: -
-  **Format**: JSON or RDF - **Destination**: Download link or cloud storage -
-  **Compression**: Optional gzip compression ![Export
-  Configuration](/images/dgraph-cloud-export-config.png)
-  <Note>Screenshot placeholder: Show export configuration options</Note>
-</Step>
+  **Format**: JSON or RDF  ![Export
+  Configuration](/images/dgraph/self-managed/dg-cloud-export-3.png)
 
-<Step title="Start Export Process">
-  Click "Start Export" and monitor the progress. Large datasets may take several
-  hours. ![Export Progress](/images/dgraph-cloud-export-progress.png)
-  <Note>Screenshot placeholder: Show export progress indicator</Note>
+Click "Start Export" and monitor the progress. Large datasets may take several
+hours.
+
+  <Note>Click "Start Export" and monitor the progress. Large datasets may take several
+  hours.</Note>
 </Step>
 
   <Step title="Download Exported Data">
     Once complete, download your exported data files.
-    ![Export Download](/images/dgraph-cloud-export-download.png)
+    ![Export Download](/images/dgraph/self-managed/dg-cloud-export-4.png)
     <Note>
       Screenshot placeholder: Show download links for completed export
     </Note>
@@ -256,10 +229,19 @@ curl -X POST https://your-cluster.grpc.cloud.dgraph.io/admin \
 
 ### Exporting from Hypermode Graphs
 
-Hypermode Graphs provides native export capabilities through both API and
-interface methods.
+<Note>
+  For larger datasets please contact Hypermode Support to facilitate your graph
+  export.
+</Note>
 
 #### Using `admin` endpoint
+
+For smaller datasets you can use the `admin` endpoint to export your graph.
+
+<Note>
+  For larger datasets please contact Hypermode Support to facilitate your graph
+  export.
+</Note>
 
 ```bash
 curl --location 'https://<YOUR_CLUSTER_NAME>.hypermode.host/dgraph/admin' \
@@ -375,10 +357,6 @@ curl -X POST https://your-cluster.grpc.cloud.dgraph.io/admin \
   -H "Content-Type: application/json" \
   -d '{"query": "{ state { groups { id checksum tablets { predicate space } } } }"}'
 
-# For Hypermode Graph
-
-hypermode graph stats --detailed
-
 ````
 
 ```bash Check Performance Metrics
@@ -426,976 +404,6 @@ curl -X POST https://your-cluster.grpc.cloud.dgraph.io/admin \
   </Card>
 </CardGroup>
 
----
-
-## AWS Deployment
-
-Deploy your self-hosted Dgraph cluster on Amazon Web Services using Elastic
-Kubernetes Service (EKS).
-
-```mermaid
-graph TB
-    subgraph "AWS Architecture"
-        A[Application Load Balancer] --> B[EKS Cluster]
-        B --> C[Dgraph Alpha Pods]
-        B --> D[Dgraph Zero Pods]
-        C --> E[EBS Volumes]
-        D --> F[EBS Volumes]
-
-        subgraph "EKS Cluster"
-            C
-            D
-            G[Monitoring]
-            H[Ingress Controller]
-        end
-
-        I[S3 Backup] --> C
-        J[CloudWatch] --> G
-    end
-```
-
-### 1. Infrastructure Setup
-
-#### EKS Cluster Creation
-
-<CodeGroup>
-```bash Create EKS Cluster
-aws eks create-cluster \
-  --name dgraph-cluster \
-  --version 1.28 \
-  --role-arn arn:aws:iam::ACCOUNT:role/eks-service-role \
-  --resources-vpc-config subnetIds=subnet-12345,securityGroupIds=sg-12345
-```
-
-```bash Update Kubeconfig
-aws eks update-kubeconfig --region us-west-2 --name dgraph-cluster
-```
-
-```bash Create Node Group
-aws eks create-nodegroup \
-  --cluster-name dgraph-cluster \
-  --nodegroup-name dgraph-nodes \
-  --instance-types t3.xlarge \
-  --ami-type AL2_x86_64 \
-  --capacity-type ON_DEMAND \
-  --scaling-config minSize=3,maxSize=9,desiredSize=6 \
-  --disk-size 100 \
-  --node-role arn:aws:iam::ACCOUNT:role/NodeInstanceRole
-```
-
-</CodeGroup>
-
-#### Storage Class Configuration
-
-```yaml aws-storage-class.yaml
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: dgraph-storage
-provisioner: ebs.csi.aws.com
-parameters:
-  type: gp3
-  iops: "3000"
-  throughput: "125"
-volumeBindingMode: WaitForFirstConsumer
-allowVolumeExpansion: true
-```
-
-### 2. Dgraph Deployment on AWS
-
-<Steps>
-  <Step title="Apply Storage Class">
-    ```bash kubectl apply -f aws-storage-class.yaml ```
-  </Step>
-
-<Step title="Add Helm Repository">
-  ```bash helm repo add dgraph https://charts.dgraph.io helm repo update ```
-</Step>
-
-<Step title="Create Namespace">
-  ```bash kubectl create namespace dgraph ```
-</Step>
-
-  <Step title="Deploy Dgraph">
-    ```bash
-    helm install dgraph dgraph/dgraph \
-      --namespace dgraph \
-      --set image.tag="v23.1.0" \
-      --set alpha.persistence.storageClass="dgraph-storage" \
-      --set alpha.persistence.size="500Gi" \
-      --set zero.persistence.storageClass="dgraph-storage" \
-      --set zero.persistence.size="100Gi" \
-      --set alpha.replicaCount=3 \
-      --set zero.replicaCount=3 \
-      --set alpha.resources.requests.memory="8Gi" \
-      --set alpha.resources.requests.cpu="2000m"
-    ```
-  </Step>
-</Steps>
-
-### 3. Load Balancer Configuration
-
-```yaml aws-ingress.yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: dgraph-ingress
-  namespace: dgraph
-  annotations:
-    kubernetes.io/ingress.class: alb
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:REGION:ACCOUNT:certificate/CERT-ID
-spec:
-  rules:
-    - host: dgraph.yourdomain.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: dgraph-dgraph-alpha
-                port:
-                  number: 8080
-```
-
----
-
-## Google Cloud Platform Deployment
-
-Deploy your self-hosted Dgraph cluster on Google Cloud Platform using Google
-Kubernetes Engine (GKE).
-
-```mermaid
-graph TB
-    subgraph "GCP Architecture"
-        A[Cloud Load Balancer] --> B[GKE Cluster]
-        B --> C[Dgraph Alpha Pods]
-        B --> D[Dgraph Zero Pods]
-        C --> E[Persistent Disks]
-        D --> F[Persistent Disks]
-
-        subgraph "GKE Cluster"
-            C
-            D
-            G[GKE Monitoring]
-            H[Ingress]
-        end
-
-        I[Cloud Storage] --> C
-        J[Cloud Monitoring] --> G
-    end
-```
-
-### 1. GKE Cluster Setup
-
-<CodeGroup>
-```bash Create GKE Cluster
-gcloud container clusters create dgraph-cluster \
-  --zone=us-central1-a \
-  --machine-type=e2-standard-4 \
-  --num-nodes=3 \
-  --disk-size=100GB \
-  --disk-type=pd-ssd \
-  --enable-autoscaling \
-  --min-nodes=3 \
-  --max-nodes=9 \
-  --enable-autorepair \
-  --enable-autoupgrade
-```
-
-```bash Get Credentials
-gcloud container clusters get-credentials dgraph-cluster --zone=us-central1-a
-```
-
-```bash Create Storage Class
-kubectl apply -f - <<EOF
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: dgraph-storage
-provisioner: kubernetes.io/gce-pd
-parameters:
-  type: pd-ssd
-  zones: us-central1-a,us-central1-b,us-central1-c
-volumeBindingMode: WaitForFirstConsumer
-allowVolumeExpansion: true
-EOF
-```
-
-</CodeGroup>
-
-### 2. Deploy Dgraph on GKE
-
-```bash
-# Create namespace
-kubectl create namespace dgraph
-
-# Deploy with Helm
-helm install dgraph dgraph/dgraph \
-  --namespace dgraph \
-  --set alpha.persistence.storageClass="dgraph-storage" \
-  --set zero.persistence.storageClass="dgraph-storage" \
-  --set alpha.persistence.size="500Gi" \
-  --set zero.persistence.size="100Gi" \
-  --set alpha.replicaCount=3 \
-  --set zero.replicaCount=3
-```
-
-### 3. Load Balancer Setup
-
-```yaml gcp-ingress.yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: dgraph-ingress
-  namespace: dgraph
-  annotations:
-    kubernetes.io/ingress.global-static-ip-name: dgraph-ip
-    networking.gke.io/managed-certificates: dgraph-ssl-cert
-spec:
-  rules:
-    - host: dgraph.yourdomain.com
-      http:
-        paths:
-          - path: /*
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: dgraph-dgraph-alpha
-                port:
-                  number: 8080
-```
-
----
-
-## Azure Deployment
-
-Deploy your self-hosted Dgraph cluster on Microsoft Azure using Azure Kubernetes
-Service (AKS).
-
-```mermaid
-graph TB
-    subgraph "Azure Architecture"
-        A[Application Gateway] --> B[AKS Cluster]
-        B --> C[Dgraph Alpha Pods]
-        B --> D[Dgraph Zero Pods]
-        C --> E[Azure Disks]
-        D --> F[Azure Disks]
-
-        subgraph "AKS Cluster"
-            C
-            D
-            G[Azure Monitor]
-            H[Ingress Controller]
-        end
-
-        I[Azure Storage] --> C
-        J[Azure Monitor] --> G
-    end
-```
-
-### 1. AKS Cluster Creation
-
-<CodeGroup>
-```bash Create Resource Group
-az group create --name dgraph-rg --location eastus
-```
-
-```bash Create AKS Cluster
-az aks create \
-  --resource-group dgraph-rg \
-  --name dgraph-cluster \
-  --node-count 3 \
-  --node-vm-size Standard_D4s_v3 \
-  --node-osdisk-size 100 \
-  --enable-addons monitoring \
-  --generate-ssh-keys
-```
-
-```bash Get Credentials
-az aks get-credentials --resource-group dgraph-rg --name dgraph-cluster
-```
-
-```bash Create Storage Class
-kubectl apply -f - <<EOF
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: dgraph-storage
-provisioner: kubernetes.io/azure-disk
-parameters:
-  storageaccounttype: Premium_LRS
-  kind: Managed
-volumeBindingMode: WaitForFirstConsumer
-allowVolumeExpansion: true
-EOF
-```
-
-</CodeGroup>
-
-### 2. Deploy Dgraph on AKS
-
-```bash
-# Create namespace
-kubectl create namespace dgraph
-
-# Deploy with Helm
-helm install dgraph dgraph/dgraph \
-  --namespace dgraph \
-  --set alpha.persistence.storageClass="dgraph-storage" \
-  --set zero.persistence.storageClass="dgraph-storage" \
-  --set alpha.persistence.size="500Gi" \
-  --set zero.persistence.size="100Gi"
-```
-
----
-
-## Digital Ocean Deployment
-
-### Kubernetes Deployment (DOKS)
-
-```mermaid
-graph TB
-    subgraph "Digital Ocean Kubernetes Architecture"
-        A[Load Balancer] --> B[DOKS Cluster]
-        B --> C[Dgraph Alpha Pods]
-        B --> D[Dgraph Zero Pods]
-        C --> E[Block Storage]
-        D --> F[Block Storage]
-
-        subgraph "DOKS Cluster"
-            C
-            D
-            G[DO Monitoring]
-        end
-
-        I[Spaces Storage] --> C
-    end
-```
-
-#### 1. DOKS Cluster Setup
-
-<CodeGroup>
-```bash Create Cluster
-doctl kubernetes cluster create dgraph-cluster \
-  --region nyc1 \
-  --version 1.28.2-do.0 \
-  --node-pool="name=worker-pool;size=s-4vcpu-8gb;count=3;auto-scale=true;min-nodes=3;max-nodes=9"
-```
-
-```bash Get Kubeconfig
-doctl kubernetes cluster kubeconfig save dgraph-cluster
-```
-
-```bash Apply Storage Class
-kubectl apply -f - <<EOF
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: dgraph-storage
-provisioner: dobs.csi.digitalocean.com
-allowVolumeExpansion: true
-volumeBindingMode: WaitForFirstConsumer
-EOF
-```
-
-</CodeGroup>
-
-#### 2. Deploy Dgraph on DOKS
-
-```bash
-# Create namespace
-kubectl create namespace dgraph
-
-# Deploy with Helm
-helm install dgraph dgraph/dgraph \
-  --namespace dgraph \
-  --set alpha.persistence.storageClass="dgraph-storage" \
-  --set zero.persistence.storageClass="dgraph-storage" \
-  --set alpha.persistence.size="500Gi" \
-  --set zero.persistence.size="100Gi"
-```
-
-### Docker Compose Deployment
-
-```mermaid
-graph TB
-    subgraph "Docker Compose Architecture"
-        A[Nginx Load Balancer] --> B[Dgraph Alpha 1]
-        A --> C[Dgraph Alpha 2]
-        A --> D[Dgraph Alpha 3]
-
-        B --> E[Dgraph Zero 1]
-        C --> F[Dgraph Zero 2]
-        D --> G[Dgraph Zero 3]
-
-        subgraph "Shared Storage"
-            H[Docker Volumes]
-            I[Host Directories]
-        end
-
-        B --> H
-        C --> H
-        D --> H
-        E --> I
-        F --> I
-        G --> I
-
-        J[Backup Scripts] --> H
-        K[Monitoring] --> B
-        K --> C
-        K --> D
-    end
-```
-
-#### 1. Prepare Docker Compose Environment
-
-<Steps>
-  <Step title="Create Directory Structure">
-    ```bash
-    mkdir -p dgraph-compose/{data,config,backups,nginx}
-    cd dgraph-compose
-    ```
-  </Step>
-  
-  <Step title="Create Docker Compose File">
-    ```yaml docker-compose.yml
-    version: '3.8'
-    
-    services:
-      # Dgraph Zero nodes
-      dgraph-zero-1:
-        image: dgraph/dgraph:v23.1.0
-        container_name: dgraph-zero-1
-        ports:
-          - "5080:5080"
-          - "6080:6080"
-        volumes:
-          - ./data/zero1:/dgraph
-        command: dgraph zero --my=dgraph-zero-1:5080 --replicas=3 --idx=1
-        restart: unless-stopped
-        networks:
-          - dgraph-network
-    
-      dgraph-zero-2:
-        image: dgraph/dgraph:v23.1.0
-        container_name: dgraph-zero-2
-        ports:
-          - "5081:5080"
-          - "6081:6080"
-        volumes:
-          - ./data/zero2:/dgraph
-        command: dgraph zero --my=dgraph-zero-2:5080 --replicas=3 --peer=dgraph-zero-1:5080 --idx=2
-        restart: unless-stopped
-        networks:
-          - dgraph-network
-        depends_on:
-          - dgraph-zero-1
-    
-      dgraph-zero-3:
-        image: dgraph/dgraph:v23.1.0
-        container_name: dgraph-zero-3
-        ports:
-          - "5082:5080"
-          - "6082:6080"
-        volumes:
-          - ./data/zero3:/dgraph
-        command: dgraph zero --my=dgraph-zero-3:5080 --replicas=3 --peer=dgraph-zero-1:5080 --idx=3
-        restart: unless-stopped
-        networks:
-          - dgraph-network
-        depends_on:
-          - dgraph-zero-1
-    
-      # Dgraph Alpha nodes
-      dgraph-alpha-1:
-        image: dgraph/dgraph:v23.1.0
-        container_name: dgraph-alpha-1
-        ports:
-          - "8080:8080"
-          - "9080:9080"
-        volumes:
-          - ./data/alpha1:/dgraph
-        command: dgraph alpha --my=dgraph-alpha-1:7080 --zero=dgraph-zero-1:5080,dgraph-zero-2:5080,dgraph-zero-3:5080 --security whitelist=0.0.0.0/0
-        restart: unless-stopped
-        networks:
-          - dgraph-network
-        depends_on:
-          - dgraph-zero-1
-          - dgraph-zero-2
-          - dgraph-zero-3
-    
-      dgraph-alpha-2:
-        image: dgraph/dgraph:v23.1.0
-        container_name: dgraph-alpha-2
-        ports:
-          - "8081:8080"
-          - "9081:9080"
-        volumes:
-          - ./data/alpha2:/dgraph
-        command: dgraph alpha --my=dgraph-alpha-2:7080 --zero=dgraph-zero-1:5080,dgraph-zero-2:5080,dgraph-zero-3:5080 --security whitelist=0.0.0.0/0
-        restart: unless-stopped
-        networks:
-          - dgraph-network
-        depends_on:
-          - dgraph-zero-1
-          - dgraph-zero-2
-          - dgraph-zero-3
-    
-      dgraph-alpha-3:
-        image: dgraph/dgraph:v23.1.0
-        container_name: dgraph-alpha-3
-        ports:
-          - "8082:8080"
-          - "9082:9080"
-        volumes:
-          - ./data/alpha3:/dgraph
-        command: dgraph alpha --my=dgraph-alpha-3:7080 --zero=dgraph-zero-1:5080,dgraph-zero-2:5080,dgraph-zero-3:5080 --security whitelist=0.0.0.0/0
-        restart: unless-stopped
-        networks:
-          - dgraph-network
-        depends_on:
-          - dgraph-zero-1
-          - dgraph-zero-2
-          - dgraph-zero-3
-    
-      # Load Balancer
-      nginx:
-        image: nginx:alpine
-        container_name: dgraph-nginx
-        ports:
-          - "80:80"
-          - "443:443"
-        volumes:
-          - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-          - ./nginx/ssl:/etc/nginx/ssl
-        restart: unless-stopped
-        networks:
-          - dgraph-network
-        depends_on:
-          - dgraph-alpha-1
-          - dgraph-alpha-2
-          - dgraph-alpha-3
-    
-      # Monitoring
-      prometheus:
-        image: prom/prometheus:latest
-        container_name: dgraph-prometheus
-        ports:
-          - "9090:9090"
-        volumes:
-          - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
-        restart: unless-stopped
-        networks:
-          - dgraph-network
-    
-      grafana:
-        image: grafana/grafana:latest
-        container_name: dgraph-grafana
-        ports:
-          - "3000:3000"
-        volumes:
-          - ./data/grafana:/var/lib/grafana
-        environment:
-          - GF_SECURITY_ADMIN_PASSWORD=admin
-        restart: unless-stopped
-        networks:
-          - dgraph-network
-    
-    networks:
-      dgraph-network:
-        driver: bridge
-    
-    volumes:
-      dgraph-data:
-    ```
-  </Step>
-  
-  <Step title="Create Nginx Configuration">
-    ```nginx nginx/nginx.conf
-    events {
-        worker_connections 1024;
-    }
-    
-    http {
-        upstream dgraph_alpha {
-            least_conn;
-            server dgraph-alpha-1:8080;
-            server dgraph-alpha-2:8080;
-            server dgraph-alpha-3:8080;
-        }
-        
-        upstream dgraph_grpc {
-            least_conn;
-            server dgraph-alpha-1:9080;
-            server dgraph-alpha-2:9080;
-            server dgraph-alpha-3:9080;
-        }
-    
-        server {
-            listen 80;
-            server_name localhost;
-    
-            location / {
-                proxy_pass http://dgraph_alpha;
-                proxy_set_header Host $host;
-                proxy_set_header X-Real-IP $remote_addr;
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            }
-        }
-        
-        # HTTPS configuration (uncomment and configure as needed)
-        # server {
-        #     listen 443 ssl http2;
-        #     server_name your-domain.com;
-        #     
-        #     ssl_certificate /etc/nginx/ssl/cert.pem;
-        #     ssl_certificate_key /etc/nginx/ssl/key.pem;
-        #     
-        #     location / {
-        #         proxy_pass http://dgraph_alpha;
-        #         proxy_set_header Host $host;
-        #         proxy_set_header X-Real-IP $remote_addr;
-        #         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        #         proxy_set_header X-Forwarded-Proto $scheme;
-        #     }
-        # }
-    }
-    ```
-  </Step>
-  
-  <Step title="Create Prometheus Configuration">
-    ```yaml config/prometheus.yml
-    global:
-      scrape_interval: 15s
-    
-    scrape_configs:
-      - job_name: 'dgraph-alpha'
-        static_configs:
-          - targets: 
-            - 'dgraph-alpha-1:8080'
-            - 'dgraph-alpha-2:8080'
-            - 'dgraph-alpha-3:8080'
-        metrics_path: '/debug/prometheus_metrics'
-        
-      - job_name: 'dgraph-zero'
-        static_configs:
-          - targets: 
-            - 'dgraph-zero-1:6080'
-            - 'dgraph-zero-2:6080'
-            - 'dgraph-zero-3:6080'
-        metrics_path: '/debug/prometheus_metrics'
-    ```
-  </Step>
-</Steps>
-
-#### 2. Deploy and Manage Docker Compose Cluster
-
-<CodeGroup>
-```bash Start Cluster
-# Start the entire cluster
-docker-compose up -d
-
-# Check status
-
-docker-compose ps
-
-# View logs
-
-docker-compose logs -f dgraph-alpha-1
-
-````
-
-```bash Scale Cluster
-# Add more alpha replicas
-docker-compose up -d --scale dgraph-alpha=5
-
-# Remove specific services
-docker-compose stop dgraph-alpha-3
-docker-compose rm dgraph-alpha-3
-````
-
-```bash Backup and Restore
-# Create backup script
-cat > backup.sh << 'EOF'
-#!/bin/bash
-DATE=$(date +%Y%m%d_%H%M%S)
-BACKUP_DIR="./backups/$DATE"
-mkdir -p $BACKUP_DIR
-
-# Export data
-docker exec dgraph-alpha-1 dgraph export --alpha localhost:9080 --destination /dgraph/export
-
-# Copy to backup directory
-docker cp dgraph-alpha-1:/dgraph/export $BACKUP_DIR/
-echo "Backup completed: $BACKUP_DIR"
-EOF
-
-chmod +x backup.sh
-./backup.sh
-```
-
-</CodeGroup>
-
-### Linux VPS Deployment
-
-```mermaid
-graph TB
-    subgraph "Linux VPS Architecture"
-        A[Load Balancer VPS] --> B[Dgraph Node 1]
-        A --> C[Dgraph Node 2]
-        A --> D[Dgraph Node 3]
-
-        subgraph "Node 1 (10.0.1.10)"
-            B1[Dgraph Alpha]
-            B2[Dgraph Zero]
-            B3[Local Storage]
-        end
-
-        subgraph "Node 2 (10.0.1.11)"
-            C1[Dgraph Alpha]
-            C2[Dgraph Zero]
-            C3[Local Storage]
-        end
-
-        subgraph "Node 3 (10.0.1.12)"
-            D1[Dgraph Alpha]
-            D2[Dgraph Zero]
-            D3[Local Storage]
-        end
-
-        B1 --> B2
-        C1 --> C2
-        D1 --> D2
-
-        B2 -.->|Raft| C2
-        C2 -.->|Raft| D2
-        D2 -.->|Raft| B2
-
-        E[Backup Server] --> B3
-        E --> C3
-        E --> D3
-
-        F[Monitoring Server] --> B1
-        F --> C1
-        F --> D1
-    end
-```
-
-#### 1. VPS Infrastructure Setup
-
-<Steps>
-  <Step title="Provision VPS Instances">
-    Create 3-5 VPS instances with the following specifications: - **CPU**: 4-8
-    cores - **RAM**: 16-32GB - **Storage**: 500GB+ SSD - **OS**: Ubuntu 22.04
-    LTS - **Network**: Private networking enabled
-  </Step>
-
-<Step title="Configure Base System">
-  ```bash # Update system (run on all nodes) sudo apt update && sudo apt upgrade
-  -y # Install required packages sudo apt install -y curl wget unzip htop iotop
-  # Configure firewall sudo ufw allow ssh sudo ufw allow 8080 # Dgraph Alpha
-  HTTP sudo ufw allow 9080 # Dgraph Alpha gRPC sudo ufw allow 5080 # Dgraph Zero
-  sudo ufw allow 6080 # Dgraph Zero HTTP sudo ufw enable # Set up swap (if
-  needed) sudo fallocate -l 4G /swapfile sudo chmod 600 /swapfile sudo mkswap
-  /swapfile sudo swapon /swapfile echo '/swapfile none swap sw 0 0' | sudo tee
-  -a /etc/fstab ```
-</Step>
-
-  <Step title="Install Dgraph">
-    ```bash
-    # Download and install Dgraph (run on all nodes)
-    curl -sSf https://get.dgraph.io | bash
-    
-    # Move to system path
-    sudo mv dgraph /usr/local/bin/
-    
-    # Create dgraph user
-    sudo useradd -r -s /bin/false dgraph
-    
-    # Create directories
-    sudo mkdir -p /opt/dgraph/{data,logs}
-    sudo chown -R dgraph:dgraph /opt/dgraph
-    ```
-  </Step>
-</Steps>
-
-#### 2. Configure Dgraph Services
-
-<Tabs>
-  <Tab title="Node 1 Configuration">
-    ```bash
-    # Create systemd service for Zero
-    sudo tee /etc/systemd/system/dgraph-zero.service << 'EOF'
-    [Unit]
-    Description=Dgraph Zero
-    After=network.target
-    
-    [Service]
-    Type=simple
-    User=dgraph
-    Group=dgraph
-    ExecStart=/usr/local/bin/dgraph zero --my=10.0.1.10:5080 --replicas=3 --idx=1 --wal=/opt/dgraph/data/zw --bindall
-    WorkingDirectory=/opt/dgraph
-    Restart=always
-    RestartSec=5
-    StandardOutput=journal
-    StandardError=journal
-    SyslogIdentifier=dgraph-zero
-    
-    [Install]
-    WantedBy=multi-user.target
-    EOF
-    
-    # Create systemd service for Alpha
-    sudo tee /etc/systemd/system/dgraph-alpha.service << 'EOF'
-    [Unit]
-    Description=Dgraph Alpha
-    After=network.target dgraph-zero.service
-    Requires=dgraph-zero.service
-    
-    [Service]
-    Type=simple
-    User=dgraph
-    Group=dgraph
-    ExecStart=/usr/local/bin/dgraph alpha --my=10.0.1.10:7080 --zero=10.0.1.10:5080,10.0.1.11:5080,10.0.1.12:5080 --postings=/opt/dgraph/data/p --wal=/opt/dgraph/data/w --bindall --security whitelist=0.0.0.0/0
-    WorkingDirectory=/opt/dgraph
-    Restart=always
-    RestartSec=5
-    StandardOutput=journal
-    StandardError=journal
-    SyslogIdentifier=dgraph-alpha
-    
-    [Install]
-    WantedBy=multi-user.target
-    EOF
-    
-    # Enable and start services
-    sudo systemctl daemon-reload
-    sudo systemctl enable dgraph-zero dgraph-alpha
-    sudo systemctl start dgraph-zero
-    sleep 10
-    sudo systemctl start dgraph-alpha
-    ```
-  </Tab>
-  
-  <Tab title="Node 2 Configuration">
-    ```bash
-    # Create systemd service for Zero
-    sudo tee /etc/systemd/system/dgraph-zero.service << 'EOF'
-    [Unit]
-    Description=Dgraph Zero
-    After=network.target
-    
-    [Service]
-    Type=simple
-    User=dgraph
-    Group=dgraph
-    ExecStart=/usr/local/bin/dgraph zero --my=10.0.1.11:5080 --replicas=3 --peer=10.0.1.10:5080 --idx=2 --wal=/opt/dgraph/data/zw --bindall
-    WorkingDirectory=/opt/dgraph
-    Restart=always
-    RestartSec=5
-    StandardOutput=journal
-    StandardError=journal
-    SyslogIdentifier=dgraph-zero
-    
-    [Install]
-    WantedBy=multi-user.target
-    EOF
-    
-    # Create systemd service for Alpha
-    sudo tee /etc/systemd/system/dgraph-alpha.service << 'EOF'
-    [Unit]
-    Description=Dgraph Alpha
-    After=network.target dgraph-zero.service
-    Requires=dgraph-zero.service
-    
-    [Service]
-    Type=simple
-    User=dgraph
-    Group=dgraph
-    ExecStart=/usr/local/bin/dgraph alpha --my=10.0.1.11:7080 --zero=10.0.1.10:5080,10.0.1.11:5080,10.0.1.12:5080 --postings=/opt/dgraph/data/p --wal=/opt/dgraph/data/w --bindall --security whitelist=0.0.0.0/0
-    WorkingDirectory=/opt/dgraph
-    Restart=always
-    RestartSec=5
-    StandardOutput=journal
-    StandardError=journal
-    SyslogIdentifier=dgraph-alpha
-    
-    [Install]
-    WantedBy=multi-user.target
-    EOF
-    
-    # Enable and start services
-    sudo systemctl daemon-reload
-    sudo systemctl enable dgraph-zero dgraph-alpha
-    sudo systemctl start dgraph-zero
-    sleep 10
-    sudo systemctl start dgraph-alpha
-    ```
-  </Tab>
-  
-  <Tab title="Node 3 Configuration">
-    ```bash
-    # Create systemd service for Zero
-    sudo tee /etc/systemd/system/dgraph-zero.service << 'EOF'
-    [Unit]
-    Description=Dgraph Zero
-    After=network.target
-    
-    [Service]
-    Type=simple
-    User=dgraph
-    Group=dgraph
-    ExecStart=/usr/local/bin/dgraph zero --my=10.0.1.12:5080 --replicas=3 --peer=10.0.1.10:5080 --idx=3 --wal=/opt/dgraph/data/zw --bindall
-    WorkingDirectory=/opt/dgraph
-    Restart=always
-    RestartSec=5
-    StandardOutput=journal
-    StandardError=journal
-    SyslogIdentifier=dgraph-zero
-    
-    [Install]
-    WantedBy=multi-user.target
-    EOF
-    
-    # Create systemd service for Alpha
-    sudo tee /etc/systemd/system/dgraph-alpha.service << 'EOF'
-    [Unit]
-    Description=Dgraph Alpha
-    After=network.target dgraph-zero.service
-    Requires=dgraph-zero.service
-    
-    [Service]
-    Type=simple
-    User=dgraph
-    Group=dgraph
-    ExecStart=/usr/local/bin/dgraph alpha --my=10.0.1.12:7080 --zero=10.0.1.10:5080,10.0.1.11:5080,10.0.1.12:5080 --postings=/opt/dgraph/data/p --wal=/opt/dgraph/data/w --bindall --security whitelist=0.0.0.0/0
-    WorkingDirectory=/opt/dgraph
-    Restart=always
-    RestartSec=5
-    StandardOutput=journal
-    StandardError=journal
-    SyslogIdentifier=dgraph-alpha
-    
-    [Install]
-    WantedBy=multi-user.target
-    EOF
-    
-    # Enable and start services
-    sudo systemctl daemon-reload
-    sudo systemctl enable dgraph-zero dgraph-alpha
-    sudo systemctl start dgraph-zero
-    sleep 10
-    sudo systemctl start dgraph-alpha
-    ```
-  </Tab>
-</Tabs>
-
----
-
 ## Data Migration and Import
 
 ```mermaid
@@ -1432,7 +440,7 @@ kubectl get pods -n dgraph
 docker-compose ps
 ```
 
-```bash Check Services (Linux VPS)
+```bash Check Services (Linux)
 systemctl status dgraph-alpha dgraph-zero
 ```
 
@@ -1481,7 +489,7 @@ application/json" \ -d @schema_backup.json
 
 </Tab>
 
-<Tab title="Linux VPS">
+<Tab title="Linux">
   
   ```bash
   
@@ -1495,6 +503,11 @@ application/json" \ -d @schema_backup.json
 </Tabs>
 
 ### 3. Import Data
+
+<Note>
+  Refer to the [Dgraph bulk loader documentation](bulk-loader/) for efficiently
+  handling larger datasets.
+</Note>
 
 <Tabs>
 
@@ -1528,7 +541,7 @@ dgraph-dgraph-zero:5080
 
 </Tab>
 
-<Tab title="Live Loader (Linux VPS)">
+<Tab title="Live Loader (Linux)">
 
 ```bash
 
@@ -1845,24 +858,6 @@ Use this checklist to ensure your migration was successful:
 </Card>
 
 ---
-
-## Conclusion
-
-<Card title="Migration Success Factors" icon="trophy">
-
-- Thorough planning and testing
-- Proper resource provisioning
-- Systematic data migration
-- Comprehensive monitoring setup
-- Regular backup procedures
-
-</Card>
-
-This migration guide provides comprehensive steps for moving from Dgraph Cloud
-and Hypermode Graph to self-hosted clusters across major cloud providers. The
-combination of detailed export procedures, multiple deployment options, and
-extensive operational guidance ensures a successful migration regardless of your
-technical requirements or constraints.
 
 <Info>
   This migration guide is a living document. Please contribute improvements,

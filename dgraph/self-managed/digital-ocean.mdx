@@ -1,0 +1,74 @@
+---
+title: "Digital Ocean Deployment"
+description:
+  "Deploy your self-hosted Dgraph cluster on Digital Ocean using Digital Ocean
+  Kubernetes Service (DOKS)"
+unlisted: true
+unindexed: true
+---
+
+## Digital Ocean Deployment
+
+### Kubernetes Deployment (DOKS)
+
+```mermaid
+graph TB
+    subgraph "Digital Ocean Kubernetes Architecture"
+        A[Load Balancer] --> B[DOKS Cluster]
+        B --> C[Dgraph Alpha Pods]
+        B --> D[Dgraph Zero Pods]
+        C --> E[Block Storage]
+        D --> F[Block Storage]
+
+        subgraph "DOKS Cluster"
+            C
+            D
+            G[DO Monitoring]
+        end
+
+        I[Spaces Storage] --> C
+    end
+```
+
+#### 1. DOKS Cluster Setup
+
+<CodeGroup>
+```bash Create Cluster
+doctl kubernetes cluster create dgraph-cluster \
+  --region nyc1 \
+  --version 1.28.2-do.0 \
+  --node-pool="name=worker-pool;size=s-4vcpu-8gb;count=3;auto-scale=true;min-nodes=3;max-nodes=9"
+```
+
+```bash Get Kubeconfig
+doctl kubernetes cluster kubeconfig save dgraph-cluster
+```
+
+```bash Apply Storage Class
+kubectl apply -f - <<EOF
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: dgraph-storage
+provisioner: dobs.csi.digitalocean.com
+allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer
+EOF
+```
+
+</CodeGroup>
+
+#### 2. Deploy Dgraph on DOKS
+
+```bash
+# Create namespace
+kubectl create namespace dgraph
+
+# Deploy with Helm
+helm install dgraph dgraph/dgraph \
+  --namespace dgraph \
+  --set alpha.persistence.storageClass="dgraph-storage" \
+  --set zero.persistence.storageClass="dgraph-storage" \
+  --set alpha.persistence.size="500Gi" \
+  --set zero.persistence.size="100Gi"
+```
