@@ -333,7 +333,11 @@ fi
 <Step title="Create Checksums">
   ```bash # Generate checksums for integrity verification cd migration_data find
   . -type f -name "*.gz" -exec sha256sum {} \; > checksums.txt find . -type f
-  -name "*.json" -exec sha256sum {} \; >> checksums.txt ```
+  ```bash
+  # Generate checksums for integrity verification
+  cd migration_data
+  find . -type f -name "*.gz" -exec sha256sum {} \; > checksums.txt
+  find . -type f -name "*.json" -exec sha256sum {} \; >> checksums.txt
 </Step>
 
   <Step title="Compress for Transfer">
