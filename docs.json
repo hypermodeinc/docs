@@ -57,8 +57,7 @@
                   "first-hypermode-agent",
                   "first-sales-agent",
                   "first-operations-agent",
-                  "agents/knowledge-graph-extraction",
-                  "semantic-search"
+                  "agents/knowledge-graph-extraction"
                 ]
               }
             ]
@@ -171,10 +170,6 @@
               },
               "agents/faq"
             ]
-          },
-          {
-            "group": "Tools",
-            "pages": ["hyp-cli"]
           },
           {
             "group": "Resources",
