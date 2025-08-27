@@ -27,14 +27,14 @@ requirements. Here's how these factors influence your deployment decision:
 
 **Data Size Considerations:**
 
-- **Under 100GB** Docker Compose or Linux VPS are suitable options
-- **100GB to 1TB** Kubernetes or Linux VPS can handle the load
+- **Under 100GB** Docker Compose or Linux are suitable options
+- **100GB to 1TB** Kubernetes or Linux can handle the load
 - **Over 1TB** Kubernetes is required for proper scaling and management
 
 **Team Expertise Factors:**
 
 - **High Kubernetes Experience**: Kubernetes deployment is recommended
-- **Limited Kubernetes Experience**: Docker Compose or Linux VPS are more
+- **Limited Kubernetes Experience**: Docker Compose or Linux are more
   approachable
 
 **Budget Constraints:**
@@ -101,28 +101,6 @@ resources.
   </Tab>
 </Tabs>
 
-### Minimum resource requirements
-
-<Tabs>
-  <Tab title="Small Cluster (< 100 GB)">
-    - **Nodes**: 3 x 4 vCPU, 8 GB RAM
-    - **Storage**: 200 GB solid-state drive per node
-    - **Network**: 1 Gbps bandwidth
-    - **Estimated Cost**: $150-300/month
-  </Tab>
-
-<Tab title="Medium Cluster (100 GB - 1 TB)">
-  - **Nodes**: 6 x 8 vCPU, 16 GB RAM - **Storage**: 500 GB solid-state drive per
-  node - **Network**: 1 Gbps bandwidth - **Estimated Cost**: $500-800/month
-</Tab>
-
-  <Tab title="Large Cluster (> 1 TB)">
-    - **Nodes**: 9+ x 16 vCPU, 32 GB RAM
-    - **Storage**: 1 TB+ solid-state drive per node
-    - **Network**: 10 Gbps bandwidth
-    - **Estimated Cost**: $1500-3000/month
-  </Tab>
-</Tabs>
 
 ---
 
@@ -621,69 +599,6 @@ time curl -X POST localhost:8080/query \
   -d '{"query": "{ users(func: allofterms(name, \"john\")) { name email } }"}'
 ```
 
-### 3. Application Connection Testing
-
-```bash
-kubectl run test-connection \
-  --image=appropriate/curl \
-  --restart=Never \
-  --namespace=dgraph \
-  --command -- curl -X POST dgraph-dgraph-alpha:8080/health
-```
-
----
-
-## Deployment Comparison and Best Practices
-
-### Deployment Method Comparison
-
-<CardGroup cols={3}>
-  <Card title="Kubernetes" icon="dharmachakra">
-    **Best For**: Production environments, auto-scaling, enterprise deployments
-    **Pros**: - Automatic scaling and healing - Rolling updates - Resource
-    management - Service discovery - Built-in monitoring **Cons**: - Complex
-    setup - Higher resource overhead - Learning curve - Vendor lock-in potential
-  </Card>
-
-<Card title="Docker Compose" icon="docker">
-  **Best For**: Development, testing, small to medium production **Pros**: -
-  Simple deployment - Easy local development - Version control friendly - Quick
-  setup and teardown - Cost-effective **Cons**: - Limited scaling options - No
-  automatic failover - Single host limitation - Manual monitoring setup
-</Card>
-
-  <Card title="Linux VPS" icon="server">
-    **Best For**: Full control, cost optimization, legacy environments **Pros**:
-    - Maximum control - Cost-effective - No abstraction layers - Predictable
-    performance - Easy debugging **Cons**: - Manual scaling - More maintenance
-    overhead - No built-in redundancy - Manual backup management
-  </Card>
-</CardGroup>
-
-### Cost Analysis
-
-<CardGroup cols={3}>
-  <Card title="AWS EKS" icon="aws">
-    **Small**: $300-500/month - EKS cluster: $72 - 3 x t3.large: $150 - EBS
-    storage: $50 - Load balancer: $25 **Medium**: $800-1200/month - EKS cluster:
-    $72 - 6 x t3.xlarge: $600 - EBS storage: $150 - Load balancer: $25
-    **Large**: $2000-3000/month - EKS cluster: $72 - 9+ x m5.2xlarge: $1800 -
-    EBS storage: $300 - Load balancer: $50
-  </Card>
-
-<Card title="Docker Compose VPS" icon="docker">
-  **Small**: $50-100/month - 1 x 8vCPU/32GB: $80 **Medium**: $150-250/month - 1
-  x 16vCPU/64GB: $160 - Or 2 x smaller: $120 **Large**: $300-500/month - 3 x
-  12vCPU/48GB: $360
-</Card>
-
-  <Card title="Linux VPS" icon="server">
-    **Small**: $100-150/month - 3 x 4vCPU/16GB: $120 - 1 x load balancer: $20
-    **Medium**: $250-400/month - 3 x 8vCPU/32GB: $300 - 1 x load balancer: $40
-    **Large**: $500-800/month - 6 x 8vCPU/32GB: $600 - 2 x load balancers: $80 -
-    1 x monitoring: $40
-  </Card>
-</CardGroup>
 
 ---
 
