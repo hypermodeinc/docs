@@ -13,7 +13,13 @@ services to a self-hosted environment. It covers step-by-step instructions for
 deployment using various cloud providers and methods, supporting goals like cost
 savings, increased control, and compliance.
 
-### Deployment Options
+<Info>
+  This guide supplements the [Dgraph self-managed documentation](/dgraph/self-managed/overview).
+  Be sure to refer to the [self-managed documentation](/dgraph/self-managed/overview)
+  for more information.
+</Info>
+
+## Deployment options
 
 When migrating to self-hosted Dgraph, your deployment choice depends on several
 key factors: data size, team expertise, budget constraints, and control
@@ -21,9 +27,9 @@ requirements. Here's how these factors influence your deployment decision:
 
 **Data Size Considerations:**
 
-- **Under 100GB**: Docker Compose or Linux VPS are suitable options
-- **100GB to 1TB**: Kubernetes or Linux VPS can handle the load
-- **Over 1TB**: Kubernetes is required for proper scaling and management
+- **Under 100GB** Docker Compose or Linux VPS are suitable options
+- **100GB to 1TB** Kubernetes or Linux VPS can handle the load
+- **Over 1TB** Kubernetes is required for proper scaling and management
 
 **Team Expertise Factors:**
 
@@ -33,13 +39,13 @@ requirements. Here's how these factors influence your deployment decision:
 
 **Budget Constraints:**
 
-- **Cost Optimized**: Linux VPS provides the most economical option
+- **Cost Optimized**: Linux provides the most economical option
 - **Balanced**: Docker Compose offers a good middle ground
 - **Enterprise**: Kubernetes provides enterprise-grade features
 
 **Control Requirements:**
 
-- **Maximum Control**: Linux VPS gives you full control over the environment
+- **Maximum Control**: Linux gives you full control over the environment
 - **Managed Infrastructure**: Kubernetes provides managed infrastructure
   capabilities
 
@@ -49,7 +55,7 @@ requirements. Here's how these factors influence your deployment decision:
   teams with K8s expertise
 - **Docker Compose**: Ideal for development, testing, and smaller production
   workloads
-- **Linux VPS**: Perfect for cost-conscious deployments and teams wanting
+- **Linux**: Perfect for cost-conscious deployments and teams wanting
   maximum control
 
 ---
@@ -59,7 +65,7 @@ requirements. Here's how these factors influence your deployment decision:
 Before starting your migration, ensure you have the necessary tools, access, and
 resources.
 
-### Required Tools
+### Required tools
 
 <CardGroup cols={2}>
   <Card title="Command Line Tools" icon="terminal">
@@ -78,7 +84,7 @@ resources.
   </Card>
 </CardGroup>
 
-### Access Requirements
+### Access requirements
 
 <Tabs>
   <Tab title="Source Systems">
@@ -136,8 +142,7 @@ API endpoints and the web interface.
 <Steps>
   <Step title="Access Export Function">
     Log into your Dgraph Cloud dashboard and navigate to your cluster.
-    ![Dgraph Cloud Dashboard](/images/dgraph/self-managed/dg-cloud-export-1.png)
-    
+    ![Dgraph Cloud Dashboard](/images/dgraph/self-managed/dg-cloud-export-1.png)  
   </Step>
 
 <Step title="Navigate to Export">
@@ -146,9 +151,9 @@ API endpoints and the web interface.
 </Step>
 
 <Step title="Configure Export Settings">
-  Select your export format and destination. Dgraph Cloud supports: -
-  **Format**: JSON or RDF  ![Export
-  Configuration](/images/dgraph/self-managed/dg-cloud-export-3.png)
+  Select your export format and destination. 
+  Dgraph Cloud supports JSON or RDF  
+  ![Export Configuration](/images/dgraph/self-managed/dg-cloud-export-3.png)
 
 Click "Start Export" and monitor the progress. Large datasets may take several
 hours.
@@ -160,9 +165,7 @@ hours.
   <Step title="Download Exported Data">
     Once complete, download your exported data files.
     ![Export Download](/images/dgraph/self-managed/dg-cloud-export-4.png)
-    <Note>
-      Screenshot placeholder: Show download links for completed export
-    </Note>
+      
   </Step>
 </Steps>
 
@@ -195,9 +198,9 @@ dgraph export --alpha=your-cluster.grpc.cloud.dgraph.io:443 \
 
 </CodeGroup>
 
-#### Method 3: Bulk Export for Large Datasets
+#### Method 3: Bulk export for large datasets
 
-For datasets larger than 10GB, use the bulk export feature:
+For datasets larger than 10 GB, use the bulk export feature:
 
 <CodeGroup>
 ```bash Request Bulk Export
@@ -250,13 +253,13 @@ curl --location 'https://<YOUR_CLUSTER_NAME>.hypermode.host/dgraph/admin' \
 --data '{"query":"mutation {\n  export(input: { format: \"rdf\" }) {\n    response {\n      message\n      code\n    }\n  }\n}","variables":{}}'
 ```
 
-### Export Validation and Preparation
+### Export validation and preparation
 
 <Warning>
   Always validate your exported data before proceeding with the migration.
 </Warning>
 
-#### Data Integrity Checks
+#### Data integrity checks
 
 <CodeGroup>
 
@@ -308,7 +311,7 @@ fi
 
 </CodeGroup>
 
-#### Prepare for Transfer
+#### Prepare for transfer
 
 <Steps>
   <Step title="Organize Export Files">
@@ -343,12 +346,12 @@ fi
 
 ---
 
-## Pre-Migration Planning
+## Pre-migration planning
 
 Proper planning is crucial for a successful migration. This section helps you
 assess your current environment and plan the migration strategy.
 
-### 1. Assess Current Environment
+### 1. Assess current environment
 
 <CodeGroup>
 ```bash Analyze Current Usage
@@ -373,7 +376,7 @@ curl -X POST https://your-cluster.grpc.cloud.dgraph.io/admin \
 
 </CodeGroup>
 
-### 2. Infrastructure Sizing
+### 2. Infrastructure sizing
 
 <CardGroup cols={2}>
   <Card title="CPU Requirements" icon="microchip">
