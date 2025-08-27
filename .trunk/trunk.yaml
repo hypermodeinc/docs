@@ -38,6 +38,8 @@ lint:
       paths:
         - styles
         - agents/available-connections.mdx
+        - dgraph/self-managed/*.mdx
+        - dgraph/self-hosted.mdx
     - linters: [checkov]
       paths:
         - docs.json
