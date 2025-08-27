@@ -15,31 +15,13 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Hypermode Graphs (preview)",
-          "icon": "chart-network",
+          "anchor": "Hypermode Agents (beta)",
+          "icon": "robot",
           "color": {
             "light": "#FF00EE",
             "dark": "#CC00BE"
           },
           "href": "https://hypermode.com/login"
-        },
-        {
-          "anchor": "Dgraph Cloud",
-          "icon": "cloud",
-          "color": {
-            "light": "#FF00EE",
-            "dark": "#CC00BE"
-          },
-          "href": "https://cloud.dgraph.io"
-        },
-        {
-          "anchor": "Agents Bootcamp",
-          "icon": "calendar",
-          "color": {
-            "light": "#FF00EE",
-            "dark": "#CC00BE"
-          },
-          "href": "https://docs.hypermode.com/agents/30-days-of-agents/overview"
         }
       ]
     },
@@ -57,8 +39,7 @@
                   "first-hypermode-agent",
                   "first-sales-agent",
                   "first-operations-agent",
-                  "agents/knowledge-graph-extraction",
-                  "semantic-search"
+                  "agents/knowledge-graph-extraction"
                 ]
               }
             ]
@@ -171,32 +152,6 @@
               },
               "agents/faq"
             ]
-          },
-          {
-            "group": "Apps",
-            "pages": [
-              "apps/overview",
-              "apps/create-app",
-              "apps/connect-app",
-              "apps/develop-app",
-              "apps/deploy-app"
-            ]
-          },
-          {
-            "group": "Graphs",
-            "pages": [
-              "graphs/overview",
-              "graphs/provision",
-              "graphs/connect",
-              "graphs/manage-schema",
-              "graphs/manage-data",
-              "graphs/manage-graph",
-              "graphs/graph-mcp"
-            ]
-          },
-          {
-            "group": "Tools",
-            "pages": ["model-router", "hyp-cli"]
           },
           {
             "group": "Resources",
