@@ -282,7 +282,14 @@ if [[-f "exported_data/g01.json.gz"]]; then zcat exported_data/g01.json.gz | jq
 
 ```bash Schema Validation
 # Validate schema syntax
-if [[ -f "schema.graphql" ]]; then
+if [ -f "exported_data/g01.rdf.gz" ]; then zcat exported_data/g01.rdf.gz | wc -l
+fi
+
+# For JSON exports, validate structure
+
+if [ -f "exported_data/g01.json.gz" ]; then zcat exported_data/g01.json.gz | jq '.[] | keys' | head -10
+fi
+
   # Basic GraphQL syntax check
   node -e "
     const fs = require('fs');
@@ -329,7 +336,11 @@ fi
 <Step title="Create Checksums">
   ```bash # Generate checksums for integrity verification cd migration_data find
   . -type f -name "*.gz" -exec sha256sum {} \; > checksums.txt find . -type f
-  -name "*.json" -exec sha256sum {} \; >> checksums.txt ```
+  ```bash
+  # Generate checksums for integrity verification
+  cd migration_data
+  find . -type f -name "*.gz" -exec sha256sum {} \; > checksums.txt
+  find . -type f -name "*.json" -exec sha256sum {} \; >> checksums.txt
 </Step>
 
   <Step title="Compress for Transfer">
@@ -476,7 +487,9 @@ curl http://10.0.1.10:8080/health
 kubectl port-forward -n dgraph svc/dgraph-dgraph-alpha 8080:8080 &
 curl -X POST localhost:8080/admin/schema -H "Content-Type: application/json"
 \ -d @schema_backup.json
-
+curl -X POST localhost:8080/admin/schema \
+  -H "Content-Type: application/json" \
+  -d @schema_backup.json
 ```
 
 </Tab>
@@ -524,7 +537,7 @@ kubectl run dgraph-live-loader \
 --namespace=dgraph \
 --command -- dgraph live \
 --files
-/data/export.rdf.gz \
+--files /data/export.rdf.gz \
 --alpha dgraph-dgraph-alpha:9080 \ --zero
 dgraph-dgraph-zero:5080
 ```
@@ -567,7 +580,8 @@ dgraph-dgraph-zero:5080
 curl -X POST $DGRAPH_ENDPOINT/admin \
  -H "Content-Type: application/json" \
  -d '{"query": "mutation { addUser(input: {name: \"admin\", password:
-\"password\"}) { user { name } } }"}'
+  -H "Content-Type: application/json" \
+  -d '{"query": "mutation { addUser(input: {name: \"admin\", password: \"password\"}) { user { name } } }"}'
 
 ````
 </Tab>
