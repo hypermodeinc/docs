@@ -530,7 +530,7 @@ kubectl run dgraph-live-loader \
 --namespace=dgraph \
 --command -- dgraph live \
 --files
-/data/export.rdf.gz \
+--files /data/export.rdf.gz \
 --alpha dgraph-dgraph-alpha:9080 \ --zero
 dgraph-dgraph-zero:5080
 ```
