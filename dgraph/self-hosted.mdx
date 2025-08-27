@@ -480,7 +480,9 @@ curl http://10.0.1.10:8080/health
 kubectl port-forward -n dgraph svc/dgraph-dgraph-alpha 8080:8080 &
 curl -X POST localhost:8080/admin/schema -H "Content-Type: application/json"
 \ -d @schema_backup.json
-
+curl -X POST localhost:8080/admin/schema \
+  -H "Content-Type: application/json" \
+  -d @schema_backup.json
 ```
 
 </Tab>
