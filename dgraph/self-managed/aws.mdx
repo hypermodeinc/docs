@@ -12,6 +12,12 @@ unindexed: true
 Deploy your self-hosted Dgraph cluster on Amazon Web Services using Elastic
 Kubernetes Service (EKS).
 
+### Prerequisites
+- AWS Account with appropriate permissions to create EKS clusters, IAM roles, and VPCs.
+- kubectl installed and configured to interact with your EKS cluster.
+- eksctl or AWS CLI for cluster management.
+- Helm for deploying Dgraph.
+
 ```mermaid
 graph TB
     subgraph "AWS Architecture"
@@ -33,38 +39,61 @@ graph TB
     end
 ```
 
-### 1. Infrastructure Setup
+### 1. Create an EKS Cluster
 
-#### EKS Cluster Creation
+<Steps>
+<Step name="Create EKS Cluster">
 
-<CodeGroup>
 ```bash Create EKS Cluster
 aws eks create-cluster \
-  --name dgraph-cluster \
-  --version 1.28 \
-  --role-arn arn:aws:iam::ACCOUNT:role/eks-service-role \
-  --resources-vpc-config subnetIds=subnet-12345,securityGroupIds=sg-12345
+  --name <cluster-name> \
+  --region <region> \
+  --role-arn <eks-cluster-role-arn> \
+  --resources-vpc-config subnetIds=<subnet-id-1>,<subnet-id-2>,<subnet-id-3>,securityGroupIds=<security-group-id>
 ```
+Required Parameters:
 
-```bash Update Kubeconfig
-aws eks update-kubeconfig --region us-west-2 --name dgraph-cluster
-```
+- name: Name of your EKS cluster (e.g., my-eks-cluster).
+- region: AWS region (e.g., us-west-2).
+- role-arn: ARN of the IAM role for EKS. This role must have the AmazonEKSClusterPolicy attached.
+- resources-vpc-config:
+
+subnetIds: List of subnet IDs (at least 2 in different AZs for high availability).
+securityGroupIds: Security group ID for the cluster
+
+
+
 
 ```bash Create Node Group
 aws eks create-nodegroup \
-  --cluster-name dgraph-cluster \
-  --nodegroup-name dgraph-nodes \
-  --instance-types t3.xlarge \
-  --ami-type AL2_x86_64 \
-  --capacity-type ON_DEMAND \
-  --scaling-config minSize=3,maxSize=9,desiredSize=6 \
-  --disk-size 100 \
-  --node-role arn:aws:iam::ACCOUNT:role/NodeInstanceRole
+  --cluster-name <cluster-name> \
+  --region <region> \
+  --nodegroup-name <nodegroup-name> \
+  --subnets <subnet-id-1> <subnet-id-2> \
+  --node-role <node-instance-role-arn> \
+  --instance-types <instance-type> \
+  --scaling-config minSize=<min-nodes>,maxSize=<max-nodes>,desiredSize=<desired-nodes>
 ```
+Required Parameters:
 
-</CodeGroup>
+- --cluster-name: Name of your EKS cluster.
+- --region: AWS region.
+- --nodegroup-name: Name of the node group (e.g., my-node-group).
+- --subnets: Subnet IDs where the nodes will be launched.
+- --node-role: ARN of the IAM role for the node group. This role must have the AmazonEKSWorkerNodePolicy, AmazonEC2ContainerRegistryReadOnly, and AmazonEC2FullAccess policies attached.
+- --instance-types: EC2 instance type (e.g., t3.medium).
+- --scaling-config: Minimum, maximum, and desired number of nodes.
+</Step>
 
-#### Storage Class Configuration
+<Step name="update your kubectl config">
+
+After cluster creation, update your kubectl config file (~/.kube/config) so that all kubectl commands now interact with your EKS cluster.
+```bash Update Kubeconfig
+aws eks update-kubeconfig --region us-west-2 --name dgraph-cluster
+```
+</Step>
+
+<Step title="Apply Storage Class">
 
 ```yaml aws-storage-class.yaml
 apiVersion: storage.k8s.io/v1
@@ -80,15 +109,19 @@ volumeBindingMode: WaitForFirstConsumer
 allowVolumeExpansion: true
 ```
 
-### 2. Dgraph Deployment on AWS
+    ```bash kubectl apply -f aws-storage-class.yaml ```
+</Step>
+</Steps>
+
+### 2. Deploy Dgraph Using Helm
 
 <Steps>
-  <Step title="Apply Storage Class">
-    ```bash kubectl apply -f aws-storage-class.yaml ```
-  </Step>
-
+  
 <Step title="Add Helm Repository">
-  ```bash helm repo add dgraph https://charts.dgraph.io helm repo update ```
+  ```bash
+  helm repo add dgraph https://charts.dgraph.io
+  helm repo update
+  ```
 </Step>
 
 <Step title="Create Namespace">
@@ -99,7 +132,7 @@ allowVolumeExpansion: true
     ```bash
     helm install dgraph dgraph/dgraph \
       --namespace dgraph \
-      --set image.tag="v23.1.0" \
+      --set image.tag="v24.1.4" \
       --set alpha.persistence.storageClass="dgraph-storage" \
       --set alpha.persistence.size="500Gi" \
       --set zero.persistence.storageClass="dgraph-storage" \
@@ -137,4 +170,9 @@ spec:
                 name: dgraph-dgraph-alpha
                 port:
                   number: 8080
+```
+
+### 
+```bash
+kubectl get services -n dgraph
 ```
