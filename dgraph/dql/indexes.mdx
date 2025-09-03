@@ -43,6 +43,7 @@ The indices available for strings are as follows.
 | `le`, `ge`, `lt`, `gt`     | `exact`                                | Allows faster sorting.                                                                                                                                                                                       |
 | `allofterms`, `anyofterms` | `term`                                 | Allows searching by a term in a sentence.                                                                                                                                                                    |
 | `alloftext`, `anyoftext`   | `fulltext`                             | Matching with language specific stemming and stopwords.                                                                                                                                                      |
+| `ngram`                    | `ngram`                                | Contiguous sequence matching (shingles) with stop word removal and stemming.                                                                                                                                 |
 | `regexp`                   | `trigram`                              | Regular expression matching. Can also be used for equality checking.                                                                                                                                         |
 
 <Warning>
