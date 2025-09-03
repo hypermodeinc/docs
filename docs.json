@@ -247,7 +247,14 @@
               "dgraph/quickstart",
               "dgraph/guides",
               "dgraph/v25-preview",
-              "dgraph/self-hosted"
+              {
+                "group": "Dgraph Self-Managed",
+                "pages": [
+                  "dgraph/self-hosted",
+                  "dgraph/self-managed/cloud-run",
+                  "dgraph/self-managed/render"
+                ]
+              }
             ]
           },
           {
