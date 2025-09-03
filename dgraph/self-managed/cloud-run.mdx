@@ -374,7 +374,7 @@ gcloud run services update dgraph-alpha --min-instances=1 --max-instances=3 --re
 #### Schema Validation
 
 ```bash
-curl -X POST https://api.yourdomain.com/query
+curl -X POST https://api.yourdomain.com/query \
 -H "Content-Type: application/json" \
 -d '{"query": "schema {}"}'
 ```
