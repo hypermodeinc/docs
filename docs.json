@@ -253,7 +253,7 @@
                   "dgraph/self-hosted",
                   "dgraph/self-managed/cloud-run",
                   "dgraph/self-managed/render",
-                  "dgraph/self-managed/gcp"
+                  "dgraph/self-managed/managed-kubernetes"
                 ]
               }
             ]
