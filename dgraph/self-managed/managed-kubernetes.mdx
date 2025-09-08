@@ -220,31 +220,35 @@ kubectl port-forward service/dgraph-alpha-public 8080:8080 -n dgraph
         
       </Step>
 
-      <Step title="Create EKS Cluster">
-        ```bash
-        # Create EKS cluster using eksctl
-        eksctl create cluster \
-          --name dgraph-cluster \
-          --region us-west-2 \
-          --nodegroup-name dgraph-nodes \
-          --node-type m5.xlarge \
-          --nodes 3 \
-          --nodes-min 1 \
-          --nodes-max 4 \
-          --with-oidc \
-          --ssh-access \
-          --ssh-public-key your-key-name \
-          --managed
+      <Step title="EKS Cluster Creation">
+```bash Create EKS Cluster
+aws eks create-cluster \
+  --name dgraph-cluster \
+  --version 1.28 \
+  --role-arn arn:aws:iam::ACCOUNT:role/eks-service-role \
+  --resources-vpc-config subnetIds=subnet-12345,securityGroupIds=sg-12345
+```
 
-        # Update kubeconfig
-        aws eks update-kubeconfig --region us-west-2 --name dgraph-cluster
-        ```
-        
+```bash Update Kubeconfig
+aws eks update-kubeconfig --region us-west-2 --name dgraph-cluster
+```
+
+```bash Create Node Group
+aws eks create-nodegroup \
+  --cluster-name dgraph-cluster \
+  --nodegroup-name dgraph-nodes \
+  --instance-types t3.xlarge \
+  --ami-type AL2_x86_64 \
+  --capacity-type ON_DEMAND \
+  --scaling-config minSize=3,maxSize=9,desiredSize=6 \
+  --disk-size 100 \
+  --node-role arn:aws:iam::ACCOUNT:role/NodeInstanceRole
+```
         
         <Note>
         Replace `your-key-name` with your EC2 key pair name. The cluster creation takes 10-15 minutes.
-        </Note>
-      </Step>
+            </Note>
+        </Step>
 
       <Step title="Create S3 Bucket">
         ```bash
@@ -510,300 +514,87 @@ If you are using EKS, you can use the EKS Storage Class.
   </Tab>
 </Tabs>
 
-
-### Deploy Dgraph Zero (Cluster Management)
-
-<Info>
-Dgraph Zero manages the cluster metadata and coordinates the Alpha nodes. It's essential for cluster operations.
-</Info>
-
-Create `dgraph-zero.yaml` file with the following content:
-
-```yaml dgraph-zero.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: dgraph-zero
-  namespace: dgraph
-  labels:
-    app: dgraph-zero
-spec:
-  ports:
-  - port: 5080
-    targetPort: 5080
-    name: zero-grpc
-  - port: 6080
-    targetPort: 6080
-    name: zero-http
-  selector:
-    app: dgraph-zero
-  clusterIP: None
----
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: dgraph-zero
-  namespace: dgraph
-spec:
-  serviceName: "dgraph-zero"
-  replicas: 1
-  selector:
-    matchLabels:
-      app: dgraph-zero
-  template:
-    metadata:
-      labels:
-        app: dgraph-zero
-    spec:
-      containers:
-      - name: zero
-        image: dgraph/dgraph:latest
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 5080
-          name: zero-grpc
-        - containerPort: 6080
-          name: zero-http
-        volumeMounts:
-        - name: datadir
-          mountPath: /dgraph
-        command:
-        - bash
-        - "-c"
-        - |
-          set -ex
-          dgraph zero --my=$(hostname -f):5080 --replicas=1
-  volumeClaimTemplates:
-  - metadata:
-      name: datadir
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      storageClassName: fast-ssd
-      resources:
-        requests:
-          storage: 50Gi
-```
-
-Deploy the configuration with `kubectl apply -f dgraph-zero.yaml`:
-
-```bash Deploy Zero
-kubectl apply -f dgraph-zero.yaml
-```
-
-Wait for Zero to be ready:
-
-```bash
-# Wait for Zero to be ready
-kubectl wait --for=condition=ready pod -l app=dgraph-zero -n dgraph --timeout=300s
-```
-
-
-### Deploy Dgraph Alpha (Data Nodes)
+### Using Dgraph Helm Charts
 
 <Info>
-Dgraph Alpha nodes store and serve your data. This configuration creates 3 Alpha replicas for high availability.
+<strong>What is a Helm Chart?</strong><br/>
+A <b>Helm chart</b> is a package of pre-configured Kubernetes resources that makes it easy to deploy and manage complex applications on Kubernetes clusters. Helm acts as a package manager for Kubernetes, similar to how <code>apt</code> or <code>yum</code> work for Linux distributions. A Helm chart defines all the resources (like Deployments, Services, StatefulSets, ConfigMaps, etc.) needed to run an application, along with customizable parameters.
+
+<strong>Why use Helm Charts for Dgraph on Managed Kubernetes?</strong><br/>
+When using a managed Kubernetes service (such as GKE, EKS, or AKS), Helm charts simplify the deployment process by automating the creation and configuration of all the necessary Kubernetes resources for Dgraph. Dgraph maintains official Helm charts that encapsulate best practices for running Dgraph in production, including resource requests, persistent storage, replica management, and service exposure. By using these charts, you avoid manual configuration errors, ensure compatibility with Kubernetes best practices, and can easily upgrade or roll back your Dgraph deployment as needed.
 </Info>
 
-<Tabs>
-  <Tab title="GKE LoadBalancer">
+<Step title="Add Helm Repository">
+  ```bash 
+  helm repo add dgraph https://charts.dgraph.io helm repo update 
+  ```
+</Step>
 
-  Create `dgraph-alpha-gke.yaml` file with the following content:
+<Step title="Create Namespace">
+  ```bash 
+  kubectl create namespace dgraph 
+  ```
+</Step>
 
-    ```yaml dgraph-alpha-gke.yaml
-    apiVersion: v1
-    kind: Service
-    metadata:
-      name: dgraph-alpha
-      namespace: dgraph
-      labels:
-        app: dgraph-alpha
-    spec:
-      ports:
-      - port: 8080
-        targetPort: 8080
-        name: alpha-http
-      - port: 9080
-        targetPort: 9080
-        name: alpha-grpc
-      selector:
-        app: dgraph-alpha
-      clusterIP: None
-    ---
-    apiVersion: v1
-    kind: Service
-    metadata:
-      name: dgraph-alpha-public
-      namespace: dgraph
-    spec:
-      type: LoadBalancer
-      ports:
-      - port: 8080
-        targetPort: 8080
-        name: alpha-http
-      - port: 9080
-        targetPort: 9080
-        name: alpha-grpc
-      selector:
-        app: dgraph-alpha
-    ---
-    apiVersion: apps/v1
-    kind: StatefulSet
-    metadata:
-      name: dgraph-alpha
-      namespace: dgraph
-    spec:
-      serviceName: "dgraph-alpha"
-      replicas: 3
-      selector:
-        matchLabels:
-          app: dgraph-alpha
-      template:
-        metadata:
-          labels:
-            app: dgraph-alpha
-        spec:
-          containers:
-          - name: alpha
-            image: dgraph/dgraph:latest
-            imagePullPolicy: IfNotPresent
-            ports:
-            - containerPort: 8080
-              name: alpha-http
-            - containerPort: 9080
-              name: alpha-grpc
-            volumeMounts:
-            - name: datadir
-              mountPath: /dgraph
-            env:
-            - name: POD_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
-            command:
-            - bash
-            - "-c"
-            - |
-              set -ex
-              dgraph alpha --my=$(hostname -f):7080 --zero=dgraph-zero.${POD_NAMESPACE}.svc.cluster.local:5080 --whitelist=0.0.0.0/0
-            securityContext:
-              runAsUser: 0
-      volumeClaimTemplates:
-      - metadata:
-          name: datadir
-        spec:
-          accessModes: ["ReadWriteOnce"]
-          storageClassName: fast-ssd
-          resources:
-            requests:
-              storage: 100Gi
+  <Step title="Deploy Dgraph">
+    ```bash
+    helm install dgraph dgraph/dgraph \
+      --namespace dgraph \
+      --set image.tag="v23.1.0" \
+      --set alpha.persistence.storageClass="dgraph-storage" \
+      --set alpha.persistence.size="500Gi" \
+      --set zero.persistence.storageClass="dgraph-storage" \
+      --set zero.persistence.size="100Gi" \
+      --set alpha.replicaCount=3 \
+      --set zero.replicaCount=3 \
+      --set alpha.resources.requests.memory="8Gi" \
+      --set alpha.resources.requests.cpu="2000m"
     ```
-
-  Deploy the configuration with `kubectl apply -f dgraph-alpha-gke.yaml`:
-
-    ```bash Deploy Alpha
-    kubectl apply -f dgraph-alpha-gke.yaml
-
-    # Wait for Alpha pods to be ready
-    kubectl wait --for=condition=ready pod -l app=dgraph-alpha -n dgraph --timeout=300s
-    ```
+  </Step>
   
-  </Tab>
-  
+
+
+### Exposing Dgraph Services
+
+<Info>
+<strong>What is a LoadBalancer?</strong><br/>
+A <b>LoadBalancer</b> is a Kubernetes service type that creates a load balancer in front of a set of Pods. It allows you to expose your Dgraph services to the internet or to a private network.
+</Info>
+
+<Info>
+<strong>What is an Ingress?</strong><br/>
+An <b>Ingress</b> is a Kubernetes resource that allows you to manage external access to your Dgraph services. It can route traffic to different services based on the hostname or path.
+</Info>
+
+  <Tabs>
   <Tab title="EKS LoadBalancer">
 
   Create `dgraph-alpha-eks.yaml` file with the following content:
 
-    ```yaml dgraph-alpha-eks.yaml
-    apiVersion: v1
-    kind: Service
-    metadata:
-      name: dgraph-alpha
-      namespace: dgraph
-      labels:
-        app: dgraph-alpha
-    spec:
-      ports:
-      - port: 8080
-        targetPort: 8080
-        name: alpha-http
-      - port: 9080
-        targetPort: 9080
-        name: alpha-grpc
-      selector:
-        app: dgraph-alpha
-      clusterIP: None
-    ---
-    apiVersion: v1
-    kind: Service
-    metadata:
-      name: dgraph-alpha-public
-      namespace: dgraph
-      annotations:
-        service.beta.kubernetes.io/aws-load-balancer-type: nlb
-        service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
-    spec:
-      type: LoadBalancer
-      ports:
-      - port: 8080
-        targetPort: 8080
-        name: alpha-http
-      - port: 9080
-        targetPort: 9080
-        name: alpha-grpc
-      selector:
-        app: dgraph-alpha
-    ---
-    apiVersion: apps/v1
-    kind: StatefulSet
-    metadata:
-      name: dgraph-alpha
-      namespace: dgraph
-    spec:
-      serviceName: "dgraph-alpha"
-      replicas: 3
-      selector:
-        matchLabels:
-          app: dgraph-alpha
-      template:
-        metadata:
-          labels:
-            app: dgraph-alpha
-        spec:
-          containers:
-          - name: alpha
-            image: dgraph/dgraph:latest
-            imagePullPolicy: IfNotPresent
-            ports:
-            - containerPort: 8080
-              name: alpha-http
-            - containerPort: 9080
-              name: alpha-grpc
-            volumeMounts:
-            - name: datadir
-              mountPath: /dgraph
-            env:
-            - name: POD_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
-            command:
-            - bash
-            - "-c"
-            - |
-              set -ex
-              dgraph alpha --my=$(hostname -f):7080 --zero=dgraph-zero.${POD_NAMESPACE}.svc.cluster.local:5080 --whitelist=0.0.0.0/0
-            securityContext:
-              runAsUser: 0
-      volumeClaimTemplates:
-      - metadata:
-          name: datadir
-        spec:
-          accessModes: ["ReadWriteOnce"]
-          storageClassName: fast-ssd
-          resources:
-            requests:
-              storage: 100Gi
-    ```
+```yaml dgraph-alpha-eks.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dgraph-ingress
+  namespace: dgraph
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:REGION:ACCOUNT:certificate/CERT-ID
+spec:
+  rules:
+    - host: dgraph.yourdomain.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: dgraph-dgraph-alpha
+                port:
+                  number: 8080 
+```
 
   Deploy the configuration with `kubectl apply -f dgraph-alpha-eks.yaml`:
 
@@ -814,9 +605,46 @@ Dgraph Alpha nodes store and serve your data. This configuration creates 3 Alpha
     kubectl wait --for=condition=ready pod -l app=dgraph-alpha -n dgraph --timeout=300s
     ```
   
-  </Tab>
-</Tabs>
+</Tab>
 
+  <Tab title="GKE LoadBalancer">
+
+  Create `dgraph-alpha-gke.yaml` file with the following content:
+  ```yaml gcp-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dgraph-ingress
+  namespace: dgraph
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: dgraph-ip
+    networking.gke.io/managed-certificates: dgraph-ssl-cert
+spec:
+  rules:
+    - host: dgraph.yourdomain.com
+      http:
+        paths:
+          - path: /*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: dgraph-dgraph-alpha
+                port:
+                  number: 8080
+```
+
+  Deploy the configuration with `kubectl apply -f dgraph-alpha-gke.yaml`:
+
+    ```bash Deploy Alpha
+    kubectl apply -f dgraph-alpha-gke.yaml
+
+    # Wait for Alpha pods to be ready
+    kubectl wait --for=condition=ready pod -l app=dgraph-alpha -n dgraph --timeout=300s
+    ```
+
+  </Tab>
+
+</Tabs>
 
 ## Phase 4: Import Data to Kubernetes Dgraph
 
