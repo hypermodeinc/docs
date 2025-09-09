@@ -267,12 +267,18 @@ In case your dataset is small (a few gigabytes) it would be convenient to start
 by initializing just one Alpha node and then let the snapshot be streamed among
 the other Alpha replicas. You can follow these steps:
 
-1. Run Bulk Loader only on one server
+1. Run Bulk Loader only on one Alpha server
 
-2. Once the `p` directory has been created by the Bulk Loader, then start
-   **only** the first Alpha replica
+2. Once the `out\0\p` directory has been created by the Bulk Loader, copy the
+   `p` directoty (default path is `out/0/p`) to the Alpha volume.
 
-3. Wait for 1 minute to ensure that a snapshot has been taken by the first Alpha
+3. Start **only** the first Alpha replica
+
+4. Generate some mutations. Without mutation the Alpha will not create a
+   snapshot. You can run `dgraph increment -n 1000` to generate some mutations
+   on an internal counter not affecting your data.
+
+5. Wait for 1 minute to ensure that a snapshot has been taken by the first Alpha
    node replica. You can confirm that a snapshot has been taken by looking for
    the following message":
 
@@ -280,7 +286,7 @@ the other Alpha replicas. You can follow these steps:
    I1227 13:12:24.202196   14691 draft.go:571] Creating snapshot at index: 30. ReadTs: 4.
    ```
 
-4. After confirming that the snapshot has been taken, you can start the other
+6. After confirming that the snapshot has been taken, you can start the other
    Alpha node replicas (number of Alpha nodes must be equal to the `--replicas`
    flag value set in the Zero nodes). Now the Alpha node (the one started in
    step 2) logs similar messages:
@@ -305,9 +311,9 @@ When your dataset is pretty big (larger than 10 GB) it is faster that you just
 copy the generated `p` directory (by the Bulk Loader) among all the Alphas
 nodes. You can follow these steps:
 
-1. Run Bulk Loader only on one server
-2. Copy (or use `rsync`) the `p` directory to the other servers (the servers you
-   are using to start the other Alpha nodes)
+1. Run Bulk Loader only on one Alpha server
+2. Copy (or use `rsync`) the generated `out\0\p` directory to the all Alpha
+   servers (the servers you are using to start the Alpha nodes)
 3. Now, start all Alpha nodes at the same time
 
 If the process went well **all** Alpha nodes take a snapshot after 1 minute. You
