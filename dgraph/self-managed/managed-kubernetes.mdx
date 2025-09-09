@@ -1,0 +1,1458 @@
+---
+title: "Dgraph Cloud to Kubernetes Migration Guide"
+description: "Complete guide for migrating your data from Dgraph Cloud to a self-managed Dgraph cluster on Google Kubernetes Engine (GKE) or Amazon Elastic Kubernetes Service (EKS)"
+sidebarTitle: "Managed Kubernetes"
+---
+
+<Info>
+This guide walks you through migrating your data from Dgraph Cloud to a self-managed Dgraph cluster running on Google Kubernetes Engine (GKE) or Amazon Elastic Kubernetes Service (EKS).
+</Info>
+
+## Prerequisites
+
+Before starting the migration, ensure you have the following:
+
+<CardGroup cols={2}>
+  <Card title="Cloud Account" icon="cloud">
+    Google Cloud Platform or AWS account with billing enabled
+  </Card>
+  <Card title="CLI Tools" icon="terminal">
+    Cloud CLI tools and `kubectl` installed and configured
+  </Card>
+  <Card title="Dgraph Access" icon="database">
+    Access to your Dgraph Cloud instance with export permissions
+  </Card>
+  <Card title="Docker" icon="docker">
+    Docker installed (for custom images if needed)
+  </Card>
+</CardGroup>
+
+## Understanding kubectl
+
+<Accordion title="What is kubectl?">
+`kubectl` is the command-line interface (CLI) tool for interacting with Kubernetes clusters. It's your primary way to communicate with and control Kubernetes from the command line.
+
+**kubectl allows you to:**
+- Deploy and manage applications on Kubernetes
+- Inspect and manage cluster resources (pods, services, deployments, etc.)
+- View logs and debug applications
+- Execute commands inside containers
+- Configure cluster settings and permissions
+</Accordion>
+
+<Tabs>
+  <Tab title="macOS">
+    <CodeGroup>
+    ```bash Homebrew
+    brew install kubectl
+    ```
+    
+    ```bash Direct Download
+    # Download latest release
+    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/darwin/amd64/kubectl"
+    
+    # Make executable and move to PATH
+    chmod +x kubectl
+    sudo mv kubectl /usr/local/bin/
+    ```
+    </CodeGroup>
+  </Tab>
+  
+  <Tab title="Linux">
+    <CodeGroup>
+    ```bash Ubuntu/Debian
+    sudo apt-get update
+    sudo apt-get install -y kubectl
+    ```
+    
+    ```bash Direct Download
+    # Download latest release
+    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    
+    # Make executable and move to PATH
+    chmod +x kubectl
+    sudo mv kubectl /usr/local/bin/
+    ```
+    </CodeGroup>
+  </Tab>
+  
+  <Tab title="Windows">
+    ```bash Chocolatey
+    choco install kubernetes-cli
+    ```
+  </Tab>
+  
+  <Tab title="Cloud CLI">
+    <Tabs>
+      <Tab title="Google Cloud SDK">
+        ```bash
+        gcloud components install kubectl
+        ```
+      </Tab>
+      <Tab title="AWS CLI">
+        ```bash
+        # Install eksctl (EKS CLI)
+        curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+        sudo mv /tmp/eksctl /usr/local/bin
+        
+        # kubectl is automatically installed with eksctl
+        ```
+      </Tab>
+    </Tabs>
+  </Tab>
+</Tabs>
+
+### Essential kubectl Commands
+
+<Accordion title="Viewing Resources">
+```bash
+# List all pods
+kubectl get pods
+
+# List pods in specific namespace
+kubectl get pods -n dgraph
+
+# List services and deployments
+kubectl get services
+kubectl get deployments
+
+# List cluster nodes
+kubectl get nodes
+```
+</Accordion>
+
+<Accordion title="Debugging & Logs">
+```bash
+# View pod logs
+kubectl logs dgraph-alpha-0 -n dgraph
+
+# Follow logs in real-time
+kubectl logs -f dgraph-alpha-0 -n dgraph
+
+# Get detailed pod information
+kubectl describe pod dgraph-alpha-0 -n dgraph
+
+# Execute shell inside pod
+kubectl exec -it dgraph-alpha-0 -n dgraph -- bash
+```
+</Accordion>
+
+<Accordion title="Managing Resources">
+```bash
+# Apply configuration from file
+kubectl apply -f dgraph-alpha.yaml
+
+# Delete resources
+kubectl delete pod dgraph-alpha-0 -n dgraph
+kubectl delete -f dgraph-alpha.yaml
+
+# Port forwarding for local access
+kubectl port-forward service/dgraph-alpha-public 8080:8080 -n dgraph
+```
+</Accordion>
+
+## Phase 1: Prepare Cloud Environment
+
+<Tabs>
+  <Tab title="Google Cloud (GKE)">
+    <Steps>
+      <Step title="Enable Required APIs">
+        ```bash
+        gcloud services enable container.googleapis.com
+        gcloud services enable compute.googleapis.com
+        gcloud services enable storage-api.googleapis.com
+        ```
+        
+      </Step>
+
+      <Step title="Install GKE auth plugin for kubectl">
+        ```bash
+          gcloud components install gke-gcloud-auth-plugin
+
+        ```
+      </Step>
+
+      <Step title="Create GKE Cluster">
+        ```bash
+        # Create a GKE cluster
+        gcloud container clusters create dgraph-cluster \
+          --zone=us-central1-a \
+          --num-nodes=3 \
+          --machine-type=n1-standard-4 \
+          --disk-size=100GB \
+          --enable-autorepair \
+          --enable-autoupgrade
+
+        # Get credentials for kubectl
+        gcloud container clusters get-credentials dgraph-cluster --zone=us-central1-a
+        ```
+        
+        
+        <Note>
+        This creates a 3-node cluster with sufficient resources for Dgraph. Adjust machine types and disk sizes based on your data volume.
+        </Note>
+      </Step>
+
+      <Step title="Create Storage Bucket">
+        ```bash
+        # Create a Cloud Storage bucket for storing exports/backups
+        gsutil mb gs://your-dgraph-backups
+        ```
+        
+        
+        <Warning>
+        Replace `your-dgraph-backups` with a globally unique bucket name.
+        </Warning>
+      </Step>
+    </Steps>
+  </Tab>
+  
+  <Tab title="Amazon Web Services (EKS)">
+    <Steps>
+      <Step title="Configure AWS CLI">
+        ```bash
+        # Configure AWS CLI with your credentials
+        aws configure
+        
+        # Verify configuration
+        aws sts get-caller-identity
+        ```
+        
+      </Step>
+
+      <Step title="EKS Cluster Creation">
+```bash Create EKS Cluster
+aws eks create-cluster \
+  --name dgraph-cluster \
+  --version 1.28 \
+  --role-arn arn:aws:iam::ACCOUNT:role/eks-service-role \
+  --resources-vpc-config subnetIds=subnet-12345,securityGroupIds=sg-12345
+```
+
+```bash Update Kubeconfig
+aws eks update-kubeconfig --region us-west-2 --name dgraph-cluster
+```
+
+```bash Create Node Group
+aws eks create-nodegroup \
+  --cluster-name dgraph-cluster \
+  --nodegroup-name dgraph-nodes \
+  --instance-types t3.xlarge \
+  --ami-type AL2_x86_64 \
+  --capacity-type ON_DEMAND \
+  --scaling-config minSize=3,maxSize=9,desiredSize=6 \
+  --disk-size 100 \
+  --node-role arn:aws:iam::ACCOUNT:role/NodeInstanceRole
+```
+        
+        <Note>
+        Replace `your-key-name` with your EC2 key pair name. The cluster creation takes 10-15 minutes.
+            </Note>
+        </Step>
+
+      <Step title="Create S3 Bucket">
+        ```bash
+        # Create an S3 bucket for storing exports/backups
+        aws s3 mb s3://your-dgraph-backups --region us-west-2
+        
+        # Enable versioning (recommended)
+        aws s3api put-bucket-versioning \
+          --bucket your-dgraph-backups \
+          --versioning-configuration Status=Enabled
+        ```
+        
+        
+        <Warning>
+        Replace `your-dgraph-backups` with a globally unique bucket name.
+        </Warning>
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## Phase 2: Export Data from Dgraph Cloud
+
+<Warning>
+Ensure you have sufficient permissions to export data from your Dgraph Cloud instance. The export process may take time depending on your data size.
+</Warning>
+
+### Exporting from Dgraph Cloud
+
+Dgraph Cloud provides several methods for exporting your data, including admin
+API endpoints and the web interface.
+
+#### Method 1: Using the Web Interface
+
+<Steps>
+  <Step title="Access Export Function">
+    Log into your Dgraph Cloud dashboard and navigate to your cluster.
+    ![Dgraph Cloud Dashboard](/images/dgraph/self-managed/dg-cloud-export-1.png)  
+  </Step>
+
+<Step title="Navigate to Export">
+  Click on the "Export" tab in your cluster management interface. ![Export Tab
+  Location](/images/dgraph/self-managed/dg-cloud-export-2.png)
+</Step>
+
+<Step title="Configure Export Settings">
+  Select your export format and destination. 
+  Dgraph Cloud supports JSON or RDF.  
+  ![Export Configuration](/images/dgraph/self-managed/dg-cloud-export-3.png)
+
+Click "Start Export" and monitor the progress. Large datasets may take several
+hours.
+
+  <Note>Click "Start Export" and monitor the progress. Large datasets may take several
+  hours.</Note>
+</Step>
+
+  <Step title="Download Exported Data">
+    Once complete, download your exported data files.
+    ![Export Download](/images/dgraph/self-managed/dg-cloud-export-4.png)
+      
+  </Step>
+</Steps>
+
+#### Method 2: Using Admin API
+
+<CodeGroup>
+```bash Check Cluster Status
+curl -X POST https://your-cluster.grpc.cloud.dgraph.io/admin \
+  -H "Content-Type: application/json" \
+  -d '{"query": "{ state { groups { id members { id addr leader lastUpdate } } } }"}'
+```
+
+```bash Export Schema
+curl -X POST https://your-cluster.grpc.cloud.dgraph.io/admin \
+  -H "Content-Type: application/json" \
+  -d '{"query": "schema {}"}' > schema_backup.json
+```
+
+```bash Export Data (Small Datasets)
+curl -X POST https://your-cluster.grpc.cloud.dgraph.io/admin \
+  -H "Content-Type: application/json" \
+  -d '{"query": "{ backup(destination: \"s3://your-bucket/backup\") { response { message code } } }"}'
+```
+
+```bash Export Data (Alternative Method)
+dgraph export --alpha=your-cluster.grpc.cloud.dgraph.io:443 \
+  --output=/path/to/export \
+  --format=json
+```
+
+</CodeGroup>
+
+#### Method 3: Bulk export for large datasets
+
+For datasets larger than 10 GB, use the bulk export feature:
+
+<CodeGroup>
+```bash Request Bulk Export
+curl -X POST https://your-cluster.grpc.cloud.dgraph.io/admin \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "mutation { 
+      export(input: {
+        destination: \"s3://your-backup-bucket/$(date +%Y-%m-%d)\",
+        format: \"rdf\",
+        namespace: 0
+      }) { 
+        response { 
+          message 
+          code 
+        } 
+      } 
+    }"
+  }'
+```
+
+```bash Check Export Status
+curl -X POST https://your-cluster.grpc.cloud.dgraph.io/admin \
+  -H "Content-Type: application/json" \
+  -d '{"query": "{ state { ongoing } }"}'
+```
+
+</CodeGroup>
+
+### Exporting from Hypermode Graphs
+
+<Note>
+  For larger datasets please contact Hypermode Support to facilitate your graph
+  export.
+</Note>
+
+#### Using `admin` endpoint
+
+For smaller datasets you can use the `admin` endpoint to export your graph.
+
+<Note>
+  For larger datasets please contact Hypermode Support to facilitate your graph
+  export.
+</Note>
+
+```bash
+curl --location 'https://<YOUR_CLUSTER_NAME>.hypermode.host/dgraph/admin' \
+--header 'Content-Type: application/json' \
+--header 'Dg-Auth: ••••••' \
+--data '{"query":"mutation {\n  export(input: { format: \"rdf\" }) {\n    response {\n      message\n      code\n    }\n  }\n}","variables":{}}'
+```
+
+### Upload Export To Cloud Storage
+  
+    <Tabs>
+      <Tab title="Google Cloud Storage">
+        ```bash
+        # Upload exported files to Cloud Storage
+        gsutil cp schema.txt gs://your-dgraph-backups/
+        gsutil cp *.rdf.gz gs://your-dgraph-backups/
+        gsutil cp *.schema.gz gs://your-dgraph-backups/
+        
+        # Verify upload
+        gsutil ls -la gs://your-dgraph-backups/
+        ```
+      </Tab>
+      
+      <Tab title="Amazon S3">
+        ```bash
+        # Upload exported files to S3
+        aws s3 cp schema.txt s3://your-dgraph-backups/
+        aws s3 cp . s3://your-dgraph-backups/ --recursive --exclude "*" --include "*.rdf.gz"
+        aws s3 cp . s3://your-dgraph-backups/ --recursive --exclude "*" --include "*.schema.gz"
+        
+        # Verify upload
+        aws s3 ls s3://your-dgraph-backups/ --recursive
+        ```
+      </Tab>
+    </Tabs>
+    
+
+
+
+## Phase 3: Deploy Dgraph on Kubernetes
+
+### Create Namespace and Storage Class
+
+<Info>
+<strong>What is a Namespace?</strong><br/>
+A <b>Kubernetes namespace</b> is a way to divide cluster resources between multiple users or projects. In this guide, we create a <code>dgraph</code> namespace to logically isolate all Dgraph-related resources (pods, services, volumes, etc.) from other workloads in your cluster. This makes management, access control, and resource monitoring easier.
+
+<strong>What is a Storage Class?</strong><br/>
+A <b>StorageClass</b> in Kubernetes defines the type of storage (such as SSD or HDD) and its parameters (like performance, replication, or zone) for dynamically provisioned persistent volumes. By creating a StorageClass (e.g., <code>fast-ssd</code>), you tell Kubernetes how to create and manage storage for Dgraph pods, ensuring the right performance and durability for your data.
+</Info>
+
+
+<Info>
+If you are using GKE, you can use the GKE Storage Class.
+</Info>
+
+<Info>
+If you are using EKS, you can use the EKS Storage Class.
+</Info>
+
+
+<Tabs>
+  <Tab title="GKE Storage Class">
+
+  Create `dgraph-namespace-gke.yaml` file with the following content:
+
+  
+    ```yaml dgraph-namespace-gke.yaml
+    apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: dgraph
+    ---
+    apiVersion: storage.k8s.io/v1
+    kind: StorageClass
+    metadata:
+      name: fast-ssd
+    provisioner: kubernetes.io/gce-pd
+    parameters:
+      type: pd-ssd
+      zones: us-central1-a
+    allowVolumeExpansion: true
+    ```
+
+  Apply the configuration:
+
+    ```bash Apply Configuration
+    kubectl apply -f dgraph-namespace-gke.yaml
+    ```
+  
+  </Tab>
+  
+  <Tab title="EKS Storage Class">
+
+  Create `dgraph-namespace-eks.yaml` file with the following content:
+
+    
+    ```yaml dgraph-namespace-eks.yaml
+    apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: dgraph
+    ---
+    apiVersion: storage.k8s.io/v1
+    kind: StorageClass
+    metadata:
+      name: fast-ssd
+    provisioner: kubernetes.io/aws-ebs
+    parameters:
+      type: gp3
+      fsType: ext4
+      encrypted: "true"
+    allowVolumeExpansion: true
+    volumeBindingMode: WaitForFirstConsumer
+    ```
+
+  Apply the configuration with `kubectl apply -f dgraph-namespace-eks.yaml`:
+
+    ```bash Apply Configuration
+    kubectl apply -f dgraph-namespace-eks.yaml
+    ```
+  
+  </Tab>
+</Tabs>
+
+### Using Dgraph Helm Charts
+
+<Info>
+<strong>What is a Helm Chart?</strong><br/>
+A <b>Helm chart</b> is a package of pre-configured Kubernetes resources that makes it easy to deploy and manage complex applications on Kubernetes clusters. Helm acts as a package manager for Kubernetes, similar to how <code>apt</code> or <code>yum</code> work for Linux distributions. A Helm chart defines all the resources (like Deployments, Services, StatefulSets, ConfigMaps, etc.) needed to run an application, along with customizable parameters.
+
+<strong>Why use Helm Charts for Dgraph on Managed Kubernetes?</strong><br/>
+When using a managed Kubernetes service (such as GKE, EKS, or AKS), Helm charts simplify the deployment process by automating the creation and configuration of all the necessary Kubernetes resources for Dgraph. Dgraph maintains official Helm charts that encapsulate best practices for running Dgraph in production, including resource requests, persistent storage, replica management, and service exposure. By using these charts, you avoid manual configuration errors, ensure compatibility with Kubernetes best practices, and can easily upgrade or roll back your Dgraph deployment as needed.
+</Info>
+
+<Step title="Add Helm Repository">
+  ```bash 
+  helm repo add dgraph https://charts.dgraph.io 
+  helm repo update 
+  ```
+</Step>
+
+<Step title="Create Namespace">
+  ```bash 
+  kubectl create namespace dgraph 
+  ```
+</Step>
+
+  <Step title="Deploy Dgraph">
+    ```bash
+    helm install dgraph dgraph/dgraph \
+      --namespace dgraph \
+      --set image.tag="v24.1.4" \
+      --set alpha.persistence.storageClass="dgraph-storage" \
+      --set alpha.persistence.size="500Gi" \
+      --set zero.persistence.storageClass="dgraph-storage" \
+      --set zero.persistence.size="100Gi" \
+      --set alpha.replicaCount=3 \
+      --set zero.replicaCount=3 \
+      --set alpha.resources.requests.memory="8Gi" \
+      --set alpha.resources.requests.cpu="2000m"
+    ```
+  </Step>
+  
+
+
+### Exposing Dgraph Services
+
+<Info>
+<strong>What is a LoadBalancer?</strong><br/>
+A <b>LoadBalancer</b> is a Kubernetes service type that creates a load balancer in front of a set of Pods. It allows you to expose your Dgraph services to the internet or to a private network.
+</Info>
+
+<Info>
+<strong>What is an Ingress?</strong><br/>
+An <b>Ingress</b> is a Kubernetes resource that allows you to manage external access to your Dgraph services. It can route traffic to different services based on the hostname or path.
+</Info>
+
+  <Tabs>
+  <Tab title="EKS LoadBalancer">
+
+  Create `dgraph-alpha-eks.yaml` file with the following content:
+
+```yaml dgraph-alpha-eks.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dgraph-ingress
+  namespace: dgraph
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:REGION:ACCOUNT:certificate/CERT-ID
+spec:
+  rules:
+    - host: dgraph.yourdomain.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: dgraph-dgraph-alpha
+                port:
+                  number: 8080 
+```
+
+  Deploy the configuration with `kubectl apply -f dgraph-alpha-eks.yaml`:
+
+    ```bash Deploy Alpha
+    kubectl apply -f dgraph-alpha-eks.yaml
+
+    # Wait for Alpha pods to be ready
+    kubectl wait --for=condition=ready pod -l app=dgraph-alpha -n dgraph --timeout=300s
+    ```
+  
+</Tab>
+
+  <Tab title="GKE LoadBalancer">
+
+  Create `dgraph-alpha-gke.yaml` file with the following content:
+  ```yaml gcp-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dgraph-ingress
+  namespace: dgraph
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: dgraph-ip
+    networking.gke.io/managed-certificates: dgraph-ssl-cert
+spec:
+  rules:
+    - host: dgraph.yourdomain.com
+      http:
+        paths:
+          - path: /*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: dgraph-dgraph-alpha
+                port:
+                  number: 8080
+```
+
+  Deploy the configuration with `kubectl apply -f dgraph-alpha-gke.yaml`:
+
+    ```bash Deploy Alpha
+    kubectl apply -f dgraph-alpha-gke.yaml
+
+    # Wait for Alpha pods to be ready
+    kubectl wait --for=condition=ready pod -l app=dgraph-alpha -n dgraph --timeout=300s
+    ```
+
+  </Tab>
+
+</Tabs>
+
+## Phase 4: Import Data to Kubernetes Dgraph
+
+<Warning>
+The import process will download data from cloud storage and load it into your Dgraph cluster. Ensure your cluster has sufficient resources and storage.
+</Warning>
+
+### Create Service Account for Import
+
+<Tabs>
+  <Tab title="GCP Workload Identity">
+    <Steps>
+      <Step title="Create GCP Service Account">
+        ```bash
+        # Create service account
+        gcloud iam service-accounts create dgraph-import \
+          --display-name="Dgraph Import Service Account"
+
+        # Grant Storage Object Viewer permission
+        gcloud projects add-iam-policy-binding your-project-id \
+          --member="serviceAccount:dgraph-import@your-project-id.iam.gserviceaccount.com" \
+          --role="roles/storage.objectViewer"
+        ```
+      </Step>
+
+      <Step title="Configure Workload Identity">
+        ```bash
+        # Allow Kubernetes service account to impersonate GCP service account
+        gcloud iam service-accounts add-iam-policy-binding \
+          --role roles/iam.workloadIdentityUser \
+          --member "serviceAccount:your-project-id.svc.id.goog[dgraph/dgraph-import-sa]" \
+          dgraph-import@your-project-id.iam.gserviceaccount.com
+        ```
+      </Step>
+
+      <Step title="Create Kubernetes Service Account">
+        <CodeGroup>
+        ```yaml service-account-gcp.yaml
+        apiVersion: v1
+        kind: ServiceAccount
+        metadata:
+          name: dgraph-import-sa
+          namespace: dgraph
+          annotations:
+            iam.gke.io/gcp-service-account: dgraph-import@your-project-id.iam.gserviceaccount.com
+        ---
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: Role
+        metadata:
+          namespace: dgraph
+          name: dgraph-import-role
+        rules:
+        - apiGroups: [""]
+          resources: ["pods", "services"]
+          verbs: ["get", "list"]
+        ---
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: RoleBinding
+        metadata:
+          name: dgraph-import-rolebinding
+          namespace: dgraph
+        subjects:
+        - kind: ServiceAccount
+          name: dgraph-import-sa
+          namespace: dgraph
+        roleRef:
+          kind: Role
+          name: dgraph-import-role
+          apiGroup: rbac.authorization.k8s.io
+        ```
+        
+        ```bash Apply Service Account
+        kubectl apply -f service-account-gcp.yaml
+        ```
+        </CodeGroup>
+      </Step>
+    </Steps>
+  </Tab>
+  
+  <Tab title="AWS IAM Roles">
+    <Steps>
+      <Step title="Create IAM Policy">
+        ```bash
+        # Create IAM policy for S3 access
+        cat <<EOF > dgraph-s3-policy.json
+        {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Action": [
+                        "s3:GetObject",
+                        "s3:ListBucket"
+                    ],
+                    "Resource": [
+                        "arn:aws:s3:::your-dgraph-backups",
+                        "arn:aws:s3:::your-dgraph-backups/*"
+                    ]
+                }
+            ]
+        }
+        EOF
+
+        aws iam create-policy \
+          --policy-name DgraphS3Access \
+          --policy-document file://dgraph-s3-policy.json
+        ```
+      </Step>
+
+      <Step title="Create IAM Role">
+        ```bash
+        # Get OIDC issuer URL
+        aws eks describe-cluster --name dgraph-cluster --query "cluster.identity.oidc.issuer" --output text
+
+        # Create trust policy
+        cat <<EOF > trust-policy.json
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Federated": "arn:aws:iam::ACCOUNT-ID:oidc-provider/OIDC-ISSUER-URL"
+              },
+              "Action": "sts:AssumeRoleWithWebIdentity",
+              "Condition": {
+                "StringEquals": {
+                  "OIDC-ISSUER-URL:sub": "system:serviceaccount:dgraph:dgraph-import-sa"
+                }
+              }
+            }
+          ]
+        }
+        EOF
+
+        # Create IAM role
+        aws iam create-role \
+          --role-name DgraphImportRole \
+          --assume-role-policy-document file://trust-policy.json
+
+        # Attach policy to role
+        aws iam attach-role-policy \
+          --role-name DgraphImportRole \
+          --policy-arn arn:aws:iam::ACCOUNT-ID:policy/DgraphS3Access
+        ```
+      </Step>
+
+      <Step title="Create Kubernetes Service Account">
+        <CodeGroup>
+        ```yaml service-account-aws.yaml
+        apiVersion: v1
+        kind: ServiceAccount
+        metadata:
+          name: dgraph-import-sa
+          namespace: dgraph
+          annotations:
+            eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT-ID:role/DgraphImportRole
+        ---
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: Role
+        metadata:
+          namespace: dgraph
+          name: dgraph-import-role
+        rules:
+        - apiGroups: [""]
+          resources: ["pods", "services"]
+          verbs: ["get", "list"]
+        ---
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: RoleBinding
+        metadata:
+          name: dgraph-import-rolebinding
+          namespace: dgraph
+        subjects:
+        - kind: ServiceAccount
+          name: dgraph-import-sa
+          namespace: dgraph
+        roleRef:
+          kind: Role
+          name: dgraph-import-role
+          apiGroup: rbac.authorization.k8s.io
+        ```
+        
+        ```bash Apply Service Account
+        kubectl apply -f service-account-aws.yaml
+        ```
+        </CodeGroup>
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+
+### Create and Run Import Job
+
+<Tabs>
+  <Tab title="GCP Import Job">
+    <CodeGroup>
+    ```yaml dgraph-import-job-gcp.yaml
+    apiVersion: batch/v1
+    kind: Job
+    metadata:
+      name: dgraph-data-import
+      namespace: dgraph
+    spec:
+      template:
+        spec:
+          serviceAccountName: dgraph-import-sa
+          containers:
+          - name: import
+            image: google/cloud-sdk:alpine
+            command:
+            - /bin/sh
+            - -c
+            - |
+              # Install dgraph
+              apk add --no-cache wget
+              wget https://github.com/dgraph-io/dgraph/releases/latest/download/dgraph-linux-amd64.tar.gz
+              tar -xzf dgraph-linux-amd64.tar.gz
+              chmod +x dgraph
+              
+              # Download data from Cloud Storage
+              gsutil cp gs://your-dgraph-backups/*.gz ./
+              gsutil cp gs://your-dgraph-backups/schema.txt ./
+              
+              # Decompress files
+              gunzip *.gz
+              
+              # Import schema first
+              ./dgraph live --schema=schema.txt --alpha=dgraph-alpha.dgraph.svc.cluster.local:9080 --zero=dgraph-zero.dgraph.svc.cluster.local:5080
+              
+              # Import data
+              ./dgraph live --files=*.rdf --alpha=dgraph-alpha.dgraph.svc.cluster.local:9080 --zero=dgraph-zero.dgraph.svc.cluster.local:5080
+          restartPolicy: OnFailure
+      backoffLimit: 3
+    ```
+
+```
+    #Run Import Job
+kubectl apply -f dgraph-import-job-gcp.yaml
+
+# Monitor import progress
+kubectl logs -f job/dgraph-data-import -n dgraph
+```
+    </CodeGroup>
+  </Tab>
+  <Tab title="AWS Import Job">
+    <CodeGroup>
+    ```yaml dgraph-import-job-aws.yaml
+    apiVersion: batch/v1
+    kind: Job
+    metadata:
+      name: dgraph-data-import
+      namespace: dgraph
+    spec:
+      template:
+        spec:
+          serviceAccountName: dgraph-import-sa
+          containers:
+          - name: import
+            image: amazon/aws-cli:latest
+            command:
+            - /bin/sh
+            - -c
+            - |
+              # Install required packages
+              yum update -y
+              yum install -y wget tar gzip
+              
+              # Install dgraph
+              wget https://github.com/dgraph-io/dgraph/releases/latest/download/dgraph-linux-amd64.tar.gz
+              tar -xzf dgraph-linux-amd64.tar.gz
+              chmod +x dgraph
+              
+              # Download data from S3
+              aws s3 cp s3://your-dgraph-backups/ ./ --recursive
+              
+              # Decompress files
+              gunzip *.gz
+              
+              # Import schema first
+              ./dgraph live --schema=schema.txt --alpha=dgraph-alpha.dgraph.svc.cluster.local:9080 --zero=dgraph-zero.dgraph.svc.cluster.local:5080
+              
+              # Import data
+              ./dgraph live --files=*.r
+```
+</CodeGroup>
+
+
+
+  </Tab>
+
+</Tabs>
+
+
+<Note>
+The import process may take significant time depending on your data size. Monitor the logs to track progress and identify any issues.
+</Note>
+
+## Phase 5: Verification and Testing
+
+<Steps>
+  <Step title="Get External IP/Endpoint">
+    
+        ```bash
+        # Get the external IP of your Dgraph service
+        kubectl get service dgraph-alpha-public -n dgraph
+        ```
+    
+    <Info>
+    It may take a few minutes for the LoadBalancer to assign an external IP address or hostname.
+    </Info>
+  </Step>
+
+  <Step title="Test GraphQL Endpoint">
+    
+        ```bash
+        # Test the GraphQL endpoint
+        curl -X POST \
+          http://EXTERNAL-IP:8080/query \
+          -H "Content-Type: application/json" \
+          -d '{
+            "query": "{ q(func: has(dgraph.type)) { count(uid) } }"
+          }'
+        ```
+  </Step>
+
+  <Step title="Verify Data Count">
+    Compare the count of nodes between your Dgraph Cloud instance and the new Kubernetes deployment to ensure all data was migrated successfully.
+    
+  </Step>
+</Steps>
+
+## Monitoring and Observability
+
+<Tabs>
+  <Tab title="GCP Monitoring">
+    <Steps>
+      <Step title="Enable GKE Monitoring">
+        ```bash
+        # Enable monitoring for existing cluster
+        gcloud container clusters update dgraph-cluster \
+          --zone=us-central1-a \
+          --enable-cloud-monitoring \
+          --enable-cloud-logging
+        ```
+      </Step>
+      
+      <Step title="Create Custom Dashboards">
+        ```bash
+        # Create monitoring dashboard for Dgraph
+        gcloud monitoring dashboards create --config-from-file=dgraph-dashboard.json
+        ```
+        
+      </Step>
+    </Steps>
+  </Tab>
+  
+  <Tab title="AWS CloudWatch">
+    <Steps>
+      <Step title="Install CloudWatch Container Insights">
+        ```bash
+        # Install CloudWatch agent
+        curl https://raw.githubusercontent.com/aws-samples/amazon-cloudwatch-container-insights/latest/k8s-deployment-manifest-templates/deployment-mode/daemonset/container-insights-monitoring/quickstart/cwagent-fluentd-quickstart.yaml | sed "s/{{cluster_name}}/dgraph-cluster/;s/{{region_name}}/us-west-2/" | kubectl apply -f -
+        ```
+      </Step>
+      
+      <Step title="Create CloudWatch Dashboard">
+        ```bash
+        # Create custom dashboard
+        aws cloudwatch put-dashboard \
+          --dashboard-name "Dgraph-Cluster" \
+          --dashboard-body file://dgraph-cloudwatch-dashboard.json
+        ```
+        
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## Security Hardening
+
+<Accordion title="Network Policies">
+```yaml network-policy.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: dgraph-network-policy
+  namespace: dgraph
+spec:
+  podSelector:
+    matchLabels:
+      app: dgraph-alpha
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: dgraph-zero
+    - podSelector:
+        matchLabels:
+          app: dgraph-alpha
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: dgraph-zero
+    - podSelector:
+        matchLabels:
+          app: dgraph-alpha
+```
+</Accordion>
+
+<Accordion title="Authentication Setup">
+```bash
+# Generate auth token
+kubectl create secret generic dgraph-auth \
+  --from-literal=token=your-secure-token \
+  --namespace=dgraph
+```
+</Accordion>
+
+<Accordion title="TLS/SSL Configuration">
+<Tabs>
+  <Tab title="GKE with Google-managed SSL">
+    ```yaml
+    # Add annotation to service for Google-managed SSL
+    metadata:
+      annotations:
+        cloud.google.com/neg: '{"ingress": true}'
+        kubernetes.io/ingress.global-static-ip-name: "dgraph-ip"
+    ```
+  </Tab>
+  
+  <Tab title="EKS with AWS Certificate Manager">
+    ```yaml
+    # Add annotation to service for ACM SSL
+    metadata:
+      annotations:
+        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-west-2:ACCOUNT-ID:certificate/CERTIFICATE-ID"
+        service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+        service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"
+    ```
+  </Tab>
+</Tabs>
+</Accordion>
+
+## Backup and Disaster Recovery
+
+<Tabs>
+  <Tab title="GCP Backup Strategy">
+    <CodeGroup>
+    ```yaml gcp-backup-cronjob.yaml
+    apiVersion: batch/v1
+    kind: CronJob
+    metadata:
+      name: dgraph-backup
+      namespace: dgraph
+    spec:
+      schedule: "0 2 * * *"
+      jobTemplate:
+        spec:
+          template:
+            spec:
+              serviceAccountName: dgraph-backup-sa
+              containers:
+              - name: backup
+                image: google/cloud-sdk:alpine
+                command:
+                - /bin/sh
+                - -c
+                - |
+                  # Install dgraph
+                  apk add --no-cache wget
+                  wget https://github.com/dgraph-io/dgraph/releases/latest/download/dgraph-linux-amd64.tar.gz
+                  tar -xzf dgraph-linux-amd64.tar.gz
+                  chmod +x dgraph
+                  
+                  # Create backup
+                  ./dgraph export --alpha=dgraph-alpha.dgraph.svc.cluster.local:9080 --zero=dgraph-zero.dgraph.svc.cluster.local:5080
+                  
+                  # Upload to Cloud Storage
+                  gsutil cp export/dgraph.* gs://your-dgraph-backups/backups/$(date +%Y-%m-%d)/
+              restartPolicy: OnFailure
+    ```
+    
+    ```bash Create Backup Job
+    kubectl apply -f gcp-backup-cronjob.yaml
+    ```
+    </CodeGroup>
+  </Tab>
+  
+  <Tab title="AWS Backup Strategy">
+    <CodeGroup>
+    ```yaml aws-backup-cronjob.yaml
+    apiVersion: batch/v1
+    kind: CronJob
+    metadata:
+      name: dgraph-backup
+      namespace: dgraph
+    spec:
+      schedule: "0 2 * * *"
+      jobTemplate:
+        spec:
+          template:
+            spec:
+              serviceAccountName: dgraph-backup-sa
+              containers:
+              - name: backup
+                image: amazon/aws-cli:latest
+                command:
+                - /bin/sh
+                - -c
+                - |
+                  # Install dgraph
+                  yum update -y && yum install -y wget tar gzip
+                  wget https://github.com/dgraph-io/dgraph/releases/latest/download/dgraph-linux-amd64.tar.gz
+                  tar -xzf dgraph-linux-amd64.tar.gz
+                  chmod +x dgraph
+                  
+                  # Create backup
+                  ./dgraph export --alpha=dgraph-alpha.dgraph.svc.cluster.local:9080 --zero=dgraph-zero.dgraph.svc.cluster.local:5080
+                  
+                  # Upload to S3
+                  aws s3 cp export/ s3://your-dgraph-backups/backups/$(date +%Y-%m-%d)/ --recursive
+              restartPolicy: OnFailure
+    ```
+    
+    ```bash Create Backup Job
+    kubectl apply -f aws-backup-cronjob.yaml
+    ```
+    </CodeGroup>
+  </Tab>
+</Tabs>
+
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Pod stuck in Pending">
+    Check if sufficient resources are available in your cluster:
+    
+    ```bash
+    kubectl describe nodes
+    kubectl get events -n dgraph --sort-by='.metadata.creationTimestamp'
+    ```
+    
+  </Accordion>
+
+  <Accordion title="Import fails">
+    Verify cloud storage permissions and file formats:
+    
+    <Tabs>
+      <Tab title="GCP Troubleshooting">
+        ```bash
+        # Check job logs for detailed error messages
+        kubectl logs job/dgraph-data-import -n dgraph
+        
+        # Verify files in Cloud Storage
+        gsutil ls -la gs://your-dgraph-backups/
+        
+        # Test service account permissions
+        kubectl exec -it dgraph-data-import-xxxxx -n dgraph -- gsutil ls gs://your-dgraph-backups/
+        ```
+      </Tab>
+      
+      <Tab title="AWS Troubleshooting">
+        ```bash
+        # Check job logs for detailed error messages
+        kubectl logs job/dgraph-data-import -n dgraph
+        
+        # Verify files in S3
+        aws s3 ls s3://your-dgraph-backups/ --recursive
+        
+        # Test IAM role permissions
+        kubectl exec -it dgraph-data-import-xxxxx -n dgraph -- aws s3 ls s3://your-dgraph-backups/
+        ```
+      </Tab>
+    </Tabs>
+    
+  </Accordion>
+
+  <Accordion title="Connection issues">
+    Check service discovery and network policies:
+    
+    ```bash
+    # Check service endpoints
+    kubectl get endpoints -n dgraph
+    
+    # Test internal connectivity
+    kubectl exec -it dgraph-alpha-0 -n dgraph -- nslookup dgraph-zero.dgraph.svc.cluster.local
+    
+    # Check LoadBalancer status
+    kubectl describe service dgraph-alpha-public -n dgraph
+    ```
+    
+  </Accordion>
+  
+  <Accordion title="LoadBalancer not getting External IP">
+    <Tabs>
+      <Tab title="GKE Issues">
+        ```bash
+        # Check quotas
+        gcloud compute project-info describe --project=your-project-id
+        
+        # Check firewall rules
+        gcloud compute firewall-rules list
+        
+        # Check load balancer creation
+        gcloud compute forwarding-rules list
+        ```
+      </Tab>
+      
+      <Tab title="EKS Issues">
+        ```bash
+        # Check AWS Load Balancer Controller
+        kubectl get deployment -n kube-system aws-load-balancer-controller
+        
+        # Check service events
+        kubectl describe service dgraph-alpha-public -n dgraph
+        
+        # Install AWS Load Balancer Controller if missing
+        helm repo add eks https://aws.github.io/eks-charts
+        helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system
+        ```
+      </Tab>
+    </Tabs>
+  </Accordion>
+</AccordionGroup>
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Resource Planning" icon="chart-line">
+    Size your nodes based on data volume and query patterns. Monitor resource usage and scale accordingly.
+  </Card>
+  <Card title="Backup Strategy" icon="floppy-disk">
+    Implement regular automated backups to cloud storage using CronJobs.
+  </Card>
+  <Card title="Monitoring" icon="chart-mixed">
+    Set up comprehensive monitoring with cloud-native solutions for production workloads.
+  </Card>
+  <Card title="High Availability" icon="shield">
+    Deploy across multiple zones and use regional storage for production.
+  </Card>
+</CardGroup>
+
+## Cost Optimization
+
+<Tabs>
+  <Tab title="GCP Cost Optimization">
+    <Tip>
+    **Use preemptible nodes** for non-critical workloads to reduce costs by up to 80%.
+    </Tip>
+
+    ```bash
+    # Create cluster with preemptible nodes
+    gcloud container clusters create dgraph-cluster-preemptible \
+      --preemptible \
+      --zone=us-central1-a \
+      --num-nodes=3
+    ```
+
+    <Tip>
+    **Implement cluster autoscaling** to automatically adjust node count based on demand.
+    </Tip>
+
+    ```bash
+    # Enable autoscaling
+    gcloud container clusters update dgraph-cluster \
+      --enable-autoscaling \
+      --min-nodes=1 \
+      --max-nodes=10 \
+      --zone=us-central1-a
+    ```
+  </Tab>
+  
+  <Tab title="AWS Cost Optimization">
+    <Tip>
+    **Use Spot Instances** for non-critical workloads to reduce costs by up to 90%.
+    </Tip>
+
+    ```bash
+    # Create managed node group with spot instances
+    eksctl create nodegroup \
+      --cluster=dgraph-cluster \
+      --name=dgraph-spot-nodes \
+      --instance-types=m5.large,m5a.large,m4.large \
+      --spot \
+      --nodes-min=1 \
+      --nodes-max=10
+    ```
+
+    <Tip>
+    **Use EBS gp3 volumes** for better cost-performance ratio than gp2.
+    </Tip>
+
+    <Tip>
+    **Implement Cluster Autoscaler** to automatically adjust node count.
+    </Tip>
+
+    ```bash
+    # Install cluster autoscaler
+    kubectl apply -f https://raw.githubusercontent.com/kubernetes/autoscaler/master/cluster-autoscaler/cloudprovider/aws/examples/cluster-autoscaler-autodiscover.yaml
+    ```
+  </Tab>
+</Tabs>
+
+## Performance Tuning
+
+<Accordion title="Storage Performance">
+<Tabs>
+  <Tab title="GCP Storage Tuning">
+    ```yaml
+    # Use SSD persistent disks for better performance
+    volumeClaimTemplates:
+    - metadata:
+        name: datadir
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: fast-ssd
+        resources:
+          requests:
+            storage: 500Gi  # Larger volumes get better IOPS
+    ```
+  </Tab>
+  
+  <Tab title="AWS Storage Tuning">
+    ```yaml
+    # Use gp3 with provisioned IOPS for better performance
+    apiVersion: storage.k8s.io/v1
+    kind: StorageClass
+    metadata:
+      name: fast-ssd
+    provisioner: kubernetes.io/aws-ebs
+    parameters:
+      type: gp3
+      iops: "3000"
+      throughput: "125"
+    ```
+  </Tab>
+</Tabs>
+</Accordion>
+
+<Accordion title="Network Performance">
+```yaml
+# Enable high-performance networking
+spec:
+  template:
+    metadata:
+      annotations:
+        # GKE: Enable faster networking
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+        # EKS: Use enhanced networking
+        kubernetes.io/os: linux
+    spec:
+      hostNetwork: false  # Keep false for security
+      dnsPolicy: ClusterFirst
+```
+</Accordion>
+
+## Migration Checklist
+
+<Steps>
+  <Step title="Pre-Migration">
+    - [ ] Backup existing Dgraph Cloud data
+    - [ ] Test migration process in staging environment
+    - [ ] Verify cloud provider quotas and limits
+    - [ ] Plan maintenance window for production migration
+    
+  </Step>
+
+  <Step title="During Migration">
+    - [ ] Export data from Dgraph Cloud
+    - [ ] Upload data to cloud storage
+    - [ ] Deploy Dgraph cluster on Kubernetes
+    - [ ] Import data and verify integrity
+    - [ ] Test application connectivity
+    
+  </Step>
+
+  <Step title="Post-Migration">
+    - [ ] Verify data consistency and count
+    - [ ] Update application connection strings
+    - [ ] Set up monitoring and alerting
+    - [ ] Configure backup strategy
+    - [ ] Update DNS records if applicable
+    - [ ] Decommission Dgraph Cloud instance (after verification)
+    
+  </Step>
+</Steps>
+
+<Warning>
+Test this migration process thoroughly in a staging environment before migrating production data. Always maintain backups of your original data during the migration process.
+</Warning>
+
+## Next Steps
+
+After completing the migration, consider these additional steps:
+
+1. **Set up CI/CD pipelines** for application deployments
+2. **Implement GitOps** for Kubernetes configuration management
+3. **Configure disaster recovery** across multiple regions
+4. **Optimize performance** based on your specific workload patterns
+5. **Set up comprehensive monitoring** and alerting
+
+
+  
