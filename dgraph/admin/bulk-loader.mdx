@@ -269,13 +269,13 @@ the other Alpha replicas. You can follow these steps:
 
 1. Run Bulk Loader only on one Alpha server
 
-2. Once the `out\0\p` directory has been created by the Bulk Loader, copy the
-   `p` directoty (default path is `out/0/p`) to the Alpha volume.
+2. Once the generated `out\0\p` directory has been created by the Bulk Loader,
+   copy the `p` directoty (default path is `out/0/p`) to the Alpha volume.
 
 3. Start **only** the first Alpha replica
 
 4. Generate some mutations. Without mutation the Alpha will not create a
-   snapshot. You can run `dgraph increment -n 1000` to generate some mutations
+   snapshot. You can run `dgraph increment -n 10000` to generate some mutations
    on an internal counter not affecting your data.
 
 5. Wait for 1 minute to ensure that a snapshot has been taken by the first Alpha
