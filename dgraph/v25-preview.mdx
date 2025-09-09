@@ -155,30 +155,6 @@ defer client.Close()
 // use the client
 ```
 
-### Connect to Hypermode Graph
-
-You can use either `Open` or `NewClient` to connect to a Hypermode Graph.
-Hypermode automatically handles load balancing in multi-node clusters.
-
-Using `Open` with a connection string:
-
-```go
-client, err := dgo.Open("dgraph://<graph-workspace>.hypermode.host?sslmode=verify-ca&bearertoken=<bearer-token>")
-// handle error
-defer client.Close()
-```
-
-Using `NewClient`:
-
-```go
-client, err := dgo.NewClient("<graph-workspace>.hypermode.host:443",
-  dgo.WithBearerToken("<bearer-token>"),
-  dgo.WithSystemCertPool(),
-)
-// handle error
-defer client.Close()
-```
-
 ### Set schema
 
 To set the schema, use the `SetSchema` function.
@@ -372,26 +348,7 @@ assistants:
 To add the MCP server to your coding assistant, add the following to your
 configuration file:
 
-When using Hypermode Graphs, the MCP configuration is available on the graph
-details screen in the console.
-
 <CodeGroup>
-
-```json Hypermode
-{
-  "mcpServers": {
-    "hypermode-graph": {
-      "command": "npx",
-      "args": [
-        "mcp-remote",
-        "https://<graph-workspace>.hypermode.host/mcp/sse",
-        "--header",
-        "Authorization: Bearer <bearer-token>"
-      ]
-    }
-  }
-}
-```
 
 ```json local
 {
