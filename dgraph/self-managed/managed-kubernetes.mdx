@@ -526,7 +526,8 @@ When using a managed Kubernetes service (such as GKE, EKS, or AKS), Helm charts 
 
 <Step title="Add Helm Repository">
   ```bash 
-  helm repo add dgraph https://charts.dgraph.io helm repo update 
+  helm repo add dgraph https://charts.dgraph.io 
+  helm repo update 
   ```
 </Step>
 
@@ -540,7 +541,7 @@ When using a managed Kubernetes service (such as GKE, EKS, or AKS), Helm charts 
     ```bash
     helm install dgraph dgraph/dgraph \
       --namespace dgraph \
-      --set image.tag="v23.1.0" \
+      --set image.tag="v24.1.4" \
       --set alpha.persistence.storageClass="dgraph-storage" \
       --set alpha.persistence.size="500Gi" \
       --set zero.persistence.storageClass="dgraph-storage" \
