@@ -111,7 +111,7 @@ client like Insomnia, GraphQL Playground or GraphiQL.
 ```graphql
 mutation {
   backup(
-    input: { destination: "s3://s3.us-west-2.amazonaws.com/<bucketname>" }
+    input: { destination: "s3:///s3.us-west-2.amazonaws.com/<bucketname>" }
   ) {
     response {
       message
@@ -829,7 +829,7 @@ default.
 ### Restore from Amazon S3
 
 ```sh
-dgraph restore --postings "/var/db/dgraph" --location "s3://s3.<region>.amazonaws.com/<bucketname>"
+dgraph restore --postings "/var/db/dgraph" --location "s3:///s3.<region>.amazonaws.com/<bucketname>"
 ```
 
 ### Restore from MinIO
