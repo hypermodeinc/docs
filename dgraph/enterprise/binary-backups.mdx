@@ -111,7 +111,7 @@ client like Insomnia, GraphQL Playground or GraphiQL.
 ```graphql
 mutation {
   backup(
-    input: { destination: "s3:///s3.us-west-2.amazonaws.com/<bucketname>" }
+    input: { destination: "s3://<bucketname>/<path>" }
   ) {
     response {
       message
