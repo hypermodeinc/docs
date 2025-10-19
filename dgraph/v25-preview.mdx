@@ -55,8 +55,7 @@ Namespaces allow you to create logically separated environments for your data,
 enabling multi-customer apps without the overhead of managing a database per
 customer.
 
-The default namespace is created when the cluster is provisioned. It is named
-`root`.
+The default namespace is created when the cluster is provisioned.
 
 Namespace APIs are part of the [v2 APIs](#v2-apis). The v2 APIs are available in
 the `dgo/v250` package today. Other SDKs are being updated currently.
@@ -66,27 +65,18 @@ the `dgo/v250` package today. Other SDKs are being updated currently.
 To create a namespace, use the `CreateNamespace` function.
 
 ```go
-err := client.CreateNamespace(context.TODO(), "finance-graph")
+namespaceID, err := client.CreateNamespace(context.TODO())
+// handle error
+fmt.Printf("%d\n", namespaceID)
 // handle error
 ```
-
-You can now pass this name to `SetSchema`, `RunDQL` or similar functions.
 
 ### Dropping a namespace
 
 To drop a namespace, use the `DropNamespace` function.
 
 ```go
-err := client.DropNamespace(context.TODO(), "finance-graph")
-// handle error
-```
-
-### Rename a namespace
-
-To rename a namespace, use the `RenameNamespace` function.
-
-```go
-err := client.RenameNamespace(context.TODO(), "finance-graph", "new-finance-graph")
+err := client.DropNamespace(context.TODO())
 // handle error
 ```
 
@@ -165,7 +155,7 @@ sch := `
   email: string @index(exact) @unique .
   age: int .
 `
-err := client.SetSchema(context.TODO(), dgo.RootNamespace, sch)
+err := client.SetSchema(context.TODO(), sch)
 // handle error
 ```
 
@@ -181,7 +171,7 @@ mutationDQL := `{
     _:alice <age> "29" .
   }
 }`
-resp, err := client.RunDQL(context.TODO(), dgo.RootNamespace, mutationDQL)
+resp, err := client.RunDQL(context.TODO(), mutationDQL)
 // handle error
 // print map of blank UIDs
 fmt.Printf("%+v\n", resp.BlankUids)
@@ -199,7 +189,7 @@ queryDQL := `{
     age
   }
 }`
-resp, err := client.RunDQL(context.TODO(), dgo.RootNamespace, queryDQL)
+resp, err := client.RunDQL(context.TODO(), queryDQL)
 // handle error
 fmt.Printf("%s\n", resp.QueryResult)
 ```
@@ -217,7 +207,7 @@ queryDQL = `query Alice($name: string) {
   }
 }`
 vars := map[string]string{"$name": "Alice"}
-resp, err := client.RunDQLWithVars(context.TODO(), dgo.RootNamespace, queryDQL, vars)
+resp, err := client.RunDQLWithVars(context.TODO(), queryDQL, vars)
 // handle error
 fmt.Printf("%s\n", resp.QueryResult)
 ```
@@ -234,7 +224,7 @@ queryDQL := `{
     age
   }
 }`
-resp, err := client.RunDQL(context.TODO(), dgo.RootNamespace, queryDQL, dgo.WithBestEffort())
+resp, err := client.RunDQL(context.TODO(), queryDQL, dgo.WithBestEffort())
 // handle error
 fmt.Printf("%s\n", resp.QueryResult)
 ```
@@ -251,7 +241,7 @@ queryDQL := `{
     age
   }
 }`
-resp, err := client.RunDQL(context.TODO(), dgo.RootNamespace, queryDQL, dgo.WithReadOnly())
+resp, err := client.RunDQL(context.TODO(), queryDQL, dgo.WithReadOnly())
 // handle error
 fmt.Printf("%s\n", resp.QueryResult)
 ```
@@ -274,7 +264,7 @@ queryDQL := `{
     age
   }
 }`
-resp, err = client.RunDQL(context.TODO(), dgo.RootNamespace, queryDQL, dgo.WithResponseFormat(api_v2.RespFormat_RDF))
+resp, err = client.RunDQL(context.TODO(), queryDQL, dgo.WithResponseFormat(api_v2.RespFormat_RDF))
 // handle error
 fmt.Printf("%s\n", resp.QueryResult)
 ```
@@ -295,7 +285,7 @@ upsertQuery := `upsert {
     }
   }
 }`
-resp, err := client.RunDQL(context.TODO(), dgo.RootNamespace, upsertQuery)
+resp, err := client.RunDQL(context.TODO(), upsertQuery)
 // handle error
 fmt.Printf("%s\n", resp.QueryResult)
 fmt.Printf("%+v\n", resp.BlankUids)
@@ -315,7 +305,7 @@ upsertQuery := `upsert {
     }
   }
 }`
-resp, err := client.RunDQL(context.TODO(), dgo.RootNamespace, upsertQuery)
+resp, err := client.RunDQL(context.TODO(), upsertQuery)
 // handle error
 fmt.Printf("%s\n", resp.QueryResult)
 ```
